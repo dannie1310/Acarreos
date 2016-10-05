@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Módulo de Acarreos</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_user">Nombre de Usuario</string>
+    <string name="prompt_password">Contraseña</string>
+    <string name="action_sign_in">Iniciar Sesión</string>
+    <string name="error_field_required">Este campo es requerido</string>
+
+</resources>
