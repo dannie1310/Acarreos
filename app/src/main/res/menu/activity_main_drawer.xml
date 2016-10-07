@@ -3,33 +3,29 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Import" />
+            android:id="@+id/nav_sync"
+            android:icon="@drawable/ic_action_sync"
+            android:title="Sincronizar viajes" />
         <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
+            android:id="@+id/nav_list"
+            android:icon="@drawable/ic_action_list"
+            android:title="Lista de Viajes" />
         <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
+            android:id="@+id/nav_pair_on"
+            android:icon="@drawable/ic_action_pair"
+            android:title="Conectar Impresora" />
         <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:id="@+id/nav_pair_off"
+            android:icon="@drawable/ic_action_pair_off"
+            android:title="Desconectar Impresora" />
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="Sesión Actual">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/ic_action_logout"
+                android:title="Cerrar Sesión" />
         </menu>
     </item>
 
