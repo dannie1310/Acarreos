@@ -1,3 +1,5 @@
+package mx.grupohi.acarreos;
+
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -8,22 +10,21 @@ import java.util.GregorianCalendar;
 /**
  * Creado por JFEsquivel on 05/10/2016.
  */
+ class DBScaSqlite extends SQLiteOpenHelper {
 
-public class DBScaSqlite extends SQLiteOpenHelper {
 
-
-    public DBScaSqlite(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+    DBScaSqlite(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
     }
 
-    public static String[] queries = new String[] {
-            "CREATE TABLE user (iduser INTEGER, nombre TEXT, usr TEXT, pass TEXT, idproyecto INTEGER, base_datos TEXT, descripcion_database TEXT)",
+    private static String[] queries = new String[] {
+            "CREATE TABLE user (idusuario INTEGER, idproyecto INTEGER, nombre, TEXT, base_datos TEXT, descripcion_database TEXT, user TEXT, pass TEXT)",
             "CREATE TABLE camiones (idcamion INTEGER, placas TEXT, marca TEXT, modelo TEXT, ancho REAL, largo REAL, alto REAL, economico TEXT, capacidad INTEGER)",
+            "CREATE TABLE tiros (idtiro INTEGER, descripcion TEXT)",
             "CREATE TABLE origenes (idorigen INTEGER, descripcion TEXT, estado INTEGER)",
             "CREATE TABLE rutas (idruta INTEGER, clave TEXT, idorigen INTEGER, idtiro INTEGER, totalkm TEXT)",
             "CREATE TABLE materiales (idmaterial INTEGER, descripcion TEXT)",
-            "CREATE TABLE tiros (idtiro INTEGER, descripcion TEXT)",
-            "CREATE TABLE botones (idboton INTEGER, identificador TEXT)",
+            "CREATE TABLE tags (uid TEXT, idcamion INTEGER, idproyecto INTEGER)",
             "CREATE TABLE viajesnetos (ID INTEGER PRIMARY KEY AUTOINCREMENT,"+
                     "FechaCarga VARCHAR(8),"+
                     "HoraCarga VARCHAR(8),"+
@@ -60,7 +61,7 @@ public class DBScaSqlite extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS rutas");
         db.execSQL("DROP TABLE IF EXISTS materiales");
         db.execSQL("DROP TABLE IF EXISTS tiros");
-        db.execSQL("DROP TABLE IF EXISTS botones");
+        db.execSQL("DROP TABLE IF EXISTS tags");
         db.execSQL("DROP TABLE IF EXISTS viajesnetos");
         db.execSQL("DROP TABLE IF EXISTS coordenadas");
         db.execSQL("DROP TABLE IF EXISTS camion_tag");
@@ -69,38 +70,16 @@ public class DBScaSqlite extends SQLiteOpenHelper {
             db.execSQL(query);
         }
     }
-    public final static String getFechaHora() {
 
-    }
-    public boolean setCoordenada(String IMEI, int idevento, String latitud, String longitud, String code){
+    void deleteCatalogos() {
         SQLiteDatabase db = this.getReadableDatabase();
-        db.execSQL("INSERT INTO  coordenadas (IMEI, idevento, latitud, longitud, fecha_hora, code)" +
-                "VALUES ("+
-                "'"+IMEI+"',"+
-                idevento+","+
-                "'"+latitud+"',"+
-                "'"+longitud+"',"+
-                "'"+getFechaHora()+"',"+
-                "'"+code+"')"
-        );
-        return true;
+
+        db.execSQL("DELETE FROM user");
+        db.execSQL("DELETE FROM camiones");
+        db.execSQL("DELETE FROM tiros");
+        db.execSQL("DELETE FROM origenes");
+        db.execSQL("DELETE FROM rutas");
+        db.execSQL("DELETE FROM materiales");
+        db.execSQL("DELETE FROM tags");
     }
-    public static void alCerrarSesion (SQLiteDatabase db){
-        db.execSQL("DROP TABLE IF EXISTS user");
-        db.execSQL("DROP TABLE IF EXISTS camiones");
-        db.execSQL("DROP TABLE IF EXISTS origenes");
-        db.execSQL("DROP TABLE IF EXISTS rutas");
-        db.execSQL("DROP TABLE IF EXISTS materiales");
-        db.execSQL("DROP TABLE IF EXISTS tiros");
-        db.execSQL("DROP TABLE IF EXISTS botones");
-        db.execSQL("DROP TABLE IF EXISTS camion_tag");
-        db.execSQL("DROP TABLE IF EXISTS viajesnetos");
-        db.execSQL("DROP TABLE IF EXISTS coordenadas");
-        //Se crea la nueva versión de la tabla
-        for (String elemento: database){
-            db.execSQL(elemento);
-        }
-        // db.execSQL(sqlCreate);
-    }
-}
 }

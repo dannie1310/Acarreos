@@ -1,10 +1,17 @@
 <resources>
     <string name="app_name">Módulo de Acarreos</string>
+    <string name="error_internet">Por favor habilite su conexión a Internet para poder iniciar sesión</string>
 
     <!-- Strings related to login -->
     <string name="prompt_user">Nombre de Usuario</string>
     <string name="prompt_password">Contraseña</string>
     <string name="action_sign_in">Iniciar Sesión</string>
     <string name="error_field_required">Este campo es requerido</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
 
 </resources>
