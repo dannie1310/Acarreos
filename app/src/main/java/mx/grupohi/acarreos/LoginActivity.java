@@ -31,15 +31,19 @@ public class LoginActivity extends AppCompatActivity {
     private AutoCompleteTextView userText;
     private EditText passText;
     private TextInputLayout loginFormLayout;
-
     private ProgressDialog loginProgressDialog;
-
     private DBScaSqlite db_sca;
-
     Intent mainActivity;
+    Usuario usuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mainActivity = new Intent(this, MainActivity.class);
+        usuario = new Usuario(this);
+        if (usuario.isAuth()) {
+            mainActivity = new Intent(this, MainActivity.class);
+            startActivity(mainActivity);
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         
@@ -48,7 +52,6 @@ public class LoginActivity extends AppCompatActivity {
         passText = (EditText) findViewById(R.id.passText);
         loginFormLayout = (TextInputLayout) findViewById(R.id.layout);
 
-        mainActivity = new Intent(this, MainActivity.class);
         db_sca = new DBScaSqlite(getApplicationContext(), "sca", null, 1);
 
         Button loginButton = (Button) findViewById(R.id.loginButton);
@@ -63,6 +66,14 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(usuario.isAuth()) {
+            startActivity(mainActivity);
+        }
     }
 
     /**

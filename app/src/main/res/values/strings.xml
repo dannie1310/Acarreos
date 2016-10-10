@@ -12,6 +12,8 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="API_URL">http://sca.grupohi.mx/android20160923.php</string>
 
+    <!-- Mensajes -->
+    <string name="msg_sincronizacion_correcta">¡Sincronización finalizada con éxito!</string>
 </resources>
