@@ -1,15 +1,25 @@
 package mx.grupohi.acarreos;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AutoCompleteTextView;
@@ -23,8 +33,12 @@ import org.json.JSONObject;
 
 import java.net.URL;
 
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.Manifest.permission.PACKAGE_USAGE_STATS;
+import static android.Manifest.permission.READ_PHONE_STATE;
+
 public class LoginActivity extends AppCompatActivity {
-    
+
     private UserLoginTask mAuthTask = null;
 
     // UI references.
@@ -36,6 +50,13 @@ public class LoginActivity extends AppCompatActivity {
     Intent mainActivity;
     Usuario usuario;
 
+    // GPSTracker class
+    GPSTracker gps;
+    double latitude;
+    double longitude;
+    public String IMEI;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mainActivity = new Intent(this, MainActivity.class);
@@ -46,7 +67,10 @@ public class LoginActivity extends AppCompatActivity {
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        
+        setTitle(getString(R.string.title_activity_login));
+
+        gps = new GPSTracker(LoginActivity.this);
+        checkPermissions();
         // Set up the login form.
         userText = (AutoCompleteTextView) findViewById(R.id.userText);
         passText = (EditText) findViewById(R.id.passText);
@@ -54,18 +78,66 @@ public class LoginActivity extends AppCompatActivity {
 
         db_sca = new DBScaSqlite(getApplicationContext(), "sca", null, 1);
 
-        Button loginButton = (Button) findViewById(R.id.loginButton);
+        final Button loginButton = (Button) findViewById(R.id.loginButton);
         assert loginButton != null;
         loginButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (Util.isNetworkStatusAvialable(getApplicationContext())) {
-                    attemptLogin();
-                } else {
-                    Toast.makeText(LoginActivity.this, R.string.error_internet, Toast.LENGTH_LONG).show();
+                gps = new GPSTracker(LoginActivity.this);
+                if(checkPermissions()) {
+                    latitude = gps.getLatitude();
+                    longitude = gps.getLongitude();
+                    TelephonyManager phneMgr = (TelephonyManager)getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+                    IMEI = phneMgr.getDeviceId();
+                    if(latitude + longitude == 0) {
+                        Snackbar snackbar;
+                        snackbar = Snackbar.make(view, "No se puede detectar la ubicación. ¡Espere un momento por favor e intentelo de nuevo!", Snackbar.LENGTH_SHORT);
+                        View snackBarView = snackbar.getView();
+                        snackBarView.setBackgroundColor(Color.RED);
+                        snackbar.show();
+                    } else {
+                        attemptLogin();
+                    }
                 }
             }
         });
+    }
+    private Boolean checkPermissions() {
+        Boolean permission_fine_location = true;
+        Boolean permission_read_phone_state = true;
+        Boolean _gps = true;
+        Boolean internet = true;
+
+        if(ContextCompat.checkSelfPermission(LoginActivity.this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(LoginActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
+            permission_fine_location = false;
+        }
+
+        if(ContextCompat.checkSelfPermission(LoginActivity.this, READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(LoginActivity.this, new String[]{Manifest.permission.READ_PHONE_STATE}, 100);
+            permission_read_phone_state =  false;
+        }
+
+        if(!gps.canGetLocation()) {
+            gps.showSettingsAlert();
+            _gps = false;
+        }
+
+        if(!Util.isNetworkStatusAvialable(getApplicationContext())) {
+            Toast.makeText(LoginActivity.this, R.string.error_internet, Toast.LENGTH_LONG).show();
+            internet = false;
+        }
+        return (permission_fine_location && permission_read_phone_state && _gps && internet);
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        gps = new GPSTracker(LoginActivity.this);
+        if(gps.canGetLocation()) {
+            this.latitude = gps.getLatitude();
+            this.longitude = gps.getLongitude();
+        }
     }
 
     @Override
@@ -326,6 +398,19 @@ public class LoginActivity extends AppCompatActivity {
                         if (!tag.create(data)) {
                             return false;
                         }
+                    }
+
+                    data.clear();
+                    data.put("IMEI", IMEI);
+                    data.put("idevento", 1);
+                    data.put("latitud", latitude);
+                    data.put("longitud", longitude);
+                    data.put("fecha_hora", Util.timeStamp());
+                    data.put("code", "");
+
+                    Coordenada coordenada = new Coordenada(getApplicationContext());
+                    if(!coordenada.create(data)) {
+                        return false;
                     }
                 }
             } catch (Exception e) {

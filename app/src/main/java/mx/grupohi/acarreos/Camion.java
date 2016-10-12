@@ -1,7 +1,9 @@
 package mx.grupohi.acarreos;
 
+import android.app.ActivityManager;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.renderscript.Double2;
@@ -12,15 +14,15 @@ import android.renderscript.Double2;
 
 class Camion {
 
-    private Integer idCamion;
-    private String placas;
-    private String marca;
-    private String modelo;
-    private Double ancho;
-    private Double largo;
-    private Double alto;
-    private String economico;
-    private Integer capacidad;
+    public Integer idCamion;
+    public String placas;
+    public String marca;
+    public String modelo;
+    public Double ancho;
+    public Double largo;
+    public Double alto;
+    public String economico;
+    public Integer capacidad;
 
     private Context context;
 
@@ -34,18 +36,25 @@ class Camion {
     }
 
     Boolean create(ContentValues data) {
-        Boolean result = db.insert("camiones", null, data) > -1;
-        if (result) {
-            this.idCamion = data.getAsInteger("idcamion");
-            this.placas = data.getAsString("placas");
-            this.marca = data.getAsString("marca");
-            this.modelo = data.getAsString("modelo");
-            this.ancho = data.getAsDouble("ancho");
-            this.largo = data.getAsDouble("largo");
-            this.alto = data.getAsDouble("alto");
-            this.economico = data.getAsString("economico");
-            this.capacidad = data.getAsInteger("capacidad");
+        return db.insert("camiones", null, data) > -1;
+    }
+
+    public Camion find(Integer idCamion) {
+        Cursor c = db.rawQuery("SELECT * FROM camiones WHERE idcamion = '" + idCamion + "'", null);
+        if(c != null && c.moveToFirst()) {
+            this.idCamion   = c.getInt(0);
+            this.placas     = c.getString(1);
+            this.marca      = c.getString(2);
+            this.modelo     = c.getString(3);
+            this.ancho      = c.getDouble(4);
+            this.largo      = c.getDouble(5);
+            this.alto       = c.getDouble(6);
+            this.economico  = c.getString(7);
+            this.capacidad  = c.getInt(8);
+
+            return this;
+        } else {
+            return null;
         }
-        return result;
     }
 }

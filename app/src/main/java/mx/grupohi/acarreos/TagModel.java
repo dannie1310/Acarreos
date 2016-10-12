@@ -2,6 +2,8 @@ package mx.grupohi.acarreos;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.IntentFilter;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 /**
@@ -10,13 +12,13 @@ import android.database.sqlite.SQLiteDatabase;
 
 class TagModel {
 
-    private String UID;
-    private Integer idCamion;
-    private Integer idProyecto;
+    public String UID;
+    public Integer idCamion;
+    public Integer idProyecto;
 
     private Context context;
 
-    private SQLiteDatabase db;
+    private static SQLiteDatabase db;
     private DBScaSqlite db_sca;
 
     TagModel(Context context) {
@@ -33,5 +35,17 @@ class TagModel {
             this.idProyecto = data.getAsInteger("idproyecto");
         }
         return result;
+    }
+
+    TagModel find(String UID, Integer idCamion, Integer idProyecto) {
+        Cursor c = db.rawQuery("SELECT * FROM tags WHERE uid = '" +  UID + "' AND idcamion = '" + idCamion + "' AND idproyecto = '" + idProyecto + "'", null);
+        if(c != null && c.moveToFirst()) {
+            this.idProyecto = c.getInt(c.getColumnIndex("idproyecto"));
+            this.idCamion = c.getInt(c.getColumnIndex("idcamion"));
+            this.UID = c.getString(c.getColumnIndex("uid"));
+            return this;
+        } else {
+            return null;
+        }
     }
 }

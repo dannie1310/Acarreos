@@ -229,7 +229,7 @@
                     
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/textViewLargo"
+                    android:id="@+id/textViewAlto"
                     android:textAppearance="@android:style/TextAppearance.Material.Caption"
                     android:textSize="11sp"
                     android:textAlignment="center" />
@@ -254,7 +254,7 @@
                     
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/textViewAlto"
+                    android:id="@+id/textViewLargo"
                     android:textAppearance="@android:style/TextAppearance.Material.Caption"
                     android:textSize="11sp"
                     android:textAlignment="center" />
@@ -397,7 +397,7 @@
     </LinearLayout>
 
     <Button
-        android:text="ACERQUE EL TAG PARA SER LEIDO"
+        android:text="CLICK AQUI PARA ESCRIBIR ORIGEN"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/ButtonAction"
@@ -405,5 +405,21 @@
         android:layout_below="@+id/LayoutOrigen"
         android:layout_alignParentStart="true" />
 
+    <TextView
+        android:text="Acerque el tag para ser leido"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@android:style/TextAppearance.Material.Display1"
+        android:textAlignment="center"
+        android:id="@+id/textInfoTag"
+        android:layout_below="@+id/nfc_background"
+        android:layout_alignParentStart="true" />
+
+    <ImageView android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:src="@drawable/nfc_back"
+        android:id="@+id/nfc_background"
+        app:srcCompat="@drawable/nfc_back"
+        android:layout_alignBottom="@+id/ButtonAction"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

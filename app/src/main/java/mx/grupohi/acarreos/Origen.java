@@ -2,6 +2,7 @@ package mx.grupohi.acarreos;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 /**
@@ -33,5 +34,18 @@ class Origen {
             this.estado = data.getAsInteger("estado");
         }
         return result;
+    }
+
+    Origen find(Integer idOrigen) {
+        Cursor c = db.rawQuery("SELECT * FROM origenes WHERE idorigen = '" + idOrigen + "'", null);
+        if(c != null && c.moveToFirst()) {
+            this.idOrigen = c.getInt(0);
+            this.descripcion = c.getString(1);
+            this.estado = c.getInt(2);
+
+            return this;
+        } else {
+            return null;
+        }
     }
 }
