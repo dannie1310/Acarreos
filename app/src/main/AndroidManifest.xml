@@ -27,11 +27,18 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SetOrigenActivity"
             android:label="@string/title_activity_set_origen"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SuccessOrigen"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_success_origen"
+            android:theme="@style/FullscreenTheme"></activity>
     </application>
 
 </manifest>

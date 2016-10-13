@@ -26,6 +26,7 @@
     <string name="error_update_tag">¡Error! Hubo un problema al registrar los cambios en la base de datos</string>
     <string name="error_tag_capacidad_almacenamiento">¡Error! La información excede la capacidad de almacenamiento</string>
     <string name="tag_configurado">TAG configurado correctamente</string>
+    <string name="origen_configurado">Origen escrito correctamente en el TAG</string>
     <string name="error_conexion_tag">Error de conexion</string>
     <string name="error_no_nfc">Su dispositivo no posee lector NFC. No se puede ejecutar esta aplicación.</string>
     <string name="text_warning_nfc_is_off">¡NFC Está apagado!</string>
@@ -33,5 +34,9 @@
     <string name="text_update_settings">Encender Ahora</string>
 
     <string name="action_settings">Settings</string>
+
+    <string name="title_activity_success_origen">SuccessOrigen</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 
 </resources>

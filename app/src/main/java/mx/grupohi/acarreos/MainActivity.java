@@ -4,16 +4,13 @@ import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.graphics.Color;
+import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
-import android.nfc.tech.NfcA;
 import android.os.Bundle;
-import android.support.annotation.RequiresPermission;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.view.ViewCompat;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -38,7 +35,7 @@ public class MainActivity extends AppCompatActivity
     private PendingIntent pendingIntent;
     private IntentFilter writeTagFilters[];
     private Snackbar snackbar;
-
+    private String UID;
     private Intent setOrigenActivity;
 
 
@@ -58,6 +55,8 @@ public class MainActivity extends AppCompatActivity
     private TextView tLargo;
     private TextView tCapacidad;
 
+    private Boolean writeMode;
+
     Usuario usuario;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +65,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         setTitle(getString(R.string.title_activity_main));
         usuario = new Usuario(this);
-
+        writeMode = true;
         infoLayout = (LinearLayout) findViewById(R.id.LayoutInfo);
         origenLayout = (LinearLayout) findViewById(R.id.LayoutOrigen);
         actionButton = (Button) findViewById(R.id.ButtonAction);
@@ -116,6 +115,7 @@ public class MainActivity extends AppCompatActivity
     protected void onPostResume() {
         super.onPostResume();
         WriteModeOn();
+        checkNfcEnabled();
     }
 
     @Override
@@ -144,6 +144,7 @@ public class MainActivity extends AppCompatActivity
             if(snackbar != null && snackbar.isShown()) snackbar.dismiss();
             final Tag myTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
             nfc = new NFCTag(myTag, this);
+            UID = nfc.idTag(myTag);
 
             TagModel tagModel = new TagModel(getApplicationContext());
             Origen origen = new Origen(getApplicationContext());
@@ -153,17 +154,16 @@ public class MainActivity extends AppCompatActivity
             final Integer tagCamion = Util.getIdCamion(tagString);
             Integer tagProyecto = Util.getIdProyecto(tagString);
 
-            tagModel = tagModel.find(nfc.idTag(myTag), tagCamion, tagProyecto);
+            tagModel = tagModel.find(UID, tagCamion, tagProyecto);
 
             if(tagModel != null) {
                 Camion camion = new Camion(getApplicationContext());
                 camion = camion.find(tagModel.idCamion);
                 setCamionInfo(camion);
-                final Camion finalCamion = camion;
                 actionButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        setOrigenActivity.putExtra("UID", nfc.idTag(myTag));
+                        setOrigenActivity.putExtra("UID", UID);
                         startActivity(setOrigenActivity);
                     }
                 });

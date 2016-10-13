@@ -68,7 +68,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         setTitle(getString(R.string.title_activity_login));
-
         gps = new GPSTracker(LoginActivity.this);
         checkPermissions();
         // Set up the login form.
@@ -83,12 +82,12 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                gps = new GPSTracker(LoginActivity.this);
                 if(checkPermissions()) {
                     latitude = gps.getLatitude();
                     longitude = gps.getLongitude();
                     TelephonyManager phneMgr = (TelephonyManager)getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
                     IMEI = phneMgr.getDeviceId();
+                    attemptLogin();
                     /* if(latitude + longitude == 0) {
                         Snackbar snackbar;
                         snackbar = Snackbar.make(view, "No se puede detectar la ubicación. ¡Espere un momento por favor e intentelo de nuevo!", Snackbar.LENGTH_SHORT);
@@ -128,16 +127,6 @@ public class LoginActivity extends AppCompatActivity {
             internet = false;
         }
         return (permission_fine_location && permission_read_phone_state && _gps && internet);
-    }
-
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        gps = new GPSTracker(LoginActivity.this);
-        if(gps.canGetLocation()) {
-            this.latitude = gps.getLatitude();
-            this.longitude = gps.getLongitude();
-        }
     }
 
     @Override

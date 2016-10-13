@@ -312,7 +312,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/textViewOrigen"
                     android:textAppearance="@android:style/TextAppearance.Material.Caption"
-                    
+
                     android:textAlignment="center" />
             </LinearLayout>
 
@@ -335,7 +335,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="@android:style/TextAppearance.Material.Caption"
                     android:id="@+id/textViewMaterial"
-                    
+
                     android:textAlignment="center" />
             </LinearLayout>
         </LinearLayout>
@@ -365,7 +365,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/textViewFecha"
                     android:textAppearance="@android:style/TextAppearance.Material.Caption"
-                    
+
                     android:textAlignment="center" />
             </LinearLayout>
 
@@ -387,7 +387,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/textView"
                     android:textAppearance="@android:style/TextAppearance.Material.Caption"
-                    
+
                     android:textAlignment="center" />
             </LinearLayout>
 
@@ -406,20 +406,23 @@
         android:layout_alignParentStart="true" />
 
     <TextView
-        android:text="Acerque el tag para ser leido"
-        android:layout_width="wrap_content"
+        android:text="ACERQUE EL TAG PARA SER LEIDO"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="@android:style/TextAppearance.Material.Display1"
-        android:textAlignment="center"
+        android:textAppearance="@android:style/TextAppearance.Material.Widget.TextView.SpinnerItem"
         android:id="@+id/textInfoTag"
-        android:layout_below="@+id/nfc_background"
-        android:layout_alignParentStart="true" />
+        android:textAlignment="center"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true" />
 
-    <ImageView android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:src="@drawable/nfc_back"
+    <ImageView
+        android:src="@drawable/nfc_back"
         android:id="@+id/nfc_background"
         app:srcCompat="@drawable/nfc_back"
-        android:layout_alignBottom="@+id/ButtonAction"
-        android:layout_centerHorizontal="true" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/textInfoTag"
+        android:layout_above="@+id/ButtonAction" />
 
 </RelativeLayout>

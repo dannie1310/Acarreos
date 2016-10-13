@@ -83,4 +83,16 @@ class Util {
             return null;
         }
     }
+
+    static String concatenar(String id, String id1){
+        String aux = id;
+        String aux1 = id1;
+        for(int i = id.length(); i < 4; i++){
+            aux = 0 + aux;
+        }
+        for(int i = id1.length(); i < 4; i++){
+            aux1 = 0 + aux1;
+        }
+        return aux + aux1;
+    }
 }
