@@ -89,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
                     longitude = gps.getLongitude();
                     TelephonyManager phneMgr = (TelephonyManager)getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
                     IMEI = phneMgr.getDeviceId();
-                    if(latitude + longitude == 0) {
+                    /* if(latitude + longitude == 0) {
                         Snackbar snackbar;
                         snackbar = Snackbar.make(view, "No se puede detectar la ubicación. ¡Espere un momento por favor e intentelo de nuevo!", Snackbar.LENGTH_SHORT);
                         View snackBarView = snackbar.getView();
@@ -97,7 +97,7 @@ public class LoginActivity extends AppCompatActivity {
                         snackbar.show();
                     } else {
                         attemptLogin();
-                    }
+                    }*/
                 }
             }
         });

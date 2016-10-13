@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,25 +15,41 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class SetOrigenActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private Usuario usuario;
+    private Material material;
+    private Origen origen;
+
+    private Integer idMaterial;
+    private Integer idOrigen;
+
 
     //Referencias UI
-    private Spinner materialesSpinner;
+    Spinner materialesSpinner;
     private Spinner origenesSpinner;
+    private Button escribirOrigenButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_origen);
+        escribirOrigenButton = (Button) findViewById(R.id.buttonEscribirOrigen);
+        escribirOrigenButton.setEnabled(false);
 
         usuario = new Usuario(this);
+        material = new Material(this);
+        origen = new Origen(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -48,12 +65,72 @@ public class SetOrigenActivity extends AppCompatActivity
 
         materialesSpinner = (Spinner) findViewById(R.id.spinnerMateriales);
         origenesSpinner = (Spinner) findViewById(R.id.spinnerOrigenes);
-        ArrayAdapter<ContentValues> arrayAdapter = new ArrayAdapter<ContentValues>(this, R.layout.support_simple_spinner_dropdown_item);
-        ContentValues data = new ContentValues();
-        data.put("HOLA", "MUNDO");
-        data.put("HELLO", "world");
-        arrayAdapter.add(data);
-        materialesSpinner.setAdapter(arrayAdapter);
+
+        final ArrayList<String> descripcionesMateriales = material.getArrayListDescripciones();
+        final ArrayList <String> idsMateriales = material.getArrayListId();
+
+        final String[] spinnerMaterialesArray = new String[idsMateriales.size()];
+        final HashMap<String, String> spinnerMaterialesMap = new HashMap<>();
+
+        for (int i = 0; i < idsMateriales.size(); i++) {
+            spinnerMaterialesMap.put(descripcionesMateriales.get(i), idsMateriales.get(i));
+            spinnerMaterialesArray[i] = descripcionesMateriales.get(i);
+        }
+
+        final ArrayAdapter<String> arrayAdapterMateriales = new ArrayAdapter<>(this,R.layout.support_simple_spinner_dropdown_item, spinnerMaterialesArray);
+        arrayAdapterMateriales.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        materialesSpinner.setAdapter(arrayAdapterMateriales);
+
+        materialesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String descripcion = materialesSpinner.getSelectedItem().toString();
+                idMaterial = Integer.valueOf(spinnerMaterialesMap.get(descripcion));
+                if (idMaterial != 0 && idOrigen != 0) {
+                    escribirOrigenButton.setEnabled(true);
+                } else {
+                    escribirOrigenButton.setEnabled(false);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        final ArrayList<String> descripcionesOrigenes = origen.getArrayListDescripciones();
+        final ArrayList <String> idsOrigenes = origen.getArrayListId();
+
+        final String[] spinnerOrigenesArray = new String[idsOrigenes.size()];
+        final HashMap<String, String> spinnerOrigenesMap = new HashMap<>();
+
+        for (int i = 0; i < idsOrigenes.size(); i++) {
+            spinnerOrigenesMap.put(descripcionesOrigenes.get(i), idsOrigenes.get(i));
+            spinnerOrigenesArray[i] = descripcionesOrigenes.get(i);
+        }
+
+        final ArrayAdapter<String> arrayAdapterOrigenes = new ArrayAdapter<>(this,R.layout.support_simple_spinner_dropdown_item, spinnerOrigenesArray);
+        arrayAdapterOrigenes.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        origenesSpinner.setAdapter(arrayAdapterOrigenes);
+
+        origenesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String descripcion = origenesSpinner.getSelectedItem().toString();
+                idOrigen = Integer.valueOf(spinnerOrigenesMap.get(descripcion));
+                if (idMaterial != 0 && idOrigen != 0) {
+                    escribirOrigenButton.setEnabled(true);
+                } else {
+                    escribirOrigenButton.setEnabled(false);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     @Override
