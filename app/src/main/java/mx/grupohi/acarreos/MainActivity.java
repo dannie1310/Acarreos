@@ -28,8 +28,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.TreeMap;
-
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -167,9 +165,9 @@ public class MainActivity extends AppCompatActivity
             Origen origen = new Origen(getApplicationContext());
             Material material = new Material(getApplicationContext());
 
-            String tagString = nfc.readSector(myTag, 0);
-
             Integer tagCamion = Util.getIdCamion(tagString);
+            String tagString = nfc.readSector(myTag, 0,1);
+            final Integer tagCamion = Util.getIdCamion(tagString);
             Integer tagProyecto = Util.getIdProyecto(tagString);
             tagModel = tagModel.find(UID, tagCamion, tagProyecto);
 
