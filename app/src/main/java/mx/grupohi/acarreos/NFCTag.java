@@ -3,10 +3,16 @@ package mx.grupohi.acarreos;
 import android.content.Context;
 import android.nfc.Tag;
 import android.nfc.tech.MifareClassic;
+import android.renderscript.Element;
 import android.util.Log;
 import android.widget.Toast;
 
+
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+
+import static java.nio.charset.StandardCharsets.US_ASCII;
 
 /**
  * Created by Usuario on 29/09/2016.
@@ -16,16 +22,18 @@ public class NFCTag {
 
     private Tag NFCTag;
     Context context;
+    private byte[] ky= hexStringToByteArray("773A7DB80405FF078069773A7DB80405");
+    private byte[] kyUID= hexStringToByteArray("773A7DB80405FF05A069773A7DB80405");
+    private byte[] pw= hexStringToByteArray("773A7DB80405");
+    private byte[] def= hexStringToByteArray("FFFFFFFFFFFFFF078069FFFFFFFFFFFF");
 
     public NFCTag(Tag NFCTag, Context context) {
-        this.context = context;
+        this.context=context;
         this.NFCTag = NFCTag;
     }
 
-    void write(String text, Tag tag) {
-
+    void write(String text, Tag tag){
         MifareClassic mfc = MifareClassic.get(tag);
-
         try {
             mfc.connect();
             int x = 0;
@@ -40,12 +48,10 @@ public class NFCTag {
             if (value.length <= 752) {
                 while (x != value.length) {
                     if (y < 16) {
-                        auth = mfc.authenticateSectorWithKeyA(y, MifareClassic.KEY_DEFAULT);
+                        auth = mfc.authenticateSectorWithKeyA(y, pw);
                         if (auth) {
                             byte[] toWrite = new byte[MifareClassic.BLOCK_SIZE];
-
                             for (block = 0; block < auxBlock; block++) {
-
                                 for (iw = 0; iw < MifareClassic.BLOCK_SIZE; iw++) {
                                     if (x < value.length) {
                                         toWrite[iw] = value[x];
@@ -68,75 +74,67 @@ public class NFCTag {
                         y = y + 1;
                     }
                 }
-
                 Toast.makeText(context, context.getString(R.string.tag_configurado), Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(context, context.getString(R.string.error_tag_capacidad_almacenamiento), Toast.LENGTH_LONG).show();
             }
             mfc.close();
-
-
         } catch (Exception fe) {
             Toast.makeText(context, context.getString(R.string.error_tag_comunicacion), Toast.LENGTH_LONG).show();
             fe.printStackTrace();
         }
     }
 
-    boolean writeID(Tag tag, int sector, int bloque, String mensaje) {
-
+    boolean writeID(Tag tag, int sector, String mensaje){
         MifareClassic mfc = MifareClassic.get(tag);
-
+        int bloque = mfc.sectorToBlock(sector);
+        int x=0;
+        int auxBloque=0;
         try {
             mfc.connect();
             boolean auth = false;
-            byte[] value = mensaje.getBytes();
-            auth = mfc.authenticateSectorWithKeyA(sector, MifareClassic.KEY_DEFAULT);
+            byte[] value =  mensaje.getBytes();
+            auth = mfc.authenticateSectorWithKeyA(sector, pw);
             if (auth) {
-
-                byte[] toWrite = new byte[MifareClassic.BLOCK_SIZE];
-
-                for (int iw = 0; iw < MifareClassic.BLOCK_SIZE; iw++) {
-                    if (iw < value.length) {
-                        toWrite[iw] = value[iw];
-                    } else {
-                        toWrite[iw] = 0;
+                while (x != value.length) {
+                    byte[] toWrite = new byte[MifareClassic.BLOCK_SIZE];
+                    for (int iw = 0; iw < MifareClassic.BLOCK_SIZE; iw++) {
+                        if (x < value.length) {
+                            toWrite[iw] = value[x];
+                            x++;
+                        } else {
+                            toWrite[iw] = 0;
+                        }
                     }
-
-                    mfc.writeBlock(bloque, toWrite);
+                    mfc.writeBlock(bloque + auxBloque, toWrite);
+                    auxBloque += 1;
+                    toWrite = new byte[MifareClassic.BLOCK_SIZE];
                 }
             }
             mfc.close();
             return true;
-
         } catch (Exception fe) {
             fe.printStackTrace();
             return false;
         }
     }
 
-    String concatenar(String idCamion, String idProyecto) {
-
-
-        String resultado = "";
-        String aux = idCamion;
-        String aux1 = idProyecto;
-        for (int i = idCamion.length(); i < 4; i++) {
-            aux = 0 + aux;
+    String concatenar(String idCamion, String idProyecto){
+        String resultado="";
+        String aux =idCamion;
+        String aux1=idProyecto;
+        for(int i=idCamion.length(); i<4;i++){
+            aux= 0 + aux;
         }
-
-        for (int i = idProyecto.length(); i < 4; i++) {
-            aux1 = 0 + aux1;
+        for(int i=idProyecto.length(); i<4;i++){
+            aux1= 0 + aux1;
         }
-
-        resultado = aux + aux1;
-        Log.i("respuesta", resultado);
+        resultado= aux+aux1;
         return resultado;
-
     }
 
-    String read(Tag tag) {
+    String read(Tag tag) {// Leer toda la informacion de la tag
         int y = 0;
-        int j = 1;
         int z = 1;
         byte[] toRead = null;
         int block;
@@ -147,8 +145,7 @@ public class NFCTag {
             mf.connect();
             boolean auth = false;
             for (y = 0; y < 16; y++) {
-                //System.out.println("Sector "+ y);
-                auth = mf.authenticateSectorWithKeyA(y, MifareClassic.KEY_DEFAULT);
+                auth = mf.authenticateSectorWithKeyA(y, pw);
                 if (auth) {
                     for (block = 0; block < auxBlock; block++) {
                         toRead = mf.readBlock(block + z);
@@ -162,7 +159,6 @@ public class NFCTag {
                                 }
                             }
                             String s = new String(limpio);
-                            //System.out.println("Mensaje tag:  " + s);
                             aux += s;
                         }
                     }
@@ -176,50 +172,33 @@ public class NFCTag {
             }
             mf.close();
         } catch (Exception e) {
-
             e.printStackTrace();
             return context.getString(R.string.error_conexion_tag);
         }
-        // System.out.println("Mensaje tag:  " + aux);
         return aux;
     }
 
-    public String readSector(Tag tag, int sector) {
-
-        int z = 1;
-        byte[] toRead = null;
-        int block;
-        int auxBlock;
-
-        if (sector == 0) {
-            auxBlock = 2;
-        } else {
-            auxBlock = 3;
-            z = sector * 4;
-
-        }
-        String aux = "";
+    String readSector (Tag tag, int sector, int bloque) { //Leer solo un sector y bloque especifico
+        byte[] toRead=null;
+        String aux="";
         MifareClassic mf = MifareClassic.get(tag);
         try {
             mf.connect();
             boolean auth = false;
-
-            auth = mf.authenticateSectorWithKeyA(sector, MifareClassic.KEY_DEFAULT);
+            auth = mf.authenticateSectorWithKeyA(sector, pw);
             if (auth) {
-                for (block = 0; block < auxBlock; block++) {
-                    toRead = mf.readBlock(block + z);
-                    if (toRead != null) {
-                        byte[] limpio = new byte[toRead.length];
-                        for (int i = 0; i < toRead.length; i++) {
-                            if (toRead[i] != 0) {
-                                limpio[i] += toRead[i];
-                            } else {
-                                limpio[i] += ' ';
-                            }
+                toRead = mf.readBlock(bloque);
+                byte[] limpio=new byte[toRead.length];
+                if (toRead != null) {
+                    for (int i = 0; i < toRead.length; i++) {
+                        if (toRead[i] != 0) {
+                            limpio[i] += toRead[i];
+                        } else {
+                            limpio[i] += ' ';
                         }
-                        String s = new String(limpio);
-                        aux += s;
                     }
+                    String s= new String(limpio);
+                    aux += s;
                 }
             }
             mf.close();
@@ -227,12 +206,10 @@ public class NFCTag {
             e.printStackTrace();
             return context.getString(R.string.error_conexion_tag);
         }
-        // System.out.println("Mensaje tag:  " + aux);
-        return aux;
+        return  aux;
     }
 
-    void clean(Tag tag) {
-
+    void clean(Tag tag){
         MifareClassic mfc = MifareClassic.get(tag);
         try {
             mfc.connect();
@@ -243,9 +220,8 @@ public class NFCTag {
             int block;
             int auxBlock = 2;
             boolean auth = false;
-
-            for (y = 0; y < 16; y++) {
-                auth = mfc.authenticateSectorWithKeyA(y, MifareClassic.KEY_DEFAULT);
+            for (y=0; y < 16; y++) {
+                auth = mfc.authenticateSectorWithKeyA(y, pw);
                 if (auth) {
                     byte[] toWrite = new byte[MifareClassic.BLOCK_SIZE];
 
@@ -273,36 +249,132 @@ public class NFCTag {
         }
     }
 
-    String idTag(Tag tag) {
-
-        byte[] toRead = null;
-        byte[] send = new byte[4];
-        String aux = "";
+    String idTag(Tag tag){
+        byte[] toRead=null;
+        byte[] send= new byte[4];
+        String aux="";
         MifareClassic mf = MifareClassic.get(tag);
         try {
             mf.connect();
             boolean auth = false;
-
-            auth = mf.authenticateSectorWithKeyA(0, MifareClassic.KEY_DEFAULT);
-            if (auth) {
+            auth = mf.authenticateSectorWithKeyA(0, pw);
+            if (auth==true) {
                 toRead = mf.readBlock(0);
-                System.out.println(toRead.toString());
-                for (int i = 0; i < 4; i++) {
-                    // System.out.println("id: "+ i + " num: " + toRead[i]);
-                    send[i] = toRead[i];
+                for(int i=0; i<4; i++) {
+                    send[i]=toRead[i];
                 }
-                aux = byteArrayToHexString(send);
+                aux=byteArrayToHexString(send);
+            }
+            else {
+                aux="";
+                auth = mf.authenticateSectorWithKeyA(0, MifareClassic.KEY_DEFAULT);
+                if (auth) {
+                    toRead = mf.readBlock(0);
+                    for (int i = 0; i < 4; i++) {
+                        send[i] = toRead[i];
+                    }
+                    aux = byteArrayToHexString(send);
+                }
             }
             mf.close();
         } catch (Exception e) {
             e.printStackTrace();
             return context.getString(R.string.error_conexion_tag);
         }
-        //System.out.println("Mensaje tag:  " + aux);
-        return aux;
+        System.out.println("idTag "+aux);
+        return  aux;
     }
 
-    public static String byteArrayToHexString(byte[] byteArray) {
-        return String.format("%0" + (byteArray.length * 2) + "X", new BigInteger(1, byteArray));
+    public static String byteArrayToHexString(byte[] byteArray){
+        return String.format("%0" + (byteArray.length * 2) + "X", new BigInteger(1,byteArray));
     }
+
+    public static byte[] hexStringToByteArray(String s) {
+        int len = s.length();
+        byte[] data = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4) + Character.digit(s.charAt(i+1), 16));
+        }
+        return data;
+    }
+    boolean changeKey(Tag tag) {
+        MifareClassic mf = MifareClassic.get(tag);
+        int y=0;
+        try {
+            mf.connect();
+            boolean auth = false;
+            for (y=0; y < 16; y++) {
+                auth = mf.authenticateSectorWithKeyA(y, MifareClassic.KEY_DEFAULT);
+                int bloque= mf.sectorToBlock(y);
+                if (auth) {
+                    if(y==0){
+                        mf.writeBlock(bloque + 3, kyUID);
+                    }
+                    else{
+                        mf.writeBlock(bloque + 3, ky);
+                    }
+                }
+            }
+            mf.close();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    boolean writeSector(Tag tag, int sector, int bloque, String mensaje, int tipo){
+        MifareClassic mfc = MifareClassic.get(tag);
+        int bq=mfc.sectorToBlock(sector);
+        bq=bq+3;
+        if(bloque== bq){
+            return false;
+        }
+        int x=0;
+        try {
+            mfc.connect();
+            boolean auth = false;
+            byte[] value =  mensaje.getBytes();
+            if(tipo==0){ //Escribir UID
+                auth = mfc.authenticateSectorWithKeyA(sector, MifareClassic.KEY_DEFAULT);
+            }
+            else{
+                auth = mfc.authenticateSectorWithKeyA(sector, pw);
+            }
+            if (auth) {
+                byte[] toWrite = new byte[MifareClassic.BLOCK_SIZE];
+                for (int iw = 0; iw < MifareClassic.BLOCK_SIZE; iw++) {
+                    if (x < value.length) {
+                        toWrite[iw] = value[x];
+                        x++;
+                    } else {
+                        toWrite[iw] = 0;
+                    }
+                }
+                mfc.writeBlock(bloque, toWrite);
+            }
+            mfc.close();
+            return true;
+        } catch (Exception fe) {
+            fe.printStackTrace();
+            return false;
+        }
+    }
+
+    void formatear(Tag tag, int sector) {
+        MifareClassic mf = MifareClassic.get(tag);
+        int bloque= mf.sectorToBlock(sector);
+        try {
+            mf.connect();
+            boolean auth = false;
+            auth = mf.authenticateSectorWithKeyA(sector,pw);
+            if (auth) {
+                mf.writeBlock(bloque + 3,def);
+            }
+            mf.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

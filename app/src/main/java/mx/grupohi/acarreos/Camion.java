@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.renderscript.Double2;
+import android.util.Log;
 
 /**
  * Creado por JFEsquivel on 07/10/2016.
@@ -36,6 +37,7 @@ class Camion {
     }
 
     Boolean create(ContentValues data) {
+        Log.i("JSON", data.toString());
         return db.insert("camiones", null, data) > -1;
     }
 

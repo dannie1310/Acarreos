@@ -149,12 +149,11 @@ public class MainActivity extends AppCompatActivity
             Origen origen = new Origen(getApplicationContext());
 
 
-            String tagString = nfc.readSector(myTag, 0);
+            String tagString = nfc.readSector(myTag, 0,1);
             final Integer tagCamion = Util.getIdCamion(tagString);
             Integer tagProyecto = Util.getIdProyecto(tagString);
 
             tagModel = tagModel.find(nfc.idTag(myTag), tagCamion, tagProyecto);
-
             if(tagModel != null) {
                 Camion camion = new Camion(getApplicationContext());
                 camion = camion.find(tagModel.idCamion);

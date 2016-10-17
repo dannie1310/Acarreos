@@ -98,6 +98,7 @@ public class LoginActivity extends AppCompatActivity {
                     } else {
                         attemptLogin();
                     }*/
+                    attemptLogin();
                 }
             }
         });
