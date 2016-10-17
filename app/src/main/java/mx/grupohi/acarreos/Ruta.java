@@ -2,7 +2,11 @@ package mx.grupohi.acarreos;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+
+import java.util.ArrayList;
 
 /**
  * Creado por JFEsquivel on 07/10/2016.
@@ -38,5 +42,39 @@ class Ruta {
             this.totalKm = data.getAsInteger("totalkm");
         }
         return result;
+    }
+
+    ArrayList<String> getArrayListDescripciones(Integer idOrigen, Integer idTiro) {
+        ArrayList<String> data = new ArrayList<>();
+        Cursor c = db.rawQuery("SELECT * FROM rutas WHERE idorigen = '" + idOrigen + "' AND idtiro = '" + idTiro + "' ORDER BY clave ASC", null);
+        if (c != null && c.moveToFirst())
+            try {
+                data.add("-- Seleccione --");
+                data.add(c.getString(1) + " - " + c.getString(0) + " " + c.getString(4) + " KM");
+                while (c.moveToNext()) {
+                    data.add(c.getString(1) + " - " + c.getString(0) + " " + c.getString(4) + " KM");
+                }
+            } finally {
+                c.close();
+            }
+        return data;
+    }
+
+    ArrayList<String> getArrayListId(Integer idOrigen, Integer idTiro) {
+        Log.i("IDORIGEN", String.valueOf(idOrigen));
+        Log.i("IDTIRO", String.valueOf(idTiro));
+        ArrayList<String> data = new ArrayList<>();
+        Cursor c = db.rawQuery("SELECT * FROM rutas WHERE idorigen = '" + idOrigen + "' AND idtiro = '" + idTiro + "' ORDER BY clave ASC", null);
+        if (c != null && c.moveToFirst())
+            try {
+                data.add("0");
+                data.add(c.getString(c.getColumnIndex("idruta")));
+                while (c.moveToNext()) {
+                    data.add(c.getString(c.getColumnIndex("idruta")));
+                }
+            } finally {
+                c.close();
+            }
+        return data;
     }
 }

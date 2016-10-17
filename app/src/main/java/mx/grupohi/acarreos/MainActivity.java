@@ -28,6 +28,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -38,6 +42,7 @@ public class MainActivity extends AppCompatActivity
     private IntentFilter writeTagFilters[];
     private Snackbar snackbar;
     private String UID;
+    private Integer idOrigen;
     private Intent setOrigenActivity;
     private Intent setDestinoActivity;
 
@@ -66,6 +71,7 @@ public class MainActivity extends AppCompatActivity
     private Boolean writeMode;
 
     Usuario usuario;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setOrigenActivity = new Intent(this, SetOrigenActivity.class);
@@ -156,7 +162,8 @@ public class MainActivity extends AppCompatActivity
     protected void onNewIntent(Intent intent) {
         if (nfc_adapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
             clearCamionInfo();
-            if(snackbar != null && snackbar.isShown()) snackbar.dismiss();
+            clearOrigenInfo();
+            if (snackbar != null && snackbar.isShown()) snackbar.dismiss();
             final Tag myTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
             nfc = new NFCTag(myTag, this);
             UID = nfc.idTag(myTag);
@@ -165,35 +172,35 @@ public class MainActivity extends AppCompatActivity
             Origen origen = new Origen(getApplicationContext());
             Material material = new Material(getApplicationContext());
 
+            String tagString = nfc.readSector(myTag, 0, 1);
+
             Integer tagCamion = Util.getIdCamion(tagString);
-            String tagString = nfc.readSector(myTag, 0,1);
-            final Integer tagCamion = Util.getIdCamion(tagString);
             Integer tagProyecto = Util.getIdProyecto(tagString);
             tagModel = tagModel.find(UID, tagCamion, tagProyecto);
 
-            String origenString = nfc.readSector(myTag, 1);
-            String fechaString = nfc.readSector(myTag, 1).substring(16,32);
+            String origenString = nfc.readSector(myTag, 1, 4);
 
-            Log.i("ORIREN Y MATERIAL", origenString);
-            Log.i("FECHA Y HORA", fechaString);
-
-            Integer tagMaterial = Util.getIdMaterial(origenString);
             Integer tagOrigen = Util.getIdOrigen(origenString);
-
+            Integer tagMaterial = Util.getIdMaterial(origenString);
             origen = origen.find(tagOrigen);
             material = material.find(tagMaterial);
 
-            if(tagModel != null) {
+
+            String fechaString = nfc.readSector(myTag, 1, 5);
+
+            if (tagModel != null) {
                 Camion camion = new Camion(getApplicationContext());
                 camion = camion.find(tagModel.idCamion);
                 setCamionInfo(camion);
-                if(origen != null && material != null) {
+                setTitle("INFORMACIÓN DEL TAG");
+                if (origen != null && material != null) {
                     setOrigenInfo(origen, material, fechaString);
-                    actionButton.setText("CLICK AQUI PARA ESCRIBIR DESTINO");
+                    idOrigen = origen.idOrigen;
                     actionButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             setDestinoActivity.putExtra("UID", UID);
+                            setDestinoActivity.putExtra("idOrigen", idOrigen);
                             startActivity(setDestinoActivity);
                         }
                     });
@@ -212,7 +219,7 @@ public class MainActivity extends AppCompatActivity
                 snackBarView.setBackgroundColor(Color.RED);
                 snackbar.show();
             }
-        } else if(nfc_adapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
+        } else if (nfc_adapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
             Toast.makeText(getApplicationContext(), "El TAG que intentas utilizar no es compatible", Toast.LENGTH_SHORT).show();
         }
     }
@@ -280,12 +287,34 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void setOrigenInfo(Origen origen, Material material, String fechaHora) {
-        origenLayout.setVisibility(View.VISIBLE);
 
+        origenLayout.setVisibility(View.VISIBLE);
         tOrigen.setText(origen.descripcion);
         tMaterial.setText(material.descripcion);
-        tFecha.setText(fechaHora.substring(6,14));
-        tHora.setText(fechaHora.substring(0,6));
+
+        SimpleDateFormat format = new SimpleDateFormat("HHmmssyyyyMMdd");
+        try {
+            Date date = format.parse(fechaHora);
+            SimpleDateFormat fechaFormat = new SimpleDateFormat("yyyy/MM/dd");
+            SimpleDateFormat horaFormat = new SimpleDateFormat("HH:mm:ss");
+
+            String fecha = fechaFormat.format(date);
+            String hora = horaFormat.format(date);
+            tFecha.setText(fecha);
+            tHora.setText(hora);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        actionButton.setText("CLICK AQUI PARA ESCRIBIR EL DESTINO");
+    }
+
+    private void clearOrigenInfo() {
+        origenLayout.setVisibility(View.GONE);
+        tOrigen.setText("");
+        tMaterial.setText("");
+        tFecha.setText("");
+        tHora.setText("");
     }
 
     @Override
@@ -310,16 +339,13 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
         } else if (id == R.id.nav_sync) {
-            Toast.makeText(this, getString(R.string.msg_sincronizacion_correcta), Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_list) {
-            //Intent lista_viajes_activity = new Intent(this, ListaViajesActivity.class);
-            //startActivity(lista_viajes_activity);
         } else if (id == R.id.nav_pair_on) {
-
         } else if (id == R.id.nav_pair_off) {
-
         } else if (id == R.id.nav_logout) {
             Intent login_activity = new Intent(this, LoginActivity.class);
             usuario.destroy();

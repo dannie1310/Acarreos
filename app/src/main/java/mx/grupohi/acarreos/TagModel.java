@@ -38,7 +38,7 @@ class TagModel {
     }
 
     TagModel find(String UID, Integer idCamion, Integer idProyecto) {
-        Cursor c = db.rawQuery("SELECT * FROM tags WHERE uid = '" +  UID + "' AND idcamion = '" + idCamion + "' AND idproyecto = '" + idProyecto + "'", null);
+        Cursor c = db.rawQuery("SELECT * FROM tags WHERE uid = '" +  UID + "' AND idcamion = '" + idCamion + "'", null);
         if(c != null && c.moveToFirst()) {
             this.idProyecto = c.getInt(c.getColumnIndex("idproyecto"));
             this.idCamion = c.getInt(c.getColumnIndex("idcamion"));

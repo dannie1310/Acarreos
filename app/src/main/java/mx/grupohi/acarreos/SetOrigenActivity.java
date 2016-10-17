@@ -7,16 +7,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
-import android.media.ImageWriter;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.os.Bundle;
-import android.support.annotation.RequiresPermission;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.telephony.TelephonyManager;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -29,7 +25,6 @@ import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -223,7 +218,7 @@ public class SetOrigenActivity extends AppCompatActivity
 
                     String dataTime = Util.getFechaHora();
 
-                    if (nfcTag.writeID(myTag, 1, 4, data) && nfcTag.writeID(myTag, 1, 5, dataTime)) {
+                    if (nfcTag.writeSector(myTag, 1, 4, data, 1) && nfcTag.writeSector(myTag, 1, 5, dataTime, 1)) {
                         ContentValues cv = new ContentValues();
                         cv.put("IMEI", IMEI);
                         cv.put("idevento", 2);
@@ -329,14 +324,9 @@ public class SetOrigenActivity extends AppCompatActivity
             Intent mainActivity = new Intent(this, MainActivity.class);
             startActivity(mainActivity);
         } else if (id == R.id.nav_sync) {
-            Toast.makeText(this, getString(R.string.msg_sincronizacion_correcta), Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_list) {
-            //Intent lista_viajes_activity = new Intent(this, ListaViajesActivity.class);
-            //startActivity(lista_viajes_activity);
         } else if (id == R.id.nav_pair_on) {
-
         } else if (id == R.id.nav_pair_off) {
-
         } else if (id == R.id.nav_logout) {
             Intent login_activity = new Intent(this, LoginActivity.class);
             usuario.destroy();
