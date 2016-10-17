@@ -13,8 +13,8 @@ import java.util.ArrayList;
 
 class Material {
 
-    private Integer idMaterial;
-    private String descripcion;
+    public Integer idMaterial;
+    public String descripcion;
 
     private Context context;
 
@@ -36,8 +36,8 @@ class Material {
         return result;
     }
 
-    Material find(String descripcion) {
-        Cursor c = db.rawQuery("SELECT * FROM materiales WHERE descripcion = '" + descripcion + "'", null);
+    Material find(Integer idMaterial) {
+        Cursor c = db.rawQuery("SELECT * FROM materiales WHERE idmaterial = '" + idMaterial + "'", null);
         if (c != null && c.moveToFirst()) {
             this.idMaterial = c.getInt(0);
             this.descripcion = c.getString(1);

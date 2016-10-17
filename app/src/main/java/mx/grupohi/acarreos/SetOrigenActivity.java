@@ -220,8 +220,10 @@ public class SetOrigenActivity extends AppCompatActivity
                     String data = Util.concatenar(String.valueOf(idMaterial), String.valueOf(idOrigen));
                     latitude = gps.getLatitude();
                     longitude = gps.getLongitude();
-                    boolean res = nfcTag.writeID(myTag, 1, 4, data);
-                    if(res) {
+
+                    String dataTime = Util.getFechaHora();
+
+                    if (nfcTag.writeID(myTag, 1, 4, data) && nfcTag.writeID(myTag, 1, 5, dataTime)) {
                         ContentValues cv = new ContentValues();
                         cv.put("IMEI", IMEI);
                         cv.put("idevento", 2);
@@ -233,7 +235,7 @@ public class SetOrigenActivity extends AppCompatActivity
                         Coordenada coordenada = new Coordenada(getApplicationContext());
                         coordenada.create(cv);
 
-                        Intent success = new Intent(SetOrigenActivity.this, SuccessOrigen.class);
+                        Intent success = new Intent(SetOrigenActivity.this, SuccessOrigenActivity.class);
                         startActivity(success);
                     } else {
                         Toast.makeText(SetOrigenActivity.this, getString(R.string.error_tag_comunicacion), Toast.LENGTH_LONG).show();

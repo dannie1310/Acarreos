@@ -35,10 +35,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".SuccessOrigen"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_success_origen"
-            android:theme="@style/FullscreenTheme"></activity>
+            android:name=".SuccessOrigenActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".SetDestinoActivity"
+            android:label="@string/title_activity_set_destino"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

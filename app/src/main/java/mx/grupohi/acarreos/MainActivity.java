@@ -11,6 +11,7 @@ import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,11 +21,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.TreeMap;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -37,6 +41,7 @@ public class MainActivity extends AppCompatActivity
     private Snackbar snackbar;
     private String UID;
     private Intent setOrigenActivity;
+    private Intent setDestinoActivity;
 
 
     //Referencias UI
@@ -55,12 +60,19 @@ public class MainActivity extends AppCompatActivity
     private TextView tLargo;
     private TextView tCapacidad;
 
+    private TextView tOrigen;
+    private TextView tMaterial;
+    private TextView tFecha;
+    private TextView tHora;
+
     private Boolean writeMode;
 
     Usuario usuario;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setOrigenActivity = new Intent(this, SetOrigenActivity.class);
+        setDestinoActivity = new Intent(this, SetDestinoActivity.class);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle(getString(R.string.title_activity_main));
@@ -80,6 +92,11 @@ public class MainActivity extends AppCompatActivity
         tAlto = (TextView) findViewById(R.id.textViewAlto);
         tAncho = (TextView) findViewById(R.id.textViewAncho);
         tLargo = (TextView) findViewById(R.id.textViewLargo);
+
+        tOrigen = (TextView) findViewById(R.id.textViewOrigen);
+        tMaterial = (TextView) findViewById(R.id.textViewMaterial);
+        tFecha = (TextView) findViewById(R.id.textViewFecha);
+        tHora = (TextView) findViewById(R.id.textViewHora);
 
         infoLayout.setVisibility(View.GONE);
         origenLayout.setVisibility(View.GONE);
@@ -148,25 +165,49 @@ public class MainActivity extends AppCompatActivity
 
             TagModel tagModel = new TagModel(getApplicationContext());
             Origen origen = new Origen(getApplicationContext());
-
+            Material material = new Material(getApplicationContext());
 
             String tagString = nfc.readSector(myTag, 0);
-            final Integer tagCamion = Util.getIdCamion(tagString);
-            Integer tagProyecto = Util.getIdProyecto(tagString);
 
+            Integer tagCamion = Util.getIdCamion(tagString);
+            Integer tagProyecto = Util.getIdProyecto(tagString);
             tagModel = tagModel.find(UID, tagCamion, tagProyecto);
+
+            String origenString = nfc.readSector(myTag, 1);
+            String fechaString = nfc.readSector(myTag, 1).substring(16,32);
+
+            Log.i("ORIREN Y MATERIAL", origenString);
+            Log.i("FECHA Y HORA", fechaString);
+
+            Integer tagMaterial = Util.getIdMaterial(origenString);
+            Integer tagOrigen = Util.getIdOrigen(origenString);
+
+            origen = origen.find(tagOrigen);
+            material = material.find(tagMaterial);
 
             if(tagModel != null) {
                 Camion camion = new Camion(getApplicationContext());
                 camion = camion.find(tagModel.idCamion);
                 setCamionInfo(camion);
-                actionButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        setOrigenActivity.putExtra("UID", UID);
-                        startActivity(setOrigenActivity);
-                    }
-                });
+                if(origen != null && material != null) {
+                    setOrigenInfo(origen, material, fechaString);
+                    actionButton.setText("CLICK AQUI PARA ESCRIBIR DESTINO");
+                    actionButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            setDestinoActivity.putExtra("UID", UID);
+                            startActivity(setDestinoActivity);
+                        }
+                    });
+                } else {
+                    actionButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            setOrigenActivity.putExtra("UID", UID);
+                            startActivity(setOrigenActivity);
+                        }
+                    });
+                }
             } else {
                 snackbar = Snackbar.make(findViewById(R.id.content_main), "El TAG que intentas utilizar no es valido para el control de viajes", Snackbar.LENGTH_SHORT);
                 View snackBarView = snackbar.getView();
@@ -238,6 +279,15 @@ public class MainActivity extends AppCompatActivity
         tAlto.setText("");
         tAncho.setText("");
         tLargo.setText("");
+    }
+
+    private void setOrigenInfo(Origen origen, Material material, String fechaHora) {
+        origenLayout.setVisibility(View.VISIBLE);
+
+        tOrigen.setText(origen.descripcion);
+        tMaterial.setText(material.descripcion);
+        tFecha.setText(fechaHora.substring(6,14));
+        tHora.setText(fechaHora.substring(0,6));
     }
 
     @Override

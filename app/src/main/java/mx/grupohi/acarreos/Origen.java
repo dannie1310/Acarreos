@@ -13,9 +13,9 @@ import java.util.ArrayList;
 
 class Origen {
 
-    private Integer idOrigen;
-    private String descripcion;
-    private Integer estado;
+    public Integer idOrigen;
+    public String descripcion;
+    public Integer estado;
 
     private Context context;
 

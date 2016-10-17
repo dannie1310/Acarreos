@@ -2,6 +2,7 @@ package mx.grupohi.acarreos;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -84,6 +85,32 @@ class Util {
         }
     }
 
+    static Integer getIdMaterial(String string) {
+        try {
+            Integer result = Integer.valueOf(string.substring(0,4));
+            if(result != null) {
+                return result;
+            } else {
+                return null;
+            }
+        } catch (Exception e){
+            return null;
+        }
+    }
+
+   static Integer getIdOrigen(String string) {
+       try {
+           Integer result = Integer.valueOf(string.substring(4,8));
+           if(result != null) {
+               return result;
+           } else {
+               return null;
+           }
+       } catch (Exception e){
+           return null;
+       }
+   }
+
     static String concatenar(String id, String id1){
         String aux = id;
         String aux1 = id1;
@@ -94,5 +121,9 @@ class Util {
             aux1 = 0 + aux1;
         }
         return aux + aux1;
+    }
+
+    static String getFechaHora() {
+        return (String) android.text.format.DateFormat.format("hhmmssyyyyMMdd", new java.util.Date());
     }
 }
