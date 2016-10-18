@@ -126,4 +126,38 @@ class Util {
     static String getFechaHora() {
         return (String) android.text.format.DateFormat.format("hhmmssyyyyMMdd", new java.util.Date());
     }
+
+    static String getFecha() {
+        return (String) android.text.format.DateFormat.format("yyyy/MM/dd", new java.util.Date());
+    }
+
+    static String getFecha(String string) {
+        SimpleDateFormat format = new SimpleDateFormat("HHmmssyyyyMMdd");
+        try {
+            Date date = format.parse(string);
+            SimpleDateFormat fechaFormat = new SimpleDateFormat("yyyy/MM/dd");
+
+            return fechaFormat.format(date);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    static String getTime() {
+        return (String) android.text.format.DateFormat.format("hh:mm:ss", new java.util.Date());
+    }
+
+    static String getTime(String string) {
+        SimpleDateFormat format = new SimpleDateFormat("HHmmssyyyyMMdd");
+        try {
+            Date date = format.parse(string);
+            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+
+            return timeFormat.format(date);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

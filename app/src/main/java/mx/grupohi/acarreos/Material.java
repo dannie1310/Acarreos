@@ -53,6 +53,7 @@ class Material {
         if (c != null && c.moveToFirst())
             try {
                 data.add("-- Seleccione --");
+                data.add(c.getString(c.getColumnIndex("descripcion")));
                 while (c.moveToNext()) {
                     data.add(c.getString(c.getColumnIndex("descripcion")));
                 }
@@ -68,6 +69,7 @@ class Material {
         if (c != null && c.moveToFirst())
             try {
                 data.add("0");
+                data.add(c.getString(c.getColumnIndex("idmaterial")));
                 while (c.moveToNext()) {
                     data.add(c.getString(c.getColumnIndex("idmaterial")));
                 }

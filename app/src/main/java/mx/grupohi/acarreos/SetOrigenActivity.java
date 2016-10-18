@@ -99,7 +99,7 @@ public class SetOrigenActivity extends AppCompatActivity
         nfcImage = (ImageView) findViewById(R.id.imageViewNFC);
         fabCancel = (FloatingActionButton) findViewById(R.id.fabCancel);
         mainLayout = (LinearLayout) findViewById(R.id.MainLayout);
-        tagAlertTextView =(TextView) findViewById(R.id.textViewTagAlert);
+        tagAlertTextView =(TextView) findViewById(R.id.textViewMensaje);
 
         tagAlertTextView.setVisibility(View.INVISIBLE);
         nfcImage.setVisibility(View.INVISIBLE);
@@ -236,7 +236,7 @@ public class SetOrigenActivity extends AppCompatActivity
                         Toast.makeText(SetOrigenActivity.this, getString(R.string.error_tag_comunicacion), Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    snackbar = Snackbar.make(findViewById(R.id.content_set_origen), "Por favor utiliza el TGA previamente correcto", Snackbar.LENGTH_SHORT);
+                    snackbar = Snackbar.make(findViewById(R.id.content_set_origen), "Por favor utiliza el TGA correcto", Snackbar.LENGTH_SHORT);
                     View snackBarView = snackbar.getView();
                     snackBarView.setBackgroundColor(Color.RED);
                     snackbar.show();
@@ -295,7 +295,7 @@ public class SetOrigenActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.set_origen, menu);
+        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 

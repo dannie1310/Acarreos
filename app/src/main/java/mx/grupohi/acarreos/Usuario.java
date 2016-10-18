@@ -49,4 +49,14 @@ class Usuario {
         c.close();
         return result;
     }
+
+    public Integer getId() {
+        Cursor c = db.rawQuery("SELECT * FROM user LIMIT 1", null);
+        if(c != null && c.moveToFirst()) {
+            return c.getInt(0);
+        } else {
+            return null;
+        }
+    }
 }
+

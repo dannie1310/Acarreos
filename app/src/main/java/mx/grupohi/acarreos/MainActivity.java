@@ -292,19 +292,8 @@ public class MainActivity extends AppCompatActivity
         tOrigen.setText(origen.descripcion);
         tMaterial.setText(material.descripcion);
 
-        SimpleDateFormat format = new SimpleDateFormat("HHmmssyyyyMMdd");
-        try {
-            Date date = format.parse(fechaHora);
-            SimpleDateFormat fechaFormat = new SimpleDateFormat("yyyy/MM/dd");
-            SimpleDateFormat horaFormat = new SimpleDateFormat("HH:mm:ss");
-
-            String fecha = fechaFormat.format(date);
-            String hora = horaFormat.format(date);
-            tFecha.setText(fecha);
-            tHora.setText(hora);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        tFecha.setText(Util.getFecha(fechaHora));
+        tHora.setText(Util.getTime(fechaHora));
 
         actionButton.setText("CLICK AQUI PARA ESCRIBIR EL DESTINO");
     }

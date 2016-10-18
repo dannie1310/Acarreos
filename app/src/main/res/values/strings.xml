@@ -8,7 +8,7 @@
     <string name="action_sign_in">Iniciar Sesión</string>
     <string name="error_field_required">Este campo es requerido</string>
     <string name="title_activity_main">INICIO</string>
-    <string name="title_activity_set_origen">ESCRIBIR DESTINO</string>
+    <string name="title_activity_set_origen">ESCRIBIR ORIGEN</string>
     <string name="title_activity_login">INICIAR SESIÓN</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>

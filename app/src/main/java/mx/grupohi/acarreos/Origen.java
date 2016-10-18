@@ -57,6 +57,7 @@ class Origen {
         if (c != null && c.moveToFirst())
             try {
                 data.add("-- Seleccione --");
+                data.add(c.getString(c.getColumnIndex("descripcion")));
                 while (c.moveToNext()) {
                     data.add(c.getString(c.getColumnIndex("descripcion")));
                 }
@@ -72,6 +73,7 @@ class Origen {
         if (c != null && c.moveToFirst())
             try {
                 data.add("0");
+                data.add(c.getString(c.getColumnIndex("idorigen")));
                 while (c.moveToNext()) {
                     data.add(c.getString(c.getColumnIndex("idorigen")));
                 }

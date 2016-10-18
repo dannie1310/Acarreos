@@ -20,7 +20,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
         android:id="@+id/MainLayout"
-        android:layout_alignBottom="@+id/textViewTagAlert">
+        android:layout_alignBottom="@+id/textViewMensaje">
 
         <TextView
             android:text="SELECCIONE EL MATERIAL:"
@@ -69,13 +69,13 @@
         android:id="@+id/imageViewNFC"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_above="@+id/textViewTagAlert" />
+        android:layout_above="@+id/textViewMensaje" />
 
     <TextView
         android:text="ACERQUE EL TAG PARA ESCRIBIR EL ORIGEN"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textViewTagAlert"
+        android:id="@+id/textViewMensaje"
         android:textAppearance="@android:style/TextAppearance.Material.Widget.TextView.SpinnerItem"
         android:layout_marginBottom="133dp"
         android:textAlignment="center"
