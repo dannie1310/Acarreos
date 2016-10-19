@@ -114,7 +114,6 @@ public class SetDestinoActivity extends AppCompatActivity
         nfcImage.setVisibility(View.INVISIBLE);
         fabCancel.setVisibility(View.INVISIBLE);
 
-
         final ArrayList<String> descripcionesTiros = tiro.getArrayListDescripciones(getIntent().getIntExtra("idOrigen", 1));
         final ArrayList <String> idsTiros = tiro.getArrayListId(getIntent().getIntExtra("idOrigen", 1));
 

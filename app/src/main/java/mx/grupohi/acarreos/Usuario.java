@@ -13,8 +13,10 @@ class Usuario {
 
     private Integer idUsuario;
     private Integer idProyecto;
+    String usr;
+    String pass;
     private String nombre;
-    private String baseDatos;
+    String baseDatos;
     private String descripcionBaseDatos;
 
     private Context context;
@@ -54,6 +56,19 @@ class Usuario {
         Cursor c = db.rawQuery("SELECT * FROM user LIMIT 1", null);
         if(c != null && c.moveToFirst()) {
             return c.getInt(0);
+        } else {
+            return null;
+        }
+    }
+
+    Usuario getUsuario() {
+        Cursor c = db.rawQuery("SELECT * FROM user LIMIT 1", null);
+        if(c != null && c.moveToFirst()) {
+            this.baseDatos = c.getString(3);
+            this.usr = c.getString(5);
+            this.pass = c.getString(6);
+            c.close();
+            return this;
         } else {
             return null;
         }

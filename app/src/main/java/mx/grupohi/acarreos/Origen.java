@@ -29,13 +29,7 @@ class Origen {
     }
 
     Boolean create(ContentValues data) {
-        Boolean result = db.insert("origenes", null, data) > -1;
-        if (result) {
-            this.idOrigen = data.getAsInteger("idorigen");
-            this.descripcion = data.getAsString("descripcion");
-            this.estado = data.getAsInteger("estado");
-        }
-        return result;
+        return db.insert("origenes", null, data) > -1;
     }
 
     Origen find(Integer idOrigen) {
