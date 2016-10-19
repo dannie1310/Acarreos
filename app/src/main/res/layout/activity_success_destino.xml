@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app=""
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_success_destino"
     android:layout_width="match_parent"
@@ -22,7 +23,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="@android:style/TextAppearance.Material.Headline"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:layout_marginBottom="10dp" />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -64,6 +66,13 @@
                 android:layout_weight="1" />
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp" />
+
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -83,6 +92,157 @@
                 android:id="@+id/textViewCubicacion"
                 android:layout_weight="1" />
         </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="ORIGEN"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="@android:style/TextAppearance.Material.Button" />
+
+            <TextView
+                android:text="TextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="FECHA / HORA SALIDA"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="@android:style/TextAppearance.Material.Button" />
+
+            <TextView
+                android:text="TextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewFechaHora"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="DESTINO"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/"
+                android:layout_weight="1"
+                android:textAppearance="@android:style/TextAppearance.Material.Button" />
+
+            <TextView
+                android:text="TextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewDestino"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="FECHA / HORA LLEGADA"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/"
+                android:layout_weight="1"
+                android:textAppearance="@android:style/TextAppearance.Material.Button" />
+
+            <TextView
+                android:text="TextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewFechaHoraLlegada"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="RUTA"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/"
+                android:layout_weight="1"
+                android:textAppearance="@android:style/TextAppearance.Material.Button" />
+
+            <TextView
+                android:text="TextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewRuta"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="92dp">
+
+            <TextView
+                android:text="OBSERVACIONES"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/"
+                android:layout_weight="1"
+                android:textAppearance="@android:style/TextAppearance.Material.Button" />
+
+            <TextView
+                android:text="TextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewObservaciones"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <Button
+            android:text="IMPRIMIR VIAJE"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonImprimir"
+            style="@style/Widget.AppCompat.Button.Colored" />
+
+        <Button
+            android:text="VER LISTA DE VIAJES"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonShowList"
+            style="@style/Widget.AppCompat.Button.Colored" />
+
+        <Button
+            android:text="SALIR"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonSalir"
+            style="@style/Widget.AppCompat.Button.Colored" />
     </LinearLayout>
 
 </RelativeLayout>
