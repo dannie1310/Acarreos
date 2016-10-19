@@ -7,6 +7,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.widget.SimpleCursorAdapter;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 /**
  * Creado por JFEsquivel on 10/10/2016.
  */
@@ -23,11 +27,11 @@ public class Viaje {
     public Origen origen;
     public Tiro tiro;
 
-
-    private SQLiteDatabase db;
+    private static HashMap <String, Viaje> viajes;
+    private static SQLiteDatabase db;
     private DBScaSqlite db_sca;
 
-    private Context context;
+    private static Context context;
 
     Viaje(Context context) {
         this.context = context;
@@ -37,6 +41,7 @@ public class Viaje {
         this.material=new Material(context);
         db_sca = new DBScaSqlite(context, "sca", null, 1);
         db = db_sca.getWritableDatabase();
+        viajes= new HashMap<>();
     }
 
     Boolean create(ContentValues data) {
@@ -50,7 +55,7 @@ public class Viaje {
         return result;
     }
     public Viaje find (Integer idViaje) {
-        Cursor c = db.rawQuery("SELECT * FROM viajesnetos WHERE", null);
+        Cursor c = db.rawQuery("SELECT * FROM viajesnetos WHERE ID = '" + idViaje + "'", null);
         if (c != null && c.moveToFirst()) {
             this.idCamion = c.getInt(4);
             this.idViaje = c.getInt(0);
@@ -77,4 +82,23 @@ public class Viaje {
                 ", Destino='"+ tiro.descripcion + '\'' +
                 '}';
     }
+
+    public static List<Viaje> getViajes(Context con){
+
+        DBScaSqlite db_sca = new DBScaSqlite(con, "sca", null, 1);
+        db = db_sca.getWritableDatabase();
+        Cursor c=db.rawQuery("SELECT * FROM viajesnetos",null);
+        Viaje viaje = new Viaje(con);
+        if (c!=null){
+            while (c.moveToNext()){
+                viaje=viaje.find(c.getInt(0));
+                viajes.put(viaje.idViaje.toString(), viaje);
+            }
+            return new ArrayList<>(viajes.values());
+        }
+        else {
+            return new ArrayList<>();
+        }
+    }
+
 }

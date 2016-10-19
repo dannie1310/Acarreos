@@ -8,6 +8,8 @@
     <uses-permission android:name="android.permission.NFC" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
     <application
         android:allowBackup="true"
@@ -43,7 +45,12 @@
             android:label="@string/title_activity_set_destino"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".SuccessDestinoActivity"></activity>
+        <activity android:name=".SuccessDestinoActivity" />
+
+        <activity
+            android:name=".ListaViajesActivity"
+            android:label="@string/title_activity_lista_viajes"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
