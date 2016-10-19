@@ -14,7 +14,7 @@ import java.util.ArrayList;
 class Tiro {
 
     private Integer idTiro;
-    private String descripcion;
+    public String descripcion;
 
     private Context context;
 
@@ -34,6 +34,19 @@ class Tiro {
             this.descripcion = data.getAsString("descripcion");
         }
         return result;
+    }
+
+    public Tiro find(Integer idTiro){
+        Cursor c= db.rawQuery("SELECT * FROM tiros WHERE idtiro = '" + idTiro + "'", null);
+        if( c != null && c.moveToFirst()){
+            this.idTiro=c.getInt(0);
+            this.descripcion=c.getString(1);
+            return this;
+        }
+        else{
+            return null;
+        }
+
     }
 
     ArrayList<String> getArrayListDescripciones(Integer idOrigen) {

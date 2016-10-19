@@ -2,6 +2,7 @@ package mx.grupohi.acarreos;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.widget.SimpleCursorAdapter;
@@ -13,6 +14,15 @@ import android.widget.SimpleCursorAdapter;
 public class Viaje {
 
     public Integer idViaje;
+    public Integer idMaterial;
+    public Integer idTiro;
+    public Integer idOrigen;
+    public Integer idCamion;
+    public Camion camion;
+    public Material material;
+    public Origen origen;
+    public Tiro tiro;
+
 
     private SQLiteDatabase db;
     private DBScaSqlite db_sca;
@@ -21,6 +31,10 @@ public class Viaje {
 
     Viaje(Context context) {
         this.context = context;
+        this.camion =new Camion(context);
+        this.origen = new Origen(context);
+        this.tiro=new Tiro(context);
+        this.material=new Material(context);
         db_sca = new DBScaSqlite(context, "sca", null, 1);
         db = db_sca.getWritableDatabase();
     }
@@ -34,5 +48,33 @@ public class Viaje {
             }
         }
         return result;
+    }
+    public Viaje find (Integer idViaje) {
+        Cursor c = db.rawQuery("SELECT * FROM viajesnetos WHERE", null);
+        if (c != null && c.moveToFirst()) {
+            this.idCamion = c.getInt(4);
+            this.idViaje = c.getInt(0);
+            this.idMaterial=c.getInt(11);
+            this.idOrigen=c.getInt(5);
+            this.idTiro =c.getInt(8);
+            this.camion= this.camion.find(this.idCamion);
+            this.material=this.material.find(this.idMaterial);
+            this.origen = this.origen.find(idOrigen);
+            this.tiro = this.tiro.find(idTiro);
+
+            return this;
+        }
+        return null;
+    }
+
+    @Override
+    public String toString() {
+        return "Viaje{" +
+                "ID='" + idViaje + '\'' +
+                ", Camion='" + camion.economico  + '\'' +
+                ", Material='" + material.descripcion + '\'' +
+                ", Origen='" + origen.descripcion + '\'' +
+                ", Destino='"+ tiro.descripcion + '\'' +
+                '}';
     }
 }
