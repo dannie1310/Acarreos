@@ -15,7 +15,7 @@ class Usuario {
     private Integer idProyecto;
     String usr;
     String pass;
-    private String nombre;
+    public String nombre;
     String baseDatos;
     private String descripcionBaseDatos;
 
@@ -70,6 +70,15 @@ class Usuario {
             c.close();
             return this;
         } else {
+            return null;
+        }
+    }
+    public String getNombre(){
+        Cursor c = db.rawQuery("SELECT nombre FROM user LIMIT 1", null);
+        if(c!=null && c.moveToFirst()){
+            return c.getString(0);
+        }
+        else{
             return null;
         }
     }

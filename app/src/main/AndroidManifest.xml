@@ -48,7 +48,6 @@
         <activity
             android:name=".SuccessDestinoActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".SuccessDestinoActivity" />
 
         <activity
             android:name=".ListaViajesActivity"

@@ -37,7 +37,6 @@ public class Viaje {
     public Ruta ruta;
 
 
-    private static SQLiteDatabase db;
     private static HashMap <String, Viaje> viajes;
     private static SQLiteDatabase db;
     private DBScaSqlite db_sca;

@@ -133,10 +133,11 @@ public class SuccessDestinoActivity extends Activity {
                            // bixolonPrinterApi.printBitmap(fewlapsBitmap, BixolonPrinter.ALIGNMENT_CENTER, 260, 50, false);
 
                             Thread.sleep(PRINTING_SLEEP_TIME); // Don't strees the printer while printing the Bitmap... it don't like it.
-
+                            printheadproyecto("Prueba");
                             bixolonPrinterApi.lineFeed(2, false);
                            // printText("Invoice\n\n", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_A);
-                            printheadproyecto("Prueba");
+
+                            String x = usuario.nombre;
                             printTextTwoColumns("Camion: ", textViewCamion.getText()+ " \n");
                             printTextTwoColumns("Ubicación: ", textViewCubicacion.getText()+" \n");
 
@@ -149,10 +150,11 @@ public class SuccessDestinoActivity extends Activity {
                             printTextTwoColumns("Observaciones: ", textViewObservaciones.getText()+"\n");
 
                             bixolonPrinterApi.lineFeed(1,true);
-                            printfoot(usuario.nombre,"479F9C18244FE5389");
-                            /*bixolonPrinterApi.printQrCode("https://github.com/rocboronat/FewlapsLovesBixolon", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.QR_CODE_MODEL2, 5, false);
-                            printText("Scan the QR\n", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_A);
-                            printText("and get the source!", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_C);*/
+                            System.out.println(usuario.getNombre());
+                            printfoot(usuario.getNombre(),"479F9479F9FE5389");
+                           // bixolonPrinterApi.printQrCode("479F9C18444FE5389", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.QR_CODE_MODEL2, 5, false);
+                           // printText("Scan the QR\n", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_A);
+                           // printText("and get the source!", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_C);
 
                             bixolonPrinterApi.lineFeed(2, false);
                         } catch (Exception e) {
@@ -186,7 +188,7 @@ public class SuccessDestinoActivity extends Activity {
 
 
     public static void printfoot(String text, String codex) {
-        int alignment = BixolonPrinter.ALIGNMENT_LEFT;
+        int alignment = BixolonPrinter.ALIGNMENT_CENTER;
         int attribute = 1;
         attribute |= BixolonPrinter.TEXT_ATTRIBUTE_FONT_A;
         int size = 0;// int size = BixolonPrinter.TEXT_SIZE_HORIZONTAL1;
@@ -195,7 +197,7 @@ public class SuccessDestinoActivity extends Activity {
         bixolonPrinterApi.printText(text, alignment, attribute, size, false);
         Log.i("code", codex);
         bixolonPrinterApi.lineFeed(2, false);
-        bixolonPrinterApi.print1dBarcode(codex.toUpperCase(), BixolonPrinter.BAR_CODE_CODE39, BixolonPrinter.ALIGNMENT_CENTER, 2, 150, BixolonPrinter.HRI_CHARACTER_NOT_PRINTED, false);
+        bixolonPrinterApi.print1dBarcode(codex.toUpperCase(), BixolonPrinter.BAR_CODE_CODE39, BixolonPrinter.ALIGNMENT_CENTER, 2, 250, BixolonPrinter.HRI_CHARACTER_NOT_PRINTED, false);
         bixolonPrinterApi.formFeed(true);
         bixolonPrinterApi.printText(codex.toUpperCase(), BixolonPrinter.ALIGNMENT_CENTER, attribute, size, false);
 

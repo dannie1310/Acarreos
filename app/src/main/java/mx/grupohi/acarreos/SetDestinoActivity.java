@@ -357,6 +357,8 @@ public class SetDestinoActivity extends AppCompatActivity
                     Coordenada coordenada = new Coordenada(this);
                     coordenada.create(cv);
 
+                    nfcTag.cleanSector(myTag,1);
+
                     Intent destinoSuccess = new Intent(this, SuccessDestinoActivity.class);
                     destinoSuccess.putExtra("idViaje", viaje.idViaje);
                     startActivity(destinoSuccess);
