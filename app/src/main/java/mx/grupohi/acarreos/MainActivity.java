@@ -26,6 +26,7 @@ import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity
     private Integer idOrigen;
     private Intent setOrigenActivity;
     private Intent setDestinoActivity;
+    private Intent listaViajes;
 
 
     //Referencias UI
@@ -80,6 +82,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         setOrigenActivity = new Intent(this, SetOrigenActivity.class);
         setDestinoActivity = new Intent(this, SetDestinoActivity.class);
+        listaViajes =new Intent(this, ListaViajesActivity.class);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -348,6 +351,10 @@ public class MainActivity extends AppCompatActivity
             }
 
         } else if (id == R.id.nav_list) {
+            Intent intent = getIntent();
+            finish();
+            startActivity(listaViajes);
+
         } else if (id == R.id.nav_pair_on) {
         } else if (id == R.id.nav_pair_off) {
         } else if (id == R.id.nav_logout) {

@@ -249,6 +249,37 @@ public class NFCTag {
         }
     }
 
+    void cleanSector(Tag tag, int sector){
+        MifareClassic mfc = MifareClassic.get(tag);
+        int bloque = mfc.sectorToBlock(sector);
+        try {
+            mfc.connect();
+            int iw;
+            int z = 1;
+            int block;
+            boolean auth = false;
+
+            auth = mfc.authenticateSectorWithKeyA(sector, pw);
+            if (auth) {
+                byte[] toWrite = new byte[MifareClassic.BLOCK_SIZE];
+
+                for (block = 0; block < 3; block++) {
+
+                    for (iw = 0; iw < MifareClassic.BLOCK_SIZE; iw++) {
+                        toWrite[iw] = 0;
+                    }
+                    mfc.writeBlock(bloque + block, toWrite);
+                    toWrite = new byte[MifareClassic.BLOCK_SIZE];
+                }
+            }
+            Toast.makeText(context, context.getString(R.string.tag_configurado), Toast.LENGTH_LONG).show();
+            mfc.close();
+        } catch (Exception fe) {
+            Toast.makeText(context, context.getString(R.string.error_tag_comunicacion), Toast.LENGTH_LONG).show();
+            fe.printStackTrace();
+        }
+    }
+
     String idTag(Tag tag){
         byte[] toRead=null;
         byte[] send= new byte[4];

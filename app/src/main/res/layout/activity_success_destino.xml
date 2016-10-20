@@ -13,9 +13,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:orientation="vertical">
+        android:layout_alignParentStart="true">
 
         <TextView
             android:text="VIAJE REGISTRADO"
@@ -50,7 +50,7 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:text="CUBICACIÓN"
+                android:text="UBICACIÓN"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

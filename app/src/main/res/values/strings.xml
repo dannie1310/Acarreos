@@ -39,5 +39,12 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="title_activity_set_destino">SetDestinoActivity</string>
+    <string name="mensaje_no_bluetooth">No esta activado</string>
+    <string name="text_warning_blue_is_off">bluethooth apagado</string>
+    <string name="text_turn_on_blue">bluethooth prendido</string>
+    <string name="title_activity_lista_viajes">ListaViajesActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

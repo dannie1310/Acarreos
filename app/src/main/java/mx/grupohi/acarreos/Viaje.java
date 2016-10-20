@@ -7,13 +7,17 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.widget.SimpleCursorAdapter;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import org.json.JSONObject;
 
 /**
  * Creado por JFEsquivel on 10/10/2016.
  */
 
-class Viaje {
+public class Viaje {
 
     public Integer idViaje;
     public Integer idMaterial;
@@ -33,10 +37,11 @@ class Viaje {
     public Ruta ruta;
 
 
+    private static HashMap <String, Viaje> viajes;
     private static SQLiteDatabase db;
     private DBScaSqlite db_sca;
 
-    private Context context;
+    private static Context context;
 
     Viaje(Context context) {
         this.context = context;
@@ -47,6 +52,7 @@ class Viaje {
         this.ruta = new Ruta(context);
         db_sca = new DBScaSqlite(this.context, "sca", null, 1);
         db = db_sca.getWritableDatabase();
+        viajes= new HashMap<>();
     }
 
     Boolean create(ContentValues data) {
@@ -132,6 +138,25 @@ class Viaje {
         }
         return JSON;
     }
+
+    public static List<Viaje> getViajes(Context con){
+
+        DBScaSqlite db_sca = new DBScaSqlite(con, "sca", null, 1);
+        db = db_sca.getWritableDatabase();
+        Cursor c=db.rawQuery("SELECT * FROM viajesnetos",null);
+        Viaje viaje = new Viaje(con);
+        if (c!=null){
+            while (c.moveToNext()){
+                viaje=viaje.find(c.getInt(0));
+                viajes.put(viaje.idViaje.toString(), viaje);
+            }
+            return new ArrayList<>(viajes.values());
+        }
+        else {
+            return new ArrayList<>();
+        }
+    }
+
 
     static void sync() {
         db.execSQL("DELETE FROM viajesnetos");

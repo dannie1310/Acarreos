@@ -48,6 +48,11 @@
         <activity
             android:name=".SuccessDestinoActivity"
             android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".ListaViajesActivity"
+            android:label="@string/title_activity_lista_viajes"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
