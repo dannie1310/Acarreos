@@ -13,7 +13,7 @@ import org.json.JSONObject;
  * Creado por JFEsquivel on 10/10/2016.
  */
 
-public class Viaje {
+class Viaje {
 
     public Integer idViaje;
     public Integer idMaterial;
@@ -45,7 +45,7 @@ public class Viaje {
         this.tiro=new Tiro(context);
         this.material=new Material(context);
         this.ruta = new Ruta(context);
-        db_sca = new DBScaSqlite(context, "sca", null, 1);
+        db_sca = new DBScaSqlite(this.context, "sca", null, 1);
         db = db_sca.getWritableDatabase();
     }
 
@@ -131,5 +131,20 @@ public class Viaje {
             e.printStackTrace();
         }
         return JSON;
+    }
+
+    static void sync() {
+        db.execSQL("DELETE FROM viajesnetos");
+        db.execSQL("DELETE FROM coordenadas");
+    }
+
+    static Boolean isSync() {
+        Boolean result = true;
+        try (Cursor c = db.rawQuery("SELECT * FROM viajesnetos", null)) {
+            if(c != null && c.moveToFirst()) {
+                result = false;
+            }
+        }
+        return result;
     }
 }

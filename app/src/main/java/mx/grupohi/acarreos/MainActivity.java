@@ -1,6 +1,7 @@
 package mx.grupohi.acarreos;
 
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity
     private Button actionButton;
     private ImageView nfcImage;
     private TextView infoTag;
+    private ProgressDialog progressDialogSync;
 
     private TextView tEconomico;
     private TextView tPlacas;
@@ -71,6 +73,8 @@ public class MainActivity extends AppCompatActivity
     private Boolean writeMode;
 
     Usuario usuario;
+    Viaje viaje;
+    Coordenada coordenada;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +85,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         setTitle(getString(R.string.title_activity_main));
         usuario = new Usuario(this);
+        viaje = new Viaje(this);
+        coordenada = new Coordenada(this);
         writeMode = true;
         infoLayout = (LinearLayout) findViewById(R.id.LayoutInfo);
         origenLayout = (LinearLayout) findViewById(R.id.LayoutOrigen);
@@ -332,6 +338,15 @@ public class MainActivity extends AppCompatActivity
             finish();
             startActivity(intent);
         } else if (id == R.id.nav_sync) {
+            if (Util.isNetworkStatusAvialable(this)){
+                if(!Viaje.isSync()) {
+                    progressDialogSync = ProgressDialog.show(this, "Sincronizando datos", "Por favor espere...", true);
+                    new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
+                }
+            } else {
+                Toast.makeText(this, R.string.error_internet, Toast.LENGTH_SHORT).show();
+            }
+
         } else if (id == R.id.nav_list) {
         } else if (id == R.id.nav_pair_on) {
         } else if (id == R.id.nav_pair_off) {

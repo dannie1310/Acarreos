@@ -233,6 +233,8 @@ public class LoginActivity extends AppCompatActivity {
                     data.put("idusuario", JSON.getString("IdUsuario"));
                     data.put("idproyecto", JSON.getString("IdProyecto") );
                     data.put("nombre", JSON.getString("Nombre"));
+                    data.put("user", user);
+                    data.put("pass", pass);
                     data.put("base_datos", JSON.getString("base_datos"));
                     data.put("descripcion_database", JSON.getString("descripcion_database"));
 

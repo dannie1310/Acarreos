@@ -38,12 +38,12 @@ public class Coordenada {
                 do {
                     JSONObject json = new JSONObject();
 
-                    json.put("IMEI", c.getString(1));
-                    json.put("idevento", c.getString(2));
-                    json.put("latitud", c.getString(3));
-                    json.put("longitud", c.getInt(4));
-                    json.put("fecha_hora", c.getString(5));
-                    json.put("code", c.getString(6));
+                    json.put("IMEI", c.getString(c.getColumnIndex("IMEI")));
+                    json.put("idevento", c.getString(c.getColumnIndex("idevento")));
+                    json.put("latitud", c.getString(c.getColumnIndex("latitud")));
+                    json.put("longitud", c.getString(c.getColumnIndex("longitud")));
+                    json.put("fecha_hora", c.getString(c.getColumnIndex("fecha_hora")));
+                    json.put("code", c.getString(c.getColumnIndex("code")));
 
                     JSON.put(i + "", json);
                     i++;

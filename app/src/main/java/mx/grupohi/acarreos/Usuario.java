@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 /**
  * Creado por JFEsquivel on 05/10/2016.
@@ -64,9 +65,21 @@ class Usuario {
     Usuario getUsuario() {
         Cursor c = db.rawQuery("SELECT * FROM user LIMIT 1", null);
         if(c != null && c.moveToFirst()) {
-            this.baseDatos = c.getString(3);
-            this.usr = c.getString(5);
-            this.pass = c.getString(6);
+            this.idUsuario = c.getInt(c.getColumnIndex("idusuario"));
+            this.idProyecto = c.getInt(c.getColumnIndex("idproyecto"));
+            this.nombre = c.getString(c.getColumnIndex("nombre"));
+            this.baseDatos = c.getString(c.getColumnIndex("base_datos"));
+            this.descripcionBaseDatos = c.getString(c.getColumnIndex("descripcion_database"));
+            this.usr = c.getString(c.getColumnIndex("user"));
+            this.pass = c.getString(c.getColumnIndex("pass"));
+
+            Log.i("ID", String.valueOf(this.idUsuario));
+            Log.i("IDP", String.valueOf(this.idProyecto));
+            Log.i("NOMBRE", this.nombre);
+            Log.i("BASDATOS", this.baseDatos);
+            Log.i("DESC", this.descripcionBaseDatos);
+            Log.i("USER", this.usr);
+            Log.i("PASS", this.pass);
             c.close();
             return this;
         } else {
