@@ -44,6 +44,20 @@ class Ruta {
         return result;
     }
 
+    Ruta find(Integer idRuta) {
+        Cursor c = db.rawQuery("SELECT * FROM rutas WHERE idruta = '" + idRuta + "'", null);
+        if(c != null && c.moveToFirst()) {
+            this.idRuta = c.getInt(0);
+            this.clave = c.getString(1);
+            this.idOrigen = c.getInt(2);
+            this.idTiro = c.getInt(3);
+            this.totalKm = c.getInt(4);
+            return this;
+        } else {
+            return null;
+        }
+    }
+
     ArrayList<String> getArrayListDescripciones(Integer idOrigen, Integer idTiro) {
         ArrayList<String> data = new ArrayList<>();
         Cursor c = db.rawQuery("SELECT * FROM rutas WHERE idorigen = '" + idOrigen + "' AND idtiro = '" + idTiro + "' ORDER BY clave ASC", null);
@@ -76,5 +90,10 @@ class Ruta {
                 c.close();
             }
         return data;
+    }
+
+    @Override
+    public String toString() {
+        return clave + " - " + idRuta + ", Distancia " + totalKm + " km";
     }
 }

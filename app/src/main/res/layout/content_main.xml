@@ -84,7 +84,6 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="@android:style/TextAppearance.Material.Caption"
                     android:id="@+id/textViewPlacas"
-                    
                     android:textAlignment="center" />
             </LinearLayout>
         </LinearLayout>
@@ -114,7 +113,6 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/textViewMarca"
                     android:textAppearance="@android:style/TextAppearance.Material.Caption"
-                    
                     android:textAlignment="center" />
             </LinearLayout>
 
