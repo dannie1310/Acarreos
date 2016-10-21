@@ -38,36 +38,28 @@ public class SuccessDestinoActivity extends Activity {
             textViewObservaciones;
 
 
-    //The columns of your printer. We only tried the Bixolon 300 and the Bixolon 200II, so there are the values.
-    //    private final int LINE_CHARS = 42 + 22; // Bixolon 300
-    private final int LINE_CHARS = 42; // Bixolon 200II
+    private final int LINE_CHARS = 42+22;
 
     static Bitmap bitmap;
-    //Some time to don't flood the printer with new commands. It's fine to wait a little after sending an image to the printer.
-    private static final long PRINTING_SLEEP_TIME = 300;
+   private static final long PRINTING_SLEEP_TIME = 300;
 
-    //The time the printer takes to print the ticket. It makes the print button to be enabled again after this time in millis.
-    //Of course, you can get it in an empiric way... :D
     private static final long PRINTING_TIME = 2200;
 
-    //Two constants that some Bixolon printers send, but aren't included in the Bixolon library. Probably some printers can send it? Don't know.
     static final int MESSAGE_START_WORK = Integer.MAX_VALUE - 2;
     static final int MESSAGE_END_WORK = Integer.MAX_VALUE - 3;
 
-    //The core of the monster: managing the Bixolon printer connection lifecycle
     private List<String> pairedPrinters = new ArrayList<String>();
     private Boolean connectedPrinter = false;
     private static BixolonPrinter bixolonPrinterApi;
 
-    //View layer things
-    private Animation rotation = null; //Caching an animation makes the world a better place to be
+    private Animation rotation = null;
     private View layoutLoading;
     private View layoutThereArentPairedPrinters;
     private View layoutPrinterReady;
-    private TextView debugTextView = null; //A hidden TextView where you can test things
-    private Button btnConectar; //Guess it :P
-    Integer idViaje;
+    private TextView debugTextView = null;
 
+    Integer idViaje;
+    private Button btnImpresora;
     Usuario usuario;
     Viaje viaje;
     @Override
@@ -93,7 +85,7 @@ public class SuccessDestinoActivity extends Activity {
         fillInfo();
         BitmapDrawable drawable = (BitmapDrawable) getResources().getDrawable(R.drawable.logo_ghi);
         bitmap = drawable.getBitmap();
-         viaje = new Viaje(this);
+        viaje = new Viaje(this);
         final String codigo = viaje.getCode(idViaje);
         System.out.println("codigo: "+codigo);
         btnSalir.setOnClickListener(new View.OnClickListener() {
@@ -126,7 +118,6 @@ public class SuccessDestinoActivity extends Activity {
                 }, PRINTING_TIME);
 
                 Thread t = new Thread() {
-                    /** Where the actual print happens. BTW, the easyest code. */
                     public void run() {
                         try {
                             bixolonPrinterApi.setSingleByteFont(BixolonPrinter.CODE_PAGE_858_EURO);
@@ -257,7 +248,7 @@ public class SuccessDestinoActivity extends Activity {
         task = new SuccessDestinoActivity.PairWithPrinterTask();
         task.execute();
 
-        //updatePrintButtonState();
+       // updatePrintButtonState();
 
         Bluetooth.startBluetooth();
     }
@@ -277,7 +268,7 @@ public class SuccessDestinoActivity extends Activity {
     }
 
     private void updatePrintButtonState() {
-        btnConectar.setEnabled(connectedPrinter != null && connectedPrinter == true);
+        btnImpresora.setEnabled(connectedPrinter != null && connectedPrinter == true);
     }
 
     private final Handler handler = new Handler() {
@@ -343,11 +334,12 @@ public class SuccessDestinoActivity extends Activity {
                 case BixolonPrinter.MESSAGE_DEVICE_NAME:
                    // debugTextView.setText(msg.getData().getString(BixolonPrinter.KEY_STRING_DEVICE_NAME));
                     Log.i("Handler", "BixolonPrinter.MESSAGE_DEVICE_NAME - " + msg.getData().getString(BixolonPrinter.KEY_STRING_DEVICE_NAME));
+                    Toast.makeText(getApplicationContext(), "Impresora Conectada como: " +msg.getData().getString(BixolonPrinter.KEY_STRING_DEVICE_NAME), Toast.LENGTH_SHORT).show();
                     break;
 
                 case BixolonPrinter.MESSAGE_TOAST:
                     Log.i("Handler", "BixolonPrinter.MESSAGE_TOAST - " + msg.getData().getString("toast"));
-                    Toast.makeText(getApplicationContext(), msg.getData().getString("toast"), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"BixolonPrinter.MESSAGE_TOAST - " + msg.getData().getString("toast"), Toast.LENGTH_SHORT).show();
                     break;
 
                 // The list of paired printers
@@ -370,6 +362,7 @@ public class SuccessDestinoActivity extends Activity {
 
                 case BixolonPrinter.MESSAGE_PRINT_COMPLETE:
                     Log.i("Handler", "BixolonPrinter.MESSAGE_PRINT_COMPLETE");
+                    Toast.makeText(getApplicationContext(),"Impresión Completa.", Toast.LENGTH_SHORT).show();
                     break;
 
                 case BixolonPrinter.MESSAGE_COMPLETE_PROCESS_BITMAP:
@@ -378,10 +371,12 @@ public class SuccessDestinoActivity extends Activity {
 
                 case MESSAGE_START_WORK:
                     Log.i("Handler", "MESSAGE_START_WORK");
+                    Toast.makeText(getApplicationContext(),"Iniciando Impresión ", Toast.LENGTH_SHORT).show();
                     break;
 
                 case MESSAGE_END_WORK:
                     Log.i("Handler", "MESSAGE_END_WORK");
+                    Toast.makeText(getApplicationContext(),"Finalizado ", Toast.LENGTH_SHORT).show();
                     break;
 
                 case BixolonPrinter.MESSAGE_NETWORK_DEVICE_SET:
@@ -429,6 +424,7 @@ public class SuccessDestinoActivity extends Activity {
             super.onProgressUpdate(values);
             if (action < 20) {
                 bixolonPrinterApi.findBluetoothPrinters();
+                Toast.makeText(getApplicationContext(),"se encontraronimpresoras", Toast.LENGTH_SHORT).show();
                 action++;
             } else {
                 bixolonPrinterApi.disconnect();
@@ -444,7 +440,7 @@ public class SuccessDestinoActivity extends Activity {
         int attribute = 1;
         attribute = BixolonPrinter.TEXT_ATTRIBUTE_FONT_C;
 
-        int size = 0;// int size = BixolonPrinter.TEXT_SIZE_HORIZONTAL1;;
+        int size = 0;
         bixolonPrinterApi.printText(textToPrint, alignment, attribute, size, false);
         bixolonPrinterApi.lineFeed(2, false);
         bixolonPrinterApi.cutPaper(true);
@@ -478,7 +474,7 @@ public class SuccessDestinoActivity extends Activity {
      * @param rightText
      */
     private void printTextTwoColumns(String leftText, String rightText) {
-        if (leftText.length() + rightText.length() + 1 > LINE_CHARS) { // If two Strings cannot fit in same line
+        if (leftText.length() + rightText.length() + 1 > LINE_CHARS) {
             int alignment = BixolonPrinter.ALIGNMENT_LEFT;
             int attribute = 0;
             attribute |= BixolonPrinter.TEXT_ATTRIBUTE_FONT_C;
