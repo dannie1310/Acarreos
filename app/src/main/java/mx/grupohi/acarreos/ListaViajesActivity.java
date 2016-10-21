@@ -120,6 +120,8 @@ public class ListaViajesActivity extends AppCompatActivity
                 if(!Viaje.isSync(getApplicationContext())) {
                     progressDialogSync = ProgressDialog.show(this, "Sincronizando datos", "Por favor espere...", true);
                     new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
+                    Intent mainActivity = new Intent(this, MainActivity.class);
+                    startActivity(mainActivity);
                 } else {
                     Toast.makeText(getApplicationContext(), "No es necesaria la sincronización en este momento", Toast.LENGTH_SHORT).show();
                 }

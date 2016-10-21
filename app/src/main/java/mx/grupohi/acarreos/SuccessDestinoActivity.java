@@ -106,14 +106,14 @@ public class SuccessDestinoActivity extends Activity {
             }
         });
 
-        /*btnShowList.setOnClickListener(new View.OnClickListener() {
+        btnShowList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ListaViajesActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }
-        });*/
+        });
+
         btnImprimir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
