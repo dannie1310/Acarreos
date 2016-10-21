@@ -157,6 +157,17 @@ public class Viaje {
         }
     }
 
+    public String getCode(int idViaje){
+        Cursor c= db.rawQuery("SELECT Code FROM viajesnetos WHERE id = '" + idViaje + "'", null);
+
+        if(c!=null && c.moveToFirst()){
+            return c.getString(0);
+        }
+        else {
+            return null;
+        }
+
+    }
 
     static void sync(Context context) {
         DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);

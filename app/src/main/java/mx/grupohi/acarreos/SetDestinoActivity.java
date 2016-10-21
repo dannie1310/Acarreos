@@ -350,6 +350,12 @@ public class SetDestinoActivity extends AppCompatActivity
                 if (UID.equals(getIntent().getStringExtra("UID"))) {
                     latitude = gps.getLatitude();
                     longitude = gps.getLongitude();
+                    String viajes = nfcTag.readSector(myTag,2,8);
+                    viajes=viajes.replace(" ","");
+                    System.out.println("viajes: "+viajes);
+                    int contador=0;
+                    contador=Integer.valueOf(viajes)+1;
+                    nfcTag.writeSector(myTag,2,8,String.valueOf(contador));
 
                     String tagInfo = nfcTag.readSector(myTag, 0, 1);
                     Integer idCamion = Util.getIdCamion(tagInfo);
@@ -379,7 +385,7 @@ public class SetDestinoActivity extends AppCompatActivity
                     cv.put("Creo", usuario.getId());
                     cv.put("Estatus", "10");
                     cv.put("Ruta", idRuta);
-                    cv.put("Code", getCode().toUpperCase() + String.valueOf(idCamion));
+                    cv.put("Code", getCode(contador,idCamion).toUpperCase());
                     cv.put("uidTAG", UID);
                     Viaje viaje = new Viaje(this);
                     viaje.create(cv);
@@ -390,7 +396,7 @@ public class SetDestinoActivity extends AppCompatActivity
                     cv.put("latitud", latitude);
                     cv.put("longitud", longitude);
                     cv.put("fecha_hora", Util.timeStamp());
-                    cv.put("code", getCode().toUpperCase() + String.valueOf(idCamion));
+                    cv.put("code", getCode(contador,idCamion).toUpperCase());
                     Coordenada coordenada = new Coordenada(this);
                     coordenada.create(cv, SetDestinoActivity.this);
 
@@ -399,10 +405,10 @@ public class SetDestinoActivity extends AppCompatActivity
                     Intent destinoSuccess = new Intent(this, SuccessDestinoActivity.class);
                     destinoSuccess.putExtra("idViaje", viaje.idViaje);
                     destinoSuccess.putExtra("LIST", 0);
+                    destinoSuccess.putExtra("code", getCode(contador,idCamion));
                     startActivity(destinoSuccess);
-
                 } else {
-                    snackbar = Snackbar.make(findViewById(R.id.content_set_origen), "Por favor utiliza el TGA correcto", Snackbar.LENGTH_SHORT);
+                    snackbar = Snackbar.make(findViewById(R.id.content_set_origen), "Por favor utiliza el TAG correcto", Snackbar.LENGTH_SHORT);
                     View snackBarView = snackbar.getView();
                     snackBarView.setBackgroundColor(Color.RED);
                     snackbar.show();
@@ -411,10 +417,48 @@ public class SetDestinoActivity extends AppCompatActivity
         }
     }
 
-    public static String getCode() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-        String currentDateandTime = sdf.format(new Date());
+    public static String getCode(Integer viaje, Integer idCamion) {
+        String mensaje = "";
+        String camion = "";
+        String viajes="";
+        viajes= viaje.toString();
+        camion = idCamion.toString();
+        int ceros = 0;
 
-        return Long.toHexString(Long.parseLong(currentDateandTime));
+        if(camion.length() < 5){
+            ceros = 5 - camion.length();
+            for ( int i=0; i< ceros; i++){
+                mensaje += "0";
+            }
+            mensaje +=camion;
+
+        }
+        else{
+            mensaje +=camion;
+        }
+        if(viajes.length() < 5){
+            ceros=0;
+            ceros = 5 - viajes.length();
+            for(int i=0; i< ceros; i++){
+                mensaje+="0";
+            }
+            mensaje+=viajes;
+        }
+        else{
+            mensaje+=viajes;
+        }
+        System.out.println("mensaje "+mensaje);
+
+        /*String resp = Long.toHexString(Long.parseLong(mensaje));
+        mensaje="";
+        if (resp.length() < 10){
+            ceros=0;
+            ceros= 10 - resp.length();
+            for (int i=0; i<ceros; i++){
+                mensaje += "0";
+            }
+            mensaje += resp;
+        }*/
+        return mensaje;
     }
 }

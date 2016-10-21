@@ -24,6 +24,7 @@ class Camion {
     public Double alto;
     public String economico;
     public Integer capacidad;
+    public Integer numero_viajes;
 
     private Context context;
 
@@ -53,6 +54,7 @@ class Camion {
             this.alto       = c.getDouble(6);
             this.economico  = c.getString(7);
             this.capacidad  = c.getInt(8);
+            this.numero_viajes = c.getInt(9);
 
             return this;
         } else {

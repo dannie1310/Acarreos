@@ -241,7 +241,7 @@ public class SetOrigenActivity extends AppCompatActivity
 
                     String dataTime = Util.getFechaHora();
 
-                    if (nfcTag.writeSector(myTag, 1, 4, data, 1) && nfcTag.writeSector(myTag, 1, 5, dataTime, 1)) {
+                    if (nfcTag.writeSector(myTag, 1, 4, data) && nfcTag.writeSector(myTag, 1, 5, dataTime)) {
                         ContentValues cv = new ContentValues();
                         cv.put("IMEI", IMEI);
                         cv.put("idevento", 2);
