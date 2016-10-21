@@ -3,6 +3,7 @@ package mx.grupohi.acarreos;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.lang.reflect.Method;
 import java.util.Set;

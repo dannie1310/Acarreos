@@ -65,7 +65,7 @@ public class SuccessDestinoActivity extends Activity {
     private View layoutThereArentPairedPrinters;
     private View layoutPrinterReady;
     private TextView debugTextView = null; //A hidden TextView where you can test things
-    private Button printButton = null; //Guess it :P
+    private Button btnConectar; //Guess it :P
     Integer idViaje;
 
     Usuario usuario;
@@ -84,6 +84,7 @@ public class SuccessDestinoActivity extends Activity {
         textViewFechaHoraLlegada = (TextView) findViewById(R.id.textViewFechaHoraLlegada);
         textViewRuta = (TextView) findViewById(R.id.textViewRuta);
         textViewObservaciones = (TextView) findViewById(R.id.textViewObservaciones);
+
 
         final Button btnImprimir = (Button) findViewById(R.id.buttonImprimir);
         Button btnShowList = (Button) findViewById(R.id.buttonShowList);
@@ -128,27 +129,18 @@ public class SuccessDestinoActivity extends Activity {
                     /** Where the actual print happens. BTW, the easyest code. */
                     public void run() {
                         try {
-                            //FIXME this example hardcodes the text values to increase a little the readability of the code. Don't do it in production! :)
-
-                            bixolonPrinterApi.setSingleByteFont(BixolonPrinter.CODE_PAGE_858_EURO); //It fixes an issue printing special values like €, áéíóú...
-
-                            //bixolonPrinterApi.lineFeed(2, false); //It's like printing \n\n
+                            bixolonPrinterApi.setSingleByteFont(BixolonPrinter.CODE_PAGE_858_EURO);
                             Bitmap fewlapsBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.img_success);
 
-                            //BEWARE THE DOG: The 260 and 50 values are really MAGIC. They aren't as siple as width and height. It can break the Bitmap print.
-                           // bixolonPrinterApi.printBitmap(fewlapsBitmap, BixolonPrinter.ALIGNMENT_CENTER, 260, 50, false);
-
-                            Thread.sleep(PRINTING_SLEEP_TIME); // Don't strees the printer while printing the Bitmap... it don't like it.
-                            printheadproyecto("Prueba");
-
-                           // printText("Invoice\n\n", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_A);
-
-                            String x = usuario.nombre;
+                            Thread.sleep(PRINTING_SLEEP_TIME);
+                            printheadproyecto(usuario.getDescripcion());
+                            bixolonPrinterApi.lineFeed(1,true);
                             printTextTwoColumns("Camion: ", textViewCamion.getText()+ " \n");
                             printTextTwoColumns("Ubicación: ", textViewCubicacion.getText()+" \n");
 
                             printTextTwoColumns("Material: ",textViewMaterial.getText()+ "\n");
                             printTextTwoColumns("Origen: ", textViewOrigen.getText()+"\n");
+                            printTextTwoColumns("Fecha de Salida: ", textViewFechaHoraSalida.getText()+"\n");
 
                             printTextTwoColumns("Destino: ",textViewDestino.getText()+ "\n");
                             printTextTwoColumns("Fecha Llegada: ", textViewFechaHoraLlegada.getText()+"\n");
@@ -156,15 +148,12 @@ public class SuccessDestinoActivity extends Activity {
                             printTextTwoColumns("Observaciones: ", textViewObservaciones.getText()+"\n");
 
                             bixolonPrinterApi.lineFeed(1,true);
-                            System.out.println(usuario.getNombre());
                             printfoot("   Checador: "+ usuario.getNombre(),codigo);
-                           bixolonPrinterApi.printQrCode(codigo, BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.QR_CODE_MODEL1, 5, false);
-                           // printText("Scan the QR\n", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_A);
-                           // printText("and get the source!", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_C);
+                            bixolonPrinterApi.printQrCode(codigo, BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.QR_CODE_MODEL1, 5, false);
 
                             bixolonPrinterApi.lineFeed(2, false);
                         } catch (Exception e) {
-                            Log.e("ERROR", "Printing", e);
+                            Toast.makeText(getApplicationContext(), R.string.error_impresion, Toast.LENGTH_SHORT).show();
                         }
                     }
                 };
@@ -182,7 +171,7 @@ public class SuccessDestinoActivity extends Activity {
         int attribute = 0;
         attribute |= BixolonPrinter.TEXT_ATTRIBUTE_FONT_A;
 
-        int size = 0;// int size = BixolonPrinter.TEXT_SIZE_HORIZONTAL1;
+        int size = 0;
         bixolonPrinterApi.setSingleByteFont(BixolonPrinter.CODE_PAGE_858_EURO);
         bixolonPrinterApi.printText(text, alignment, attribute, size, false);
         bixolonPrinterApi.lineFeed(1, false);
@@ -197,13 +186,12 @@ public class SuccessDestinoActivity extends Activity {
         int alignment = BixolonPrinter.ALIGNMENT_LEFT;
         int attribute = 1;
         attribute |= BixolonPrinter.TEXT_ATTRIBUTE_FONT_A;
-        int size = 0;// int size = BixolonPrinter.TEXT_SIZE_HORIZONTAL1;
+        int size = 0;
 
         bixolonPrinterApi.setSingleByteFont(BixolonPrinter.CODE_PAGE_858_EURO);
         bixolonPrinterApi.printText(text, alignment, attribute, size, false);
-        Log.i("code", codex);
-        bixolonPrinterApi.lineFeed(2, false);
-        bixolonPrinterApi.print1dBarcode(codex.toUpperCase(), BixolonPrinter.BAR_CODE_CODE39, BixolonPrinter.ALIGNMENT_CENTER, 3, 200, BixolonPrinter.HRI_CHARACTER_NOT_PRINTED, true);
+        bixolonPrinterApi.lineFeed(1, false);
+        bixolonPrinterApi.print1dBarcode(codex.toUpperCase(), BixolonPrinter.BAR_CODE_CODE39, BixolonPrinter.ALIGNMENT_CENTER, 4, 200, BixolonPrinter.HRI_CHARACTER_NOT_PRINTED, true);
         bixolonPrinterApi.formFeed(true);
         bixolonPrinterApi.printText(codex.toUpperCase(), BixolonPrinter.ALIGNMENT_CENTER, attribute, size, false);
 
@@ -256,7 +244,7 @@ public class SuccessDestinoActivity extends Activity {
            // iconLoadingStop();
         }
 
-       // updatePrintButtonState();
+        //updatePrintButtonState();
     }
 
     SuccessDestinoActivity.PairWithPrinterTask task = null;
@@ -289,14 +277,14 @@ public class SuccessDestinoActivity extends Activity {
     }
 
     private void updatePrintButtonState() {
-        printButton.setEnabled(connectedPrinter != null && connectedPrinter == true);
+        btnConectar.setEnabled(connectedPrinter != null && connectedPrinter == true);
     }
 
     private final Handler handler = new Handler() {
         @SuppressWarnings("unchecked")
         @Override
         public void handleMessage(Message msg) {
-            // Log.i("Handler", msg.what + " " + msg.arg1 + " " + msg.arg2);
+            Log.i("Handler: - ", msg.what + " " + msg.arg1 + " " + msg.arg2);
 
             switch (msg.what) {
 
@@ -359,14 +347,14 @@ public class SuccessDestinoActivity extends Activity {
 
                 case BixolonPrinter.MESSAGE_TOAST:
                     Log.i("Handler", "BixolonPrinter.MESSAGE_TOAST - " + msg.getData().getString("toast"));
-                    // Toast.makeText(getApplicationContext(), msg.getData().getString("toast"), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), msg.getData().getString("toast"), Toast.LENGTH_SHORT).show();
                     break;
 
                 // The list of paired printers
                 case BixolonPrinter.MESSAGE_BLUETOOTH_DEVICE_SET:
                     Log.i("Handler", "BixolonPrinter.MESSAGE_BLUETOOTH_DEVICE_SET");
                     if (msg.obj == null) {
-                        //updateScreenStatus(layoutThereArentPairedPrinters);
+                        updateScreenStatus(layoutThereArentPairedPrinters);
                     } else {
                         Set<BluetoothDevice> pairedDevices = (Set<BluetoothDevice>) msg.obj;
                         for (BluetoothDevice device : pairedDevices) {
@@ -394,16 +382,6 @@ public class SuccessDestinoActivity extends Activity {
 
                 case MESSAGE_END_WORK:
                     Log.i("Handler", "MESSAGE_END_WORK");
-                    break;
-
-                case BixolonPrinter.MESSAGE_USB_DEVICE_SET:
-                    Log.i("Handler", "BixolonPrinter.MESSAGE_USB_DEVICE_SET");
-                    if (msg.obj == null) {
-                        Toast.makeText(getApplicationContext(), "No connected device", Toast.LENGTH_SHORT).show();
-                    } else {
-                        // DialogManager.showUsbDialog(MainActivity.this,
-                        // (Set<UsbDevice>) msg.obj, mUsbReceiver);
-                    }
                     break;
 
                 case BixolonPrinter.MESSAGE_NETWORK_DEVICE_SET:
@@ -512,7 +490,7 @@ public class SuccessDestinoActivity extends Activity {
             bixolonPrinterApi.printText(rightText, alignment, attribute, BixolonPrinter.TEXT_SIZE_HORIZONTAL1, false);
         } else {
             int padding = LINE_CHARS - leftText.length() - rightText.length();
-            String paddingChar = " ";
+            String paddingChar = "";
             for (int i = 0; i < padding; i++) {
                 paddingChar = paddingChar.concat(" ");
             }

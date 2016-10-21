@@ -82,5 +82,15 @@ class Usuario {
             return null;
         }
     }
+
+    public String getDescripcion(){
+        Cursor c = db.rawQuery("SELECT descripcion_database FROM user LIMIT 1", null);
+        if(c!=null && c.moveToFirst()){
+            return c.getString(0);
+        }
+        else{
+            return null;
+        }
+    }
 }
 

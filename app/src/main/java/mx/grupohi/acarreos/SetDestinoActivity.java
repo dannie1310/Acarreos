@@ -364,7 +364,7 @@ public class SetDestinoActivity extends AppCompatActivity
                     Coordenada coordenada = new Coordenada(this);
                     coordenada.create(cv);
 
-                   // nfcTag.cleanSector(myTag,1);
+                    nfcTag.cleanSector(myTag,1);
 
                     Intent destinoSuccess = new Intent(this, SuccessDestinoActivity.class);
                     destinoSuccess.putExtra("idViaje", viaje.idViaje);
@@ -389,20 +389,26 @@ public class SetDestinoActivity extends AppCompatActivity
         camion = idCamion.toString();
         int ceros = 0;
 
-        if(camion.length() != 4){
-            ceros = 4 - camion.length();
+        if(camion.length() < 5){
+            ceros = 5 - camion.length();
             for ( int i=0; i< ceros; i++){
                 mensaje += "0";
             }
             mensaje +=camion;
 
         }
-        if(viajes.length() != 6){
+        else{
+            mensaje +=camion;
+        }
+        if(viajes.length() < 5){
             ceros=0;
-            ceros = 6 - viajes.length();
+            ceros = 5 - viajes.length();
             for(int i=0; i< ceros; i++){
                 mensaje+="0";
             }
+            mensaje+=viajes;
+        }
+        else{
             mensaje+=viajes;
         }
         System.out.println("mensaje "+mensaje);
