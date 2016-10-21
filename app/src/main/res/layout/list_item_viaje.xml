@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:minHeight="?attr/listPreferredItemHeight"
     android:orientation="vertical"
     android:paddingBottom="8dp"
@@ -11,39 +12,34 @@
     android:paddingTop="8dp">
 
     <TextView
-        android:id="@+id/idCamion"
+        android:id="@+id/camion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="56dp"
-        android:text="Camion"
         android:textAppearance="?attr/textAppearanceListItem"
-        tools:text="T00" />
+        tools:text="T-000" />
 
     <TextView
-        android:id="@+id/idMaterial"
+        android:id="@+id/material"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/idCamion"
-        android:layout_below="@+id/idCamion"
-        android:text="Material"
-        tools:text="CEO" />
+        android:layout_alignStart="@+id/camion"
+        android:layout_below="@+id/camion"
+        tools:text="DESPERDICIO" />
 
     <TextView
-        android:id="@+id/idOrigen"
+        android:id="@+id/origen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/idCamion"
-        android:layout_below="@+id/idMaterial"
-        android:text="Origen"
-        tools:text="Blue Insurances Ltd" />
+        android:layout_alignStart="@+id/camion"
+        android:layout_below="@+id/material"
+        tools:text="KM 01 +300 V-1-B" />
 
     <TextView
-        android:id="@+id/idDestino"
+        android:id="@+id/destino"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/idCamion"
-        android:layout_below="@+id/idOrigen"
-        android:text="Destino"
-        tools:text="Blue Iniddds Ltd" />
+        android:layout_alignStart="@+id/camion"
+        android:layout_below="@+id/origen"
+        tools:text="BANCO DE TIRO GUADALUPE" />
 
 </RelativeLayout>

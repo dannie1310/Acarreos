@@ -19,29 +19,29 @@ import org.json.JSONObject;
 
 public class Viaje {
 
-    public Integer idViaje;
-    public Integer idMaterial;
-    public Integer idTiro;
-    public Integer idOrigen;
-    public Integer idCamion;
-    public Integer idRuta;
-    public String fechaSalida;
-    public String horaSalida;
-    public String fechaLlegada;
-    public String horaLlegada;
-    public String observaciones;
-    public Camion camion;
-    public Material material;
-    public Origen origen;
-    public Tiro tiro;
-    public Ruta ruta;
+    Integer idViaje;
+    private Integer idMaterial;
+    private Integer idTiro;
+    private Integer idOrigen;
+    private Integer idCamion;
+    private Integer idRuta;
+    String fechaSalida;
+    String horaSalida;
+    String fechaLlegada;
+    String horaLlegada;
+    String observaciones;
+    Camion camion;
+    Material material;
+    Origen origen;
+    Tiro tiro;
+    Ruta ruta;
 
 
     private static HashMap <String, Viaje> viajes;
     private static SQLiteDatabase db;
     private DBScaSqlite db_sca;
 
-    private static Context context;
+    private Context context;
 
     Viaje(Context context) {
         this.context = context;
@@ -52,7 +52,6 @@ public class Viaje {
         this.ruta = new Ruta(context);
         db_sca = new DBScaSqlite(this.context, "sca", null, 1);
         db = db_sca.getWritableDatabase();
-        viajes= new HashMap<>();
     }
 
     Boolean create(ContentValues data) {
@@ -143,11 +142,12 @@ public class Viaje {
 
         DBScaSqlite db_sca = new DBScaSqlite(con, "sca", null, 1);
         db = db_sca.getWritableDatabase();
-        Cursor c=db.rawQuery("SELECT * FROM viajesnetos",null);
-        Viaje viaje = new Viaje(con);
-        if (c!=null){
+        Cursor c = db.rawQuery("SELECT * FROM viajesnetos",null);
+        viajes = new HashMap<>();
+        if (c != null){
             while (c.moveToNext()){
-                viaje=viaje.find(c.getInt(0));
+                Viaje viaje = new Viaje(con);
+                viaje = viaje.find(c.getInt(0));
                 viajes.put(viaje.idViaje.toString(), viaje);
             }
             return new ArrayList<>(viajes.values());
@@ -158,12 +158,18 @@ public class Viaje {
     }
 
 
-    static void sync() {
+    static void sync(Context context) {
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+
         db.execSQL("DELETE FROM viajesnetos");
         db.execSQL("DELETE FROM coordenadas");
     }
 
-    static Boolean isSync() {
+    static Boolean isSync(Context context) {
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+
         Boolean result = true;
         try (Cursor c = db.rawQuery("SELECT * FROM viajesnetos", null)) {
             if(c != null && c.moveToFirst()) {

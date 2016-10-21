@@ -16,17 +16,17 @@ import java.net.URL;
  * Creado por JFEsquivel on 19/10/2016.
  */
 
-public class Sync extends AsyncTask<Void, Void, Boolean> {
+class Sync extends AsyncTask<Void, Void, Boolean> {
 
     private Context context;
     private ProgressDialog progressDialog;
     private Usuario usuario;
 
     // GPSTracker class
-    GPSTracker gps;
-    double latitude;
-    double longitude;
-    public String IMEI;
+    private GPSTracker gps;
+    private double latitude;
+    private double longitude;
+    private String IMEI;
 
     private JSONObject JSON;
 
@@ -60,8 +60,7 @@ public class Sync extends AsyncTask<Void, Void, Boolean> {
             values.put("fecha_hora", Util.timeStamp());
             values.put("code", "");
 
-            Coordenada coordenada = new Coordenada(context);
-            coordenada.create(values);
+            Coordenada.create(values, context);
 
             values.clear();
 
@@ -70,13 +69,13 @@ public class Sync extends AsyncTask<Void, Void, Boolean> {
             values.put("pass", usuario.pass);
             values.put("bd", usuario.baseDatos);
             values.put("idusuario", usuario.getId());
-            if (!Viaje.getJSON().equals(null)) {
+
+            if (Viaje.getJSON().length() != 0) {
                 values.put("carddata", String.valueOf(Viaje.getJSON()));
             }
-            if (!Coordenada.getJSON().equals(null)) {
-                values.put("coordenadas", String.valueOf(Coordenada.getJSON()));
+            if (Coordenada.getJSON(context).length() != 0) {
+                values.put("coordenadas", String.valueOf(Coordenada.getJSON(context)));
             }
-
             try {
                 URL url = new URL("http://sca.grupohi.mx/android20160923.php");
                 JSON = HttpConnection.POST(url, values);
@@ -97,14 +96,8 @@ public class Sync extends AsyncTask<Void, Void, Boolean> {
                 if (JSON.has("error")) {
                     Toast.makeText(context, (String) JSON.get("error"), Toast.LENGTH_SHORT).show();
                 } else if(JSON.has("msj")) {
-                    Viaje.sync();
-                    new android.app.AlertDialog.Builder(context)
-                            .setTitle("¡Hecho!")
-                            .setMessage((String) JSON.get("msj"))
-                            .setCancelable(false)
-                            .setPositiveButton("Aceptar", null)
-                            .create()
-                            .show();
+                    Viaje.sync(context);
+                    Toast.makeText(context, (String) JSON.get("msj"), Toast.LENGTH_LONG).show();
                 }
             } catch (Exception e) {
                 e.printStackTrace();

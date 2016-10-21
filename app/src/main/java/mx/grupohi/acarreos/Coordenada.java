@@ -11,10 +11,10 @@ import org.json.JSONObject;
  * Creado por JFEsquivel on 11/10/2016.
  */
 
-public class Coordenada {
+class Coordenada {
 
     Context context;
-    static SQLiteDatabase db;
+    SQLiteDatabase db;
     DBScaSqlite db_sca;
 
     Coordenada (Context context) {
@@ -23,13 +23,17 @@ public class Coordenada {
         db = db_sca.getWritableDatabase();
     }
 
-    public static Boolean create(ContentValues data) {
+    public static Boolean create(ContentValues data, Context context) {
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
         Boolean result = db.insert("coordenadas", null, data) > -1;
         db.close();
         return result;
     }
 
-    static JSONObject getJSON() {
+    static JSONObject getJSON(Context context) {
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
         JSONObject JSON = new JSONObject();
         try {
             Cursor c = db.rawQuery("SELECT * FROM coordenadas", null);
@@ -55,5 +59,18 @@ public class Coordenada {
             e.printStackTrace();
         }
         return JSON;
+    }
+
+    static Boolean isSync(Context context) {
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+
+        Boolean result = true;
+        try (Cursor c = db.rawQuery("SELECT * FROM coordenadas", null)) {
+            if(c != null && c.moveToFirst()) {
+                result = false;
+            }
+        }
+        return result;
     }
 }

@@ -16,9 +16,9 @@ class Usuario {
     private Integer idProyecto;
     String usr;
     String pass;
-    public String nombre;
+    String nombre;
     String baseDatos;
-    private String descripcionBaseDatos;
+    String descripcionBaseDatos;
 
     private Context context;
 
@@ -43,9 +43,9 @@ class Usuario {
         return result;
     }
 
-    public void destroy() { db.execSQL("DELETE FROM user"); }
+    void destroy() { db.execSQL("DELETE FROM user"); }
 
-    public boolean isAuth() {
+    boolean isAuth() {
         Cursor c = db.rawQuery("SELECT * FROM user LIMIT 1", null);
         Boolean result = c != null && c.moveToFirst();
         assert c != null;
@@ -56,10 +56,10 @@ class Usuario {
     public Integer getId() {
         Cursor c = db.rawQuery("SELECT * FROM user LIMIT 1", null);
         if(c != null && c.moveToFirst()) {
-            return c.getInt(0);
-        } else {
-            return null;
+            this.idUsuario = c.getInt(0);
         }
+        c.close();
+        return this.idUsuario;
     }
 
     Usuario getUsuario() {
@@ -73,27 +73,20 @@ class Usuario {
             this.usr = c.getString(c.getColumnIndex("user"));
             this.pass = c.getString(c.getColumnIndex("pass"));
 
-            Log.i("ID", String.valueOf(this.idUsuario));
-            Log.i("IDP", String.valueOf(this.idProyecto));
-            Log.i("NOMBRE", this.nombre);
-            Log.i("BASDATOS", this.baseDatos);
-            Log.i("DESC", this.descripcionBaseDatos);
-            Log.i("USER", this.usr);
-            Log.i("PASS", this.pass);
             c.close();
             return this;
         } else {
             return null;
         }
     }
-    public String getNombre(){
+
+    String getNombre(){
         Cursor c = db.rawQuery("SELECT nombre FROM user LIMIT 1", null);
         if(c!=null && c.moveToFirst()){
-            return c.getString(0);
+            this.nombre =  c.getString(0);
         }
-        else{
-            return null;
-        }
+        c.close();
+        return this.nombre;
     }
 }
 

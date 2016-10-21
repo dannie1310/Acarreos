@@ -21,6 +21,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/fragment_viajes" />
+    <include layout="@layout/content_lista_viajes" />
 
 </android.support.design.widget.CoordinatorLayout>
