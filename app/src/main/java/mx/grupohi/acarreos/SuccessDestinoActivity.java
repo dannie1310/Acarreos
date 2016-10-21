@@ -66,7 +66,10 @@ public class SuccessDestinoActivity extends Activity {
     private View layoutPrinterReady;
     private TextView debugTextView = null; //A hidden TextView where you can test things
     private Button printButton = null; //Guess it :P
+    Integer idViaje;
+
     Usuario usuario;
+    Viaje viaje;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +92,9 @@ public class SuccessDestinoActivity extends Activity {
         fillInfo();
         BitmapDrawable drawable = (BitmapDrawable) getResources().getDrawable(R.drawable.logo_ghi);
         bitmap = drawable.getBitmap();
+         viaje = new Viaje(this);
+        final String codigo = viaje.getCode(idViaje);
+        System.out.println("codigo: "+codigo);
         btnSalir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,7 +140,7 @@ public class SuccessDestinoActivity extends Activity {
 
                             Thread.sleep(PRINTING_SLEEP_TIME); // Don't strees the printer while printing the Bitmap... it don't like it.
                             printheadproyecto("Prueba");
-                            bixolonPrinterApi.lineFeed(2, false);
+
                            // printText("Invoice\n\n", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_A);
 
                             String x = usuario.nombre;
@@ -151,8 +157,8 @@ public class SuccessDestinoActivity extends Activity {
 
                             bixolonPrinterApi.lineFeed(1,true);
                             System.out.println(usuario.getNombre());
-                            printfoot(usuario.getNombre(),"479F9479F9FE5389");
-                           // bixolonPrinterApi.printQrCode("479F9C18444FE5389", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.QR_CODE_MODEL2, 5, false);
+                            printfoot("   Checador: "+ usuario.getNombre(),codigo);
+                           bixolonPrinterApi.printQrCode(codigo, BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.QR_CODE_MODEL1, 5, false);
                            // printText("Scan the QR\n", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_A);
                            // printText("and get the source!", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_C);
 
@@ -179,7 +185,7 @@ public class SuccessDestinoActivity extends Activity {
         int size = 0;// int size = BixolonPrinter.TEXT_SIZE_HORIZONTAL1;
         bixolonPrinterApi.setSingleByteFont(BixolonPrinter.CODE_PAGE_858_EURO);
         bixolonPrinterApi.printText(text, alignment, attribute, size, false);
-        bixolonPrinterApi.lineFeed(2, false);
+        bixolonPrinterApi.lineFeed(1, false);
 
         bixolonPrinterApi.cutPaper(true);
         bixolonPrinterApi.kickOutDrawer(BixolonPrinter.DRAWER_CONNECTOR_PIN5);
@@ -188,7 +194,7 @@ public class SuccessDestinoActivity extends Activity {
 
 
     public static void printfoot(String text, String codex) {
-        int alignment = BixolonPrinter.ALIGNMENT_CENTER;
+        int alignment = BixolonPrinter.ALIGNMENT_LEFT;
         int attribute = 1;
         attribute |= BixolonPrinter.TEXT_ATTRIBUTE_FONT_A;
         int size = 0;// int size = BixolonPrinter.TEXT_SIZE_HORIZONTAL1;
@@ -197,7 +203,7 @@ public class SuccessDestinoActivity extends Activity {
         bixolonPrinterApi.printText(text, alignment, attribute, size, false);
         Log.i("code", codex);
         bixolonPrinterApi.lineFeed(2, false);
-        bixolonPrinterApi.print1dBarcode(codex.toUpperCase(), BixolonPrinter.BAR_CODE_CODE39, BixolonPrinter.ALIGNMENT_CENTER, 2, 250, BixolonPrinter.HRI_CHARACTER_NOT_PRINTED, false);
+        bixolonPrinterApi.print1dBarcode(codex.toUpperCase(), BixolonPrinter.BAR_CODE_CODE39, BixolonPrinter.ALIGNMENT_CENTER, 3, 200, BixolonPrinter.HRI_CHARACTER_NOT_PRINTED, true);
         bixolonPrinterApi.formFeed(true);
         bixolonPrinterApi.printText(codex.toUpperCase(), BixolonPrinter.ALIGNMENT_CENTER, attribute, size, false);
 
@@ -209,7 +215,7 @@ public class SuccessDestinoActivity extends Activity {
 
     }
     public void fillInfo() {
-        Integer idViaje = getIntent().getIntExtra("idViaje", 0);
+        idViaje = getIntent().getIntExtra("idViaje", 0);
         Viaje viaje = new Viaje(getApplicationContext());
         viaje = viaje.find(idViaje);
 
