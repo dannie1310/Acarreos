@@ -1,6 +1,7 @@
 package mx.grupohi.acarreos;
 
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -53,6 +54,7 @@ public class SetOrigenActivity extends AppCompatActivity
     private ImageView nfcImage;
     private FloatingActionButton fabCancel;
     private TextView tagAlertTextView;
+    private ProgressDialog progressDialogSync;
 
     private Snackbar snackbar;
 
@@ -76,6 +78,7 @@ public class SetOrigenActivity extends AppCompatActivity
         escribirOrigenButton = (Button) findViewById(R.id.buttonEscribirOrigen);
 
         usuario = new Usuario(this);
+        usuario = usuario.getUsuario();
         material = new Material(this);
         origen = new Origen(this);
 
@@ -87,7 +90,7 @@ public class SetOrigenActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -200,6 +203,26 @@ public class SetOrigenActivity extends AppCompatActivity
                 WriteModeOff();
             }
         });
+
+        if(drawer != null)
+            drawer.post(new Runnable() {
+                @Override
+                public void run() {
+                    for (int i = 0; i < drawer.getChildCount(); i++) {
+                        View child = drawer.getChildAt(i);
+                        TextView tvp = (TextView) child.findViewById(R.id.textViewProyecto);
+                        TextView tvu = (TextView) child.findViewById(R.id.textViewUser);
+
+                        if (tvp != null) {
+                            tvp.setText(usuario.descripcionBaseDatos);
+                        }
+                        if (tvu != null) {
+                            tvu.setText(usuario.nombre);
+                        }
+                    }
+                }
+            });
+
     }
 
     @Override
@@ -228,7 +251,7 @@ public class SetOrigenActivity extends AppCompatActivity
                         cv.put("code", "");
 
                         Coordenada coordenada = new Coordenada(getApplicationContext());
-                        coordenada.create(cv);
+                        coordenada.create(cv, getApplicationContext());
 
                         Intent success = new Intent(SetOrigenActivity.this, SuccessOrigenActivity.class);
                         startActivity(success);
@@ -324,7 +347,19 @@ public class SetOrigenActivity extends AppCompatActivity
             Intent mainActivity = new Intent(this, MainActivity.class);
             startActivity(mainActivity);
         } else if (id == R.id.nav_sync) {
+            if (Util.isNetworkStatusAvialable(this)) {
+                if(!Viaje.isSync(getApplicationContext())) {
+                    progressDialogSync = ProgressDialog.show(this, "Sincronizando datos", "Por favor espere...", true);
+                    new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
+                } else {
+                    Toast.makeText(getApplicationContext(), "No es necesaria la sincronización en este momento", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(this, R.string.error_internet, Toast.LENGTH_SHORT).show();
+            }
         } else if (id == R.id.nav_list) {
+            Intent listActivity = new Intent(this, ListaViajesActivity.class);
+            startActivity(listActivity);
         } else if (id == R.id.nav_pair_on) {
         } else if (id == R.id.nav_pair_off) {
         } else if (id == R.id.nav_logout) {

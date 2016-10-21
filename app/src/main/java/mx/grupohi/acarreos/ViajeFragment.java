@@ -1,29 +1,37 @@
 package mx.grupohi.acarreos;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.ListViewAutoScrollHelper;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link ViajesFragment.OnFragmentInteractionListener} interface
+ * {@link ViajeFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link ViajesFragment#newInstance} factory method to
+ * Use the {@link ViajeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ViajesFragment extends Fragment {
+public class ViajeFragment extends Fragment {
+
+    ListView mViajesList;
+    ViajesAdapter mViajesAdapter;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    Context context;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -31,7 +39,7 @@ public class ViajesFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public ViajesFragment() {
+    public ViajeFragment() {
         // Required empty public constructor
     }
 
@@ -39,14 +47,16 @@ public class ViajesFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment ViajesFragment.
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment ViajeFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ViajesFragment newInstance() {
-        ViajesFragment fragment = new ViajesFragment();
+    public static ViajeFragment newInstance(String param1, String param2) {
+        ViajeFragment fragment = new ViajeFragment();
         Bundle args = new Bundle();
-       // args.putString(ARG_PARAM1, param1);
-       // args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -63,18 +73,23 @@ public class ViajesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View root = inflater.inflate(R.layout.fragment_viajes, container);
-        context = container.getContext();
 
-        // Instancia del ListView.
-        ListView viajesList = (ListView) root.findViewById(R.id.viajes_list);
+        final Context con = container.getContext();
+        View root = inflater.inflate(R.layout.fragment_viaje, container, false);
+        mViajesList = (ListView) root.findViewById(R.id.viajes_list);
+        mViajesAdapter = new ViajesAdapter(getActivity(), Viaje.getViajes(con));
+        mViajesList.setAdapter(mViajesAdapter);
 
-        // Inicializar el adaptador con la fuente de datos.
-       ViajeAdapter mLeadsAdapter = new ViajeAdapter(getActivity(), Viaje.getViajes(context));
-
-        //Relacionando la lista con el adaptador
-        viajesList.setAdapter(mLeadsAdapter);
+        mViajesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Viaje viajeActual = mViajesAdapter.getItem(position);
+                Intent intent = new Intent(con, SuccessDestinoActivity.class);
+                intent.putExtra("idViaje", viajeActual.idViaje);
+                intent.putExtra("list", 1);
+                startActivity(intent);
+            }
+        });
 
         return root;
     }
@@ -101,6 +116,12 @@ public class ViajesFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    public static ViajeFragment newInstance() {
+        ViajeFragment fragment = new ViajeFragment();
+        // Setup parámetros
+        return fragment;
     }
 
     /**

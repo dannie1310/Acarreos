@@ -1,6 +1,7 @@
 package mx.grupohi.acarreos;
 
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity
     private Button actionButton;
     private ImageView nfcImage;
     private TextView infoTag;
+    private ProgressDialog progressDialogSync;
 
     private TextView tEconomico;
     private TextView tPlacas;
@@ -73,6 +75,8 @@ public class MainActivity extends AppCompatActivity
     private Boolean writeMode;
 
     Usuario usuario;
+    Viaje viaje;
+    Coordenada coordenada;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +88,9 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         setTitle(getString(R.string.title_activity_main));
         usuario = new Usuario(this);
+        usuario = usuario.getUsuario();
+        viaje = new Viaje(this);
+        coordenada = new Coordenada(this);
         writeMode = true;
         infoLayout = (LinearLayout) findViewById(R.id.LayoutInfo);
         origenLayout = (LinearLayout) findViewById(R.id.LayoutOrigen);
@@ -125,11 +132,30 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+
+        if(drawer != null)
+            drawer.post(new Runnable() {
+                @Override
+                public void run() {
+                    for (int i = 0; i < drawer.getChildCount(); i++) {
+                        View child = drawer.getChildAt(i);
+                        TextView tvp = (TextView) child.findViewById(R.id.textViewProyecto);
+                        TextView tvu = (TextView) child.findViewById(R.id.textViewUser);
+
+                        if (tvp != null) {
+                            tvp.setText(usuario.descripcionBaseDatos);
+                        }
+                        if (tvu != null) {
+                            tvu.setText(usuario.nombre);
+                        }
+                    }
+                }
+            });
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -154,7 +180,6 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
             Intent intent = new Intent(Intent.ACTION_MAIN);
             intent.addCategory(Intent.CATEGORY_HOME);
             startActivity(intent);
@@ -335,13 +360,22 @@ public class MainActivity extends AppCompatActivity
             finish();
             startActivity(intent);
         } else if (id == R.id.nav_sync) {
+            if (Util.isNetworkStatusAvialable(this)) {
+                if(!Viaje.isSync(getApplicationContext())) {
+                    progressDialogSync = ProgressDialog.show(this, "Sincronizando datos", "Por favor espere...", true);
+                    new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
+                } else {
+                    Toast.makeText(getApplicationContext(), "No es necesaria la sincronización en este momento", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(this, R.string.error_internet, Toast.LENGTH_SHORT).show();
+            }
         } else if (id == R.id.nav_list) {
-            Intent intent = getIntent();
-            finish();
             startActivity(listaViajes);
-
         } else if (id == R.id.nav_pair_on) {
+
         } else if (id == R.id.nav_pair_off) {
+
         } else if (id == R.id.nav_logout) {
             Intent login_activity = new Intent(this, LoginActivity.class);
             usuario.destroy();

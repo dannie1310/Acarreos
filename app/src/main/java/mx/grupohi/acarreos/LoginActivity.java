@@ -67,7 +67,7 @@ public class LoginActivity extends AppCompatActivity {
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        setTitle(getString(R.string.title_activity_login));
+        setTitle(getString(R.string.app_name));
         gps = new GPSTracker(LoginActivity.this);
         checkPermissions();
         // Set up the login form.
@@ -233,6 +233,8 @@ public class LoginActivity extends AppCompatActivity {
                     data.put("idusuario", JSON.getString("IdUsuario"));
                     data.put("idproyecto", JSON.getString("IdProyecto") );
                     data.put("nombre", JSON.getString("Nombre"));
+                    data.put("user", user);
+                    data.put("pass", pass);
                     data.put("base_datos", JSON.getString("base_datos"));
                     data.put("descripcion_database", JSON.getString("descripcion_database"));
 
@@ -431,7 +433,7 @@ public class LoginActivity extends AppCompatActivity {
                     data.put("code", "");
 
                     Coordenada coordenada = new Coordenada(getApplicationContext());
-                    if(!coordenada.create(data)) {
+                    if(!coordenada.create(data, LoginActivity.this)) {
                         return false;
                     }
                 }
@@ -456,6 +458,13 @@ public class LoginActivity extends AppCompatActivity {
             mAuthTask = null;
             loginProgressDialog.dismiss();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        startActivity(intent);
     }
 }
 

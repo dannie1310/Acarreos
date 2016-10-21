@@ -39,6 +39,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SuccessOrigenActivity"
+            android:label="@string/title_activity_success_origen"
             android:screenOrientation="portrait" />
         <activity
             android:name=".SetDestinoActivity"
@@ -47,12 +48,13 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SuccessDestinoActivity"
-            android:screenOrientation="portrait"/>
-
+            android:label="@string/title_activity_success_destino"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ListaViajesActivity"
             android:label="@string/title_activity_lista_viajes"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

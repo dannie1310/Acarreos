@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 /**
  * Creado por JFEsquivel on 05/10/2016.
@@ -15,9 +16,9 @@ class Usuario {
     private Integer idProyecto;
     String usr;
     String pass;
-    public String nombre;
+    String nombre;
     String baseDatos;
-    private String descripcionBaseDatos;
+    String descripcionBaseDatos;
 
     private Context context;
 
@@ -42,9 +43,9 @@ class Usuario {
         return result;
     }
 
-    public void destroy() { db.execSQL("DELETE FROM user"); }
+    void destroy() { db.execSQL("DELETE FROM user"); }
 
-    public boolean isAuth() {
+    boolean isAuth() {
         Cursor c = db.rawQuery("SELECT * FROM user LIMIT 1", null);
         Boolean result = c != null && c.moveToFirst();
         assert c != null;
@@ -55,32 +56,37 @@ class Usuario {
     public Integer getId() {
         Cursor c = db.rawQuery("SELECT * FROM user LIMIT 1", null);
         if(c != null && c.moveToFirst()) {
-            return c.getInt(0);
-        } else {
-            return null;
+            this.idUsuario = c.getInt(0);
         }
+        c.close();
+        return this.idUsuario;
     }
 
     Usuario getUsuario() {
         Cursor c = db.rawQuery("SELECT * FROM user LIMIT 1", null);
         if(c != null && c.moveToFirst()) {
-            this.baseDatos = c.getString(3);
-            this.usr = c.getString(5);
-            this.pass = c.getString(6);
+            this.idUsuario = c.getInt(c.getColumnIndex("idusuario"));
+            this.idProyecto = c.getInt(c.getColumnIndex("idproyecto"));
+            this.nombre = c.getString(c.getColumnIndex("nombre"));
+            this.baseDatos = c.getString(c.getColumnIndex("base_datos"));
+            this.descripcionBaseDatos = c.getString(c.getColumnIndex("descripcion_database"));
+            this.usr = c.getString(c.getColumnIndex("user"));
+            this.pass = c.getString(c.getColumnIndex("pass"));
+
             c.close();
             return this;
         } else {
             return null;
         }
     }
-    public String getNombre(){
+
+    String getNombre(){
         Cursor c = db.rawQuery("SELECT nombre FROM user LIMIT 1", null);
         if(c!=null && c.moveToFirst()){
-            return c.getString(0);
+            this.nombre =  c.getString(0);
         }
-        else{
-            return null;
-        }
+        c.close();
+        return this.nombre;
     }
 
     public String getDescripcion(){

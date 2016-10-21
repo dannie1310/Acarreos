@@ -35,14 +35,15 @@
 
     <string name="action_settings">Settings</string>
 
-    <string name="title_activity_success_origen">SuccessOrigen</string>
+    <string name="title_activity_success_origen">VIAJE INICIADO</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
-    <string name="title_activity_set_destino">SetDestinoActivity</string>
+    <string name="title_activity_set_destino">ESCRIBIR DESTINO</string>
     <string name="mensaje_no_bluetooth">No esta activado</string>
     <string name="text_warning_blue_is_off">bluethooth apagado</string>
     <string name="text_turn_on_blue">bluethooth prendido</string>
-    <string name="title_activity_lista_viajes">ListaViajesActivity</string>
+    <string name="title_activity_lista_viajes">LISTA DE VIAJES</string>
+    <string name="title_activity_success_destino">VIAJE COMPLETADO</string>
 
     <!--Mensajes Impresora -->
     <string name="error_impresion">Error de Impresión</string>

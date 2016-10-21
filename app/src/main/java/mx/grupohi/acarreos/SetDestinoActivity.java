@@ -1,6 +1,7 @@
 package mx.grupohi.acarreos;
 
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -69,6 +70,7 @@ public class SetDestinoActivity extends AppCompatActivity
     private TextView mensajeTextView;
     private EditText observacionesTextView;
     private Snackbar snackbar;
+    private ProgressDialog progressDialogSync;
 
     private Integer idTiro;
     private Integer idRuta;
@@ -83,7 +85,7 @@ public class SetDestinoActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -94,6 +96,7 @@ public class SetDestinoActivity extends AppCompatActivity
 
 
         usuario = new Usuario(this);
+        usuario = usuario.getUsuario();
         ruta = new Ruta(this);
         tiro = new Tiro(this);
 
@@ -149,6 +152,26 @@ public class SetDestinoActivity extends AppCompatActivity
                 final ArrayAdapter<String> arrayAdapterRutas = new ArrayAdapter<>(SetDestinoActivity.this, R.layout.support_simple_spinner_dropdown_item, spinnerRutasArray);
                 arrayAdapterRutas.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
                 rutasSpinner.setAdapter(arrayAdapterRutas);
+
+                if(drawer != null)
+                    drawer.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            for (int i = 0; i < drawer.getChildCount(); i++) {
+                                View child = drawer.getChildAt(i);
+                                TextView tvp = (TextView) child.findViewById(R.id.textViewProyecto);
+                                TextView tvu = (TextView) child.findViewById(R.id.textViewUser);
+
+                                if (tvp != null) {
+                                    tvp.setText(usuario.descripcionBaseDatos);
+                                }
+                                if (tvu != null) {
+                                    tvu.setText(usuario.nombre);
+                                }
+                            }
+                        }
+                    });
+
             }
 
             @Override
@@ -268,9 +291,23 @@ public class SetDestinoActivity extends AppCompatActivity
             Intent mainActivity = new Intent(this, MainActivity.class);
             startActivity(mainActivity);
         } else if (id == R.id.nav_sync) {
+            if (Util.isNetworkStatusAvialable(this)) {
+                if(!Viaje.isSync(getApplicationContext())) {
+                    progressDialogSync = ProgressDialog.show(this, "Sincronizando datos", "Por favor espere...", true);
+                    new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
+                } else {
+                    Toast.makeText(getApplicationContext(), "No es necesaria la sincronización en este momento", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(this, R.string.error_internet, Toast.LENGTH_SHORT).show();
+            }
         } else if (id == R.id.nav_list) {
+            Intent navList = new Intent(this, ListaViajesActivity.class);
+            startActivity(navList);
         } else if (id == R.id.nav_pair_on) {
+
         } else if (id == R.id.nav_pair_off) {
+
         } else if (id == R.id.nav_logout) {
             Intent login_activity = new Intent(this, LoginActivity.class);
             usuario.destroy();
@@ -349,7 +386,6 @@ public class SetDestinoActivity extends AppCompatActivity
                     cv.put("Estatus", "10");
                     cv.put("Ruta", idRuta);
                     cv.put("Code", getCode(contador,idCamion).toUpperCase());
-                    System.out.println("idCamion: "+idCamion);
                     cv.put("uidTAG", UID);
                     Viaje viaje = new Viaje(this);
                     viaje.create(cv);
@@ -362,15 +398,15 @@ public class SetDestinoActivity extends AppCompatActivity
                     cv.put("fecha_hora", Util.timeStamp());
                     cv.put("code", getCode(contador,idCamion).toUpperCase());
                     Coordenada coordenada = new Coordenada(this);
-                    coordenada.create(cv);
+                    coordenada.create(cv, SetDestinoActivity.this);
 
                     nfcTag.cleanSector(myTag,1);
 
                     Intent destinoSuccess = new Intent(this, SuccessDestinoActivity.class);
                     destinoSuccess.putExtra("idViaje", viaje.idViaje);
+                    destinoSuccess.putExtra("LIST", 0);
                     destinoSuccess.putExtra("code", getCode(contador,idCamion));
                     startActivity(destinoSuccess);
-                    System.out.println("codigo viajes: "+ getCode(contador, idCamion));
                 } else {
                     snackbar = Snackbar.make(findViewById(R.id.content_set_origen), "Por favor utiliza el TAG correcto", Snackbar.LENGTH_SHORT);
                     View snackBarView = snackbar.getView();

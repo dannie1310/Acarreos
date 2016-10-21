@@ -66,6 +66,7 @@ public class SuccessDestinoActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_success_destino);
+
         usuario = new Usuario(this);
         textViewCamion = (TextView) findViewById(R.id.textViewCamion);
         textViewCubicacion = (TextView) findViewById(R.id.textViewCubicacion);
@@ -97,14 +98,14 @@ public class SuccessDestinoActivity extends Activity {
             }
         });
 
-        /*btnShowList.setOnClickListener(new View.OnClickListener() {
+        btnShowList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ListaViajesActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }
-        });*/
+        });
+
         btnImprimir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -213,9 +214,15 @@ public class SuccessDestinoActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
+
+        Integer list = getIntent().getIntExtra("list", 0);
+        if(list == 1) {
+            super.onBackPressed();
+        } else {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        }
     }
     private void updateScreenStatus(View viewToShow) {
         if (viewToShow == layoutLoading) {
@@ -497,6 +504,4 @@ public class SuccessDestinoActivity extends Activity {
             bixolonPrinterApi.printText(leftText + paddingChar + rightText, alignment, attribute, BixolonPrinter.TEXT_SIZE_HORIZONTAL1, false);
         }
     }
-
-
 }
