@@ -50,6 +50,8 @@
 
 
     <!--Mensajes Bluetooth -->
-
+    <string name="text_warning_bluetooth">¡Bluetooth Está apagado!</string>
+    <string name="text_turn_on_bluetooth">No se podrá imprimir si el adaptador Bluetooth está apagado. Por favor encienda el adaptador Bluetooth en la configuración del dispositivo.</string>
+    <string name="text_update_settingsB">Encender Ahora</string>
 
 </resources>

@@ -31,6 +31,16 @@ public class Bluetooth {
         }
     }
 
+    public static boolean statusBluetooth() {
+        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (bluetoothAdapter.isEnabled()) {
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
     public static void unpairMac(String macToRemove) {
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         Set<BluetoothDevice> bondedDevices = bluetoothAdapter.getBondedDevices();

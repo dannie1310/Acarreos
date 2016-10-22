@@ -1,11 +1,13 @@
 package mx.grupohi.acarreos;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -110,6 +112,7 @@ public class SuccessDestinoActivity extends Activity {
             @Override
             public void onClick(View v) {
                 btnImprimir.setEnabled(false);
+
                 new Handler().postDelayed(new Thread() {
                     @Override
                     public void run() {
@@ -153,17 +156,39 @@ public class SuccessDestinoActivity extends Activity {
 
             }
         });
+        onPause();
+
+
     }
 
+    private void checkEnabled() {
+        Boolean enabled = Bluetooth.statusBluetooth();
+        if (!enabled) {
+            new android.app.AlertDialog.Builder(SuccessDestinoActivity.this)
+                    .setTitle(getString(R.string.text_warning_blue_is_off))
+                    .setMessage(getString(R.string.text_turn_on_bluetooth))
+                    .setCancelable(true)
+                    .setPositiveButton(
+                            getString(R.string.text_update_settingsB),
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+                                    startActivity(new Intent(Settings.ACTION_BLUETOOTH_SETTINGS));
+                                }
+                            })
+                    .create()
+                    .show();
+        }
+    }
     public static void printheadproyecto(String text) {
         bixolonPrinterApi.printBitmap(bitmap, BixolonPrinter.ALIGNMENT_CENTER,260, 50, true);
 
         int alignment = BixolonPrinter.ALIGNMENT_CENTER;
 
         int attribute = 0;
-        attribute |= BixolonPrinter.TEXT_ATTRIBUTE_FONT_A;
+        attribute |= BixolonPrinter.TEXT_ATTRIBUTE_FONT_B;
 
-        int size = 0;
+        int size = 1;
         bixolonPrinterApi.setSingleByteFont(BixolonPrinter.CODE_PAGE_858_EURO);
         bixolonPrinterApi.printText(text, alignment, attribute, size, false);
         bixolonPrinterApi.lineFeed(1, false);
@@ -250,14 +275,14 @@ public class SuccessDestinoActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-
+        checkEnabled();
         bixolonPrinterApi = new BixolonPrinter(this, handler, null);
         task = new SuccessDestinoActivity.PairWithPrinterTask();
         task.execute();
 
        // updatePrintButtonState();
 
-        Bluetooth.startBluetooth();
+        //Bluetooth.startBluetooth();
     }
 
     @Override
@@ -346,7 +371,7 @@ public class SuccessDestinoActivity extends Activity {
 
                 case BixolonPrinter.MESSAGE_TOAST:
                     Log.i("Handler", "BixolonPrinter.MESSAGE_TOAST - " + msg.getData().getString("toast"));
-                    Toast.makeText(getApplicationContext(),"BixolonPrinter.MESSAGE_TOAST - " + msg.getData().getString("toast"), Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(getApplicationContext(),"BixolonPrinter.MESSAGE_TOAST - " + msg.getData().getString("toast"), Toast.LENGTH_SHORT).show();
                     break;
 
                 // The list of paired printers
@@ -359,6 +384,8 @@ public class SuccessDestinoActivity extends Activity {
                         for (BluetoothDevice device : pairedDevices) {
                             if (!pairedPrinters.contains(device.getAddress())) {
                                 pairedPrinters.add(device.getAddress());
+                                Toast.makeText(getApplicationContext(),"device "+device.getAddress(), Toast.LENGTH_SHORT).show();
+
                             }
                             if (pairedPrinters.size() == 1) {
                                 SuccessDestinoActivity.bixolonPrinterApi.connect(pairedPrinters.get(0));
@@ -431,7 +458,6 @@ public class SuccessDestinoActivity extends Activity {
             super.onProgressUpdate(values);
             if (action < 20) {
                 bixolonPrinterApi.findBluetoothPrinters();
-                Toast.makeText(getApplicationContext(),"se encontraronimpresoras", Toast.LENGTH_SHORT).show();
                 action++;
             } else {
                 bixolonPrinterApi.disconnect();

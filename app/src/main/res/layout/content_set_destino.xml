@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="@android:style/TextAppearance.Material.Menu"
             android:id="@+id/textObservaciones"
-            android:maxLength="20"/>
+            android:maxLength="50"/>
 
         <Button
             android:text="ESCRIBIR DESTINO"
