@@ -166,7 +166,6 @@ public class Viaje {
         else {
             return null;
         }
-
     }
 
     static void sync(Context context) {

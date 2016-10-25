@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -34,9 +33,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 
 public class SetDestinoActivity extends AppCompatActivity
@@ -352,7 +349,6 @@ public class SetDestinoActivity extends AppCompatActivity
                     longitude = gps.getLongitude();
                     String viajes = nfcTag.readSector(myTag,2,8);
                     viajes=viajes.replace(" ","");
-                    System.out.println("viajes: "+viajes);
                     int contador=0;
                     contador=Integer.valueOf(viajes)+1;
                     nfcTag.writeSector(myTag,2,8,String.valueOf(contador));
@@ -366,8 +362,6 @@ public class SetDestinoActivity extends AppCompatActivity
                     Integer idMaterial = Util.getIdMaterial(tagOrigen);
 
                     String fechaString = nfcTag.readSector(myTag, 1, 5);
-                    String fechaOrigen = Util.getFecha(fechaString);
-                    String horaOrigen = Util.getTime(fechaString);
 
                     ContentValues cv = new ContentValues();
                     cv.put("FechaCarga", Util.getFecha());
@@ -447,7 +441,6 @@ public class SetDestinoActivity extends AppCompatActivity
         else{
             mensaje+=viajes;
         }
-        System.out.println("mensaje "+mensaje);
 
         /*String resp = Long.toHexString(Long.parseLong(mensaje));
         mensaje="";

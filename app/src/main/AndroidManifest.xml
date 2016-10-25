@@ -47,14 +47,15 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".SuccessDestinoActivity"
-            android:label="@string/title_activity_success_destino"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ListaViajesActivity"
             android:label="@string/title_activity_lista_viajes"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SuccessDestinoActivity"
+            android:label="@string/title_activity_success_destino"
             android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

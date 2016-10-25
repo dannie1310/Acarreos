@@ -1,4 +1,4 @@
-<resources>
+<resources  xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Módulo de Acarreos</string>
     <string name="error_internet">Por favor habilite su conexión a Internet para poder iniciar sesión</string>
 
@@ -53,5 +53,10 @@
     <string name="text_warning_bluetooth">¡Bluetooth Está apagado!</string>
     <string name="text_turn_on_bluetooth">No se podrá imprimir si el adaptador Bluetooth está apagado. Por favor encienda el adaptador Bluetooth en la configuración del dispositivo.</string>
     <string name="text_update_settingsB">Encender Ahora</string>
+
+    <!--Printer-->
+    <string name="title_connecting">Conectando&#8230;</string>
+    <string name="title_not_connected">No hay impresora conectada</string>
+
 
 </resources>

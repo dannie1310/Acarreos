@@ -1,33 +1,38 @@
 package mx.grupohi.acarreos;
 
-import android.app.Activity;
+import android.app.ProgressDialog;
+import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.Handler;
-import android.provider.Settings;
-import android.support.v7.app.AppCompatActivity;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.Animation;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
-import android.bluetooth.BluetoothDevice;
-import com.bixolon.printer.BixolonPrinter;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import android.os.AsyncTask;
-import android.os.Message;
 import android.widget.Toast;
 
+import com.bixolon.printer.BixolonPrinter;
 
-public class SuccessDestinoActivity extends Activity {
+import java.util.Set;
+
+public class SuccessDestinoActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     private TextView textViewCamion,
             textViewCubicacion,
@@ -39,37 +44,43 @@ public class SuccessDestinoActivity extends Activity {
             textViewRuta,
             textViewObservaciones;
 
+    private Toolbar toolbar;
 
-    private final int LINE_CHARS = 42+22;
+    private ProgressDialog progressDialogSync;
+    private Usuario usuario;
+    private Viaje viaje;
+    private Integer idViaje;
+
+    private Button btnImprimir,
+            btnSalir,
+            btnShowList;
 
     static Bitmap bitmap;
-   private static final long PRINTING_SLEEP_TIME = 300;
+
+    public static BixolonPrinter bixolonPrinterApi;
 
     private static final long PRINTING_TIME = 2200;
-
+    private static final long PRINTING_SLEEP_TIME = 300;
     static final int MESSAGE_START_WORK = Integer.MAX_VALUE - 2;
     static final int MESSAGE_END_WORK = Integer.MAX_VALUE - 3;
+    private final int LINE_CHARS = 64;
 
-    private List<String> pairedPrinters = new ArrayList<String>();
     private Boolean connectedPrinter = false;
-    private static BixolonPrinter bixolonPrinterApi;
+    private String mConnectedDeviceName = null;
 
-    private Animation rotation = null;
-    private View layoutLoading;
-    private View layoutThereArentPairedPrinters;
-    private View layoutPrinterReady;
-    private TextView debugTextView = null;
 
-    Integer idViaje;
-    private Button btnImpresora;
-    Usuario usuario;
-    Viaje viaje;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_success_destino);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         usuario = new Usuario(this);
+        usuario = usuario.getUsuario();
+        viaje = new Viaje(this);
+        bixolonPrinterApi = new BixolonPrinter(this, mHandler, null);
+
         textViewCamion = (TextView) findViewById(R.id.textViewCamion);
         textViewCubicacion = (TextView) findViewById(R.id.textViewCubicacion);
         textViewMaterial = (TextView) findViewById(R.id.textViewMaterial);
@@ -80,17 +91,43 @@ public class SuccessDestinoActivity extends Activity {
         textViewRuta = (TextView) findViewById(R.id.textViewRuta);
         textViewObservaciones = (TextView) findViewById(R.id.textViewObservaciones);
 
+        btnImprimir = (Button) findViewById(R.id.buttonImprimir);
+        btnShowList = (Button) findViewById(R.id.buttonShowList);
+        btnSalir = (Button) findViewById(R.id.buttonSalir);
 
-        final Button btnImprimir = (Button) findViewById(R.id.buttonImprimir);
-        Button btnShowList = (Button) findViewById(R.id.buttonShowList);
-        Button btnSalir = (Button) findViewById(R.id.buttonSalir);
-
-        fillInfo();
         BitmapDrawable drawable = (BitmapDrawable) getResources().getDrawable(R.drawable.logo_ghi);
         bitmap = drawable.getBitmap();
-        viaje = new Viaje(this);
-        final String codigo = viaje.getCode(idViaje);
-        System.out.println("codigo: "+codigo);
+
+        fillInfo();
+
+        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        if(drawer != null)
+            drawer.post(new Runnable() {
+                @Override
+                public void run() {
+                    for (int i = 0; i < drawer.getChildCount(); i++) {
+                        View child = drawer.getChildAt(i);
+                        TextView tvp = (TextView) child.findViewById(R.id.textViewProyecto);
+                        TextView tvu = (TextView) child.findViewById(R.id.textViewUser);
+
+                        if (tvp != null) {
+                            tvp.setText(usuario.descripcionBaseDatos);
+                        }
+                        if (tvu != null) {
+                            tvu.setText(usuario.nombre);
+                        }
+                    }
+                }
+            });
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
         btnSalir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,7 +149,6 @@ public class SuccessDestinoActivity extends Activity {
             @Override
             public void onClick(View v) {
                 btnImprimir.setEnabled(false);
-
                 new Handler().postDelayed(new Thread() {
                     @Override
                     public void run() {
@@ -131,7 +167,7 @@ public class SuccessDestinoActivity extends Activity {
                             printheadproyecto(usuario.getDescripcion());
                             bixolonPrinterApi.lineFeed(1,true);
                             printTextTwoColumns("Camion: ", textViewCamion.getText()+ " \n");
-                            printTextTwoColumns("Ubicación: ", textViewCubicacion.getText()+" \n");
+                            printTextTwoColumns("Cubicación: ", textViewCubicacion.getText()+" \n");
 
                             printTextTwoColumns("Material: ",textViewMaterial.getText()+ "\n");
                             printTextTwoColumns("Origen: ", textViewOrigen.getText()+"\n");
@@ -143,8 +179,8 @@ public class SuccessDestinoActivity extends Activity {
                             printTextTwoColumns("Observaciones: ", textViewObservaciones.getText()+"\n");
 
                             bixolonPrinterApi.lineFeed(1,true);
-                            printfoot("   Checador: "+ usuario.getNombre(),codigo);
-                            bixolonPrinterApi.printQrCode(codigo, BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.QR_CODE_MODEL1, 5, false);
+                            printfoot("Checador: "+ usuario.getNombre(), viaje.getCode(idViaje));
+                            bixolonPrinterApi.printQrCode(viaje.getCode(idViaje), BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.QR_CODE_MODEL1, 5, false);
 
                             bixolonPrinterApi.lineFeed(2, false);
                         } catch (Exception e) {
@@ -153,11 +189,92 @@ public class SuccessDestinoActivity extends Activity {
                     }
                 };
                 t.start();
-
             }
         });
         onPause();
+        bixolonPrinterApi.kickOutDrawer(BixolonPrinter.DRAWER_CONNECTOR_PIN5);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkEnabled();
+    }
+
+    @Override
+    protected void onPause() {
+        if (bixolonPrinterApi != null) {
+            bixolonPrinterApi.disconnect();
+        }
+        super.onPause();
+    }
+
+    public static void printheadproyecto(String text) {
+        bixolonPrinterApi.printBitmap(bitmap, BixolonPrinter.ALIGNMENT_CENTER,260, 50, true);
+
+        int alignment = BixolonPrinter.ALIGNMENT_CENTER;
+
+        int attribute = 0;
+        attribute |= BixolonPrinter.TEXT_ATTRIBUTE_FONT_B;
+
+        int size = 1;
+        bixolonPrinterApi.setSingleByteFont(BixolonPrinter.CODE_PAGE_858_EURO);
+        bixolonPrinterApi.printText(text, alignment, attribute, size, false);
+        bixolonPrinterApi.lineFeed(1, false);
+
+        bixolonPrinterApi.cutPaper(true);
+        bixolonPrinterApi.kickOutDrawer(BixolonPrinter.DRAWER_CONNECTOR_PIN5);
+    }
+
+    /**
+     * Print the common two columns ticket style text. Label+Value.
+     *
+     * @param leftText
+     * @param rightText
+     */
+    private void printTextTwoColumns(String leftText, String rightText) {
+        if (leftText.length() + rightText.length() + 1 > LINE_CHARS) {
+            int alignment = BixolonPrinter.ALIGNMENT_LEFT;
+            int attribute = 0;
+            attribute |= BixolonPrinter.TEXT_ATTRIBUTE_FONT_C;
+            bixolonPrinterApi.printText(leftText, alignment, attribute, BixolonPrinter.TEXT_SIZE_HORIZONTAL1, false);
+
+            alignment = BixolonPrinter.ALIGNMENT_RIGHT;
+            attribute = 0;
+            attribute |= BixolonPrinter.TEXT_ATTRIBUTE_FONT_C;
+            bixolonPrinterApi.printText(rightText, alignment, attribute, BixolonPrinter.TEXT_SIZE_HORIZONTAL1, false);
+        } else {
+            int padding = LINE_CHARS - leftText.length() - rightText.length();
+            String paddingChar = "";
+            for (int i = 0; i < padding; i++) {
+                paddingChar = paddingChar.concat(" ");
+            }
+
+            int alignment = BixolonPrinter.ALIGNMENT_CENTER;
+            int attribute = 0;
+            attribute |= BixolonPrinter.TEXT_ATTRIBUTE_FONT_C;
+            bixolonPrinterApi.printText(leftText + paddingChar + rightText, alignment, attribute, BixolonPrinter.TEXT_SIZE_HORIZONTAL1, false);
+        }
+    }
+
+    public static void printfoot(String text, String codex) {
+        int alignment = BixolonPrinter.ALIGNMENT_LEFT;
+        int attribute = 1;
+        attribute |= BixolonPrinter.TEXT_ATTRIBUTE_FONT_A;
+        int size = 0;
+
+        bixolonPrinterApi.setSingleByteFont(BixolonPrinter.CODE_PAGE_858_EURO);
+        bixolonPrinterApi.printText(text, alignment, attribute, size, false);
+        bixolonPrinterApi.lineFeed(1, false);
+        bixolonPrinterApi.print1dBarcode(codex.toUpperCase(), BixolonPrinter.BAR_CODE_CODE39, BixolonPrinter.ALIGNMENT_CENTER, 4, 200, BixolonPrinter.HRI_CHARACTER_NOT_PRINTED, true);
+        bixolonPrinterApi.formFeed(true);
+        bixolonPrinterApi.printText(codex.toUpperCase(), BixolonPrinter.ALIGNMENT_CENTER, attribute, size, false);
+
+        String cadena = "\n\nEste documento es un comprobante de recepción \nde materiales del Sistema de Administración de \nObra, no representa un compromiso de pago hasta \nsu validación contra las remisiones del \nproveedor y la revisión de factura.";
+        bixolonPrinterApi.printText(cadena, BixolonPrinter.ALIGNMENT_LEFT, attribute, size, false);
+        bixolonPrinterApi.lineFeed(3, false);
+        bixolonPrinterApi.cutPaper(true);
+        bixolonPrinterApi.kickOutDrawer(BixolonPrinter.DRAWER_CONNECTOR_PIN5);
 
     }
 
@@ -180,130 +297,7 @@ public class SuccessDestinoActivity extends Activity {
                     .show();
         }
     }
-    public static void printheadproyecto(String text) {
-        bixolonPrinterApi.printBitmap(bitmap, BixolonPrinter.ALIGNMENT_CENTER,260, 50, true);
-
-        int alignment = BixolonPrinter.ALIGNMENT_CENTER;
-
-        int attribute = 0;
-        attribute |= BixolonPrinter.TEXT_ATTRIBUTE_FONT_B;
-
-        int size = 1;
-        bixolonPrinterApi.setSingleByteFont(BixolonPrinter.CODE_PAGE_858_EURO);
-        bixolonPrinterApi.printText(text, alignment, attribute, size, false);
-        bixolonPrinterApi.lineFeed(1, false);
-
-        bixolonPrinterApi.cutPaper(true);
-        bixolonPrinterApi.kickOutDrawer(BixolonPrinter.DRAWER_CONNECTOR_PIN5);
-    }
-
-
-
-    public static void printfoot(String text, String codex) {
-        int alignment = BixolonPrinter.ALIGNMENT_LEFT;
-        int attribute = 1;
-        attribute |= BixolonPrinter.TEXT_ATTRIBUTE_FONT_A;
-        int size = 0;
-
-        bixolonPrinterApi.setSingleByteFont(BixolonPrinter.CODE_PAGE_858_EURO);
-        bixolonPrinterApi.printText(text, alignment, attribute, size, false);
-        bixolonPrinterApi.lineFeed(1, false);
-        bixolonPrinterApi.print1dBarcode(codex.toUpperCase(), BixolonPrinter.BAR_CODE_CODE39, BixolonPrinter.ALIGNMENT_CENTER, 4, 200, BixolonPrinter.HRI_CHARACTER_NOT_PRINTED, true);
-        bixolonPrinterApi.formFeed(true);
-        bixolonPrinterApi.printText(codex.toUpperCase(), BixolonPrinter.ALIGNMENT_CENTER, attribute, size, false);
-
-        String cadena = "\n\nEste documento es un comprobante de recepción \nde materiales del Sistema de Administración de \nObra, no representa un compromiso de pago hasta \nsu validación contra las remisiones del \nproveedor y la revisión de factura.";
-        bixolonPrinterApi.printText(cadena, BixolonPrinter.ALIGNMENT_LEFT, attribute, size, false);
-        bixolonPrinterApi.lineFeed(3, false);
-        bixolonPrinterApi.cutPaper(true);
-        bixolonPrinterApi.kickOutDrawer(BixolonPrinter.DRAWER_CONNECTOR_PIN5);
-
-    }
-    public void fillInfo() {
-        idViaje = getIntent().getIntExtra("idViaje", 0);
-        Viaje viaje = new Viaje(getApplicationContext());
-        viaje = viaje.find(idViaje);
-
-        textViewCamion.setText(viaje.camion.economico);
-        textViewCubicacion.setText(viaje.camion.capacidad + " m3");
-        textViewMaterial.setText(viaje.material.descripcion);
-        textViewOrigen.setText(viaje.origen.descripcion);
-        textViewFechaHoraSalida.setText(viaje.fechaSalida + " " + viaje.horaSalida);
-        textViewDestino.setText(viaje.tiro.descripcion);
-        textViewFechaHoraLlegada.setText(viaje.fechaLlegada + " " + viaje.horaLlegada);
-        textViewRuta.setText(viaje.ruta.toString());
-        textViewObservaciones.setText(viaje.observaciones);
-        Log.i("ORIGEN", viaje.origen.descripcion);
-        Log.i("ECONOMICO", viaje.camion.economico);
-    }
-
-    @Override
-    public void onBackPressed() {
-
-        Integer list = getIntent().getIntExtra("list", 0);
-        if(list == 1) {
-            super.onBackPressed();
-        } else {
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-        }
-    }
-    private void updateScreenStatus(View viewToShow) {
-        if (viewToShow == layoutLoading) {
-            layoutLoading.setVisibility(View.VISIBLE);
-            layoutThereArentPairedPrinters.setVisibility(View.GONE);
-            layoutPrinterReady.setVisibility(View.GONE);
-            //iconLoadingStart();
-        } else if (viewToShow == layoutThereArentPairedPrinters) {
-            layoutLoading.setVisibility(View.GONE);
-            layoutThereArentPairedPrinters.setVisibility(View.VISIBLE);
-            layoutPrinterReady.setVisibility(View.GONE);
-           // iconLoadingStop();
-        } else if (viewToShow == layoutPrinterReady) {
-            layoutLoading.setVisibility(View.GONE);
-            layoutThereArentPairedPrinters.setVisibility(View.GONE);
-            layoutPrinterReady.setVisibility(View.VISIBLE);
-           // iconLoadingStop();
-        }
-
-        //updatePrintButtonState();
-    }
-
-    SuccessDestinoActivity.PairWithPrinterTask task = null;
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        checkEnabled();
-        bixolonPrinterApi = new BixolonPrinter(this, handler, null);
-        task = new SuccessDestinoActivity.PairWithPrinterTask();
-        task.execute();
-
-       // updatePrintButtonState();
-
-        //Bluetooth.startBluetooth();
-    }
-
-    @Override
-    protected void onPause() {
-        if (task != null) {
-            task.stop();
-            task = null;
-        }
-
-        if (bixolonPrinterApi != null) {
-            bixolonPrinterApi.disconnect();
-        }
-
-        super.onPause();
-    }
-
-    private void updatePrintButtonState() {
-        btnImpresora.setEnabled(connectedPrinter != null && connectedPrinter == true);
-    }
-
-    private final Handler handler = new Handler() {
+    Handler mHandler = new Handler() {
         @SuppressWarnings("unchecked")
         @Override
         public void handleMessage(Message msg) {
@@ -315,22 +309,26 @@ public class SuccessDestinoActivity extends Activity {
                     Log.i("Handler", "BixolonPrinter.MESSAGE_STATE_CHANGE");
                     switch (msg.arg1) {
                         case BixolonPrinter.STATE_CONNECTED:
-                           // updateScreenStatus(layoutPrinterReady);
                             Log.i("Handler", "BixolonPrinter.STATE_CONNECTED");
+                            toolbar.setSubtitle("Impresora Contectada " + mConnectedDeviceName);
                             connectedPrinter = true;
-                           // updateScreenStatus(layoutPrinterReady);
+                            btnImprimir.setEnabled(true);
                             break;
 
                         case BixolonPrinter.STATE_CONNECTING:
-                           // updateScreenStatus(layoutLoading);
                             Log.i("Handler", "BixolonPrinter.STATE_CONNECTING");
+                            toolbar.setSubtitle(R.string.title_connecting);
                             connectedPrinter = false;
+                            btnImprimir.setEnabled(false);
+
                             break;
 
                         case BixolonPrinter.STATE_NONE:
-                           // updateScreenStatus(layoutLoading);
+                            toolbar.setSubtitle(R.string.title_not_connected);
                             Log.i("Handler", "BixolonPrinter.STATE_NONE");
                             connectedPrinter = false;
+                            btnImprimir.setEnabled(false);
+
                             break;
                     }
                     break;
@@ -364,33 +362,25 @@ public class SuccessDestinoActivity extends Activity {
                     break;
 
                 case BixolonPrinter.MESSAGE_DEVICE_NAME:
-                   // debugTextView.setText(msg.getData().getString(BixolonPrinter.KEY_STRING_DEVICE_NAME));
                     Log.i("Handler", "BixolonPrinter.MESSAGE_DEVICE_NAME - " + msg.getData().getString(BixolonPrinter.KEY_STRING_DEVICE_NAME));
-                    Toast.makeText(getApplicationContext(), "Impresora Conectada como: " +msg.getData().getString(BixolonPrinter.KEY_STRING_DEVICE_NAME), Toast.LENGTH_SHORT).show();
+                    mConnectedDeviceName = msg.getData().getString(BixolonPrinter.KEY_STRING_DEVICE_NAME);
+                    Toast.makeText(getApplicationContext(), "Impresora Conectada como: " + mConnectedDeviceName, Toast.LENGTH_SHORT).show();
                     break;
 
                 case BixolonPrinter.MESSAGE_TOAST:
                     Log.i("Handler", "BixolonPrinter.MESSAGE_TOAST - " + msg.getData().getString("toast"));
-                   // Toast.makeText(getApplicationContext(),"BixolonPrinter.MESSAGE_TOAST - " + msg.getData().getString("toast"), Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(context,"BixolonPrinter.MESSAGE_TOAST - " + msg.getData().getString("toast"), Toast.LENGTH_SHORT).show();
                     break;
 
                 // The list of paired printers
                 case BixolonPrinter.MESSAGE_BLUETOOTH_DEVICE_SET:
                     Log.i("Handler", "BixolonPrinter.MESSAGE_BLUETOOTH_DEVICE_SET");
                     if (msg.obj == null) {
-                        updateScreenStatus(layoutThereArentPairedPrinters);
+                        Toast.makeText(getApplicationContext(), "No paired device",
+                                Toast.LENGTH_SHORT).show();
                     } else {
                         Set<BluetoothDevice> pairedDevices = (Set<BluetoothDevice>) msg.obj;
-                        for (BluetoothDevice device : pairedDevices) {
-                            if (!pairedPrinters.contains(device.getAddress())) {
-                                pairedPrinters.add(device.getAddress());
-                                Toast.makeText(getApplicationContext(),"device "+device.getAddress(), Toast.LENGTH_SHORT).show();
-
-                            }
-                            if (pairedPrinters.size() == 1) {
-                                SuccessDestinoActivity.bixolonPrinterApi.connect(pairedPrinters.get(0));
-                            }
-                        }
+                        DialogManager.showBluetoothDialog(SuccessDestinoActivity.this, bixolonPrinterApi, (Set<BluetoothDevice>) msg.obj);
                     }
                     break;
 
@@ -424,110 +414,91 @@ public class SuccessDestinoActivity extends Activity {
         }
     };
 
-    class PairWithPrinterTask extends AsyncTask<Void, Void, Void> {
+    public void fillInfo() {
+        idViaje = getIntent().getIntExtra("idViaje", 0);
+        Viaje viaje = new Viaje(getApplicationContext());
+        viaje = viaje.find(idViaje);
 
-        boolean running = true;
+        textViewCamion.setText(viaje.camion.economico);
+        textViewCubicacion.setText(viaje.camion.capacidad + " m3");
+        textViewMaterial.setText(viaje.material.descripcion);
+        textViewOrigen.setText(viaje.origen.descripcion);
+        textViewFechaHoraSalida.setText(viaje.fechaSalida + " " + viaje.horaSalida);
+        textViewDestino.setText(viaje.tiro.descripcion);
+        textViewFechaHoraLlegada.setText(viaje.fechaLlegada + " " + viaje.horaLlegada);
+        textViewRuta.setText(viaje.ruta.toString());
+        textViewObservaciones.setText(viaje.observaciones);
+    }
 
-        public PairWithPrinterTask() {
+    @Override
+    public void onBackPressed() {
+        Integer list = getIntent().getIntExtra("list", 0);
+        if(list == 1) {
+            super.onBackPressed();
+        } else {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        }
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
         }
 
-        public void stop() {
-            running = false;
-        }
+        return super.onOptionsItemSelected(item);
+    }
 
-        @Override
-        protected Void doInBackground(Void... params) {
-            while (running) {
-                if (connectedPrinter == null || connectedPrinter == false) {
-                    publishProgress();
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        if (id == R.id.nav_home) {
+            Intent mainActivity = new Intent(this, MainActivity.class);
+            startActivity(mainActivity);
+        } else if (id == R.id.nav_sync) {
+            if (Util.isNetworkStatusAvialable(this)) {
+                if(!Viaje.isSync(getApplicationContext())) {
+                    progressDialogSync = ProgressDialog.show(this, "Sincronizando datos", "Por favor espere...", true);
+                    new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
+                } else {
+                    Toast.makeText(getApplicationContext(), "No es necesaria la sincronización en este momento", Toast.LENGTH_SHORT).show();
                 }
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            return null;
-        }
-
-        int action = 0;
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            super.onProgressUpdate(values);
-            if (action < 20) {
-                bixolonPrinterApi.findBluetoothPrinters();
-                action++;
             } else {
-                bixolonPrinterApi.disconnect();
-                action = 0;
+                Toast.makeText(this, R.string.error_internet, Toast.LENGTH_SHORT).show();
             }
+        } else if (id == R.id.nav_list) {
+            Intent navList = new Intent(this, ListaViajesActivity.class);
+            startActivity(navList);
+        } else if (id == R.id.nav_pair_on) {
+            bixolonPrinterApi.findBluetoothPrinters();
+        } else if (id == R.id.nav_pair_off) {
+            bixolonPrinterApi.disconnect();
+        } else if (id == R.id.nav_logout) {
+            Intent login_activity = new Intent(this, LoginActivity.class);
+            usuario.destroy();
+            startActivity(login_activity);
         }
-    }
 
-    private void printText(String textToPrint) {
-
-        int alignment = BixolonPrinter.ALIGNMENT_LEFT;
-
-        int attribute = 1;
-        attribute = BixolonPrinter.TEXT_ATTRIBUTE_FONT_C;
-
-        int size = 0;
-        bixolonPrinterApi.printText(textToPrint, alignment, attribute, size, false);
-        bixolonPrinterApi.lineFeed(2, false);
-        bixolonPrinterApi.cutPaper(true);
-        bixolonPrinterApi.kickOutDrawer(BixolonPrinter.DRAWER_CONNECTOR_PIN5);
-    }
-
-    private void printText(String textToPrint, int alignment) {
-        printText(textToPrint, alignment, BixolonPrinter.TEXT_ATTRIBUTE_FONT_C);
-    }
-
-    private void printText(String textToPrint, int alignment, int attribute) {
-
-        if (textToPrint.length() <= LINE_CHARS) {
-            bixolonPrinterApi.printText(textToPrint, alignment, attribute, BixolonPrinter.TEXT_SIZE_HORIZONTAL1, false);
-        } else {
-            String textToPrintInNextLine = null;
-            while (textToPrint.length() > LINE_CHARS) {
-                textToPrintInNextLine = textToPrint.substring(0, LINE_CHARS);
-                textToPrintInNextLine = textToPrintInNextLine.substring(0, textToPrintInNextLine.lastIndexOf(" ")).trim() + "\n";
-                bixolonPrinterApi.printText(textToPrintInNextLine, alignment, attribute, BixolonPrinter.TEXT_SIZE_HORIZONTAL1, false);
-                textToPrint = textToPrint.substring(textToPrintInNextLine.length(), textToPrint.length());
-            }
-            bixolonPrinterApi.printText(textToPrint, alignment, attribute, BixolonPrinter.TEXT_SIZE_HORIZONTAL1, false);
-        }
-    }
-
-    /**
-     * Print the common two columns ticket style text. Label+Value.
-     *
-     * @param leftText
-     * @param rightText
-     */
-    private void printTextTwoColumns(String leftText, String rightText) {
-        if (leftText.length() + rightText.length() + 1 > LINE_CHARS) {
-            int alignment = BixolonPrinter.ALIGNMENT_LEFT;
-            int attribute = 0;
-            attribute |= BixolonPrinter.TEXT_ATTRIBUTE_FONT_C;
-            bixolonPrinterApi.printText(leftText, alignment, attribute, BixolonPrinter.TEXT_SIZE_HORIZONTAL1, false);
-
-            alignment = BixolonPrinter.ALIGNMENT_RIGHT;
-            attribute = 0;
-            attribute |= BixolonPrinter.TEXT_ATTRIBUTE_FONT_C;
-            bixolonPrinterApi.printText(rightText, alignment, attribute, BixolonPrinter.TEXT_SIZE_HORIZONTAL1, false);
-        } else {
-            int padding = LINE_CHARS - leftText.length() - rightText.length();
-            String paddingChar = "";
-            for (int i = 0; i < padding; i++) {
-                paddingChar = paddingChar.concat(" ");
-            }
-
-            int alignment = BixolonPrinter.ALIGNMENT_CENTER;
-            int attribute = 0;
-            attribute |= BixolonPrinter.TEXT_ATTRIBUTE_FONT_C;
-            bixolonPrinterApi.printText(leftText + paddingChar + rightText, alignment, attribute, BixolonPrinter.TEXT_SIZE_HORIZONTAL1, false);
-        }
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }
