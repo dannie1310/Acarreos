@@ -179,7 +179,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
 
                             bixolonPrinterApi.lineFeed(1,true);
                             printfoot("Checador: "+ usuario.getNombre(), viaje.getCode(idViaje));
-                            bixolonPrinterApi.printQrCode(viaje.getCode(idViaje), BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.QR_CODE_MODEL1, 5, false);
+                            bixolonPrinterApi.printQrCode(viaje.getCode(idViaje), BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.QR_CODE_MODEL2, 5, false);
 
                             bixolonPrinterApi.lineFeed(2, false);
                         } catch (Exception e) {
