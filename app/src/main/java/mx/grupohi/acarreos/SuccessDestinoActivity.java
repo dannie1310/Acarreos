@@ -7,12 +7,11 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.provider.Settings;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -65,7 +64,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
     static final int MESSAGE_END_WORK = Integer.MAX_VALUE - 3;
     private final int LINE_CHARS = 64;
 
-    private Boolean connectedPrinter = false;
+    private static Boolean connectedPrinter = false;
     private String mConnectedDeviceName = null;
 
 
@@ -318,7 +317,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
                         case BixolonPrinter.STATE_CONNECTING:
                             Log.i("Handler", "BixolonPrinter.STATE_CONNECTING");
                             toolbar.setSubtitle(R.string.title_connecting);
-                            connectedPrinter = false;
+                            SuccessDestinoActivity.connectedPrinter = false;
                             btnImprimir.setEnabled(false);
 
                             break;
@@ -369,7 +368,6 @@ public class SuccessDestinoActivity extends AppCompatActivity
 
                 case BixolonPrinter.MESSAGE_TOAST:
                     Log.i("Handler", "BixolonPrinter.MESSAGE_TOAST - " + msg.getData().getString("toast"));
-                    // Toast.makeText(context,"BixolonPrinter.MESSAGE_TOAST - " + msg.getData().getString("toast"), Toast.LENGTH_SHORT).show();
                     break;
 
                 // The list of paired printers
@@ -408,7 +406,6 @@ public class SuccessDestinoActivity extends AppCompatActivity
                     if (msg.obj == null) {
                         Toast.makeText(getApplicationContext(), "No connectable device", Toast.LENGTH_SHORT).show();
                     }
-                    // DialogManager.showNetworkDialog(PrintingActivity.this, (Set<String>) msg.obj);
                     break;
             }
         }
@@ -457,10 +454,11 @@ public class SuccessDestinoActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.nav_pair_on) {
+            bixolonPrinterApi.findBluetoothPrinters();
+        } else if (id == R.id.nav_pair_off) {
+            bixolonPrinterApi.disconnect();
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -474,16 +472,28 @@ public class SuccessDestinoActivity extends AppCompatActivity
             Intent mainActivity = new Intent(this, MainActivity.class);
             startActivity(mainActivity);
         } else if (id == R.id.nav_sync) {
-            if (Util.isNetworkStatusAvialable(this)) {
-                if(!Viaje.isSync(getApplicationContext())) {
-                    progressDialogSync = ProgressDialog.show(this, "Sincronizando datos", "Por favor espere...", true);
-                    new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
-                } else {
-                    Toast.makeText(getApplicationContext(), "No es necesaria la sincronización en este momento", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                Toast.makeText(this, R.string.error_internet, Toast.LENGTH_SHORT).show();
-            }
+            new AlertDialog.Builder(SuccessDestinoActivity.this)
+                    .setTitle("¡ADVERTENCIA!")
+                    .setMessage("Se borrarán los registros de viajes almacenados en este dispositivo. \n ¿Deséas continuar con la sincronización?")
+                    .setNegativeButton("NO", null)
+                    .setPositiveButton("SI", new DialogInterface.OnClickListener() {
+                        @Override public void onClick(DialogInterface dialog, int which) {
+                            if (Util.isNetworkStatusAvialable(getApplicationContext())) {
+                                if(!Viaje.isSync(getApplicationContext())) {
+                                    progressDialogSync = ProgressDialog.show(SuccessDestinoActivity.this, "Sincronizando datos", "Por favor espere...", true);
+                                    new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
+                                    Intent intent = new Intent(SuccessDestinoActivity.this, MainActivity.class);
+                                    startActivity(intent);
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "No es necesaria la sincronización en este momento", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Toast.makeText(getApplicationContext(), R.string.error_internet, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    })
+                    .create()
+                    .show();
         } else if (id == R.id.nav_list) {
             Intent navList = new Intent(this, ListaViajesActivity.class);
             startActivity(navList);

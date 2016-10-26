@@ -13,6 +13,7 @@ import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -315,28 +316,6 @@ public class SetOrigenActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -347,21 +326,30 @@ public class SetOrigenActivity extends AppCompatActivity
             Intent mainActivity = new Intent(this, MainActivity.class);
             startActivity(mainActivity);
         } else if (id == R.id.nav_sync) {
-            if (Util.isNetworkStatusAvialable(this)) {
-                if(!Viaje.isSync(getApplicationContext())) {
-                    progressDialogSync = ProgressDialog.show(this, "Sincronizando datos", "Por favor espere...", true);
-                    new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
-                } else {
-                    Toast.makeText(getApplicationContext(), "No es necesaria la sincronización en este momento", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                Toast.makeText(this, R.string.error_internet, Toast.LENGTH_SHORT).show();
-            }
+            new AlertDialog.Builder(SetOrigenActivity.this)
+                    .setTitle("¡ADVERTENCIA!")
+                    .setMessage("Se borrarán los registros de viajes almacenados en este dispositivo. \n ¿Deséas continuar con la sincronización?")
+                    .setNegativeButton("NO", null)
+                    .setPositiveButton("SI", new DialogInterface.OnClickListener() {
+                        @Override public void onClick(DialogInterface dialog, int which) {
+                            if (Util.isNetworkStatusAvialable(getApplicationContext())) {
+                                if(!Viaje.isSync(getApplicationContext())) {
+                                    progressDialogSync = ProgressDialog.show(SetOrigenActivity.this, "Sincronizando datos", "Por favor espere...", true);
+                                    new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "No es necesaria la sincronización en este momento", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Toast.makeText(getApplicationContext(), R.string.error_internet, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    })
+                    .create()
+                    .show();
         } else if (id == R.id.nav_list) {
             Intent listActivity = new Intent(this, ListaViajesActivity.class);
             startActivity(listActivity);
-        } else if (id == R.id.nav_pair_on) {
-        } else if (id == R.id.nav_pair_off) {
+
         } else if (id == R.id.nav_logout) {
             Intent login_activity = new Intent(this, LoginActivity.class);
             usuario.destroy();

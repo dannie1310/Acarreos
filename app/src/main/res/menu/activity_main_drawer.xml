@@ -14,14 +14,7 @@
             android:id="@+id/nav_list"
             android:icon="@drawable/ic_action_list"
             android:title="Lista de Viajes" />
-        <item
-            android:id="@+id/nav_pair_on"
-            android:icon="@drawable/ic_action_pair"
-            android:title="Conectar Impresora" />
-        <item
-            android:id="@+id/nav_pair_off"
-            android:icon="@drawable/ic_action_pair_off"
-            android:title="Desconectar Impresora" />
+
     </group>
 
     <item android:title="Sesión Actual">
