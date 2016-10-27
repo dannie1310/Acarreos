@@ -120,6 +120,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if(!gps.canGetLocation()) {
             gps.showSettingsAlert();
+            gps = new GPSTracker(LoginActivity.this);
             _gps = false;
         }
 
@@ -178,7 +179,7 @@ public class LoginActivity extends AppCompatActivity {
             mAuthTask.execute((Void) null);
         }
     }
-    
+
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
@@ -242,130 +243,150 @@ public class LoginActivity extends AppCompatActivity {
                         return false;
                     }
 
-                    //Camuiones
+                    //Camiones
                     Camion camion = new Camion(getApplicationContext());
-                    final JSONArray camiones = new JSONArray(JSON.getString("Camiones"));
-                    for (int i = 0; i < camiones.length(); i++) {
-                        final int finalI = i + 1;
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                loginProgressDialog.setMessage("Actualizando catálogo de camiones... \n Camion " + finalI + " de " + camiones.length());
+                    try {
+                        final JSONArray camiones = new JSONArray(JSON.getString("Camiones"));
+                        for (int i = 0; i < camiones.length(); i++) {
+                            final int finalI = i + 1;
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    loginProgressDialog.setMessage("Actualizando catálogo de camiones... \n Camion " + finalI + " de " + camiones.length());
+                                }
+                            });
+                            JSONObject info = camiones.getJSONObject(i);
+
+                            data.clear();
+                            data.put("idcamion", info.getString("idcamion"));
+                            data.put("placas", info.getString("placas"));
+                            data.put("marca", info.getString("marca"));
+                            data.put("modelo", info.getString("modelo"));
+                            data.put("ancho", info.getString("ancho"));
+                            data.put("largo", info.getString("largo"));
+                            data.put("alto", info.getString("alto"));
+                            data.put("economico", info.getString("economico"));
+                            data.put("capacidad", info.getString("capacidad"));
+
+                            if (!camion.create(data)) {
+                                return false;
                             }
-                        });
-                        JSONObject info = camiones.getJSONObject(i);
-
-                        data.clear();
-                        data.put("idcamion", info.getString("idcamion"));
-                        data.put("placas", info.getString("placas"));
-                        data.put("marca", info.getString("marca") );
-                        data.put("modelo",  info.getString("modelo"));
-                        data.put("ancho",  info.getString("ancho"));
-                        data.put("largo",  info.getString("largo"));
-                        data.put("alto",  info.getString("alto"));
-                        data.put("economico",  info.getString("economico"));
-                        data.put("capacidad",  info.getString("capacidad"));
-
-                        if (!camion.create(data)) {
-                            return false;
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
 
                     //Tiros
 
                     Tiro tiro = new Tiro(getApplicationContext());
-                    final JSONArray tiros = new JSONArray(JSON.getString("Tiros"));
-                    for (int i = 0; i < tiros.length(); i++) {
-                        final int finalI = i + 1;
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                loginProgressDialog.setMessage("Actualizando catálogo de tiros... \n Tiro " + finalI + " de " + tiros.length());
+                    try {
+                        final JSONArray tiros = new JSONArray(JSON.getString("Tiros"));
+                        for (int i = 0; i < tiros.length(); i++) {
+                            final int finalI = i + 1;
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    loginProgressDialog.setMessage("Actualizando catálogo de tiros... \n Tiro " + finalI + " de " + tiros.length());
+                                }
+                            });
+                            JSONObject info = tiros.getJSONObject(i);
+
+                            data.clear();
+                            data.put("idtiro", info.getString("idtiro"));
+                            data.put("descripcion", info.getString("descripcion"));
+
+                            if (!tiro.create(data)) {
+                                return false;
                             }
-                        });
-                        JSONObject info = tiros.getJSONObject(i);
-
-                        data.clear();
-                        data.put("idtiro", info.getString("idtiro"));
-                        data.put("descripcion", info.getString("descripcion"));
-
-                        if (!tiro.create(data)) {
-                            return false;
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
 
                     //Origenes
 
                     Origen origen = new Origen(getApplicationContext());
-                    final JSONArray origenes = new JSONArray(JSON.getString("Origenes"));
-                    for (int i = 0; i < origenes.length(); i++) {
-                        final int finalI = i + 1;
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                loginProgressDialog.setMessage("Actualizando catálogo de Origenes... \n Origen " + finalI + " de " + origenes.length());
+                    try {
+                        final JSONArray origenes = new JSONArray(JSON.getString("Origenes"));
+                        for (int i = 0; i < origenes.length(); i++) {
+                            final int finalI = i + 1;
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    loginProgressDialog.setMessage("Actualizando catálogo de Origenes... \n Origen " + finalI + " de " + origenes.length());
+                                }
+                            });
+                            JSONObject info = origenes.getJSONObject(i);
+
+                            data.clear();
+                            data.put("idorigen", info.getString("idorigen"));
+                            data.put("descripcion", info.getString("descripcion"));
+                            data.put("estado", info.getString("estado"));
+
+
+                            if (!origen.create(data)) {
+                                return false;
                             }
-                        });
-                        JSONObject info = origenes.getJSONObject(i);
-
-                        data.clear();
-                        data.put("idorigen", info.getString("idorigen"));
-                        data.put("descripcion", info.getString("descripcion"));
-                        data.put("estado", info.getString("estado"));
-
-
-                        if (!origen.create(data)) {
-                            return false;
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
 
                     //Rutas
 
                     Ruta ruta = new Ruta(getApplicationContext());
-                    final JSONArray rutas = new JSONArray(JSON.getString("Rutas"));
-                    for (int i = 0; i < rutas.length(); i++) {
-                        final int finalI = i + 1;
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                loginProgressDialog.setMessage("Actualizando catálogo de Rutas... \n Ruta " + finalI + " de " + rutas.length());
+                    try {
+                        final JSONArray rutas = new JSONArray(JSON.getString("Rutas"));
+                        for (int i = 0; i < rutas.length(); i++) {
+                            final int finalI = i + 1;
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    loginProgressDialog.setMessage("Actualizando catálogo de Rutas... \n Ruta " + finalI + " de " + rutas.length());
+                                }
+                            });
+                            JSONObject info = rutas.getJSONObject(i);
+
+                            data.clear();
+                            data.put("idruta", info.getString("idruta"));
+                            data.put("clave", info.getString("clave"));
+                            data.put("idorigen", info.getString("idorigen"));
+                            data.put("idtiro", info.getString("idtiro"));
+                            data.put("totalkm", info.getString("totalkm"));
+
+                            if (!ruta.create(data)) {
+                                return false;
                             }
-                        });
-                        JSONObject info = rutas.getJSONObject(i);
-
-                        data.clear();
-                        data.put("idruta", info.getString("idruta"));
-                        data.put("clave", info.getString("clave"));
-                        data.put("idorigen", info.getString("idorigen"));
-                        data.put("idtiro", info.getString("idtiro"));
-                        data.put("totalkm", info.getString("totalkm"));
-
-                        if (!ruta.create(data)) {
-                            return false;
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
 
                     //Materiales
 
                     Material material = new Material(getApplicationContext());
-                    final JSONArray materiales = new JSONArray(JSON.getString("Materiales"));
-                    for (int i = 0; i < materiales.length(); i++) {
-                        final int finalI = i + 1;
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                loginProgressDialog.setMessage("Actualizando catálogo de Materiales... \n Material " + finalI + " de " + materiales.length());
+                    try {
+                        final JSONArray materiales = new JSONArray(JSON.getString("Materiales"));
+                        for (int i = 0; i < materiales.length(); i++) {
+                            final int finalI = i + 1;
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    loginProgressDialog.setMessage("Actualizando catálogo de Materiales... \n Material " + finalI + " de " + materiales.length());
+                                }
+                            });
+                            JSONObject info = materiales.getJSONObject(i);
+
+                            data.clear();
+                            data.put("idmaterial", info.getString("idmaterial"));
+                            data.put("descripcion", info.getString("descripcion"));
+
+                            if (!material.create(data)) {
+                                return false;
                             }
-                        });
-                        JSONObject info = materiales.getJSONObject(i);
-
-                        data.clear();
-                        data.put("idmaterial", info.getString("idmaterial"));
-                        data.put("descripcion", info.getString("descripcion"));
-
-                        if (!material.create(data)) {
-                            return false;
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
 
                     //Tags
@@ -465,6 +486,12 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_HOME);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        gps = new GPSTracker(LoginActivity.this);
     }
 }
 
