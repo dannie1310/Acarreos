@@ -120,6 +120,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if(!gps.canGetLocation()) {
             gps.showSettingsAlert();
+            gps = new GPSTracker(LoginActivity.this);
             _gps = false;
         }
 
@@ -465,6 +466,12 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_HOME);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        gps = new GPSTracker(LoginActivity.this);
     }
 }
 
