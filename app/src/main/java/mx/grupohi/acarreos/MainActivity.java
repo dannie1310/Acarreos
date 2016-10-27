@@ -128,8 +128,6 @@ public class MainActivity extends AppCompatActivity
             return;
         }
 
-        checkNfcEnabled();
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -166,6 +164,7 @@ public class MainActivity extends AppCompatActivity
     protected void onPostResume() {
         super.onPostResume();
         WriteModeOn();
+        nfc_adapter = NfcAdapter.getDefaultAdapter(this);
         checkNfcEnabled();
     }
 
