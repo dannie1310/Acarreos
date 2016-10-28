@@ -120,10 +120,35 @@ public class ListaViajesActivity extends AppCompatActivity
                     .show();
 
         } else if (id == R.id.nav_logout) {
-            Intent login_activity = new Intent(this, LoginActivity.class);
-            usuario.destroy();
-            startActivity(login_activity);
+            if(!Viaje.isSync(getApplicationContext())){
+                new AlertDialog.Builder(ListaViajesActivity.this)
+                        .setTitle("¡ADVERTENCIA!")
+                        .setMessage("Hay viajes aún sin sincronizar, se borrarán los registros de viajes almacenados en este dispositivo,  \n ¿Deséas sincronizar?")
+                        .setNegativeButton("NO", null)
+                        .setPositiveButton("SI", new DialogInterface.OnClickListener() {
+                            @Override public void onClick(DialogInterface dialog, int which) {
+                                if (Util.isNetworkStatusAvialable(getApplicationContext())) {
+                                    progressDialogSync = ProgressDialog.show(ListaViajesActivity.this, "Sincronizando datos", "Por favor espere...", true);
+                                    new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
+
+                                    Intent login_activity = new Intent(getApplicationContext(), LoginActivity.class);
+                                    usuario.destroy();
+                                    startActivity(login_activity);
+                                } else {
+                                    Toast.makeText(getApplicationContext(), R.string.error_internet, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        })
+                        .create()
+                        .show();
+            }
+            else {
+                Intent login_activity = new Intent(getApplicationContext(), LoginActivity.class);
+                usuario.destroy();
+                startActivity(login_activity);
+            }
         }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

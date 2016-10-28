@@ -418,34 +418,6 @@ public class LoginActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
-                    //Viajes
-
-                    Viaje viaje = new Viaje(getApplicationContext());
-                    try {
-                        final JSONArray viajesNetos = new JSONArray(JSON.getString("ViajesNetos"));
-                        for (int i = 0; i < viajesNetos.length(); i++) {
-                            final int finalI = i + 1;
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    loginProgressDialog.setMessage("Actualizando catálogo de Viajes... \n Tag " + finalI + " de " + viajesNetos.length());
-                                }
-                            });
-                            JSONObject info = viajesNetos.getJSONObject(i);
-
-                            data.clear();
-                            data.put("uid", info.getString("uid"));
-                            data.put("idcamion", info.getString("idcamion"));
-                            data.put("idproyecto", info.getString("idproyecto"));
-
-                            if (!tag.create(data)) {
-                                return false;
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
                     data.clear();
                     data.put("IMEI", IMEI);
                     data.put("idevento", 1);
