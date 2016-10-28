@@ -182,13 +182,14 @@ public class SuccessDestinoActivity extends AppCompatActivity
                             printTextTwoColumns("Destino: ",textViewDestino.getText()+ "\n");
                             printTextTwoColumns("Fecha Llegada: ", textViewFechaHoraLlegada.getText()+"\n");
                             printTextTwoColumns("Ruta: ",textViewRuta.getText()+ "\n");
-                            printTextTwoColumns("Observaciones: ", textViewObservaciones.getText()+"\n");
-
-                            bixolonPrinterApi.lineFeed(1,true);
+                           // if(textViewObservaciones.getText().length()!=0) {
+                            printTextTwoColumns("Observaciones: ", textViewObservaciones.getText() + "\n");
+                           // }
+                            //bixolonPrinterApi.lineFeed(1,true);
                             printfoot("Checador: "+ usuario.getNombre(), viaje.getCode(idViaje));
                             bixolonPrinterApi.printQrCode(viaje.getCode(idViaje), BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.QR_CODE_MODEL2, 5, false);
 
-                            bixolonPrinterApi.lineFeed(2, false);
+                            bixolonPrinterApi.lineFeed(2, true);
                         } catch (Exception e) {
                             Toast.makeText(getApplicationContext(), R.string.error_impresion, Toast.LENGTH_SHORT).show();
                         }
@@ -216,7 +217,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
     }
 
     public static void printheadproyecto(String text) {
-        bixolonPrinterApi.printBitmap(bitmap, BixolonPrinter.ALIGNMENT_CENTER,260, 50, true);
+        bixolonPrinterApi.printBitmap(bitmap, BixolonPrinter.ALIGNMENT_CENTER,220, 50, true);
 
         int alignment = BixolonPrinter.ALIGNMENT_CENTER;
 
@@ -226,7 +227,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
         int size = 1;
         bixolonPrinterApi.setSingleByteFont(BixolonPrinter.CODE_PAGE_858_EURO);
         bixolonPrinterApi.printText(text, alignment, attribute, size, false);
-        bixolonPrinterApi.lineFeed(1, false);
+       // bixolonPrinterApi.lineFeed(1, false);
 
         bixolonPrinterApi.cutPaper(true);
         bixolonPrinterApi.kickOutDrawer(BixolonPrinter.DRAWER_CONNECTOR_PIN5);
@@ -273,12 +274,12 @@ public class SuccessDestinoActivity extends AppCompatActivity
         bixolonPrinterApi.printText(text, alignment, attribute, size, false);
         bixolonPrinterApi.lineFeed(1, false);
         bixolonPrinterApi.print1dBarcode(codex.toUpperCase(), BixolonPrinter.BAR_CODE_CODE39, BixolonPrinter.ALIGNMENT_CENTER, 4, 200, BixolonPrinter.HRI_CHARACTER_NOT_PRINTED, true);
-        bixolonPrinterApi.formFeed(true);
+       // bixolonPrinterApi.formFeed(true);
         bixolonPrinterApi.printText(codex.toUpperCase(), BixolonPrinter.ALIGNMENT_CENTER, attribute, size, false);
 
         String cadena = "\n\nEste documento es un comprobante de recepción \nde materiales del Sistema de Administración de \nObra, no representa un compromiso de pago hasta \nsu validación contra las remisiones del \nproveedor y la revisión de factura.";
         bixolonPrinterApi.printText(cadena, BixolonPrinter.ALIGNMENT_LEFT, attribute, size, false);
-        bixolonPrinterApi.lineFeed(3, false);
+        bixolonPrinterApi.lineFeed(1, false);
         bixolonPrinterApi.cutPaper(true);
         bixolonPrinterApi.kickOutDrawer(BixolonPrinter.DRAWER_CONNECTOR_PIN5);
 
