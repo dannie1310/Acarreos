@@ -1,11 +1,18 @@
 package mx.grupohi.acarreos;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
+import android.provider.Settings;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -16,6 +23,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
+
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 /**
  * Creado por JFEsquivel on 07/10/2016.
@@ -33,6 +42,22 @@ class Util {
                     return true;
         }
         return false;
+    }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    @SuppressWarnings("deprecation")
+    public static boolean isGpsEnabled(Context context) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+            String providers = Settings.Secure.getString(context.getContentResolver(),
+                    Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+            if (TextUtils.isEmpty(providers)) {
+                return false;
+            }
+            return providers.contains(LocationManager.GPS_PROVIDER);
+        } else {
+            LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+            return lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        }
     }
 
     static String getQuery(ContentValues values) throws UnsupportedEncodingException

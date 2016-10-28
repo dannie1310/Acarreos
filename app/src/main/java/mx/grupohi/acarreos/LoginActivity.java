@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -118,7 +119,7 @@ public class LoginActivity extends AppCompatActivity {
             permission_read_phone_state =  false;
         }
 
-        if(!gps.canGetLocation()) {
+        if(!Util.isGpsEnabled(getApplicationContext())) {
             gps.showSettingsAlert();
             gps = new GPSTracker(LoginActivity.this);
             _gps = false;
@@ -486,12 +487,6 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_HOME);
         startActivity(intent);
-    }
-
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        gps = new GPSTracker(LoginActivity.this);
     }
 }
 
