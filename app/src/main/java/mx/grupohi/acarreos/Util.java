@@ -47,7 +47,7 @@ class Util {
     @TargetApi(Build.VERSION_CODES.KITKAT)
     @SuppressWarnings("deprecation")
     public static boolean isGpsEnabled(Context context) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
             String providers = Settings.Secure.getString(context.getContentResolver(),
                     Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
             if (TextUtils.isEmpty(providers)) {
