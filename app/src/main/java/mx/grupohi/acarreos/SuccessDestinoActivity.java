@@ -65,6 +65,8 @@ public class SuccessDestinoActivity extends AppCompatActivity
     private final int LINE_CHARS = 64;
 
     private static Boolean connectedPrinter = false;
+    private boolean imprimir = false;
+
     private String mConnectedDeviceName = null;
 
 
@@ -148,11 +150,17 @@ public class SuccessDestinoActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 btnImprimir.setEnabled(false);
+                imprimir = true;
+                if(!connectedPrinter) {
+                    bixolonPrinterApi.findBluetoothPrinters();
+                }
+
                 new Handler().postDelayed(new Thread() {
                     @Override
                     public void run() {
                         super.run();
                         btnImprimir.setEnabled(true);
+                        imprimir = false;
                     }
                 }, PRINTING_TIME);
 
@@ -296,6 +304,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
                     .show();
         }
     }
+
     Handler mHandler = new Handler() {
         @SuppressWarnings("unchecked")
         @Override
@@ -311,14 +320,15 @@ public class SuccessDestinoActivity extends AppCompatActivity
                             Log.i("Handler", "BixolonPrinter.STATE_CONNECTED");
                             toolbar.setSubtitle("Impresora Contectada " + mConnectedDeviceName);
                             connectedPrinter = true;
-                            btnImprimir.setEnabled(true);
+                            if(imprimir) {
+                                btnImprimir.performClick();
+                            }
                             break;
 
                         case BixolonPrinter.STATE_CONNECTING:
                             Log.i("Handler", "BixolonPrinter.STATE_CONNECTING");
                             toolbar.setSubtitle(R.string.title_connecting);
                             SuccessDestinoActivity.connectedPrinter = false;
-                            btnImprimir.setEnabled(false);
 
                             break;
 
@@ -326,7 +336,6 @@ public class SuccessDestinoActivity extends AppCompatActivity
                             toolbar.setSubtitle(R.string.title_not_connected);
                             Log.i("Handler", "BixolonPrinter.STATE_NONE");
                             connectedPrinter = false;
-                            btnImprimir.setEnabled(false);
 
                             break;
                     }
