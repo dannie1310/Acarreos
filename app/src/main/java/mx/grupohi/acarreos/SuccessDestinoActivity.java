@@ -65,7 +65,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
     private final int LINE_CHARS = 64;
 
     private static Boolean connectedPrinter = false;
-    private boolean imprimir = false;
+    private boolean imprimir;
 
     private String mConnectedDeviceName = null;
 
@@ -160,7 +160,6 @@ public class SuccessDestinoActivity extends AppCompatActivity
                     public void run() {
                         super.run();
                         btnImprimir.setEnabled(true);
-                        imprimir = false;
                     }
                 }, PRINTING_TIME);
 
@@ -464,6 +463,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.nav_pair_on) {
+            imprimir = false;
             bixolonPrinterApi.findBluetoothPrinters();
         } else if (id == R.id.nav_pair_off) {
             bixolonPrinterApi.disconnect();
@@ -506,10 +506,6 @@ public class SuccessDestinoActivity extends AppCompatActivity
         } else if (id == R.id.nav_list) {
             Intent navList = new Intent(this, ListaViajesActivity.class);
             startActivity(navList);
-        } else if (id == R.id.nav_pair_on) {
-            bixolonPrinterApi.findBluetoothPrinters();
-        } else if (id == R.id.nav_pair_off) {
-            bixolonPrinterApi.disconnect();
         } else if (id == R.id.nav_logout) {
             if(!Viaje.isSync(getApplicationContext())){
                 new AlertDialog.Builder(SuccessDestinoActivity.this)
