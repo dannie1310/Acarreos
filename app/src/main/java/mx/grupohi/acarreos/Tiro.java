@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -54,10 +55,14 @@ class Tiro {
         Cursor c = db.rawQuery("SELECT * FROM tiros WHERE idtiro IN (SELECT idtiro FROM rutas WHERE idorigen = '" + idOrigen + "') ORDER BY descripcion ASC", null);
         if (c != null && c.moveToFirst())
             try {
-                data.add("-- Seleccione --");
-                data.add(c.getString(c.getColumnIndex("descripcion")));
-                while (c.moveToNext()) {
+                if (c.getCount() == 1) {
                     data.add(c.getString(c.getColumnIndex("descripcion")));
+                } else {
+                    data.add("-- Seleccione --");
+                    data.add(c.getString(c.getColumnIndex("descripcion")));
+                    while (c.moveToNext()) {
+                        data.add(c.getString(c.getColumnIndex("descripcion")));
+                    }
                 }
             } finally {
                 c.close();
@@ -70,10 +75,14 @@ class Tiro {
         Cursor c = db.rawQuery("SELECT * FROM tiros WHERE idtiro IN (SELECT idtiro FROM rutas WHERE idorigen = '" + idOrigen + "') ORDER BY descripcion ASC", null);
         if (c != null && c.moveToFirst())
             try {
-                data.add("0");
-                data.add(c.getString(c.getColumnIndex("idtiro")));
-                while (c.moveToNext()) {
+                if (c.getCount() == 1) {
                     data.add(c.getString(c.getColumnIndex("idtiro")));
+                } else {
+                    data.add("0");
+                    data.add(c.getString(c.getColumnIndex("idtiro")));
+                    while (c.moveToNext()) {
+                        data.add(c.getString(c.getColumnIndex("idtiro")));
+                    }
                 }
             } finally {
                 c.close();

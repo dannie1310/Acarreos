@@ -63,10 +63,14 @@ class Ruta {
         Cursor c = db.rawQuery("SELECT * FROM rutas WHERE idorigen = '" + idOrigen + "' AND idtiro = '" + idTiro + "' ORDER BY clave ASC", null);
         if (c != null && c.moveToFirst())
             try {
-                data.add("-- Seleccione --");
-                data.add(c.getString(1) + " - " + c.getString(0) + " " + c.getString(4) + " KM");
-                while (c.moveToNext()) {
+                if (c.getCount() == 1) {
                     data.add(c.getString(1) + " - " + c.getString(0) + " " + c.getString(4) + " KM");
+                } else {
+                    data.add("-- Seleccione --");
+                    data.add(c.getString(1) + " - " + c.getString(0) + " " + c.getString(4) + " KM");
+                    while (c.moveToNext()) {
+                        data.add(c.getString(1) + " - " + c.getString(0) + " " + c.getString(4) + " KM");
+                    }
                 }
             } finally {
                 c.close();
@@ -81,10 +85,14 @@ class Ruta {
         Cursor c = db.rawQuery("SELECT * FROM rutas WHERE idorigen = '" + idOrigen + "' AND idtiro = '" + idTiro + "' ORDER BY clave ASC", null);
         if (c != null && c.moveToFirst())
             try {
-                data.add("0");
-                data.add(c.getString(c.getColumnIndex("idruta")));
-                while (c.moveToNext()) {
+                if (c.getCount() == 1) {
                     data.add(c.getString(c.getColumnIndex("idruta")));
+                } else {
+                    data.add("0");
+                    data.add(c.getString(c.getColumnIndex("idruta")));
+                    while (c.moveToNext()) {
+                        data.add(c.getString(c.getColumnIndex("idruta")));
+                    }
                 }
             } finally {
                 c.close();

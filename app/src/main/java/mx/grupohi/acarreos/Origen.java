@@ -50,10 +50,14 @@ class Origen {
         Cursor c = db.rawQuery("SELECT * FROM origenes ORDER BY descripcion ASC", null);
         if (c != null && c.moveToFirst())
             try {
-                data.add("-- Seleccione --");
-                data.add(c.getString(c.getColumnIndex("descripcion")));
-                while (c.moveToNext()) {
+                if (c.getCount() == 1) {
                     data.add(c.getString(c.getColumnIndex("descripcion")));
+                } else {
+                    data.add("-- Seleccione --");
+                    data.add(c.getString(c.getColumnIndex("descripcion")));
+                    while (c.moveToNext()) {
+                        data.add(c.getString(c.getColumnIndex("descripcion")));
+                    }
                 }
             } finally {
                 c.close();
@@ -66,10 +70,14 @@ class Origen {
         Cursor c = db.rawQuery("SELECT * FROM origenes ORDER BY descripcion ASC", null);
         if (c != null && c.moveToFirst())
             try {
-                data.add("0");
-                data.add(c.getString(c.getColumnIndex("idorigen")));
-                while (c.moveToNext()) {
+                if (c.getCount() == 1) {
                     data.add(c.getString(c.getColumnIndex("idorigen")));
+                } else {
+                    data.add("0");
+                    data.add(c.getString(c.getColumnIndex("idorigen")));
+                    while (c.moveToNext()) {
+                        data.add(c.getString(c.getColumnIndex("idorigen")));
+                    }
                 }
             } finally {
                 c.close();

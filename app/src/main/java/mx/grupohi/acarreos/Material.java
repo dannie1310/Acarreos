@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -52,10 +53,14 @@ class Material {
         Cursor c = db.rawQuery("SELECT * FROM materiales ORDER BY descripcion ASC", null);
         if (c != null && c.moveToFirst())
             try {
-                data.add("-- Seleccione --");
-                data.add(c.getString(c.getColumnIndex("descripcion")));
-                while (c.moveToNext()) {
+                if (c.getCount() == 1) {
                     data.add(c.getString(c.getColumnIndex("descripcion")));
+                } else {
+                    data.add("-- Seleccione --");
+                    data.add(c.getString(c.getColumnIndex("descripcion")));
+                    while (c.moveToNext()) {
+                        data.add(c.getString(c.getColumnIndex("descripcion")));
+                    }
                 }
             } finally {
                 c.close();
@@ -68,10 +73,14 @@ class Material {
         Cursor c = db.rawQuery("SELECT * from materiales ORDER BY descripcion ASC", null);
         if (c != null && c.moveToFirst())
             try {
-                data.add("0");
-                data.add(c.getString(c.getColumnIndex("idmaterial")));
-                while (c.moveToNext()) {
+                if (c.getCount() == 1) {
                     data.add(c.getString(c.getColumnIndex("idmaterial")));
+                } else {
+                    data.add("0");
+                    data.add(c.getString(c.getColumnIndex("idmaterial")));
+                    while (c.moveToNext()) {
+                        data.add(c.getString(c.getColumnIndex("idmaterial")));
+                    }
                 }
             } finally {
                 c.close();
