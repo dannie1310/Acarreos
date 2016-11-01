@@ -367,8 +367,8 @@ public class SetDestinoActivity extends AppCompatActivity
                     String viajes = nfcTag.readSector(myTag,2,8);
                     viajes=viajes.replace(" ","");
                     int contador=0;
-                    contador=Integer.valueOf(viajes)+1;
-                    nfcTag.writeSector(myTag,2,8,String.valueOf(contador));
+                    contador = Integer.valueOf(viajes) + 1;
+                    nfcTag.writeSector(myTag, 2, 8, String.valueOf(contador));
 
                     String tagInfo = nfcTag.readSector(myTag, 0, 1);
                     Integer idCamion = Util.getIdCamion(tagInfo);
