@@ -190,7 +190,7 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="48dp">
+            android:layout_height="72dp">
 
             <TextView
                 android:text="OBSERVACIONES"
@@ -220,18 +220,12 @@
             android:textSize="18sp" />
 
         <Button
-            android:text="VER LISTA DE VIAJES"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/buttonShowList"
-            style="@style/Widget.AppCompat.Button.Colored" />
-
-        <Button
             android:text="SALIR"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="67dp"
             android:id="@+id/buttonSalir"
-            style="@style/Widget.AppCompat.Button.Colored" />
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:textSize="18sp" />
     </LinearLayout>
 
 </RelativeLayout>
