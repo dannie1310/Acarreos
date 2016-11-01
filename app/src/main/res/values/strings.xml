@@ -27,6 +27,7 @@
     <string name="error_tag_capacidad_almacenamiento">¡Error! La información excede la capacidad de almacenamiento</string>
     <string name="tag_configurado">TAG configurado correctamente</string>
     <string name="origen_configurado">Origen escrito correctamente en el TAG</string>
+    <string name="error_leer_TAG" >Error al leer el TAG. Intente de nuevo.</string>
     <string name="error_conexion_tag">Error de conexion</string>
     <string name="error_no_nfc">Su dispositivo no posee lector NFC. No se puede ejecutar esta aplicación.</string>
     <string name="text_warning_nfc_is_off">¡NFC Está apagado!</string>
@@ -43,7 +44,7 @@
     <string name="text_warning_blue_is_off">bluethooth apagado</string>
     <string name="text_turn_on_blue">bluethooth prendido</string>
     <string name="title_activity_lista_viajes">LISTA DE VIAJES</string>
-    <string name="title_activity_success_destino">VIAJE COMPLETADO</string>
+    <string name="title_activity_success_destino">INFORMACIÓN DEL VIAJE</string>
 
     <!--Mensajes Impresora -->
     <string name="error_impresion">Error de Impresión</string>
@@ -57,6 +58,7 @@
     <!--Printer-->
     <string name="title_connecting">Conectando&#8230;</string>
     <string name="title_not_connected">No hay impresora conectada</string>
+
 
 
 </resources>

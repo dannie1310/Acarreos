@@ -323,7 +323,7 @@ public class MainActivity extends AppCompatActivity
         tFecha.setText(Util.getFecha(fechaHora));
         tHora.setText(Util.getTime(fechaHora));
 
-        actionButton.setText("CLICK AQUI PARA ESCRIBIR EL DESTINO");
+        actionButton.setText("ESCRIBIR EL DESTINO");
     }
 
     private void clearOrigenInfo() {

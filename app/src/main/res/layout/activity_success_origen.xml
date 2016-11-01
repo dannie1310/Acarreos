@@ -27,8 +27,9 @@
         <Button
             android:text="¡ENTENDIDO! IR AL INICIO"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:id="@+id/buttonSalir"
-            style="@style/Widget.AppCompat.Button.Colored" />
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:textSize="18sp" />
     </LinearLayout>
 </RelativeLayout>

@@ -395,13 +395,15 @@
     </LinearLayout>
 
     <Button
-        android:text="CLICK AQUI PARA ESCRIBIR ORIGEN"
+        android:text="ESCRIBIR ORIGEN"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:id="@+id/ButtonAction"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_below="@+id/LayoutOrigen"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:textSize="18sp"
+        android:fontFamily="sans-serif-medium" />
 
     <TextView
         android:text="ACERQUE EL TAG PARA SER LEIDO"
