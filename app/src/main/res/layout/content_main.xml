@@ -28,7 +28,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="@android:style/TextAppearance.Material.Title"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:id="@+id/txtCamion" />
+
+        <TextView
+            android:text="INFORMACIÓN DEL CAMIÓN"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@android:style/TextAppearance.Material.Title"
+            android:textAlignment="center"
+            android:id="@+id/txtCapacidad" />
 
         <View
             android:layout_width="match_parent"
@@ -36,57 +45,6 @@
             android:background="@android:color/darker_gray"
             android:layout_marginBottom="15dp"
             android:layout_marginTop="5dp" />
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:textAlignment="center">
-
-                <TextView
-                    android:text="Económico"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@android:style/TextAppearance.Material.Button"
-                    android:textAlignment="center" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/textViewEconomico"
-                    android:textAppearance="@android:style/TextAppearance.Material.Caption"
-                    
-                    android:textAlignment="center" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:textAlignment="center">
-
-                <TextView
-                    android:text="Placas"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@android:style/TextAppearance.Material.Button"
-                    android:textAlignment="center" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@android:style/TextAppearance.Material.Caption"
-                    android:id="@+id/textViewPlacas"
-                    android:textAlignment="center" />
-            </LinearLayout>
-        </LinearLayout>
 
         <LinearLayout
             android:orientation="horizontal"
@@ -139,13 +97,6 @@
             </LinearLayout>
 
         </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="5dp" />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -394,15 +345,6 @@
 
     </LinearLayout>
 
-    <Button
-        android:text="CLICK AQUI PARA ESCRIBIR ORIGEN"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/ButtonAction"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_below="@+id/LayoutOrigen"
-        android:layout_alignParentStart="true" />
-
     <TextView
         android:text="ACERQUE EL TAG PARA SER LEIDO"
         android:layout_width="match_parent"
@@ -422,5 +364,16 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/textInfoTag"
         android:layout_above="@+id/ButtonAction" />
+
+    <Button
+        android:text="ESCRIBIR ORIGEN"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:id="@+id/ButtonAction"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textSize="24sp" />
 
 </RelativeLayout>

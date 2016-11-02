@@ -59,14 +59,14 @@ public class MainActivity extends AppCompatActivity
     private TextView infoTag;
     private ProgressDialog progressDialogSync;
 
-    private TextView tEconomico;
-    private TextView tPlacas;
+    private TextView tCamion;
+    private TextView tCapacidad;
+    private TextView tCapacidad2;
     private TextView tMarca;
     private TextView tModelo;
     private TextView tAlto;
     private TextView tAncho;
     private TextView tLargo;
-    private TextView tCapacidad;
 
     private TextView tOrigen;
     private TextView tMaterial;
@@ -99,11 +99,11 @@ public class MainActivity extends AppCompatActivity
         infoTag = (TextView) findViewById(R.id.textInfoTag);
         nfcImage = (ImageView) findViewById(R.id.nfc_background);
 
-        tEconomico = (TextView) findViewById(R.id.textViewEconomico);
-        tPlacas = (TextView) findViewById(R.id.textViewPlacas);
+        tCamion = (TextView) findViewById(R.id.txtCamion);
+        tCapacidad = (TextView) findViewById(R.id.txtCapacidad);
+        tCapacidad2 = (TextView) findViewById(R.id.textViewCapacidad);
         tMarca = (TextView) findViewById(R.id.textViewMarca);
         tModelo = (TextView) findViewById(R.id.textViewModelo);
-        tCapacidad = (TextView) findViewById(R.id.textViewCapacidad);
         tAlto = (TextView) findViewById(R.id.textViewAlto);
         tAncho = (TextView) findViewById(R.id.textViewAncho);
         tLargo = (TextView) findViewById(R.id.textViewLargo);
@@ -296,11 +296,11 @@ public class MainActivity extends AppCompatActivity
         infoLayout.setVisibility(View.VISIBLE);
         actionButton.setVisibility(View.VISIBLE);
 
-        tEconomico.setText(camion.economico);
-        tPlacas.setText(camion.placas);
+        tCamion.setText(camion.economico + " [" + camion.placas + "]");
+        tCapacidad.setText("CAPACIDAD: "+ camion.capacidad + " m3");
+        tCapacidad2.setText(String.valueOf(camion.capacidad));
         tMarca.setText(camion.marca);
         tModelo.setText(camion.modelo);
-        tCapacidad.setText(String.valueOf(camion.capacidad));
         tAlto.setText(String.valueOf(camion.alto));
         tAncho.setText(String.valueOf(camion.ancho));
         tLargo.setText(String.valueOf(camion.largo));
@@ -313,11 +313,11 @@ public class MainActivity extends AppCompatActivity
         infoLayout.setVisibility(View.GONE);
         actionButton.setVisibility(View.GONE);
 
-        tEconomico.setText("");
-        tPlacas.setText("");
+        tCamion.setText("");
+        tCapacidad.setText("");
+        tCapacidad2.setText("");
         tMarca.setText("");
         tModelo.setText("");
-        tCapacidad.setText("");
         tAlto.setText("");
         tAncho.setText("");
         tLargo.setText("");
@@ -332,7 +332,7 @@ public class MainActivity extends AppCompatActivity
         tFecha.setText(Util.getFecha(fechaHora));
         tHora.setText(Util.getTime(fechaHora));
 
-        actionButton.setText("CLICK AQUI PARA ESCRIBIR EL DESTINO");
+        actionButton.setText("ESCRIBIR DESTINO");
     }
 
     private void clearOrigenInfo() {
