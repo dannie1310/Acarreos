@@ -18,15 +18,8 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
-
-        <TextView
-            android:text="INFORMACIÓN DEL VIAJE"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@android:style/TextAppearance.Material.Headline"
-            android:textAlignment="center"
-            android:layout_marginBottom="10dp" />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -117,7 +110,7 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:text="FECHA / HORA SALIDA"
+                android:text="F / H SALIDA"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -162,7 +155,7 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:text="FECHA / HORA LLEGADA"
+                android:text="F / H LLEGADA"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -197,7 +190,7 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="92dp">
+            android:layout_height="72dp">
 
             <TextView
                 android:text="OBSERVACIONES"
@@ -212,27 +205,27 @@
                 android:id="@+id/textViewObservaciones"
                 android:layout_weight="1" />
         </LinearLayout>
-
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp" />
         <Button
             android:text="IMPRIMIR VIAJE"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/buttonImprimir"
-            style="@style/Widget.AppCompat.Button.Colored" />
-
-        <Button
-            android:text="VER LISTA DE VIAJES"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/buttonShowList"
-            style="@style/Widget.AppCompat.Button.Colored" />
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_height="80dp"
+            android:textSize="18sp" />
 
         <Button
             android:text="SALIR"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="67dp"
             android:id="@+id/buttonSalir"
-            style="@style/Widget.AppCompat.Button.Colored" />
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:textSize="18sp" />
     </LinearLayout>
 
 </RelativeLayout>
