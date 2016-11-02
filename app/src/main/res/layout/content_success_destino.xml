@@ -31,13 +31,15 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textAppearance="@android:style/TextAppearance.Material.Button" />
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault"
+                android:textStyle="normal|bold" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/textViewCamion"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
         </LinearLayout>
 
         <LinearLayout
@@ -50,13 +52,15 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textAppearance="@android:style/TextAppearance.Material.Button" />
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault"
+                android:textStyle="normal|bold" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/textViewCubicacion"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
         </LinearLayout>
 
         <View
@@ -76,13 +80,15 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textAppearance="@android:style/TextAppearance.Material.Button" />
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault"
+                android:textStyle="normal|bold" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/textViewMaterial"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
         </LinearLayout>
 
         <LinearLayout
@@ -95,13 +101,15 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textAppearance="@android:style/TextAppearance.Material.Button" />
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault"
+                android:textStyle="normal|bold" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:id="@+id/textViewOrigen" />
+                android:id="@+id/textViewOrigen"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
         </LinearLayout>
 
         <LinearLayout
@@ -114,13 +122,15 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textAppearance="@android:style/TextAppearance.Material.Button" />
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault"
+                android:textStyle="normal|bold" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/textViewFechaHora"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
         </LinearLayout>
 
         <View
@@ -140,13 +150,15 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textAppearance="@android:style/TextAppearance.Material.Button" />
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault"
+                android:textStyle="normal|bold" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/textViewDestino"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
         </LinearLayout>
 
         <LinearLayout
@@ -159,13 +171,15 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textAppearance="@android:style/TextAppearance.Material.Button" />
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault"
+                android:textStyle="normal|bold" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/textViewFechaHoraLlegada"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
         </LinearLayout>
 
         <LinearLayout
@@ -178,13 +192,15 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textAppearance="@android:style/TextAppearance.Material.Button" />
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault"
+                android:textStyle="normal|bold" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/textViewRuta"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
         </LinearLayout>
 
         <LinearLayout
@@ -197,13 +213,15 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textAppearance="@android:style/TextAppearance.Material.Button" />
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault"
+                android:textStyle="normal|bold" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/textViewObservaciones"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
         </LinearLayout>
         <View
             android:layout_width="match_parent"
@@ -216,8 +234,8 @@
             android:layout_width="match_parent"
             android:id="@+id/buttonImprimir"
             style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_height="80dp"
-            android:textSize="18sp" />
+            android:layout_height="75dp"
+            android:textSize="24sp" />
 
         <Button
             android:text="SALIR"

@@ -51,8 +51,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
     private Integer idViaje;
 
     private Button btnImprimir,
-            btnSalir,
-            btnShowList;
+            btnSalir;
 
     static Bitmap bitmap;
 
@@ -93,7 +92,6 @@ public class SuccessDestinoActivity extends AppCompatActivity
         textViewObservaciones = (TextView) findViewById(R.id.textViewObservaciones);
 
         btnImprimir = (Button) findViewById(R.id.buttonImprimir);
-        btnShowList = (Button) findViewById(R.id.buttonShowList);
         btnSalir = (Button) findViewById(R.id.buttonSalir);
 
         BitmapDrawable drawable = (BitmapDrawable) getResources().getDrawable(R.drawable.logo_ghi);
@@ -134,14 +132,6 @@ public class SuccessDestinoActivity extends AppCompatActivity
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-            }
-        });
-
-        btnShowList.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), ListaViajesActivity.class);
                 startActivity(intent);
             }
         });
