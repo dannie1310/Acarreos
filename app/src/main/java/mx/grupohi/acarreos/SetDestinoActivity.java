@@ -406,7 +406,7 @@ public class SetDestinoActivity extends AppCompatActivity
                         nfcUltra.cleanTag(myTag);
                     }
 
-                    Toast.makeText(getApplicationContext(),"numero de viaje: " + contador, Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(getApplicationContext(),"numero de viaje: " + contador, Toast.LENGTH_SHORT).show();
 
                     Integer idCamion = Util.getIdCamion(tagInfo);
                     Integer idProyecto = Util.getIdProyecto(tagInfo);

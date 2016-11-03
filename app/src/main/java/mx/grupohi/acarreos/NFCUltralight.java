@@ -48,7 +48,6 @@ public class NFCUltralight {
             for(int r=0; r<=4; r++) {
                 id = mf.readPages(r);
                 aux+=byteArrayToHexString(id);
-                System.out.println(r+" id: "+ byteArrayToHexString(id));
             }
             //aux+=byteArrayToHexString(id);
 
@@ -113,7 +112,6 @@ public class NFCUltralight {
     }
 
     public boolean write(Tag mytag, int page, String mensaje ){
-        System.out.println("menss "+mensaje);
         byte[] value =  mensaje.getBytes();
         byte[] aux = new byte[4];
         MifareUltralight mf= MifareUltralight.get(mytag);
@@ -152,7 +150,6 @@ public class NFCUltralight {
             }
             String x = byteArrayToHexString(auxRead);
             if(x.equalsIgnoreCase("00000000")){
-                System.out.println("css " + x);
                 aux=null;
             }
             else {
@@ -164,8 +161,6 @@ public class NFCUltralight {
         }catch(Exception e){
             e.printStackTrace();
         }
-        System.out.println("c "+aux);
-
         return aux;
     }
 
