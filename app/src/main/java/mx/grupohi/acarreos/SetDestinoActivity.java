@@ -452,7 +452,7 @@ public class SetDestinoActivity extends AppCompatActivity
                     destinoSuccess.putExtra("code", getCode(contador,idCamion));
                     startActivity(destinoSuccess);
                 } else {
-                    snackbar = Snackbar.make(findViewById(R.id.content_set_origen), "Por favor utiliza el TAG correcto", Snackbar.LENGTH_SHORT);
+                    snackbar = Snackbar.make(findViewById(R.id.content_set_destino), "Por favor utiliza el TAG correcto", Snackbar.LENGTH_SHORT);
                     View snackBarView = snackbar.getView();
                     snackBarView.setBackgroundColor(Color.RED);
                     snackbar.show();
