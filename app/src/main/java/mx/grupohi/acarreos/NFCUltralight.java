@@ -70,8 +70,13 @@ public class NFCUltralight {
             mf.connect();
             while(z != value.length) {
                 for (int x = 0; x < 4; x++) {
-                    aux[x] = value[z];
-                    z+=1;
+                    if(z < value.length ) {
+                        aux[x]=value[z];
+                        z++;
+                    }
+                    else{
+                        aux[x]=0;
+                    }
                 }
                 if(aux.length==4) {
                     mf.writePage(page+auxPages, aux);
@@ -108,6 +113,7 @@ public class NFCUltralight {
     }
 
     public boolean write(Tag mytag, int page, String mensaje ){
+        System.out.println("menss "+mensaje);
         byte[] value =  mensaje.getBytes();
         byte[] aux = new byte[4];
         MifareUltralight mf= MifareUltralight.get(mytag);
@@ -133,6 +139,85 @@ public class NFCUltralight {
         }
     }
 
+    public String readPage(Tag nfc, int page){
+        MifareUltralight mf=MifareUltralight.get(nfc);
+        byte[] toRead = null;
+        byte[] auxRead =  new byte[4];
+        String aux="";
+        try{
+            mf.connect();
+            toRead = mf.readPages(page);
+            for(int i=0; i<4; i++) {
+                    auxRead[i] = toRead[i];
+            }
+            String x = byteArrayToHexString(auxRead);
+            if(x.equalsIgnoreCase("00000000")){
+                System.out.println("css " + x);
+                aux=null;
+            }
+            else {
+                String s = new String(auxRead);
+                aux += s;
+                toRead = null;
+            }
+            mf.close();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        System.out.println("c "+aux);
+
+        return aux;
+    }
+
+
+    public boolean writeViaje(Tag mytag, String contador){
+
+        byte[] aux =  new byte[4];
+        MifareUltralight mf= MifareUltralight.get(mytag);
+        int z=0;
+        int auxPages =0;
+        try {
+            mf.connect();
+            if (contador.length() != 4) {
+                int c = 4 - contador.length();
+                while (c != 0) {
+                    contador = "0" + contador;
+                    c--;
+                }
+
+            }
+
+            byte[] value = contador.getBytes();
+
+            mf.writePage(7, value);
+            mf.close();
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean cleanTag(Tag nfc){
+        MifareUltralight mf=MifareUltralight.get(nfc);
+
+        byte[] value = new byte[4];
+        try{
+            mf.connect();
+            for (int x = 0; x < 4; x++) {
+                value[x] = 0;
+            }
+            for (int x=8; x<=39;x++) {
+                mf.writePage(x,value);
+            }
+
+            mf.close();
+            return true;
+        }catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     public static String byteArrayToHexString(byte[] byteArray){
         return String.format("%0" + (byteArray.length * 2) + "X", new BigInteger(1,byteArray));

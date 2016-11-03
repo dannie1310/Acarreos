@@ -10,6 +10,8 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
+import android.nfc.tech.MifareClassic;
+import android.nfc.tech.MifareUltralight;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -53,6 +55,7 @@ public class SetDestinoActivity extends AppCompatActivity
 
     //NFC
     private NFCTag nfcTag;
+    private NFCUltralight nfcUltra;
     private NfcAdapter nfcAdapter;
     private PendingIntent pendingIntent;
     private IntentFilter writeTagFilters[];
@@ -358,27 +361,59 @@ public class SetDestinoActivity extends AppCompatActivity
         if (writeMode) {
             if(NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
                 Tag myTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-                nfcTag = new NFCTag(myTag, this);
+                String UID ="";
+                int tipo=0;
+                String[] techs = myTag.getTechList();
+                for (String t : techs) {
+                    if (MifareClassic.class.getName().equals(t)) {
+                        nfcTag = new NFCTag(myTag, this);
+                        UID = nfcTag.idTag(myTag);
+                        tipo=1;
+                    }
+                    else if (MifareUltralight.class.getName().equals(t)) {
+                        nfcUltra = new NFCUltralight(myTag, this);
+                        UID = nfcUltra.byteArrayToHexString(myTag.getId());
+                        tipo=2;
+                    }
+                }
 
-                String UID = nfcTag.idTag(myTag);
                 if (UID.equals(getIntent().getStringExtra("UID"))) {
+                    int contador=0;
+                    String tagInfo ="";
+                    String viajes = "";
+                    String tagOrigen = "";
+                    String fechaString = "";
                     latitude = gps.getLatitude();
                     longitude = gps.getLongitude();
-                    String viajes = nfcTag.readSector(myTag,2,8);
-                    viajes=viajes.replace(" ","");
-                    int contador=0;
-                    contador = Integer.valueOf(viajes) + 1;
-                    nfcTag.writeSector(myTag, 2, 8, String.valueOf(contador));
+                    if(tipo==1) {
+                        viajes = nfcTag.readSector(myTag, 2, 8);
+                        viajes=viajes.replace(" ","");
+                        contador = Integer.valueOf(viajes) + 1;
+                        nfcTag.writeSector(myTag, 2, 8, String.valueOf(contador));
+                        tagInfo = nfcTag.readSector(myTag, 0, 1);
+                        tagOrigen = nfcTag.readSector(myTag, 1, 4);
+                        fechaString = nfcTag.readSector(myTag, 1, 5);
+                        nfcTag.cleanSector(myTag, 1);
+                    }
+                    if(tipo==2){
+                        viajes = nfcUltra.readPage(myTag,7);
+                        viajes=viajes.replace(" ","");
+                        contador = Integer.valueOf(viajes) + 1;
+                        boolean r=nfcUltra.writeViaje(myTag,String.valueOf(contador));
+                        tagInfo = nfcUltra.readPage(myTag, 4) + nfcUltra.readPage(myTag, 5);
+                        tagOrigen = nfcUltra.readPage(myTag,8) + nfcUltra.readPage(myTag,9);
+                        fechaString = nfcUltra.readPage(myTag,10) + nfcUltra.readPage(myTag,11) +nfcUltra.readPage(myTag,12) + nfcUltra.readPage(myTag,13).substring(0,2);
+                        nfcUltra.cleanTag(myTag);
+                    }
+
                     Toast.makeText(getApplicationContext(),"numero de viaje: " + contador, Toast.LENGTH_SHORT).show();
-                    String tagInfo = nfcTag.readSector(myTag, 0, 1);
+
                     Integer idCamion = Util.getIdCamion(tagInfo);
                     Integer idProyecto = Util.getIdProyecto(tagInfo);
-
-                    String tagOrigen = nfcTag.readSector(myTag, 1, 4);
                     Integer idOrigen = Util.getIdOrigen(tagOrigen);
                     Integer idMaterial = Util.getIdMaterial(tagOrigen);
 
-                    String fechaString = nfcTag.readSector(myTag, 1, 5);
+
 
                     ContentValues cv = new ContentValues();
                     cv.put("FechaCarga", Util.getFecha());
@@ -410,8 +445,6 @@ public class SetDestinoActivity extends AppCompatActivity
                     cv.put("code", getCode(contador,idCamion).toUpperCase());
                     Coordenada coordenada = new Coordenada(this);
                     coordenada.create(cv, SetDestinoActivity.this);
-
-                    nfcTag.cleanSector(myTag,1);
 
                     Intent destinoSuccess = new Intent(this, SuccessDestinoActivity.class);
                     destinoSuccess.putExtra("idViaje", viaje.idViaje);
