@@ -369,7 +369,7 @@ public class SetDestinoActivity extends AppCompatActivity
                     int contador=0;
                     contador = Integer.valueOf(viajes) + 1;
                     nfcTag.writeSector(myTag, 2, 8, String.valueOf(contador));
-
+                    Toast.makeText(getApplicationContext(),"numero de viaje: " + contador, Toast.LENGTH_SHORT).show();
                     String tagInfo = nfcTag.readSector(myTag, 0, 1);
                     Integer idCamion = Util.getIdCamion(tagInfo);
                     Integer idProyecto = Util.getIdProyecto(tagInfo);
