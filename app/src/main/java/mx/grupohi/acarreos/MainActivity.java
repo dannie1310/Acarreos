@@ -168,11 +168,6 @@ public class MainActivity extends AppCompatActivity
         super.onPostResume();
         WriteModeOn();
         nfc_adapter = NfcAdapter.getDefaultAdapter(this);
-        if (getIntent().getAction() != null) {
-            if (getIntent().getAction().equals(NfcAdapter.ACTION_TAG_DISCOVERED)) {
-                nfc(getIntent());
-            }
-        }
         checkNfcEnabled();
     }
 
@@ -196,10 +191,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onNewIntent(Intent intent) {
-        nfc(intent);
-    }
-
-    void nfc(Intent intent) {
         int tipo=0;
         Integer tagCamion =0;
         Integer tagProyecto =0;
@@ -218,7 +209,6 @@ public class MainActivity extends AppCompatActivity
             for (String t : techs) {
                 if (MifareClassic.class.getName().equals(t)) {
                     nfc = new NFCTag(myTag, this);
-                    Toast.makeText(getApplicationContext(), "MIFARECLASSIC", Toast.LENGTH_SHORT).show();
                     UID = nfc.idTag(myTag);
                     tipo = 1;
                     String tagString = nfc.readSector(myTag, 0, 1);
@@ -235,13 +225,11 @@ public class MainActivity extends AppCompatActivity
                 } else if (MifareUltralight.class.getName().equals(t)) {
                     nfcUltra = new NFCUltralight(myTag, this);
                     UID = nfcUltra.byteArrayToHexString(myTag.getId());
-                    Toast.makeText(getApplicationContext(), "MIFAREULTRALIGHT", Toast.LENGTH_SHORT).show();
                     tipo = 2;
                     tagCamion = Integer.valueOf(nfcUltra.readPage(myTag, 4));
                     tagProyecto = Integer.valueOf(nfcUltra.readPage(myTag, 5));
                     tagModel = tagModel.find(UID, tagCamion, tagProyecto);
                     String origen1=nfcUltra.readPage(myTag, 9);
-                    System.out.print("aaa"+origen1);
                     String material1=nfcUltra.readPage(myTag, 8);
                     if(origen1!=null && material1!=null) {
                         tagOrigen = Integer.valueOf(origen1);

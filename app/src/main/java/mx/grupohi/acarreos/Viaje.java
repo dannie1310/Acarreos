@@ -51,42 +51,55 @@ public class Viaje {
         this.material=new Material(context);
         this.ruta = new Ruta(context);
         db_sca = new DBScaSqlite(this.context, "sca", null, 1);
-        db = db_sca.getWritableDatabase();
     }
 
     Boolean create(ContentValues data) {
+        db = db_sca.getWritableDatabase();
         Boolean result = db.insert("viajesnetos", null, data) > -1;
         if (result) {
             Cursor c = db.rawQuery("SELECT ID FROM viajesnetos WHERE Code = '" + data.getAsString("Code") + "'", null);
-            if(c != null && c.moveToFirst()) {
-                this.idViaje = c.getInt(0);
+            try {
+                if(c != null && c.moveToFirst()) {
+                    this.idViaje = c.getInt(0);
+                }
+            } finally {
+                c.close();
+                db.close();
             }
         }
         return result;
     }
-    public Viaje find (Integer idViaje) {
-        Cursor c = db.rawQuery("SELECT * FROM viajesnetos WHERE ID = '" + idViaje + "'", null);
-        if (c != null && c.moveToFirst()) {
-            this.idCamion = c.getInt(4);
-            this.idViaje = c.getInt(0);
-            this.idMaterial=c.getInt(11);
-            this.idOrigen=c.getInt(5);
-            this.idTiro =c.getInt(8);
-            this.idRuta = c.getInt(15);
-            this.fechaLlegada = c.getString(9);
-            this.horaLlegada = c.getString(10);
-            this.fechaSalida = c.getString(6);
-            this.horaSalida = c.getString(7);
-            this.observaciones = c.getString(12);
-            this.camion= this.camion.find(this.idCamion);
-            this.material=this.material.find(this.idMaterial);
-            this.origen = this.origen.find(idOrigen);
-            this.tiro = this.tiro.find(idTiro);
-            this.ruta = this.ruta.find(idRuta);
 
-            return this;
+    public Viaje find (Integer idViaje) {
+        db = db_sca.getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM viajesnetos WHERE ID = '" + idViaje + "'", null);
+        try {
+            if (c != null && c.moveToFirst()) {
+                this.idCamion = c.getInt(4);
+                this.idViaje = c.getInt(0);
+                this.idMaterial=c.getInt(11);
+                this.idOrigen=c.getInt(5);
+                this.idTiro =c.getInt(8);
+                this.idRuta = c.getInt(15);
+                this.fechaLlegada = c.getString(9);
+                this.horaLlegada = c.getString(10);
+                this.fechaSalida = c.getString(6);
+                this.horaSalida = c.getString(7);
+                this.observaciones = c.getString(12);
+                this.camion= this.camion.find(this.idCamion);
+                this.material=this.material.find(this.idMaterial);
+                this.origen = this.origen.find(idOrigen);
+                this.tiro = this.tiro.find(idTiro);
+                this.ruta = this.ruta.find(idRuta);
+
+                return this;
+            } else {
+                return null;
+            }
+        } finally {
+            c.close();
+            db.close();
         }
-        return null;
     }
 
     @Override
@@ -100,10 +113,12 @@ public class Viaje {
                 '}';
     }
 
-    static JSONObject getJSON() {
+    static JSONObject getJSON(Context context) {
         JSONObject JSON = new JSONObject();
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM viajesnetos", null);
         try {
-            Cursor c = db.rawQuery("SELECT * FROM viajesnetos", null);
             if(c != null && c.moveToFirst()) {
                 Integer i = 0;
                 do {
@@ -130,41 +145,51 @@ public class Viaje {
                     i++;
                 } while (c.moveToNext());
             }
-            assert c != null;
-            c.close();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            c.close();
+            db.close();
         }
         return JSON;
     }
 
-    public static List<Viaje> getViajes(Context con){
-
-        DBScaSqlite db_sca = new DBScaSqlite(con, "sca", null, 1);
-        db = db_sca.getWritableDatabase();
+    public static List<Viaje> getViajes(Context context){
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM viajesnetos",null);
         viajes = new HashMap<>();
-        if (c != null){
-            while (c.moveToNext()){
-                Viaje viaje = new Viaje(con);
-                viaje = viaje.find(c.getInt(0));
-                viajes.put(viaje.idViaje.toString(), viaje);
+        try {
+            if (c != null){
+                while (c.moveToNext()){
+                    Viaje viaje = new Viaje(context);
+                    viaje = viaje.find(c.getInt(0));
+                    viajes.put(viaje.idViaje.toString(), viaje);
+                }
+                return new ArrayList<>(viajes.values());
             }
-            return new ArrayList<>(viajes.values());
-        }
-        else {
-            return new ArrayList<>();
+            else {
+                return new ArrayList<>();
+            }
+        } finally {
+            c.close();
+            db.close();
         }
     }
 
     public String getCode(int idViaje){
+        db = db_sca.getWritableDatabase();
         Cursor c= db.rawQuery("SELECT Code FROM viajesnetos WHERE id = '" + idViaje + "'", null);
-
-        if(c!=null && c.moveToFirst()){
-            return c.getString(0);
-        }
-        else {
-            return null;
+        try {
+            if(c!=null && c.moveToFirst()){
+                return c.getString(0);
+            }
+            else {
+                return null;
+            }
+        } finally {
+            c.close();
+            db.close();
         }
     }
 
@@ -174,6 +199,8 @@ public class Viaje {
 
         db.execSQL("DELETE FROM viajesnetos");
         db.execSQL("DELETE FROM coordenadas");
+
+        db.close();
     }
 
     static Boolean isSync(Context context) {
@@ -181,11 +208,15 @@ public class Viaje {
         SQLiteDatabase db = db_sca.getWritableDatabase();
 
         Boolean result = true;
-        try (Cursor c = db.rawQuery("SELECT * FROM viajesnetos", null)) {
+        Cursor c = db.rawQuery("SELECT * FROM viajesnetos", null);
+        try {
             if(c != null && c.moveToFirst()) {
                 result = false;
             }
+            return result;
+        } finally {
+            c.close();
+            db.close();
         }
-        return result;
     }
 }

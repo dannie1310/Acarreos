@@ -24,29 +24,35 @@ class TagModel {
     TagModel(Context context) {
         this.context = context;
         db_sca = new DBScaSqlite(context, "sca", null, 1);
-        db = db_sca.getWritableDatabase();
     }
 
     Boolean create(ContentValues data) {
+        db = db_sca.getWritableDatabase();
         Boolean result = db.insert("tags", null, data) > -1;
         if (result) {
             this.UID = data.getAsString("uid");
             this.idCamion = data.getAsInteger("idcamion");
             this.idProyecto = data.getAsInteger("idproyecto");
         }
+        db.close();
         return result;
     }
 
     TagModel find(String UID, Integer idCamion, Integer idProyecto) {
+        db = db_sca.getWritableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM tags WHERE uid = '" +  UID + "' AND idcamion = '" + idCamion + "' AND idproyecto = '" + idProyecto + "'", null);
-        //Cursor c = db.rawQuery("SELECT * FROM tags WHERE uid = '" +  UID + "' AND idcamion = '" + idCamion + "'", null);
-        if(c != null && c.moveToFirst()) {
-            this.idProyecto = c.getInt(c.getColumnIndex("idproyecto"));
-            this.idCamion = c.getInt(c.getColumnIndex("idcamion"));
-            this.UID = c.getString(c.getColumnIndex("uid"));
-            return this;
-        } else {
-            return null;
+        try {
+            if(c != null && c.moveToFirst()) {
+                this.idProyecto = c.getInt(c.getColumnIndex("idproyecto"));
+                this.idCamion = c.getInt(c.getColumnIndex("idcamion"));
+                this.UID = c.getString(c.getColumnIndex("uid"));
+                return this;
+            } else {
+                return null;
+            }
+        } finally {
+            c.close();
+            db.close();
         }
     }
 }

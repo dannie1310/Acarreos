@@ -21,11 +21,14 @@ import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -100,6 +103,26 @@ public class LoginActivity extends AppCompatActivity {
                     }*/
                     attemptLogin();
                 }
+            }
+        });
+
+        userText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                    passText.requestFocus();
+                }
+                return false;
+            }
+        });
+
+        passText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    loginButton.performClick();
+                }
+                return false;
             }
         });
     }
@@ -426,8 +449,7 @@ public class LoginActivity extends AppCompatActivity {
                     data.put("fecha_hora", Util.timeStamp());
                     data.put("code", "");
 
-                    Coordenada coordenada = new Coordenada(getApplicationContext());
-                    if(!coordenada.create(data, LoginActivity.this)) {
+                    if(!Coordenada.create(data, LoginActivity.this)) {
                         return false;
                     }
                 }

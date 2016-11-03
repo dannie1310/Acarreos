@@ -25,33 +25,40 @@ class Tiro {
     Tiro(Context context) {
         this.context = context;
         db_sca = new DBScaSqlite(context, "sca", null, 1);
-        db = db_sca.getWritableDatabase();
     }
 
     Boolean create(ContentValues data) {
+        db = db_sca.getWritableDatabase();
         Boolean result = db.insert("tiros", null, data) > -1;
         if (result) {
             this.idTiro = Integer.valueOf(data.getAsString("idtiro"));
             this.descripcion = data.getAsString("descripcion");
         }
+        db.close();
         return result;
     }
 
     public Tiro find(Integer idTiro){
+        db = db_sca.getWritableDatabase();
         Cursor c= db.rawQuery("SELECT * FROM tiros WHERE idtiro = '" + idTiro + "'", null);
-        if( c != null && c.moveToFirst()){
-            this.idTiro=c.getInt(0);
-            this.descripcion=c.getString(1);
-            return this;
+        try {
+            if( c != null && c.moveToFirst()){
+                this.idTiro=c.getInt(0);
+                this.descripcion=c.getString(1);
+                return this;
+            }
+            else{
+                return null;
+            }
+        } finally {
+            c.close();
+            db.close();
         }
-        else{
-            return null;
-        }
-
     }
 
     ArrayList<String> getArrayListDescripciones(Integer idOrigen) {
         ArrayList<String> data = new ArrayList<>();
+        db = db_sca.getWritableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM tiros WHERE idtiro IN (SELECT idtiro FROM rutas WHERE idorigen = '" + idOrigen + "') ORDER BY descripcion ASC", null);
         if (c != null && c.moveToFirst())
             try {
@@ -66,12 +73,14 @@ class Tiro {
                 }
             } finally {
                 c.close();
+                db.close();
             }
         return data;
     }
 
     ArrayList<String> getArrayListId(Integer idOrigen) {
         ArrayList<String> data = new ArrayList<>();
+        db = db_sca.getWritableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM tiros WHERE idtiro IN (SELECT idtiro FROM rutas WHERE idorigen = '" + idOrigen + "') ORDER BY descripcion ASC", null);
         if (c != null && c.moveToFirst())
             try {
@@ -86,6 +95,7 @@ class Tiro {
                 }
             } finally {
                 c.close();
+                db.close();
             }
         return data;
     }

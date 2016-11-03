@@ -20,7 +20,6 @@ class Coordenada {
     Coordenada (Context context) {
         this.context = context;
         db_sca = new DBScaSqlite(context, "sca", null, 1);
-        db = db_sca.getWritableDatabase();
     }
 
     public static Boolean create(ContentValues data, Context context) {
@@ -35,8 +34,8 @@ class Coordenada {
         DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
         SQLiteDatabase db = db_sca.getWritableDatabase();
         JSONObject JSON = new JSONObject();
+        Cursor c = db.rawQuery("SELECT * FROM coordenadas", null);
         try {
-            Cursor c = db.rawQuery("SELECT * FROM coordenadas", null);
             if(c != null && c.moveToFirst()) {
                 Integer i = 0;
                 do {
@@ -53,24 +52,13 @@ class Coordenada {
                     i++;
                 } while (c.moveToNext());
             }
-            assert c != null;
-            c.close();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            assert c != null;
+            c.close();
+            db.close();
         }
         return JSON;
-    }
-
-    static Boolean isSync(Context context) {
-        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
-        SQLiteDatabase db = db_sca.getWritableDatabase();
-
-        Boolean result = true;
-        try (Cursor c = db.rawQuery("SELECT * FROM coordenadas", null)) {
-            if(c != null && c.moveToFirst()) {
-                result = false;
-            }
-        }
-        return result;
     }
 }
