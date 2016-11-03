@@ -165,11 +165,6 @@ public class MainActivity extends AppCompatActivity
         super.onPostResume();
         WriteModeOn();
         nfc_adapter = NfcAdapter.getDefaultAdapter(this);
-        if (getIntent().getAction() != null) {
-            if (getIntent().getAction().equals(NfcAdapter.ACTION_TAG_DISCOVERED)) {
-                nfc(getIntent());
-            }
-        }
         checkNfcEnabled();
     }
 
@@ -193,10 +188,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onNewIntent(Intent intent) {
-        nfc(intent);
-    }
-
-    void nfc(Intent intent) {
         if (nfc_adapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
             clearCamionInfo();
             clearOrigenInfo();

@@ -25,31 +25,43 @@ class Origen {
     Origen(Context context) {
         this.context = context;
         db_sca = new DBScaSqlite(context, "sca", null, 1);
-        db = db_sca.getWritableDatabase();
     }
 
     Boolean create(ContentValues data) {
-        return db.insert("origenes", null, data) > -1;
+        db = db_sca.getWritableDatabase();
+        try{
+            return db.insert("origenes", null, data) > -1;
+        } finally {
+            db.close();
+        }
     }
 
     Origen find(Integer idOrigen) {
+        db = db_sca.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM origenes WHERE idorigen = '" + idOrigen + "'", null);
-        if(c != null && c.moveToFirst()) {
-            this.idOrigen = c.getInt(0);
-            this.descripcion = c.getString(1);
-            this.estado = c.getInt(2);
+        try {
+            if (c != null && c.moveToFirst()) {
+                this.idOrigen = c.getInt(0);
+                this.descripcion = c.getString(1);
+                this.estado = c.getInt(2);
 
-            return this;
-        } else {
-            return null;
+                return this;
+            } else {
+                return null;
+            }
+        } finally {
+            assert c != null;
+            c.close();
+            db.close();
         }
     }
 
     ArrayList<String> getArrayListDescripciones() {
         ArrayList<String> data = new ArrayList<>();
+        db = db_sca.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM origenes ORDER BY descripcion ASC", null);
-        if (c != null && c.moveToFirst())
-            try {
+        try {
+            if (c != null && c.moveToFirst()) {
                 if (c.getCount() == 1) {
                     data.add(c.getString(c.getColumnIndex("descripcion")));
                 } else {
@@ -59,17 +71,20 @@ class Origen {
                         data.add(c.getString(c.getColumnIndex("descripcion")));
                     }
                 }
-            } finally {
-                c.close();
             }
+        } finally {
+            c.close();
+            db.close();
+        }
         return data;
     }
 
     ArrayList<String> getArrayListId() {
         ArrayList<String> data = new ArrayList<>();
+        db = db_sca.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM origenes ORDER BY descripcion ASC", null);
-        if (c != null && c.moveToFirst())
-            try {
+        try {
+            if (c != null && c.moveToFirst()) {
                 if (c.getCount() == 1) {
                     data.add(c.getString(c.getColumnIndex("idorigen")));
                 } else {
@@ -79,9 +94,11 @@ class Origen {
                         data.add(c.getString(c.getColumnIndex("idorigen")));
                     }
                 }
-            } finally {
-                c.close();
             }
+        } finally {
+            c.close();
+            db.close();
+        }
         return data;
     }
 }

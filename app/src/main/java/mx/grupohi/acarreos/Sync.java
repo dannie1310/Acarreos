@@ -70,8 +70,8 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
             values.put("bd", usuario.baseDatos);
             values.put("idusuario", usuario.getId());
 
-            if (Viaje.getJSON().length() != 0) {
-                values.put("carddata", String.valueOf(Viaje.getJSON()));
+            if (Viaje.getJSON(context).length() != 0) {
+                values.put("carddata", String.valueOf(Viaje.getJSON(context)));
             }
             if (Coordenada.getJSON(context).length() != 0) {
                 values.put("coordenadas", String.valueOf(Coordenada.getJSON(context)));

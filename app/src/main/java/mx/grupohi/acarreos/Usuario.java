@@ -28,10 +28,10 @@ class Usuario {
     Usuario(Context context) {
         this.context = context;
         db_sca = new DBScaSqlite(context, "sca", null, 1);
-        db = db_sca.getWritableDatabase();
     }
 
     boolean create(ContentValues data) {
+        db = db_sca.getWritableDatabase();
         Boolean result = db.insert("user", null, data) > -1;
         if (result) {
             this.idUsuario = Integer.valueOf(data.getAsString("idusuario"));
@@ -40,62 +40,91 @@ class Usuario {
             this.baseDatos = data.getAsString("base_datos");
             this.descripcionBaseDatos = data.getAsString("descripcion_database");
         }
+        db.close();
         return result;
     }
 
-    void destroy() { db.execSQL("DELETE FROM user"); }
+    void destroy() {
+        db = db_sca.getWritableDatabase();
+        db.execSQL("DELETE FROM user");
+        db.close();
+    }
 
     boolean isAuth() {
+        db = db_sca.getWritableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM user LIMIT 1", null);
-        Boolean result = c != null && c.moveToFirst();
-        assert c != null;
-        c.close();
-        return result;
+        try {
+            return c != null && c.moveToFirst();
+        } finally {
+            c.close();
+            db.close();
+        }
     }
 
     public Integer getId() {
+        db = db_sca.getWritableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM user LIMIT 1", null);
-        if(c != null && c.moveToFirst()) {
-            this.idUsuario = c.getInt(0);
+        try {
+            if(c != null && c.moveToFirst()) {
+                this.idUsuario = c.getInt(0);
+            }
+            return this.idUsuario;
+        } finally {
+            c.close();
+            db.close();
         }
-        c.close();
-        return this.idUsuario;
     }
 
     Usuario getUsuario() {
+        db = db_sca.getWritableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM user LIMIT 1", null);
-        if(c != null && c.moveToFirst()) {
-            this.idUsuario = c.getInt(c.getColumnIndex("idusuario"));
-            this.idProyecto = c.getInt(c.getColumnIndex("idproyecto"));
-            this.nombre = c.getString(c.getColumnIndex("nombre"));
-            this.baseDatos = c.getString(c.getColumnIndex("base_datos"));
-            this.descripcionBaseDatos = c.getString(c.getColumnIndex("descripcion_database"));
-            this.usr = c.getString(c.getColumnIndex("user"));
-            this.pass = c.getString(c.getColumnIndex("pass"));
+        try {
+            if(c != null && c.moveToFirst()) {
+                this.idUsuario = c.getInt(c.getColumnIndex("idusuario"));
+                this.idProyecto = c.getInt(c.getColumnIndex("idproyecto"));
+                this.nombre = c.getString(c.getColumnIndex("nombre"));
+                this.baseDatos = c.getString(c.getColumnIndex("base_datos"));
+                this.descripcionBaseDatos = c.getString(c.getColumnIndex("descripcion_database"));
+                this.usr = c.getString(c.getColumnIndex("user"));
+                this.pass = c.getString(c.getColumnIndex("pass"));
 
+                return this;
+            } else {
+                return null;
+            }
+        }finally {
             c.close();
-            return this;
-        } else {
-            return null;
+            db.close();
         }
     }
 
     String getNombre(){
+        db = db_sca.getWritableDatabase();
         Cursor c = db.rawQuery("SELECT nombre FROM user LIMIT 1", null);
-        if(c!=null && c.moveToFirst()){
-            this.nombre =  c.getString(0);
+        try {
+            if(c!=null && c.moveToFirst()){
+                this.nombre =  c.getString(0);
+            }
+            return this.nombre;
+        } finally {
+            c.close();
+            db.close();
         }
-        c.close();
-        return this.nombre;
     }
 
     public String getDescripcion(){
+        db = db_sca.getWritableDatabase();
         Cursor c = db.rawQuery("SELECT descripcion_database FROM user LIMIT 1", null);
-        if(c!=null && c.moveToFirst()){
-            return c.getString(0);
-        }
-        else{
-            return null;
+        try {
+            if(c!=null && c.moveToFirst()){
+                return c.getString(0);
+            }
+            else{
+                return null;
+            }
+        } finally {
+            c.close();
+            db.close();
         }
     }
 }

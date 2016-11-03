@@ -25,31 +25,39 @@ class Material {
     Material(Context context) {
         this.context = context;
         db_sca = new DBScaSqlite(context, "sca", null, 1);
-        db = db_sca.getWritableDatabase();
     }
 
     Boolean create(ContentValues data) {
+        db = db_sca.getWritableDatabase();
         Boolean result = db.insert("materiales", null, data) > -1;
         if (result) {
             this.idMaterial = data.getAsInteger("idmaterial");
             this.descripcion = data.getAsString("descripcion");
         }
+        db.close();
         return result;
     }
 
     Material find(Integer idMaterial) {
+        db = db_sca.getWritableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM materiales WHERE idmaterial = '" + idMaterial + "'", null);
-        if (c != null && c.moveToFirst()) {
-            this.idMaterial = c.getInt(0);
-            this.descripcion = c.getString(1);
-            return this;
-        } else {
-            return null;
+        try {
+            if (c != null && c.moveToFirst()) {
+                this.idMaterial = c.getInt(0);
+                this.descripcion = c.getString(1);
+                return this;
+            } else {
+                return null;
+            }
+        } finally {
+            c.close();
+            db.close();
         }
     }
 
     ArrayList<String> getArrayListDescripciones() {
         ArrayList<String> data = new ArrayList<>();
+        db = db_sca.getWritableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM materiales ORDER BY descripcion ASC", null);
         if (c != null && c.moveToFirst())
             try {
@@ -64,12 +72,14 @@ class Material {
                 }
             } finally {
                 c.close();
+                db.close();
             }
         return data;
     }
 
     ArrayList<String> getArrayListId() {
         ArrayList<String> data = new ArrayList<>();
+        db = db_sca.getWritableDatabase();
         Cursor c = db.rawQuery("SELECT * from materiales ORDER BY descripcion ASC", null);
         if (c != null && c.moveToFirst())
             try {
@@ -84,6 +94,7 @@ class Material {
                 }
             } finally {
                 c.close();
+                db.close();
             }
         return data;
     }

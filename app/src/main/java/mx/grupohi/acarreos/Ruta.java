@@ -29,10 +29,10 @@ class Ruta {
      Ruta(Context context) {
         this.context = context;
         db_sca = new DBScaSqlite(context, "sca", null, 1);
-        db = db_sca.getWritableDatabase();
     }
 
     Boolean create(ContentValues data) {
+        db = db_sca.getWritableDatabase();
         Boolean result = db.insert("rutas", null, data) > -1;
         if (result) {
             this.idRuta = data.getAsInteger("idorigen");
@@ -41,28 +41,36 @@ class Ruta {
             this.idTiro  = data.getAsInteger("idtiro");
             this.totalKm = data.getAsInteger("totalkm");
         }
+        db.close();
         return result;
     }
 
     Ruta find(Integer idRuta) {
+        db = db_sca.getWritableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM rutas WHERE idruta = '" + idRuta + "'", null);
-        if(c != null && c.moveToFirst()) {
-            this.idRuta = c.getInt(0);
-            this.clave = c.getString(1);
-            this.idOrigen = c.getInt(2);
-            this.idTiro = c.getInt(3);
-            this.totalKm = c.getInt(4);
-            return this;
-        } else {
-            return null;
+        try {
+            if(c != null && c.moveToFirst()) {
+                this.idRuta = c.getInt(0);
+                this.clave = c.getString(1);
+                this.idOrigen = c.getInt(2);
+                this.idTiro = c.getInt(3);
+                this.totalKm = c.getInt(4);
+                return this;
+            } else {
+                return null;
+            }
+        } finally {
+            c.close();
+            db.close();
         }
     }
 
     ArrayList<String> getArrayListDescripciones(Integer idOrigen, Integer idTiro) {
         ArrayList<String> data = new ArrayList<>();
+        db = db_sca.getWritableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM rutas WHERE idorigen = '" + idOrigen + "' AND idtiro = '" + idTiro + "' ORDER BY clave ASC", null);
-        if (c != null && c.moveToFirst())
-            try {
+        try {
+            if (c != null && c.moveToFirst()) {
                 if (c.getCount() == 1) {
                     data.add(c.getString(1) + " - " + c.getString(0) + " " + c.getString(4) + " KM");
                 } else {
@@ -72,19 +80,20 @@ class Ruta {
                         data.add(c.getString(1) + " - " + c.getString(0) + " " + c.getString(4) + " KM");
                     }
                 }
-            } finally {
-                c.close();
             }
+        } finally {
+            c.close();
+            db.close();
+        }
         return data;
     }
 
     ArrayList<String> getArrayListId(Integer idOrigen, Integer idTiro) {
-        Log.i("IDORIGEN", String.valueOf(idOrigen));
-        Log.i("IDTIRO", String.valueOf(idTiro));
         ArrayList<String> data = new ArrayList<>();
+        db = db_sca.getWritableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM rutas WHERE idorigen = '" + idOrigen + "' AND idtiro = '" + idTiro + "' ORDER BY clave ASC", null);
-        if (c != null && c.moveToFirst())
-            try {
+        try {
+            if (c != null && c.moveToFirst()) {
                 if (c.getCount() == 1) {
                     data.add(c.getString(c.getColumnIndex("idruta")));
                 } else {
@@ -94,9 +103,11 @@ class Ruta {
                         data.add(c.getString(c.getColumnIndex("idruta")));
                     }
                 }
-            } finally {
-                c.close();
             }
+        } finally {
+            c.close();
+            db.close();
+        }
         return data;
     }
 

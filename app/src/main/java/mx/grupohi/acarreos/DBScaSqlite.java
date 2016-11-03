@@ -69,6 +69,8 @@ import java.util.GregorianCalendar;
         for (String query: queries){
             db.execSQL(query);
         }
+
+        db.close();
     }
 
     void deleteCatalogos() {
@@ -81,5 +83,7 @@ import java.util.GregorianCalendar;
         db.execSQL("DELETE FROM rutas");
         db.execSQL("DELETE FROM materiales");
         db.execSQL("DELETE FROM tags");
+
+        db.close();
     }
 }
