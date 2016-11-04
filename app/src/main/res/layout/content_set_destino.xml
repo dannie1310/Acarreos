@@ -65,12 +65,8 @@
             android:textAppearance="@android:style/TextAppearance.Material.Menu"
             android:id="@+id/textObservaciones"
             android:maxLength="50"/>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@android:color/darker_gray"
-            android:layout_marginBottom="15dp"
-            android:layout_marginTop="5dp" />
+
+
         <Button
             android:text="ESCRIBIR DESTINO"
             android:layout_width="match_parent"
