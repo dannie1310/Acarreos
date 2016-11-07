@@ -57,7 +57,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
 
     public static BixolonPrinter bixolonPrinterApi;
 
-    private static final long PRINTING_TIME = 2200;
+    private static final long PRINTING_TIME = 2100;
     private static final long PRINTING_SLEEP_TIME = 300;
     static final int MESSAGE_START_WORK = Integer.MAX_VALUE - 2;
     static final int MESSAGE_END_WORK = Integer.MAX_VALUE - 3;
@@ -163,7 +163,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
                             bixolonPrinterApi.setSingleByteFont(BixolonPrinter.CODE_PAGE_858_EURO);
                             Bitmap fewlapsBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.img_success);
 
-                            Thread.sleep(PRINTING_SLEEP_TIME);
+                           // Thread.sleep(PRINTING_SLEEP_TIME);
                             printheadproyecto(usuario.getDescripcion());
                             bixolonPrinterApi.lineFeed(1,true);
                             printTextTwoColumns("Camion: ", textViewCamion.getText()+ " \n");

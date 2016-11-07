@@ -10,6 +10,8 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
+import android.nfc.tech.MifareClassic;
+import android.nfc.tech.MifareUltralight;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -67,6 +69,7 @@ public class SetOrigenActivity extends AppCompatActivity
 
     //NFC
     private NFCTag nfcTag;
+    private NFCUltralight nfcUltra;
     private NfcAdapter nfcAdapter;
     private PendingIntent pendingIntent;
     private IntentFilter writeTagFilters[];
@@ -231,21 +234,44 @@ public class SetOrigenActivity extends AppCompatActivity
 
     @Override
     protected void onNewIntent(Intent intent) {
+        String UID="";
+        int tipo=0;
         if(writeMode) {
             if(NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
                 Tag myTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-                nfcTag = new NFCTag(myTag, this);
+                String[] techs = myTag.getTechList();
+                for (String t : techs) {
+                    if (MifareClassic.class.getName().equals(t)) {
+                        nfcTag = new NFCTag(myTag, this);
+                       // Toast.makeText(getApplicationContext(), "MIFARECLASSIC", Toast.LENGTH_SHORT).show();
+                        UID = nfcTag.idTag(myTag);
+                        tipo=1;
+                    }
+                    else if (MifareUltralight.class.getName().equals(t)) {
+                        nfcUltra = new NFCUltralight(myTag, this);
+                        UID = nfcUltra.byteArrayToHexString(myTag.getId());
 
-                String UID = nfcTag.idTag(myTag);
+                        //Toast.makeText(getApplicationContext(), "MIFAREULTRALIGHT", Toast.LENGTH_SHORT).show();
+                        tipo=2;
+                    }
+                }
 
                 if(UID.equals(getIntent().getStringExtra("UID"))) {
                     String data = Util.concatenar(String.valueOf(idMaterial), String.valueOf(idOrigen));
                     latitude = gps.getLatitude();
                     longitude = gps.getLongitude();
-
+                    boolean datos=false;
+                    boolean dia=false;
                     String dataTime = Util.getFechaHora();
-
-                    if (nfcTag.writeSector(myTag, 1, 4, data) && nfcTag.writeSector(myTag, 1, 5, dataTime)) {
+                    if(tipo==1){
+                        datos = nfcTag.writeSector(myTag, 1, 4, data);
+                        dia = nfcTag.writeSector(myTag, 1, 5, dataTime);
+                    }
+                    if(tipo==2){
+                        datos = nfcUltra.writePagina(myTag,8,data);
+                        dia = nfcUltra.writePagina(myTag,10,dataTime);
+                    }
+                    if (datos && dia) {
                         ContentValues cv = new ContentValues();
                         cv.put("IMEI", IMEI);
                         cv.put("idevento", 2);

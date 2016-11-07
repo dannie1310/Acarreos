@@ -10,6 +10,8 @@ import android.graphics.Color;
 import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
+import android.nfc.tech.MifareClassic;
+import android.nfc.tech.MifareUltralight;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity
 
 
     private NFCTag nfc;
+    private NFCUltralight nfcUltra;
     private NfcAdapter nfc_adapter;
     private PendingIntent pendingIntent;
     private IntentFilter writeTagFilters[];
@@ -192,33 +195,60 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onNewIntent(Intent intent) {
+        int tipo=0;
+        Integer tagCamion =0;
+        Integer tagProyecto =0;
+        Integer tagOrigen =0;
+        Integer tagMaterial = 0;
+        String fechaString = "";
         if (nfc_adapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
             clearCamionInfo();
             clearOrigenInfo();
             if (snackbar != null && snackbar.isShown()) snackbar.dismiss();
             final Tag myTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-            nfc = new NFCTag(myTag, this);
-            UID = nfc.idTag(myTag);
-
             TagModel tagModel = new TagModel(getApplicationContext());
             Origen origen = new Origen(getApplicationContext());
             Material material = new Material(getApplicationContext());
+            String[] techs = myTag.getTechList();
+            for (String t : techs) {
+                if (MifareClassic.class.getName().equals(t)) {
+                    nfc = new NFCTag(myTag, this);
+                    UID = nfc.idTag(myTag);
+                    tipo = 1;
+                    String tagString = nfc.readSector(myTag, 0, 1);
+                    tagCamion = Util.getIdCamion(tagString);
+                    tagProyecto = Util.getIdProyecto(tagString);
+                    tagModel = tagModel.find(UID, tagCamion, tagProyecto);
 
-            String tagString = nfc.readSector(myTag, 0, 1);
+                    String origenString = nfc.readSector(myTag, 1, 4);
+                    tagOrigen = Util.getIdOrigen(origenString);
+                    tagMaterial = Util.getIdMaterial(origenString);
+                    origen = origen.find(tagOrigen);
+                    material = material.find(tagMaterial);
+                    fechaString = nfc.readSector(myTag, 1, 5);
+                } else if (MifareUltralight.class.getName().equals(t)) {
+                    nfcUltra = new NFCUltralight(myTag, this);
+                    UID = nfcUltra.byteArrayToHexString(myTag.getId());
+                    tipo = 2;
+                    tagCamion = Integer.valueOf(nfcUltra.readPage(myTag, 4));
+                    tagProyecto = Integer.valueOf(nfcUltra.readPage(myTag, 5));
+                    tagModel = tagModel.find(UID, tagCamion, tagProyecto);
+                    String origen1=nfcUltra.readPage(myTag, 9);
+                    String material1=nfcUltra.readPage(myTag, 8);
+                    if(origen1!=null && material1!=null) {
+                        tagOrigen = Integer.valueOf(origen1);
+                        tagMaterial = Integer.valueOf(material1);
+                        origen = origen.find(tagOrigen);
+                        material = material.find(tagMaterial);
+                        fechaString  = nfcUltra.readPage(myTag, 10)+ nfcUltra.readPage(myTag, 11) + nfcUltra.readPage(myTag, 12) + nfcUltra.readPage(myTag, 13).substring(0,2);
+                    }else {
+                        origen = null;
+                        material = null;
+                    }
 
-            Integer tagCamion = Util.getIdCamion(tagString);
-            Integer tagProyecto = Util.getIdProyecto(tagString);
-            tagModel = tagModel.find(UID, tagCamion, tagProyecto);
+                }
+            }
 
-            String origenString = nfc.readSector(myTag, 1, 4);
-
-            Integer tagOrigen = Util.getIdOrigen(origenString);
-            Integer tagMaterial = Util.getIdMaterial(origenString);
-            origen = origen.find(tagOrigen);
-            material = material.find(tagMaterial);
-
-
-            String fechaString = nfc.readSector(myTag, 1, 5);
 
             if (tagModel != null) {
                 Camion camion = new Camion(getApplicationContext());
