@@ -159,12 +159,16 @@ public class SetDestinoActivity extends AppCompatActivity
                                 View child = drawer.getChildAt(i);
                                 TextView tvp = (TextView) child.findViewById(R.id.textViewProyecto);
                                 TextView tvu = (TextView) child.findViewById(R.id.textViewUser);
+                                TextView tvv = (TextView) child.findViewById(R.id.textViewVersion);
 
                                 if (tvp != null) {
                                     tvp.setText(usuario.descripcionBaseDatos);
                                 }
                                 if (tvu != null) {
                                     tvu.setText(usuario.nombre);
+                                }
+                                if (tvv != null) {
+                                    tvv.setText("Versión " + String.valueOf(BuildConfig.VERSION_NAME));
                                 }
                             }
                         }
