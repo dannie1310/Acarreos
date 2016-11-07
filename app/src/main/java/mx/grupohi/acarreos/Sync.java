@@ -80,6 +80,7 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
                 URL url = new URL("http://sca.grupohi.mx/android20160923.php");
                 JSON = HttpConnection.POST(url, values);
             } catch (Exception e) {
+                Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
                 return false;
             }
@@ -100,6 +101,7 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
                     Toast.makeText(context, (String) JSON.get("msj"), Toast.LENGTH_LONG).show();
                 }
             } catch (Exception e) {
+                Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
         }

@@ -52,11 +52,4 @@ class ViajesAdapter extends ArrayAdapter<Viaje> {
 
         return convertView;
     }
-
-    @Nullable
-    @Override
-    public Viaje getItem(int position) {
-        List<Viaje> viajesList = Viaje.getViajes(this.context);
-        return viajesList.get(position);
-    }
 }
