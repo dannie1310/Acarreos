@@ -5,8 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -15,7 +13,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +26,7 @@ public class ListaViajesActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle("TOTAL DE VIAJES " + String.valueOf(Viaje.getCount(getApplicationContext())));
         setContentView(R.layout.activity_lista_viajes);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -45,15 +43,22 @@ public class ListaViajesActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        ViajeFragment viajeFragment = (ViajeFragment)
-                getSupportFragmentManager().findFragmentById(R.id.content_lista_viajes);
+        final ProgressDialog progress = ProgressDialog.show(this, "ESPERE POR FAVOR", "Cargando Lista de Viajes", true, false);
 
-        if (viajeFragment == null) {
-            viajeFragment = ViajeFragment.newInstance();
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.content_lista_viajes, viajeFragment)
-                    .commit();
-        }
+        new Thread() {
+            @Override
+            public void run() {
+                ViajeFragment viajeFragment = (ViajeFragment) getSupportFragmentManager().findFragmentById(R.id.content_lista_viajes);
+
+                if (viajeFragment == null) {
+                    viajeFragment = ViajeFragment.newInstance();
+                    getSupportFragmentManager().beginTransaction()
+                            .add(R.id.content_lista_viajes, viajeFragment)
+                            .commit();
+                }
+                progress.dismiss();
+            }
+        }.start();
 
         if(drawer != null)
             drawer.post(new Runnable() {

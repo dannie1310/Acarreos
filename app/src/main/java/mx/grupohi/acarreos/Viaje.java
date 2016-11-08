@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.widget.SimpleCursorAdapter;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -36,8 +38,6 @@ public class Viaje {
     Tiro tiro;
     Ruta ruta;
 
-
-    private static HashMap <String, Viaje> viajes;
     private static SQLiteDatabase db;
     private DBScaSqlite db_sca;
 
@@ -154,19 +154,38 @@ public class Viaje {
         return JSON;
     }
 
-    public static List<Viaje> getViajes(Context context){
+    static Integer getCount(Context context) {
         DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
         SQLiteDatabase db = db_sca.getWritableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM viajesnetos",null);
-        viajes = new HashMap<>();
+        try {
+            return c.getCount();
+        } finally {
+            c.close();
+            db.close();
+        }
+    }
+
+    public static List<Viaje> getViajes(Context context){
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM viajesnetos ORDER BY 'ID' ASC",null);
+        ArrayList  viajes = new ArrayList<Viaje>();
         try {
             if (c != null){
                 while (c.moveToNext()){
                     Viaje viaje = new Viaje(context);
                     viaje = viaje.find(c.getInt(0));
-                    viajes.put(viaje.idViaje.toString(), viaje);
+                    viajes.add(viaje);
                 }
-                return new ArrayList<>(viajes.values());
+                Collections.sort(viajes, new Comparator<Viaje>() {
+                    @Override
+                    public int compare(Viaje v1, Viaje v2) {
+                        return Integer.valueOf(v2.idViaje).compareTo(Integer.valueOf(v1.idViaje));
+                    }
+                });
+
+                return viajes;
             }
             else {
                 return new ArrayList<>();
