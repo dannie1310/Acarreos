@@ -19,7 +19,8 @@ class Usuario {
     String nombre;
     String baseDatos;
     String descripcionBaseDatos;
-    String IMEI;
+    String empresa;
+    Integer logo;
 
     private Context context;
 
@@ -40,7 +41,8 @@ class Usuario {
             this.nombre = data.getAsString("nombre");
             this.baseDatos = data.getAsString("base_datos");
             this.descripcionBaseDatos = data.getAsString("descripcion_database");
-            this.IMEI = data.getAsString("IMEI");
+            this.empresa = data.getAsString("empresa");
+            this.logo = data.getAsInteger("logo");
         }
         db.close();
         return result;
@@ -89,7 +91,6 @@ class Usuario {
                 this.descripcionBaseDatos = c.getString(c.getColumnIndex("descripcion_database"));
                 this.usr = c.getString(c.getColumnIndex("user"));
                 this.pass = c.getString(c.getColumnIndex("pass"));
-                this.IMEI = c.getString(c.getColumnIndex("IMEI"));
 
                 return this;
             } else {
@@ -131,12 +132,12 @@ class Usuario {
         }
     }
 
-    public String getIMEI(){
+    public String getEmpresa(){
         db = db_sca.getWritableDatabase();
-        Cursor c = db.rawQuery("SELECT IMEI FROM user LIMIT 1", null);
+        Cursor c = db.rawQuery("SELECT empresa FROM user LIMIT 1", null);
         try {
             if(c!=null && c.moveToFirst()){
-                return c.getString(c.getColumnIndex("IMEI"));
+                return c.getString(0);
             }
             else{
                 return null;
@@ -146,5 +147,37 @@ class Usuario {
             db.close();
         }
     }
+
+    public Integer getLogo(){
+        db = db_sca.getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT logo FROM user LIMIT 1", null);
+        try {
+            if(c!=null && c.moveToFirst()){
+                return c.getInt(0);
+            }
+            else{
+                return null;
+            }
+        } finally {
+            c.close();
+            db.close();
+        }
+    }
+    public Integer getProyecto(){
+        db = db_sca.getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT idproyecto FROM user LIMIT 1", null);
+        try {
+            if(c!=null && c.moveToFirst()){
+                return c.getInt(0);
+            }
+            else{
+                return null;
+            }
+        } finally {
+            c.close();
+            db.close();
+        }
+    }
+
 }
 

@@ -1,5 +1,5 @@
 <resources  xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="app_name">Módulo de Acarreos v2.0</string>
+    <string name="app_name">Módulo de Acarreos</string>
     <string name="error_internet">Por favor habilite su conexión a Internet para poder iniciar sesión</string>
 
     <!-- Strings related to login -->

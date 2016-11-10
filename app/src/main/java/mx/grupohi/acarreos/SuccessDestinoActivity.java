@@ -49,6 +49,8 @@ public class SuccessDestinoActivity extends AppCompatActivity
     private Usuario usuario;
     private Viaje viaje;
     private Integer idViaje;
+    private String empresa;
+    private Integer logo;
 
     private Button btnImprimir,
             btnSalir;
@@ -75,10 +77,13 @@ public class SuccessDestinoActivity extends AppCompatActivity
         setContentView(R.layout.activity_success_destino);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        BitmapDrawable drawable;
         usuario = new Usuario(this);
         usuario = usuario.getUsuario();
         viaje = new Viaje(this);
+        empresa=usuario.getEmpresa();
+        logo=usuario.getLogo();
+
         bixolonPrinterApi = new BixolonPrinter(this, mHandler, null);
 
         textViewCamion = (TextView) findViewById(R.id.textViewCamion);
@@ -93,9 +98,6 @@ public class SuccessDestinoActivity extends AppCompatActivity
 
         btnImprimir = (Button) findViewById(R.id.buttonImprimir);
         btnSalir = (Button) findViewById(R.id.buttonSalir);
-
-        BitmapDrawable drawable = (BitmapDrawable) getResources().getDrawable(R.drawable.logo_ghi);
-        bitmap = drawable.getBitmap();
 
         fillInfo();
 
@@ -164,8 +166,26 @@ public class SuccessDestinoActivity extends AppCompatActivity
                             Bitmap fewlapsBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.img_success);
 
                            // Thread.sleep(PRINTING_SLEEP_TIME);
-                            printheadproyecto(usuario.getDescripcion());
+                            System.out.println("empresa:"+empresa);
+                            if(!empresa.equals("null")) {
+                                if (logo == 1) {
+                                    BitmapDrawable drawable = (BitmapDrawable) getResources().getDrawable(R.drawable.ghi_logo);
+                                    bitmap = drawable.getBitmap();
+                                }
+                                if (logo == 2) {
+                                    int x= usuario.getProyecto();
+                                    BitmapDrawable drawable;
+                                    //validar logo proyecto..
+                                    if(x==34){
+                                         drawable = (BitmapDrawable) getResources().getDrawable(R.drawable.logo_ghi);
+                                         bitmap = drawable.getBitmap();
+                                    }
+                                }
+                                bixolonPrinterApi.printBitmap(bitmap, BixolonPrinter.ALIGNMENT_CENTER, 220, 50, true);
+                                printheadproyecto(empresa);
+                            }
                             bixolonPrinterApi.lineFeed(1,true);
+                            printTextTwoColumns("Proyecto: ",usuario.getDescripcion()+ " \n");
                             printTextTwoColumns("Camion: ", textViewCamion.getText()+ " \n");
                             printTextTwoColumns("Cubicación: ", textViewCubicacion.getText()+" \n");
 
@@ -211,14 +231,12 @@ public class SuccessDestinoActivity extends AppCompatActivity
     }
 
     public static void printheadproyecto(String text) {
-        bixolonPrinterApi.printBitmap(bitmap, BixolonPrinter.ALIGNMENT_CENTER,220, 50, true);
-
         int alignment = BixolonPrinter.ALIGNMENT_CENTER;
 
         int attribute = 0;
-        attribute |= BixolonPrinter.TEXT_ATTRIBUTE_FONT_B;
+        attribute |= BixolonPrinter.TEXT_ATTRIBUTE_FONT_C;
 
-        int size = 1;
+        int size = 0;
         bixolonPrinterApi.setSingleByteFont(BixolonPrinter.CODE_PAGE_858_EURO);
         bixolonPrinterApi.printText(text, alignment, attribute, size, false);
        // bixolonPrinterApi.lineFeed(1, false);
@@ -267,7 +285,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
         bixolonPrinterApi.setSingleByteFont(BixolonPrinter.CODE_PAGE_858_EURO);
         bixolonPrinterApi.printText(text, alignment, attribute, size, false);
         bixolonPrinterApi.lineFeed(1, false);
-        bixolonPrinterApi.print1dBarcode(codex.toUpperCase(), BixolonPrinter.BAR_CODE_CODE39, BixolonPrinter.ALIGNMENT_CENTER, 4, 200, BixolonPrinter.HRI_CHARACTER_NOT_PRINTED, true);
+        bixolonPrinterApi.print1dBarcode(codex.toUpperCase(), BixolonPrinter.BAR_CODE_ITF, BixolonPrinter.ALIGNMENT_CENTER, 4, 200, BixolonPrinter.HRI_CHARACTER_NOT_PRINTED, true);
        // bixolonPrinterApi.formFeed(true);
         bixolonPrinterApi.printText(codex.toUpperCase(), BixolonPrinter.ALIGNMENT_CENTER, attribute, size, false);
 
