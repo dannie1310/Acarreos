@@ -140,6 +140,7 @@ public class Viaje {
                     json.put("Estatus", c.getString(14));
                     json.put("Code", c.getString(16));
                     json.put("uidTAG", c.getString(17));
+                    json.put("IMEI", c.getString(18));
 
                     JSON.put(i + "", json);
                     i++;

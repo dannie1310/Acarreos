@@ -262,6 +262,7 @@ public class LoginActivity extends AppCompatActivity {
                     data.put("pass", pass);
                     data.put("base_datos", JSON.getString("base_datos"));
                     data.put("descripcion_database", JSON.getString("descripcion_database"));
+                    data.put("IMEI", IMEI);
 
                     if (!usuario.create(data)) {
                         return false;

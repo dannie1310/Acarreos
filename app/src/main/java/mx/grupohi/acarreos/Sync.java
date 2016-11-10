@@ -79,6 +79,7 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
             try {
                 URL url = new URL("http://sca.grupohi.mx/android20160923.php");
                 JSON = HttpConnection.POST(url, values);
+                System.out.println("json "+ values);
             } catch (Exception e) {
                 Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
                 e.printStackTrace();

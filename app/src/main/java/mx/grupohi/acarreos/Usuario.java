@@ -19,6 +19,7 @@ class Usuario {
     String nombre;
     String baseDatos;
     String descripcionBaseDatos;
+    String IMEI;
 
     private Context context;
 
@@ -39,6 +40,7 @@ class Usuario {
             this.nombre = data.getAsString("nombre");
             this.baseDatos = data.getAsString("base_datos");
             this.descripcionBaseDatos = data.getAsString("descripcion_database");
+            this.IMEI = data.getAsString("IMEI");
         }
         db.close();
         return result;
@@ -87,6 +89,7 @@ class Usuario {
                 this.descripcionBaseDatos = c.getString(c.getColumnIndex("descripcion_database"));
                 this.usr = c.getString(c.getColumnIndex("user"));
                 this.pass = c.getString(c.getColumnIndex("pass"));
+                this.IMEI = c.getString(c.getColumnIndex("IMEI"));
 
                 return this;
             } else {
@@ -118,6 +121,22 @@ class Usuario {
         try {
             if(c!=null && c.moveToFirst()){
                 return c.getString(0);
+            }
+            else{
+                return null;
+            }
+        } finally {
+            c.close();
+            db.close();
+        }
+    }
+
+    public String getIMEI(){
+        db = db_sca.getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT IMEI FROM user LIMIT 1", null);
+        try {
+            if(c!=null && c.moveToFirst()){
+                return c.getString(c.getColumnIndex("IMEI"));
             }
             else{
                 return null;
