@@ -80,7 +80,7 @@ class Util {
     }
 
     static String timeStamp() {
-        return (String) android.text.format.DateFormat.format("yyyy-MM-dd hh:mm:ss", new java.util.Date());
+        return (String) android.text.format.DateFormat.format("yyyy-MM-dd HH:mm:ss", new java.util.Date());
     }
 
     static Integer getIdCamion(String string) {
@@ -149,7 +149,7 @@ class Util {
     }
 
     static String getFechaHora() {
-        return (String) android.text.format.DateFormat.format("hhmmssyyyyMMdd", new java.util.Date());
+        return (String) android.text.format.DateFormat.format("HHmmssyyyyMMdd", new java.util.Date());
     }
 
     static String getFecha() {
@@ -170,7 +170,7 @@ class Util {
     }
 
     static String getTime() {
-        return (String) android.text.format.DateFormat.format("hh:mm:ss", new java.util.Date());
+        return (String) android.text.format.DateFormat.format("HH:mm:ss", new java.util.Date());
     }
 
     static String getTime(String string) {

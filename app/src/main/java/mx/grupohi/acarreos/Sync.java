@@ -69,6 +69,7 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
             values.put("pass", usuario.pass);
             values.put("bd", usuario.baseDatos);
             values.put("idusuario", usuario.getId());
+            values.put("Version", String.valueOf(BuildConfig.VERSION_NAME));
 
             if (Viaje.getJSON(context).length() != 0) {
                 values.put("carddata", String.valueOf(Viaje.getJSON(context)));
