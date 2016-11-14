@@ -33,6 +33,7 @@
     <string name="text_warning_nfc_is_off">¡NFC Está apagado!</string>
     <string name="text_turn_on_nfc">La aplicación no funciona si el adaptador NFC está apagado. Por favor encienda el adaptador NFC en la configuración del dispositivo.</string>
     <string name="text_update_settings">Encender Ahora</string>
+    <string name="error_tag">¡Error! No se encuentra el camión asignado a este TAG.</string>
 
     <string name="action_settings">Settings</string>
 

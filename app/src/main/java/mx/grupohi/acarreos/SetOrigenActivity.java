@@ -189,10 +189,10 @@ public class SetOrigenActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 if(idMaterial == 0) {
-                    Toast.makeText(getApplicationContext(), "Por favor seleccione un Material de la lista", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Por favor seleccione un Material de la lista", Toast.LENGTH_LONG).show();
                     materialesSpinner.requestFocus();
                 } else if(idOrigen == 0) {
-                    Toast.makeText(getApplicationContext(), "Por favor seleccione un Origen de la lista", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Por favor seleccione un Origen de la lista", Toast.LENGTH_LONG).show();
                     origenesSpinner.requestFocus();
                 } else {
                     checkNfcEnabled();
@@ -289,7 +289,7 @@ public class SetOrigenActivity extends AppCompatActivity
                         Toast.makeText(SetOrigenActivity.this, getString(R.string.error_tag_comunicacion), Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    snackbar = Snackbar.make(findViewById(R.id.content_set_origen), "Por favor utiliza el TGA correcto", Snackbar.LENGTH_SHORT);
+                    snackbar = Snackbar.make(findViewById(R.id.content_set_origen), "Por favor utiliza el TGA correcto", Snackbar.LENGTH_LONG);
                     View snackBarView = snackbar.getView();
                     snackBarView.setBackgroundColor(Color.RED);
                     snackbar.show();
@@ -366,10 +366,10 @@ public class SetOrigenActivity extends AppCompatActivity
                                     progressDialogSync = ProgressDialog.show(SetOrigenActivity.this, "Sincronizando datos", "Por favor espere...", true);
                                     new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
                                 } else {
-                                    Toast.makeText(getApplicationContext(), "No es necesaria la sincronización en este momento", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), "No es necesaria la sincronización en este momento", Toast.LENGTH_LONG).show();
                                 }
                             } else {
-                                Toast.makeText(getApplicationContext(), R.string.error_internet, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), R.string.error_internet, Toast.LENGTH_LONG).show();
                             }
                         }
                     })
@@ -395,7 +395,7 @@ public class SetOrigenActivity extends AppCompatActivity
                                     usuario.destroy();
                                     startActivity(login_activity);
                                 } else {
-                                    Toast.makeText(getApplicationContext(), R.string.error_internet, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), R.string.error_internet, Toast.LENGTH_LONG).show();
                                 }
                             }
                         })

@@ -212,37 +212,43 @@ public class MainActivity extends AppCompatActivity
             for (String t : techs) {
                 if (MifareClassic.class.getName().equals(t)) {
                     nfc = new NFCTag(myTag, this);
-                    UID = nfc.idTag(myTag);
-                    tipo = 1;
-                    String tagString = nfc.readSector(myTag, 0, 1);
-                    tagCamion = Util.getIdCamion(tagString);
-                    tagProyecto = Util.getIdProyecto(tagString);
-                    tagModel = tagModel.find(UID, tagCamion, tagProyecto);
+                    try {
+                        UID = nfc.idTag(myTag);
+                        String tagString = nfc.readSector(myTag, 0, 1);
+                        tagCamion = Util.getIdCamion(tagString);
+                        tagProyecto = Util.getIdProyecto(tagString);
+                        tagModel = tagModel.find(UID, tagCamion, tagProyecto);
 
-                    String origenString = nfc.readSector(myTag, 1, 4);
-                    tagOrigen = Util.getIdOrigen(origenString);
-                    tagMaterial = Util.getIdMaterial(origenString);
-                    origen = origen.find(tagOrigen);
-                    material = material.find(tagMaterial);
-                    fechaString = nfc.readSector(myTag, 1, 5);
+                        String origenString = nfc.readSector(myTag, 1, 4);
+                        tagOrigen = Util.getIdOrigen(origenString);
+                        tagMaterial = Util.getIdMaterial(origenString);
+                        origen = origen.find(tagOrigen);
+                        material = material.find(tagMaterial);
+                        fechaString = nfc.readSector(myTag, 1, 5);
+                    }catch (Exception e){
+                        tagModel=null;
+                    }
                 } else if (MifareUltralight.class.getName().equals(t)) {
                     nfcUltra = new NFCUltralight(myTag, this);
                     UID = nfcUltra.byteArrayToHexString(myTag.getId());
-                    tipo = 2;
-                    tagCamion = Integer.valueOf(nfcUltra.readPage(myTag, 4));
-                    tagProyecto = Integer.valueOf(nfcUltra.readPage(myTag, 5));
-                    tagModel = tagModel.find(UID, tagCamion, tagProyecto);
-                    String origen1=nfcUltra.readPage(myTag, 9);
-                    String material1=nfcUltra.readPage(myTag, 8);
-                    if(origen1!=null && material1!=null) {
-                        tagOrigen = Integer.valueOf(origen1);
-                        tagMaterial = Integer.valueOf(material1);
-                        origen = origen.find(tagOrigen);
-                        material = material.find(tagMaterial);
-                        fechaString  = nfcUltra.readPage(myTag, 10)+ nfcUltra.readPage(myTag, 11) + nfcUltra.readPage(myTag, 12) + nfcUltra.readPage(myTag, 13).substring(0,2);
-                    }else {
-                        origen = null;
-                        material = null;
+                    try {
+                        tagCamion = Integer.valueOf(nfcUltra.readPage(myTag, 4));
+                        tagProyecto = Integer.valueOf(nfcUltra.readPage(myTag, 5));
+                        tagModel = tagModel.find(UID, tagCamion, tagProyecto);
+                        String origen1 = nfcUltra.readPage(myTag, 9);
+                        String material1 = nfcUltra.readPage(myTag, 8);
+                        if (origen1 != null && material1 != null) {
+                            tagOrigen = Integer.valueOf(origen1);
+                            tagMaterial = Integer.valueOf(material1);
+                            origen = origen.find(tagOrigen);
+                            material = material.find(tagMaterial);
+                            fechaString = nfcUltra.readPage(myTag, 10) + nfcUltra.readPage(myTag, 11) + nfcUltra.readPage(myTag, 12) + nfcUltra.readPage(myTag, 13).substring(0, 2);
+                        } else {
+                            origen = null;
+                            material = null;
+                        }
+                    }catch (Exception e){
+                        tagModel=null;
                     }
 
                 }
@@ -251,37 +257,44 @@ public class MainActivity extends AppCompatActivity
 
             if (tagModel != null) {
                 Camion camion = new Camion(getApplicationContext());
-                camion = camion.find(tagModel.idCamion);
-                setCamionInfo(camion);
-                setTitle("INFORMACIÓN DEL TAG");
-                if (origen != null && material != null) {
-                    setOrigenInfo(origen, material, fechaString);
-                    idOrigen = origen.idOrigen;
-                    actionButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            setDestinoActivity.putExtra("UID", UID);
-                            setDestinoActivity.putExtra("idOrigen", idOrigen);
-                            startActivity(setDestinoActivity);
-                        }
-                    });
-                } else {
-                    actionButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            setOrigenActivity.putExtra("UID", UID);
-                            startActivity(setOrigenActivity);
-                        }
-                    });
+                try {
+                    camion = camion.find(tagModel.idCamion);
+                    setCamionInfo(camion);
+                    setTitle("INFORMACIÓN DEL TAG");
+                    if (origen != null && material != null) {
+                        setOrigenInfo(origen, material, fechaString);
+                        idOrigen = origen.idOrigen;
+                        actionButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                setDestinoActivity.putExtra("UID", UID);
+                                setDestinoActivity.putExtra("idOrigen", idOrigen);
+                                startActivity(setDestinoActivity);
+                            }
+                        });
+                    } else {
+                        actionButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                setOrigenActivity.putExtra("UID", UID);
+                                startActivity(setOrigenActivity);
+                            }
+                        });
+                    }
+                }catch (Exception e){
+                    snackbar = Snackbar.make(findViewById(R.id.content_main),R.string.error_tag, Snackbar.LENGTH_LONG);
+                    View snackBarView = snackbar.getView();
+                    snackBarView.setBackgroundColor(Color.RED);
+                    snackbar.show();
                 }
             } else {
-                snackbar = Snackbar.make(findViewById(R.id.content_main), "El TAG que intentas utilizar no es valido para el control de viajes", Snackbar.LENGTH_SHORT);
+                snackbar = Snackbar.make(findViewById(R.id.content_main), "El TAG que intentas utilizar no es valido para el control de viajes", Snackbar.LENGTH_LONG);
                 View snackBarView = snackbar.getView();
                 snackBarView.setBackgroundColor(Color.RED);
                 snackbar.show();
             }
         } else if (nfc_adapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
-            Toast.makeText(getApplicationContext(), "El TAG que intentas utilizar no es compatible", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "El TAG que intentas utilizar no es compatible", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -315,19 +328,21 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void setCamionInfo(Camion camion) {
-        infoTag.setVisibility(View.GONE);
-        nfcImage.setVisibility(View.GONE);
-        infoLayout.setVisibility(View.VISIBLE);
-        actionButton.setVisibility(View.VISIBLE);
 
         tCamion.setText(camion.economico + " [" + camion.placas + "]");
-        tCapacidad.setText("CAPACIDAD: "+ camion.capacidad + " m3");
+        tCapacidad.setText("CAPACIDAD: " + camion.capacidad + " m3");
         tCapacidad2.setText(String.valueOf(camion.capacidad));
         tMarca.setText(camion.marca);
         tModelo.setText(camion.modelo);
         tAlto.setText(String.valueOf(camion.alto));
         tAncho.setText(String.valueOf(camion.ancho));
         tLargo.setText(String.valueOf(camion.largo));
+
+        infoTag.setVisibility(View.GONE);
+        nfcImage.setVisibility(View.GONE);
+        infoLayout.setVisibility(View.VISIBLE);
+        actionButton.setVisibility(View.VISIBLE);
+
     }
 
     private void clearCamionInfo() {
@@ -389,10 +404,10 @@ public class MainActivity extends AppCompatActivity
                                     progressDialogSync = ProgressDialog.show(MainActivity.this, "Sincronizando datos", "Por favor espere...", true);
                                     new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
                                 } else {
-                                    Toast.makeText(getApplicationContext(), "No es necesaria la sincronización en este momento", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), "No es necesaria la sincronización en este momento", Toast.LENGTH_LONG).show();
                                 }
                             } else {
-                                Toast.makeText(getApplicationContext(), R.string.error_internet, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), R.string.error_internet, Toast.LENGTH_LONG).show();
                             }
                         }
                     })
@@ -417,7 +432,7 @@ public class MainActivity extends AppCompatActivity
                                     usuario.destroy();
                                     startActivity(login_activity);
                                 } else {
-                                    Toast.makeText(getApplicationContext(), R.string.error_internet, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), R.string.error_internet, Toast.LENGTH_LONG).show();
                                 }
                             }
                         })
