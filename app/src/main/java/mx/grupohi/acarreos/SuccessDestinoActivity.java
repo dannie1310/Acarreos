@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -12,6 +13,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -168,7 +170,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
                            // Thread.sleep(PRINTING_SLEEP_TIME);
                             System.out.println("empresa:"+empresa);
                             if(!empresa.equals("null")) {
-                                if (logo == 1) {
+                               /* if (logo == 1) {
                                     BitmapDrawable drawable = (BitmapDrawable) getResources().getDrawable(R.drawable.ghi_logo);
                                     bitmap = drawable.getBitmap();
                                 }
@@ -180,8 +182,13 @@ public class SuccessDestinoActivity extends AppCompatActivity
                                          drawable = (BitmapDrawable) getResources().getDrawable(R.drawable.logo_ghi);
                                          bitmap = drawable.getBitmap();
                                     }
-                                }
-                                bixolonPrinterApi.printBitmap(bitmap, BixolonPrinter.ALIGNMENT_CENTER, 220, 50, true);
+                                }*/
+                                BitmapDrawable drawable = (BitmapDrawable) getResources().getDrawable(R.drawable.ghi_logo);
+                                bitmap = drawable.getBitmap();
+                                String myBase64Image = usuario.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 100);
+                                System.out.println("m "+myBase64Image);
+                                Bitmap myBitmapAgain = usuario.decodeBase64(myBase64Image);
+                                bixolonPrinterApi.printBitmap(myBitmapAgain, BixolonPrinter.ALIGNMENT_CENTER, 220, 50, true);
                                 printheadproyecto(empresa);
                             }
                             bixolonPrinterApi.lineFeed(1,true);

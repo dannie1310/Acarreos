@@ -130,6 +130,9 @@ public class MainActivity extends AppCompatActivity
             finish();
             return;
         }
+        String imagen = usuario.getImagen();
+
+        System.out.println("imagen: "+imagen);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

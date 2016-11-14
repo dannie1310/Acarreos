@@ -4,7 +4,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
+import android.util.Base64DataException;
 import android.util.Log;
+
+import java.io.ByteArrayOutputStream;
 
 /**
  * Creado por JFEsquivel on 05/10/2016.
@@ -21,6 +27,7 @@ class Usuario {
     String descripcionBaseDatos;
     String empresa;
     Integer logo;
+    String imagen;
 
     private Context context;
 
@@ -43,6 +50,7 @@ class Usuario {
             this.descripcionBaseDatos = data.getAsString("descripcion_database");
             this.empresa = data.getAsString("empresa");
             this.logo = data.getAsInteger("logo");
+            this.imagen = data.getAsString("imagen");
         }
         db.close();
         return result;
@@ -178,6 +186,38 @@ class Usuario {
             db.close();
         }
     }
+
+    public String getImagen(){
+        db = db_sca.getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT imagen FROM user LIMIT 1", null);
+        try {
+            if(c!=null && c.moveToFirst()){
+                return c.getString(0);
+            }
+            else{
+                return null;
+            }
+        } finally {
+            c.close();
+            db.close();
+        }
+    }
+
+    public static Bitmap decodeBase64(String input)
+    {
+        Log.e("LOOK", input);
+        System.out.println("input: "+ input);
+        byte[] decodedBytes = Base64.decode(input, 0);
+        return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+    }
+
+    public static String encodeToBase64(Bitmap image, Bitmap.CompressFormat compressFormat, int quality)
+    {
+        ByteArrayOutputStream byteArrayOS = new ByteArrayOutputStream();
+        image.compress(compressFormat, quality, byteArrayOS);
+        return Base64.encodeToString(byteArrayOS.toByteArray(), Base64.DEFAULT);
+    }
+
 
 }
 

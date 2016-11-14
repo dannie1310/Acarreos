@@ -264,6 +264,7 @@ public class LoginActivity extends AppCompatActivity {
                     data.put("descripcion_database", JSON.getString("descripcion_database"));
                     data.put("empresa", JSON.getString("empresa"));
                     data.put("logo", JSON.getInt("tiene_logo"));
+                    data.put("imagen", JSON.getString("logo"));
 
                     if (!usuario.create(data)) {
                         return false;
