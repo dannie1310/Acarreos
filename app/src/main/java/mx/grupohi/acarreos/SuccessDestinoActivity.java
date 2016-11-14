@@ -168,32 +168,27 @@ public class SuccessDestinoActivity extends AppCompatActivity
                             Bitmap fewlapsBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.img_success);
 
                            // Thread.sleep(PRINTING_SLEEP_TIME);
-                            System.out.println("empresa:"+empresa);
-                            if(!empresa.equals("null")) {
-                               /* if (logo == 1) {
-                                    BitmapDrawable drawable = (BitmapDrawable) getResources().getDrawable(R.drawable.ghi_logo);
-                                    bitmap = drawable.getBitmap();
-                                }
-                                if (logo == 2) {
-                                    int x= usuario.getProyecto();
-                                    BitmapDrawable drawable;
-                                    //validar logo proyecto..
-                                    if(x==34){
-                                         drawable = (BitmapDrawable) getResources().getDrawable(R.drawable.logo_ghi);
-                                         bitmap = drawable.getBitmap();
-                                    }
-                                }*/
+
+                            if (logo == 1) {
                                 BitmapDrawable drawable = (BitmapDrawable) getResources().getDrawable(R.drawable.ghi_logo);
                                 bitmap = drawable.getBitmap();
-                                String myBase64Image = usuario.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 100);
-                                System.out.println("m "+myBase64Image);
-                                Bitmap myBitmapAgain = usuario.decodeBase64(myBase64Image);
-                                bixolonPrinterApi.printBitmap(myBitmapAgain, BixolonPrinter.ALIGNMENT_CENTER, 220, 50, true);
+                                bixolonPrinterApi.printBitmap(bitmap, BixolonPrinter.ALIGNMENT_CENTER, 220, 50, true);
+                            }
+                            if (logo == 2) {
+                                int x = usuario.getProyecto();
+                                String log = usuario.getImagen();
+                                if(log!=null) {
+                                   bitmap = usuario.decodeBase64(log);
+                                   bixolonPrinterApi.printBitmap(bitmap, BixolonPrinter.ALIGNMENT_CENTER, 220, 50, true);
+                                }
+                            }
+
+                            if(!empresa.equals("null")) {
                                 printheadproyecto(empresa);
                             }
                             bixolonPrinterApi.lineFeed(1,true);
                             printTextTwoColumns("Proyecto: ",usuario.getDescripcion()+ " \n");
-                            printTextTwoColumns("Camion: ", textViewCamion.getText()+ " \n");
+                            printTextTwoColumns("Camión: ", textViewCamion.getText()+ " \n");
                             printTextTwoColumns("Cubicación: ", textViewCubicacion.getText()+" \n");
 
                             printTextTwoColumns("Material: ",textViewMaterial.getText()+ "\n");

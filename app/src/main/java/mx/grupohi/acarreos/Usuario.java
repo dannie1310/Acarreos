@@ -205,8 +205,6 @@ class Usuario {
 
     public static Bitmap decodeBase64(String input)
     {
-        Log.e("LOOK", input);
-        System.out.println("input: "+ input);
         byte[] decodedBytes = Base64.decode(input, 0);
         return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
     }
