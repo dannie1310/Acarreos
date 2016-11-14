@@ -118,10 +118,10 @@ public class ListaViajesActivity extends AppCompatActivity
                                     Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);
                                     startActivity(mainActivity);
                                 } else {
-                                    Toast.makeText(getApplicationContext(), "No es necesaria la sincronización en este momento", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), "No es necesaria la sincronización en este momento", Toast.LENGTH_LONG).show();
                                 }
                             } else {
-                                Toast.makeText(getApplicationContext(), R.string.error_internet, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), R.string.error_internet, Toast.LENGTH_LONG).show();
                             }
                         }
                     })
@@ -144,7 +144,7 @@ public class ListaViajesActivity extends AppCompatActivity
                                     usuario.destroy();
                                     startActivity(login_activity);
                                 } else {
-                                    Toast.makeText(getApplicationContext(), R.string.error_internet, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), R.string.error_internet, Toast.LENGTH_LONG).show();
                                 }
                             }
                         })

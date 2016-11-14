@@ -205,7 +205,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
 
                             bixolonPrinterApi.lineFeed(2, true);
                         } catch (Exception e) {
-                            Toast.makeText(getApplicationContext(), R.string.error_impresion, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), R.string.error_impresion, Toast.LENGTH_LONG).show();
                         }
                     }
                 };
@@ -384,7 +384,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
                 case BixolonPrinter.MESSAGE_DEVICE_NAME:
                     Log.i("Handler", "BixolonPrinter.MESSAGE_DEVICE_NAME - " + msg.getData().getString(BixolonPrinter.KEY_STRING_DEVICE_NAME));
                     mConnectedDeviceName = msg.getData().getString(BixolonPrinter.KEY_STRING_DEVICE_NAME);
-                    Toast.makeText(getApplicationContext(), "Impresora Conectada como: " + mConnectedDeviceName, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Impresora Conectada como: " + mConnectedDeviceName, Toast.LENGTH_LONG).show();
                     break;
 
                 case BixolonPrinter.MESSAGE_TOAST:
@@ -396,7 +396,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
                     Log.i("Handler", "BixolonPrinter.MESSAGE_BLUETOOTH_DEVICE_SET");
                     if (msg.obj == null) {
                         Toast.makeText(getApplicationContext(), "No paired device",
-                                Toast.LENGTH_SHORT).show();
+                                Toast.LENGTH_LONG).show();
                     } else {
                         Set<BluetoothDevice> pairedDevices = (Set<BluetoothDevice>) msg.obj;
                         DialogManager.showBluetoothDialog(SuccessDestinoActivity.this, bixolonPrinterApi, (Set<BluetoothDevice>) msg.obj);
@@ -405,7 +405,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
 
                 case BixolonPrinter.MESSAGE_PRINT_COMPLETE:
                     Log.i("Handler", "BixolonPrinter.MESSAGE_PRINT_COMPLETE");
-                    Toast.makeText(getApplicationContext(),"Impresión Completa.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"Impresión Completa.", Toast.LENGTH_LONG).show();
                     break;
 
                 case BixolonPrinter.MESSAGE_COMPLETE_PROCESS_BITMAP:
@@ -414,18 +414,18 @@ public class SuccessDestinoActivity extends AppCompatActivity
 
                 case MESSAGE_START_WORK:
                     Log.i("Handler", "MESSAGE_START_WORK");
-                    Toast.makeText(getApplicationContext(),"Iniciando Impresión ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"Iniciando Impresión ", Toast.LENGTH_LONG).show();
                     break;
 
                 case MESSAGE_END_WORK:
                     Log.i("Handler", "MESSAGE_END_WORK");
-                    Toast.makeText(getApplicationContext(),"Finalizado ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"Finalizado ", Toast.LENGTH_LONG).show();
                     break;
 
                 case BixolonPrinter.MESSAGE_NETWORK_DEVICE_SET:
                     Log.i("Handler", "BixolonPrinter.MESSAGE_NETWORK_DEVICE_SET");
                     if (msg.obj == null) {
-                        Toast.makeText(getApplicationContext(), "No connectable device", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "No connectable device", Toast.LENGTH_LONG).show();
                     }
                     break;
             }
@@ -507,10 +507,10 @@ public class SuccessDestinoActivity extends AppCompatActivity
                                     Intent intent = new Intent(SuccessDestinoActivity.this, MainActivity.class);
                                     startActivity(intent);
                                 } else {
-                                    Toast.makeText(getApplicationContext(), "No es necesaria la sincronización en este momento", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), "No es necesaria la sincronización en este momento", Toast.LENGTH_LONG).show();
                                 }
                             } else {
-                                Toast.makeText(getApplicationContext(), R.string.error_internet, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), R.string.error_internet, Toast.LENGTH_LONG).show();
                             }
                         }
                     })
@@ -535,7 +535,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
                                     usuario.destroy();
                                     startActivity(login_activity);
                                 } else {
-                                    Toast.makeText(getApplicationContext(), R.string.error_internet, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), R.string.error_internet, Toast.LENGTH_LONG).show();
                                 }
                             }
                         })

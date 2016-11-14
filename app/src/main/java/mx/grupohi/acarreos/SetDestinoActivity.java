@@ -201,10 +201,10 @@ public class SetDestinoActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 if(idRuta == 0) {
-                    Toast.makeText(getApplicationContext(), "Por favor seleccione la Ruta de la lista", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Por favor seleccione la Ruta de la lista", Toast.LENGTH_LONG).show();
                     rutasSpinner.requestFocus();
                 } else if (idTiro == 0) {
-                    Toast.makeText(getApplicationContext(), "Por favor seleccione el Tiro de la lista", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Por favor seleccione el Tiro de la lista", Toast.LENGTH_LONG).show();
                     tirosSpinner.requestFocus();
                 } else {
                     checkNfcEnabled();
@@ -289,10 +289,10 @@ public class SetDestinoActivity extends AppCompatActivity
                                     progressDialogSync = ProgressDialog.show(SetDestinoActivity.this, "Sincronizando datos", "Por favor espere...", true);
                                     new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
                                 } else {
-                                    Toast.makeText(getApplicationContext(), "No es necesaria la sincronización en este momento", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), "No es necesaria la sincronización en este momento", Toast.LENGTH_LONG).show();
                                 }
                             } else {
-                                Toast.makeText(getApplicationContext(), R.string.error_internet, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), R.string.error_internet, Toast.LENGTH_LONG).show();
                             }
                         }
                     })
@@ -321,7 +321,7 @@ public class SetDestinoActivity extends AppCompatActivity
                                     usuario.destroy();
                                     startActivity(login_activity);
                                 } else {
-                                    Toast.makeText(getApplicationContext(), R.string.error_internet, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), R.string.error_internet, Toast.LENGTH_LONG).show();
                                 }
                             }
                         })
@@ -457,7 +457,7 @@ public class SetDestinoActivity extends AppCompatActivity
                     destinoSuccess.putExtra("code", getCode(contador,idCamion));
                     startActivity(destinoSuccess);
                 } else {
-                    snackbar = Snackbar.make(findViewById(R.id.content_set_destino), "Por favor utiliza el TAG correcto", Snackbar.LENGTH_SHORT);
+                    snackbar = Snackbar.make(findViewById(R.id.content_set_destino), "Por favor utiliza el TAG correcto", Snackbar.LENGTH_LONG);
                     View snackBarView = snackbar.getView();
                     snackBarView.setBackgroundColor(Color.RED);
                     snackbar.show();
