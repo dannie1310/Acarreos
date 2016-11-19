@@ -55,7 +55,8 @@ public class SuccessDestinoActivity extends AppCompatActivity
     private Integer logo;
 
     private Button btnImprimir,
-            btnSalir;
+            btnSalir,
+            btnImagenes;
 
     static Bitmap bitmap;
 
@@ -99,6 +100,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
         textViewObservaciones = (TextView) findViewById(R.id.textViewObservaciones);
 
         btnImprimir = (Button) findViewById(R.id.buttonImprimir);
+        btnImagenes = (Button) findViewById(R.id.buttonImagenes);
         btnSalir = (Button) findViewById(R.id.buttonSalir);
 
         fillInfo();
@@ -139,6 +141,14 @@ public class SuccessDestinoActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        });
+        btnImagenes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ImagenesActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }

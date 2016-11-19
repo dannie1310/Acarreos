@@ -1,4 +1,4 @@
-<resources  xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Módulo de Acarreos</string>
     <string name="error_internet">Por favor habilite su conexión a Internet para poder iniciar sesión</string>
 
@@ -27,7 +27,7 @@
     <string name="error_tag_capacidad_almacenamiento">¡Error! La información excede la capacidad de almacenamiento</string>
     <string name="tag_configurado">TAG configurado correctamente</string>
     <string name="origen_configurado">Origen escrito correctamente en el TAG</string>
-    <string name="error_leer_TAG" >Error al leer el TAG. Intente de nuevo.</string>
+    <string name="error_leer_TAG">Error al leer el TAG. Intente de nuevo.</string>
     <string name="error_conexion_tag">Error de conexion</string>
     <string name="error_no_nfc">Su dispositivo no posee lector NFC. No se puede ejecutar esta aplicación.</string>
     <string name="text_warning_nfc_is_off">¡NFC Está apagado!</string>
@@ -59,7 +59,6 @@
     <!--Printer-->
     <string name="title_connecting">Conectando&#8230;</string>
     <string name="title_not_connected">No hay impresora conectada</string>
-
 
 
 </resources>

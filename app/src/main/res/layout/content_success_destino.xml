@@ -238,6 +238,15 @@
             android:textSize="24sp" />
 
         <Button
+            android:text="Imagenes"
+            android:layout_width="match_parent"
+            android:layout_height="67dp"
+            android:id="@+id/buttonImagenes"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:textSize="18sp" />
+
+
+        <Button
             android:text="SALIR"
             android:layout_width="match_parent"
             android:layout_height="67dp"
