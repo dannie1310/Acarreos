@@ -60,5 +60,7 @@
     <string name="title_connecting">Conectando&#8230;</string>
     <string name="title_not_connected">No hay impresora conectada</string>
 
+    <!--Imagenes-->
+    <string name="nombre_transicion_imagen">imagen_compartida</string>
 
 </resources>

@@ -8,9 +8,11 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.util.Base64;
@@ -30,6 +32,8 @@ import android.widget.Toast;
 
 import com.bixolon.printer.BixolonPrinter;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Set;
 
 public class SuccessDestinoActivity extends AppCompatActivity
@@ -148,9 +152,22 @@ public class SuccessDestinoActivity extends AppCompatActivity
         btnImagenes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), ImagenesActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+                ImagenesViaje im = new ImagenesViaje(getApplicationContext());
+                Integer numImagenes = im.getCount(idViaje);
+                System.out.println("count: "+numImagenes);
+               // if(numImagenes== 0){
+
+
+                       /* Bitmap imagenNew = usuario.decodeBase64(file);
+                        String base64 = Usuario.encodeToBase64(imagenNew, Bitmap.CompressFormat.JPEG, 100);
+                        System.out.println("imagen: "+base64);*/
+
+             //   }else{
+                    Intent intent = new Intent(getApplicationContext(), ImagenesActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                //}
+
             }
         });
 

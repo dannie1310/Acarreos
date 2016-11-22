@@ -416,6 +416,34 @@ public class LoginActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
+                    //Tipos Imagenes
+
+                    TipoImagenes tipo = new TipoImagenes(getApplicationContext());
+                    try {
+                        final JSONArray tags = new JSONArray(JSON.getString("TiposImagenes"));
+                        for (int i = 0; i < tags.length(); i++) {
+                            final int finalI = i + 1;
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    loginProgressDialog.setMessage("Actualizando catálogo de Tipos de Imagenes... \n  " + finalI + " de " + tags.length());
+                                }
+                            });
+                            JSONObject info = tags.getJSONObject(i);
+
+                            data.clear();
+                            data.put("id", info.getString("id"));
+                            data.put("descripcion", info.getString("descripcion"));
+                            System.out.println(data);
+                            if (!tipo.create(data)) {
+                                return false;
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+
                     //Tags
 
                     TagModel tag = new TagModel(getApplicationContext());

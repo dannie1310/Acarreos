@@ -10,6 +10,8 @@
     <uses-permission android:name="android.permission.NFC" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA"/>
+
 
     <application
         android:allowBackup="true"
@@ -56,7 +58,8 @@
             android:label="@string/title_activity_success_destino"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ImagenesActivity"></activity>
+        <activity android:name=".ImagenesActivity" />
+        <activity android:name=".ImagenDetalle"></activity>
     </application>
 
 </manifest>

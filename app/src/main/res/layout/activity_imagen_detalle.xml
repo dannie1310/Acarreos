@@ -1,20 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
 
-    <GridView
-        android:id="@+id/grid"
+    <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/imagen_extendida"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:columnWidth="120dp"
-        android:horizontalSpacing="@dimen/espacio_grilla"
-        android:numColumns="2"
-        android:padding="@dimen/espacio_grilla"
-        android:verticalSpacing="@dimen/espacio_grilla" />
+        android:transitionName="@string/nombre_transicion_imagen">
 
-
+    </ImageView>
 </LinearLayout>
