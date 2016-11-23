@@ -153,7 +153,7 @@ public class CamaraActivity extends AppCompatActivity {
 
         if(isDirectoryCreated){
             Long timestamp = System.currentTimeMillis() / 1000;
-            String imageName = timestamp.toString() + ".bmp";
+            String imageName = timestamp.toString() + ".jpeg";
 
             mPath = Environment.getExternalStorageDirectory() + File.separator + MEDIA_DIRECTORY + File.separator + imageName;
 
@@ -196,9 +196,9 @@ public class CamaraActivity extends AppCompatActivity {
 
 
                     bitmap = BitmapFactory.decodeFile(mPath);
-                    Bitmap x = resizeImage(this,bitmap, 0,640,480);
-                    mSetImage.setImageBitmap(x);
-                    base64 = Usuario.encodeToBase64(x, Bitmap.CompressFormat.JPEG, 1);
+                   // Bitmap x = resizeImage(this,bitmap, 0,640,480);
+                    mSetImage.setImageBitmap(bitmap);
+                    base64 = Usuario.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 1);
                     //System.out.println("imagen: "+base64);
                     break;
 
