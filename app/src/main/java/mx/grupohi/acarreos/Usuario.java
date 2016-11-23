@@ -211,8 +211,10 @@ class Usuario {
 
     public static String encodeToBase64(Bitmap image, Bitmap.CompressFormat compressFormat, int quality)
     {
+
         ByteArrayOutputStream byteArrayOS = new ByteArrayOutputStream();
         image.compress(compressFormat, quality, byteArrayOS);
+        //System.out.println("imagen: "+ Base64.encodeToString(byteArrayOS.toByteArray(), Base64.DEFAULT));
         return Base64.encodeToString(byteArrayOS.toByteArray(), Base64.DEFAULT);
     }
 

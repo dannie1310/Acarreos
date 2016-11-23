@@ -1,6 +1,7 @@
 package mx.grupohi.acarreos;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ public class AdaptadorImagenes extends BaseAdapter {
 
     @Override
     public int getCount() {
+        System.out.println("items "+ ImagenesViaje.ITEMS);
         return ImagenesViaje.ITEMS.length;
     }
 
@@ -50,10 +52,16 @@ public class AdaptadorImagenes extends BaseAdapter {
         TextView nombreCoche = (TextView) view.findViewById(R.id.nombre);
 
         final ImagenesViaje item = getItem(position);
-        Glide.with(imagenCoche.getContext())
+
+
+        System.out.println("selec "+item.getIdDrawable());
+        String imagen = item.getIdDrawable();
+        Bitmap imagenUsar= Usuario.decodeBase64(imagen);
+        imagenCoche.setImageBitmap(imagenUsar);
+       /* Glide.with(imagenCoche.getContext())
                 .load(item.getIdDrawable())
                 .into(imagenCoche);
-
+*/
         nombreCoche.setText(item.getNombre());
 
         return view;

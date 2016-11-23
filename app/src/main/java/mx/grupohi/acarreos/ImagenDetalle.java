@@ -1,6 +1,7 @@
 package mx.grupohi.acarreos;
 
 import android.annotation.TargetApi;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -30,9 +31,12 @@ public class ImagenDetalle extends AppCompatActivity {
     }
 
     private void cargarImagenExtendida() {
-        Glide.with(imagenExtendida.getContext())
+        String imagen = itemDetallado.getIdDrawable();
+        Bitmap imagenUsar= Usuario.decodeBase64(imagen);
+        imagenExtendida.setImageBitmap(imagenUsar);
+       /* Glide.with(imagenExtendida.getContext())
                 .load(itemDetallado.getIdDrawable())
-                .into(imagenExtendida);
+                .into(imagenExtendida);*/
     }
 
 

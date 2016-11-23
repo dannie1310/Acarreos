@@ -14,18 +14,25 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toolbar;
 
+import java.util.List;
+
 
 public class ImagenesActivity extends AppCompatActivity
         implements AdapterView.OnItemClickListener {
-
+    private String x;
     private GridView gridView;
     private AdaptadorImagenes adaptador;
+    List<ImagenesViaje> lista;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_imagenes);
-
+        x= getIntent().getStringExtra("idviaje_neto");
+        System.out.println("imagenActivity "+x);
+        ImagenesViaje m = new ImagenesViaje(this);
+       // lista = ImagenesViaje.getImagen(getApplicationContext());
+         m.getImagen(Integer.parseInt(x));
 
         gridView = (GridView) findViewById(R.id.grid);
         adaptador = new AdaptadorImagenes(this);
@@ -38,7 +45,6 @@ public class ImagenesActivity extends AppCompatActivity
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         ImagenesViaje item = (ImagenesViaje) parent.getItemAtPosition(position);
-
         Intent intent = new Intent(this, ImagenDetalle.class);
         intent.putExtra(ImagenDetalle.EXTRA_PARAM_ID, item.getId());
 

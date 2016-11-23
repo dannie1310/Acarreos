@@ -69,6 +69,8 @@ import java.util.GregorianCalendar;
         db.execSQL("DROP TABLE IF EXISTS viajesnetos");
         db.execSQL("DROP TABLE IF EXISTS coordenadas");
         db.execSQL("DROP TABLE IF EXISTS camion_tag");
+        db.execSQL("DROP TABLE IF EXISTS tipos_imagenes");
+        db.execSQL("DROP TABLE IF EXISTS imagenes_viaje");
 
         for (String query: queries){
             db.execSQL(query);
@@ -87,6 +89,7 @@ import java.util.GregorianCalendar;
         db.execSQL("DELETE FROM rutas");
         db.execSQL("DELETE FROM materiales");
         db.execSQL("DELETE FROM tags");
+        db.execSQL("DELETE FROM tipos_imagenes");
 
         db.close();
     }

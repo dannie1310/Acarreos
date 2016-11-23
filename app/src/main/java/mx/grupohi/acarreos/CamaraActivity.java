@@ -3,11 +3,15 @@ package mx.grupohi.acarreos;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
@@ -58,11 +62,14 @@ public class CamaraActivity extends AppCompatActivity {
     private Spinner tiposSpinner;
     TipoImagenes tipo;
     Integer idTipo;
+    String idviaje;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camara);
+        idviaje= getIntent().getStringExtra("idviaje_neto");
         mSetImage = (ImageView) findViewById(R.id.set_picture);
         mRlView = (RelativeLayout) findViewById(R.id.activity_camara);
         button = (Button) findViewById(R.id.buttonGuardar);
@@ -109,17 +116,24 @@ public class CamaraActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                //System.out.println("imagen: "+base64);
+                base64=base64.replace("\n","");
                 ContentValues cv = new ContentValues();
-                cv.put("idviaje_neto", getIntent().getStringExtra("idviaje_neto"));
+                cv.put("idviaje_neto", idviaje);
                 cv.put("idtipo_imagen", idTipo);
                 cv.put("imagen", base64);
+                //System.out.println("imagen: "+base64);
                 ImagenesViaje imagenesViaje = new ImagenesViaje(CamaraActivity.this);
-                imagenesViaje.create(cv);
-                System.out.println("put: " + cv);
-                System.out.println("TIPO: " + idTipo);
-                Intent imagen= new Intent(CamaraActivity.this, ImagenesActivity.class);
-                startActivity(imagen);
+                Boolean respuesta = imagenesViaje.create(cv);
+
+
+               if(respuesta) {
+                   Toast.makeText(getApplicationContext(), "Se Guardo la Imagen", Toast.LENGTH_LONG).show();
+                  Intent imagen = new Intent(CamaraActivity.this, ImagenesActivity.class);
+                   imagen.putExtra("idviaje_neto", idviaje);
+                   startActivity(imagen);
+               }else{
+                   Toast.makeText(getApplicationContext(), "Error al guardar imagen", Toast.LENGTH_LONG).show();
+               }
 
             }
         });
@@ -139,10 +153,9 @@ public class CamaraActivity extends AppCompatActivity {
 
         if(isDirectoryCreated){
             Long timestamp = System.currentTimeMillis() / 1000;
-            String imageName = timestamp.toString() + ".jpg";
+            String imageName = timestamp.toString() + ".bmp";
 
-            mPath = Environment.getExternalStorageDirectory() + File.separator + MEDIA_DIRECTORY
-                    + File.separator + imageName;
+            mPath = Environment.getExternalStorageDirectory() + File.separator + MEDIA_DIRECTORY + File.separator + imageName;
 
             File newFile = new File(mPath);
 
@@ -169,7 +182,6 @@ public class CamaraActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == RESULT_OK){
             switch (requestCode){
                 case PHOTO_CODE:
                     MediaScannerConnection.scanFile(this,
@@ -184,13 +196,44 @@ public class CamaraActivity extends AppCompatActivity {
 
 
                     bitmap = BitmapFactory.decodeFile(mPath);
-                    mSetImage.setImageBitmap(bitmap);
-                    base64 = Usuario.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 100);
+                    Bitmap x = resizeImage(this,bitmap, 0,640,480);
+                    mSetImage.setImageBitmap(x);
+                    base64 = Usuario.encodeToBase64(x, Bitmap.CompressFormat.JPEG, 1);
+                    //System.out.println("imagen: "+base64);
                     break;
 
-            }
+
         }
     }
 
+    public static Bitmap resizeImage(Context ctx, Bitmap imagen, int resId, int w, int h) {
 
+        // cargamos la imagen de origen
+        Bitmap BitmapOrg = imagen;
+
+        int width = BitmapOrg.getWidth();
+        int height = BitmapOrg.getHeight();
+        int newWidth = w;
+        int newHeight = h;
+
+        // calculamos el escalado de la imagen destino
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+
+        // para poder manipular la imagen
+        // debemos crear una matriz
+
+        Matrix matrix = new Matrix();
+        // resize the Bitmap
+        matrix.postScale(scaleWidth, scaleHeight);
+
+        // volvemos a crear la imagen con los nuevos valores
+        Bitmap resizedBitmap = Bitmap.createBitmap(BitmapOrg, 0, 0,
+                width, height, matrix, true);
+
+        // si queremos poder mostrar nuestra imagen tenemos que crear un
+        // objeto drawable y así asignarlo a un botón, imageview...
+        return  resizedBitmap;
+
+    }
 }

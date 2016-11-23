@@ -160,19 +160,17 @@ public class SuccessDestinoActivity extends AppCompatActivity
             public void onClick(View v) {
                 ImagenesViaje im = new ImagenesViaje(getApplicationContext());
                 Integer numImagenes = im.getCount(idViaje);
-                System.out.println("count: "+numImagenes);
+                //im.getAll();
+                System.out.println("open:  "+numImagenes+ " "+idViaje.toString());
                 if(numImagenes == 0){
-                    System.out.println("open:  "+numImagenes);
                     Intent intent = new Intent(getApplicationContext(), CamaraActivity.class);
-                    intent.putExtra("idviaje_neto", idViaje);
+                    intent.putExtra("idviaje_neto", idViaje.toString());
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
-                       /* Bitmap imagenNew = usuario.decodeBase64(file);
-                        String base64 = Usuario.encodeToBase64(imagenNew, Bitmap.CompressFormat.JPEG, 100);
-                        System.out.println("imagen: "+base64);*/
 
                 }else{
                     Intent intent = new Intent(getApplicationContext(), ImagenesActivity.class);
+                    intent.putExtra("idviaje_neto", idViaje.toString());
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                 }

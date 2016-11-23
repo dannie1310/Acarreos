@@ -40,7 +40,9 @@ import java.net.URL;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.PACKAGE_USAGE_STATS;
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.READ_PHONE_STATE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -131,6 +133,8 @@ public class LoginActivity extends AppCompatActivity {
         Boolean permission_fine_location = true;
         Boolean permission_read_phone_state = true;
         Boolean permission_camara = true;
+        Boolean permission_read_external = true;
+        Boolean permission_write_external = true;
         Boolean _gps = true;
         Boolean internet = true;
 
@@ -148,6 +152,12 @@ public class LoginActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(LoginActivity.this, new String[]{Manifest.permission.CAMERA}, 100);
             permission_camara =  false;
         }
+        if(ContextCompat.checkSelfPermission(LoginActivity.this, READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(LoginActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 100);
+            permission_read_external =  false;
+            permission_write_external = false;
+        }
+
         if(!Util.isGpsEnabled(getApplicationContext())) {
             gps.showSettingsAlert();
             gps = new GPSTracker(LoginActivity.this);
@@ -158,7 +168,7 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(LoginActivity.this, R.string.error_internet, Toast.LENGTH_LONG).show();
             internet = false;
         }
-        return (permission_fine_location && permission_read_phone_state && _gps && internet && permission_camara);
+        return (permission_fine_location && permission_read_phone_state && _gps && internet && permission_camara && permission_read_external && permission_write_external);
     }
 
     @Override
