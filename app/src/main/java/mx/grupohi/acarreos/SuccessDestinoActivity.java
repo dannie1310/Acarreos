@@ -8,8 +8,10 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
@@ -27,6 +29,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -76,8 +79,11 @@ public class SuccessDestinoActivity extends AppCompatActivity
     private boolean imprimir;
 
     private String mConnectedDeviceName = null;
-
-
+    private static String APP_DIRECTORY = "Picture/";
+    private static String MEDIA_DIRECTORY = APP_DIRECTORY + "PictureApp";
+    private String mPath;
+    private final int PHOTO_CODE = 200;
+    private ImageView mSetImage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -155,18 +161,21 @@ public class SuccessDestinoActivity extends AppCompatActivity
                 ImagenesViaje im = new ImagenesViaje(getApplicationContext());
                 Integer numImagenes = im.getCount(idViaje);
                 System.out.println("count: "+numImagenes);
-               // if(numImagenes== 0){
-
-
+                if(numImagenes == 0){
+                    System.out.println("open:  "+numImagenes);
+                    Intent intent = new Intent(getApplicationContext(), CamaraActivity.class);
+                    intent.putExtra("idviaje_neto", idViaje);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
                        /* Bitmap imagenNew = usuario.decodeBase64(file);
                         String base64 = Usuario.encodeToBase64(imagenNew, Bitmap.CompressFormat.JPEG, 100);
                         System.out.println("imagen: "+base64);*/
 
-             //   }else{
+                }else{
                     Intent intent = new Intent(getApplicationContext(), ImagenesActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
-                //}
+                }
 
             }
         });
@@ -582,4 +591,5 @@ public class SuccessDestinoActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 }

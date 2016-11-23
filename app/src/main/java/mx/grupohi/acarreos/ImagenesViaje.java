@@ -31,18 +31,11 @@ public class ImagenesViaje {
         this.nombre = nombre;
         this.idDrawable = idDrawable;
     }
-    boolean crear(JSONObject data) throws Exception {
-        this.data.clear();
-        this.data.put("idviaje_neto", data.getInt("idviaje_neto"));
-        this.data.put("idtipo_imagen", data.getInt("idtipo_imagen"));
-        this.data.put("imagen", data.getString("imagen"));
-
+    Boolean create(ContentValues data) {
         db = db_sca.getWritableDatabase();
-        try{
-            return db.insert("imagenes_viaje", null, this.data) > -1;
-        } finally {
-            db.close();
-        }
+        Boolean result = db.insert("imagenes_viaje", null, data) > -1;
+       db.close();
+        return result;
     }
 
     public static ImagenesViaje[] ITEMS = {

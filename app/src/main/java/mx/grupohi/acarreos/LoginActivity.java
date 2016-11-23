@@ -38,6 +38,7 @@ import org.json.JSONObject;
 import java.net.URL;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.PACKAGE_USAGE_STATS;
 import static android.Manifest.permission.READ_PHONE_STATE;
 
@@ -129,6 +130,7 @@ public class LoginActivity extends AppCompatActivity {
     private Boolean checkPermissions() {
         Boolean permission_fine_location = true;
         Boolean permission_read_phone_state = true;
+        Boolean permission_camara = true;
         Boolean _gps = true;
         Boolean internet = true;
 
@@ -142,6 +144,10 @@ public class LoginActivity extends AppCompatActivity {
             permission_read_phone_state =  false;
         }
 
+        if(ContextCompat.checkSelfPermission(LoginActivity.this, CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(LoginActivity.this, new String[]{Manifest.permission.CAMERA}, 100);
+            permission_camara =  false;
+        }
         if(!Util.isGpsEnabled(getApplicationContext())) {
             gps.showSettingsAlert();
             gps = new GPSTracker(LoginActivity.this);
@@ -152,7 +158,7 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(LoginActivity.this, R.string.error_internet, Toast.LENGTH_LONG).show();
             internet = false;
         }
-        return (permission_fine_location && permission_read_phone_state && _gps && internet);
+        return (permission_fine_location && permission_read_phone_state && _gps && internet && permission_camara);
     }
 
     @Override

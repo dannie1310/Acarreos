@@ -38,7 +38,7 @@ public class TipoImagenes {
     ArrayList<String> getArrayListTipos() {
         ArrayList<String> data = new ArrayList<>();
         db = db_sca.getWritableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM tipos_imagenes ORDER BY id ASC", null);
+        Cursor c = db.rawQuery("SELECT DISTINCT * FROM tipos_imagenes ORDER BY id ASC", null);
         try {
             if (c != null && c.moveToFirst()) {
                 if (c.getCount() == 1) {
@@ -48,6 +48,29 @@ public class TipoImagenes {
                     data.add(c.getString(0) + " - " + c.getString(1));
                     while (c.moveToNext()) {
                         data.add(c.getString(0) + " - " + c.getString(1));
+                    }
+                }
+            }
+        } finally {
+            c.close();
+            db.close();
+        }
+        return data;
+    }
+
+    ArrayList<String> getArrayListId() {
+        ArrayList<String> data = new ArrayList<>();
+        db = db_sca.getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT DISTINCT * FROM tipos_imagenes ORDER BY id ASC", null);
+        try {
+            if (c != null && c.moveToFirst()) {
+                if (c.getCount() == 1) {
+                    data.add(c.getString(c.getColumnIndex("id")));
+                } else {
+                    data.add("0");
+                    data.add(c.getString(c.getColumnIndex("id")));
+                    while (c.moveToNext()) {
+                        data.add(c.getString(c.getColumnIndex("id")));
                     }
                 }
             }
