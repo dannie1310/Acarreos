@@ -91,14 +91,14 @@ public class ImagenesViaje {
     public void getImagen(Integer idViaje) {
         db = db_sca.getWritableDatabase();
 
-        Cursor c = db.rawQuery("SELECT id, imagen FROM imagenes_viaje WHERE idviaje_neto = '" + idViaje + "'",null);
+        Cursor c = db.rawQuery("SELECT imagenes_viaje.id as id, imagenes_viaje.imagen as imagen, tipos_imagenes.descripcion as tipo_imagen FROM imagenes_viaje left join tipos_imagenes on(tipos_imagenes.id = imagenes_viaje.idtipo_imagen)  WHERE idviaje_neto = '" + idViaje + "'",null);
 
         ImagenesViaje [] ITEMS= new ImagenesViaje[c.getCount()];
         try {
           if (c != null && c.moveToFirst()) {
 
                 for(int i=0; i<c.getCount();i++) {
-                    ITEMS[i] = new ImagenesViaje(c.getInt(0),"prueba21", c.getString(1));
+                    ITEMS[i] = new ImagenesViaje(c.getInt(0),c.getString(2), c.getString(1));
                 }
 
             }
