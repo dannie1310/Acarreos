@@ -26,7 +26,6 @@ public class AdaptadorImagenes extends BaseAdapter {
 
     @Override
     public int getCount() {
-        System.out.println("items "+ ImagenesViaje.ITEMS);
         return ImagenesViaje.ITEMS.length;
     }
 
@@ -57,22 +56,9 @@ public class AdaptadorImagenes extends BaseAdapter {
 
         System.out.println("selec "+item.getIdDrawable());
         String image = item.getIdDrawable();
-       // Bitmap imagenUsar= Usuario.decodeBase64(image);
 
-        /*final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        options.inSampleSize = 2;
-        options.inJustDecodeBounds = false;
-        options.inTempStorage = new byte[16 * 1024];
+        imagen.setImageBitmap(decodeSampledBitmapFromResource(image, 100, 100));
 
-        Bitmap bitmap = BitmapFactory.decodeFile(image, options);*/
-        imagen.setImageBitmap(
-                decodeSampledBitmapFromResource(image, 100, 100));
-        //imagen.setImageBitmap(bitmap);
-       /* Glide.with(imagenCoche.getContext())
-                .load(item.getIdDrawable())
-                .into(imagenCoche);
-*/
         nombre.setText(item.getNombre());
 
         return view;

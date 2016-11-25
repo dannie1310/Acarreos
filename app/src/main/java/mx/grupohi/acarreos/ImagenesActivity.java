@@ -32,9 +32,7 @@ public class ImagenesActivity extends AppCompatActivity
         setContentView(R.layout.activity_imagenes);
 
         x= getIntent().getStringExtra("idviaje_neto");
-        System.out.println("imagenActivity "+x);
         ImagenesViaje m = new ImagenesViaje(this);
-       // lista = ImagenesViaje.getImagen(getApplicationContext());
          m.getImagen(Integer.parseInt(x));
         int numImagenes = m.getCount(Integer.parseInt(x));
         button= (ImageButton) findViewById(R.id.imageButton);
@@ -43,12 +41,13 @@ public class ImagenesActivity extends AppCompatActivity
            button.setOnClickListener(new View.OnClickListener() {
                @Override
                public void onClick(View v) {
-                   System.out.println("CLICK");
                    Intent intent = new Intent(getApplicationContext(), CamaraActivity.class);
                    intent.putExtra("idviaje_neto", x);
                    startActivity(intent);
                }
            });
+       }else{
+           button.setVisibility(View.GONE);
        }
         gridView = (GridView) findViewById(R.id.grid);
         adaptador = new AdaptadorImagenes(getApplicationContext());

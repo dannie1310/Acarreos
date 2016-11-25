@@ -222,8 +222,18 @@ class Usuario {
 
         ByteArrayOutputStream byteArrayOS = new ByteArrayOutputStream();
         image.compress(compressFormat, quality, byteArrayOS);
-        //System.out.println("imagen: "+ Base64.encodeToString(byteArrayOS.toByteArray(), Base64.DEFAULT));
         return Base64.encodeToString(byteArrayOS.toByteArray(), Base64.DEFAULT);
+    }
+
+    public static String encodeToBase64Imagen(String URL, int quality)
+    {
+        Bitmap image = BitmapFactory.decodeFile(URL);
+        Bitmap.CompressFormat compressFormat = Bitmap.CompressFormat.JPEG;
+        ByteArrayOutputStream byteArrayOS = new ByteArrayOutputStream();
+        image.compress(compressFormat, quality, byteArrayOS);
+        String respuesta = Base64.encodeToString(byteArrayOS.toByteArray(), Base64.DEFAULT);
+        respuesta = respuesta.replace("\n","");
+        return respuesta;
     }
 
 

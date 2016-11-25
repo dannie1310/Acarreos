@@ -450,7 +450,7 @@ public class LoginActivity extends AppCompatActivity {
                             data.clear();
                             data.put("id", info.getString("id"));
                             data.put("descripcion", info.getString("descripcion"));
-                            System.out.println(data);
+
                             if (!tipo.create(data)) {
                                 return false;
                             }

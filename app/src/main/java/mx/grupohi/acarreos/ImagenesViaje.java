@@ -159,8 +159,9 @@ public class ImagenesViaje {
                 Integer i = 0;
                 do {
                     JSONObject json = new JSONObject();
-                    json.put("idtipo_imagen", c.getInt(2));
-                    json.put("imagen", c.getString(3));
+                    json.put("idtipo_imagen", c.getString(2));
+                    String imagen = Usuario.encodeToBase64Imagen(c.getString(3), 50);
+                    json.put("imagen", imagen);
                     JSON.put(i + "", json);
                     i++;
                 } while (c.moveToNext());

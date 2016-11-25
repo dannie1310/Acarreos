@@ -119,7 +119,14 @@ public class CamaraActivity extends AppCompatActivity {
                 //base64=base64.replace("\n","");
                 ContentValues cv = new ContentValues();
                 cv.put("idviaje_neto", idviaje);
-                cv.put("idtipo_imagen", idTipo);
+                System.out.println("idTipo : "+ idTipo);
+                if(idTipo == 0){
+                    cv.put("idtipo_imagen", "NULL");
+                    System.out.println("NULL");
+                }
+                else {
+                    cv.put("idtipo_imagen", idTipo);
+                }
                 cv.put("imagen", mPath);
                 //System.out.println("imagen: "+base64);
                 ImagenesViaje imagenesViaje = new ImagenesViaje(CamaraActivity.this);
