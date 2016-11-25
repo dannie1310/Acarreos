@@ -165,11 +165,13 @@ public class SuccessDestinoActivity extends AppCompatActivity
                 if(numImagenes == 0){
                     Intent intent = new Intent(getApplicationContext(), CamaraActivity.class);
                     intent.putExtra("idviaje_neto", idViaje.toString());
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
 
                 }else{
                     Intent intent = new Intent(getApplicationContext(), ImagenesActivity.class);
                     intent.putExtra("idviaje_neto", idViaje.toString());
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                 }
 

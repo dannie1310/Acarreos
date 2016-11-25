@@ -206,7 +206,15 @@ class Usuario {
     public static Bitmap decodeBase64(String input)
     {
         byte[] decodedBytes = Base64.decode(input, 0);
-        return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+        Bitmap imagen=null;
+        try {
+            imagen = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally {
+            return imagen;
+        }
     }
 
     public static String encodeToBase64(Bitmap image, Bitmap.CompressFormat compressFormat, int quality)

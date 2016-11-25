@@ -116,19 +116,19 @@ public class CamaraActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                base64=base64.replace("\n","");
+                //base64=base64.replace("\n","");
                 ContentValues cv = new ContentValues();
                 cv.put("idviaje_neto", idviaje);
                 cv.put("idtipo_imagen", idTipo);
-                cv.put("imagen", base64);
+                cv.put("imagen", mPath);
                 //System.out.println("imagen: "+base64);
-                ImagenesViaje imagenesViaje = new ImagenesViaje(getApplicationContext());
+                ImagenesViaje imagenesViaje = new ImagenesViaje(CamaraActivity.this);
                 Boolean respuesta = imagenesViaje.create(cv);
 
 
                if(respuesta) {
                    Toast.makeText(getApplicationContext(), "Se Guardo la Imagen", Toast.LENGTH_LONG).show();
-                  Intent imagen = new Intent(getApplicationContext(), ImagenesActivity.class);
+                  Intent imagen = new Intent(CamaraActivity.this, ImagenesActivity.class);
                    imagen.putExtra("idviaje_neto", idviaje);
                    startActivity(imagen);
                }else{
@@ -198,7 +198,7 @@ public class CamaraActivity extends AppCompatActivity {
                     bitmap = BitmapFactory.decodeFile(mPath);
                    // Bitmap x = resizeImage(this,bitmap, 0,640,480);
                     mSetImage.setImageBitmap(bitmap);
-                    base64 = Usuario.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 50);
+                    //base64 = Usuario.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 1);
                     //System.out.println("imagen: "+base64);
                     break;
 

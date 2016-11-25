@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.Toolbar;
@@ -25,37 +24,34 @@ public class ImagenesActivity extends AppCompatActivity
     private GridView gridView;
     private AdaptadorImagenes adaptador;
     List<ImagenesViaje> lista;
-    ImageButton camara;
+    ImageButton button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_imagenes);
-        camara = (ImageButton) findViewById(R.id.imageButton);
 
         x= getIntent().getStringExtra("idviaje_neto");
         System.out.println("imagenActivity "+x);
-        ImagenesViaje m = new ImagenesViaje(getApplicationContext());
+        ImagenesViaje m = new ImagenesViaje(this);
        // lista = ImagenesViaje.getImagen(getApplicationContext());
          m.getImagen(Integer.parseInt(x));
         int numImagenes = m.getCount(Integer.parseInt(x));
-
+        button= (ImageButton) findViewById(R.id.imageButton);
+        button.setEnabled(true);
        if(numImagenes != 4){
-           camara.setEnabled(true);
-           camara.setOnClickListener(new View.OnClickListener() {
+           button.setOnClickListener(new View.OnClickListener() {
                @Override
                public void onClick(View v) {
+                   System.out.println("CLICK");
                    Intent intent = new Intent(getApplicationContext(), CamaraActivity.class);
-                   intent.putExtra("idviaje_neto", x.toString());
+                   intent.putExtra("idviaje_neto", x);
                    startActivity(intent);
                }
            });
-        }
-       else{
-           camara.setVisibility(View.GONE);
        }
         gridView = (GridView) findViewById(R.id.grid);
-        adaptador = new AdaptadorImagenes(this);
+        adaptador = new AdaptadorImagenes(getApplicationContext());
         gridView.setAdapter(adaptador);
         gridView.setOnItemClickListener(this);
 

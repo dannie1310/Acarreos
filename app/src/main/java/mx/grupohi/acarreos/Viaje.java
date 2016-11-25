@@ -123,7 +123,7 @@ public class Viaje {
                 Integer i = 0;
                 do {
                     JSONObject json = new JSONObject();
-                    json.put("id", c.getInt(0));
+
                     json.put("FechaCarga", c.getString(1));
                     json.put("HoraCarga", c.getString(2));
                     json.put("IdProyecto", c.getString(3));

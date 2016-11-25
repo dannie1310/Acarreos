@@ -98,7 +98,6 @@ public class ImagenesViaje {
           if (c != null && c.moveToFirst()) {
               do {
                   ITEMS[i] = new ImagenesViaje(c.getInt(0), c.getString(2), c.getString(1));
-                  System.out.println(c.getInt(0)+" " +c.getString(2)+ "\n "+c.getString(1));
                   i++;
               } while (c.moveToNext());
           }

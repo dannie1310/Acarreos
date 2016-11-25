@@ -47,7 +47,7 @@ import java.util.GregorianCalendar;
             "CREATE TABLE coordenadas (IMEI TEXT, idevento INT, latitud TEXT, longitud TEXT, fecha_hora TEXT, code TEXT)",
             "CREATE TABLE camion_tag (ID INTEGER PRIMARY KEY AUTOINCREMENT, IMEI TEXT, id_camion INT, id_tags TEXT, created_at DATETIME DEFAULT CURRENT_TIMESTAMP);",
             "CREATE TABLE tipos_imagenes (id INTEGER, descripcion TEXT);",
-            "CREATE TABLE imagenes_viaje (ID INTEGER PRIMARY KEY AUTOINCREMENT, idviaje_neto INTEGER, idtipo_imagen INTEGER, imagen LONGBLOB);"
+            "CREATE TABLE imagenes_viaje (ID INTEGER PRIMARY KEY AUTOINCREMENT, idviaje_neto INTEGER, idtipo_imagen INTEGER, imagen TEXT);"
     };
 
     @Override

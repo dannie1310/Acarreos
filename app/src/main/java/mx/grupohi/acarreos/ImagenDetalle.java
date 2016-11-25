@@ -2,6 +2,7 @@ package mx.grupohi.acarreos;
 
 import android.annotation.TargetApi;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,7 +15,7 @@ public class ImagenDetalle extends AppCompatActivity {
     private ImagenesViaje itemDetallado;
     private ImageView imagenExtendida;
 
-    public static final String EXTRA_PARAM_ID = "com.herprogramacion.coches2015.extra.ID";
+    public static final String EXTRA_PARAM_ID = "";
     public static final String VIEW_NAME_HEADER_IMAGE = "imagen_compartida";
 
     @Override
@@ -32,8 +33,9 @@ public class ImagenDetalle extends AppCompatActivity {
 
     private void cargarImagenExtendida() {
         String imagen = itemDetallado.getIdDrawable();
-        Bitmap imagenUsar= Usuario.decodeBase64(imagen);
-        imagenExtendida.setImageBitmap(imagenUsar);
+       // Bitmap imagenUsar= Usuario.decodeBase64(imagen);
+        Bitmap bitmap = BitmapFactory.decodeFile(imagen);
+        imagenExtendida.setImageBitmap(bitmap);
        /* Glide.with(imagenExtendida.getContext())
                 .load(itemDetallado.getIdDrawable())
                 .into(imagenExtendida);*/
