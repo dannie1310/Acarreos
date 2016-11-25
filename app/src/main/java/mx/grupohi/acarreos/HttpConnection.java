@@ -56,6 +56,7 @@ class HttpConnection {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        System.out.println("response: "+response);
         return  new JSONObject(response);
     }
 }

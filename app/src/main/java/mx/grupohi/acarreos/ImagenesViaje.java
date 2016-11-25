@@ -5,7 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.JSONStringer;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -59,7 +61,6 @@ public class ImagenesViaje {
     public static ImagenesViaje getItem(int id) {
         for (ImagenesViaje item : ITEMS) {
             if (item.getId() == id) {
-                System.out.println("Item: "+item);
                 return item;
             }
         }
@@ -67,12 +68,10 @@ public class ImagenesViaje {
     }
 
     public String getIdDrawable() {
-        System.out.println("idDrawa: "+idDrawable);
         return idDrawable;
     }
 
     public String getNombre() {
-        System.out.println("Nombre: "+nombre);
         return nombre;
     }
 
@@ -90,25 +89,25 @@ public class ImagenesViaje {
 
     public void getImagen(Integer idViaje) {
         db = db_sca.getWritableDatabase();
-
+        int i=0;
         Cursor c = db.rawQuery("SELECT imagenes_viaje.id as id, imagenes_viaje.imagen as imagen, tipos_imagenes.descripcion as tipo_imagen FROM imagenes_viaje left join tipos_imagenes on(tipos_imagenes.id = imagenes_viaje.idtipo_imagen)  WHERE idviaje_neto = '" + idViaje + "'",null);
 
         ImagenesViaje [] ITEMS= new ImagenesViaje[c.getCount()];
+
         try {
           if (c != null && c.moveToFirst()) {
-
-                for(int i=0; i<c.getCount();i++) {
-                    ITEMS[i] = new ImagenesViaje(c.getInt(0),c.getString(2), c.getString(1));
-                }
-
-            }
+              do {
+                  ITEMS[i] = new ImagenesViaje(c.getInt(0), c.getString(2), c.getString(1));
+                  System.out.println(c.getInt(0)+" " +c.getString(2)+ "\n "+c.getString(1));
+                  i++;
+              } while (c.moveToNext());
+          }
 
         } finally {
             c.close();
             db.close();
         }
         this.ITEMS = ITEMS;
-        System.out.println("Imagen: "+ITEMS);
     }
 
     public String getImagen(){
@@ -138,7 +137,6 @@ public class ImagenesViaje {
                     lista.add(c.getString(0));
                 }
 
-                System.out.println(lista);
                 return lista;
             }
             else {
@@ -148,5 +146,32 @@ public class ImagenesViaje {
             c.close();
             db.close();
         }
+    }
+
+
+    static JSONObject getJSONImagenes(Context context, Integer idViaje) {
+        JSONObject JSON = new JSONObject();
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+
+        Cursor c = db.rawQuery("SELECT * FROM imagenes_viaje WHERE idviaje_neto = '" + idViaje +"'" , null);
+        try {
+            if(c != null && c.moveToFirst()) {
+                Integer i = 0;
+                do {
+                    JSONObject json = new JSONObject();
+                    json.put("idtipo_imagen", c.getInt(2));
+                    json.put("imagen", c.getString(3));
+                    JSON.put(i + "", json);
+                    i++;
+                } while (c.moveToNext());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            c.close();
+            db.close();
+        }
+        return JSON;
     }
 }

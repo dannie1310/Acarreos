@@ -3,18 +3,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
-
+    android:orientation="vertical"
+    android:gravity="center"
+    android:weightSum="1">
 
     <GridView
         android:id="@+id/grid"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="283dp"
         android:columnWidth="120dp"
         android:horizontalSpacing="@dimen/espacio_grilla"
         android:numColumns="2"
         android:padding="@dimen/espacio_grilla"
-        android:verticalSpacing="@dimen/espacio_grilla" />
+        android:verticalSpacing="@dimen/espacio_grilla"
+        android:layout_weight="0.98" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_menu_camera"
+        android:id="@+id/imageButton"
+        android:adjustViewBounds="true"
+        android:cropToPadding="false"
+        android:scaleType="fitCenter"
+        android:clickable="true"
+        android:elevation="0dp"
+        android:verticalScrollbarPosition="defaultPosition"
+        android:baselineAlignBottom="false" />
 
 
 </LinearLayout>

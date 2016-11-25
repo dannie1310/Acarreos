@@ -123,7 +123,7 @@ public class Viaje {
                 Integer i = 0;
                 do {
                     JSONObject json = new JSONObject();
-
+                    json.put("id", c.getInt(0));
                     json.put("FechaCarga", c.getString(1));
                     json.put("HoraCarga", c.getString(2));
                     json.put("IdProyecto", c.getString(3));
@@ -141,7 +141,7 @@ public class Viaje {
                     json.put("Code", c.getString(16));
                     json.put("uidTAG", c.getString(17));
                     json.put("IMEI", c.getString(18));
-
+                    json.put("Imagenes", ImagenesViaje.getJSONImagenes(context,c.getInt(0)));
                     JSON.put(i + "", json);
                     i++;
                 } while (c.moveToNext());
@@ -219,6 +219,7 @@ public class Viaje {
 
         db.execSQL("DELETE FROM viajesnetos");
         db.execSQL("DELETE FROM coordenadas");
+        db.execSQL("DELETE FROM imagenes_viaje");
 
         db.close();
     }

@@ -85,7 +85,7 @@ public class ListaViajesActivity extends AppCompatActivity
 
     }
 
-    @Override
+/*    @Override      //regresar a la actividad anterior
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -93,8 +93,18 @@ public class ListaViajesActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+    }*/
+    @Override
+    public void onBackPressed() {
+        Integer list = getIntent().getIntExtra("list", 0);
+        if(list == 1) {
+            super.onBackPressed();
+        } else {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        }
     }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {

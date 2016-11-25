@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.json.JSONObject;
@@ -80,7 +81,7 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
             try {
                 URL url = new URL("http://sca.grupohi.mx/android20160923.php");
                 JSON = HttpConnection.POST(url, values);
-                System.out.println("json "+ values);
+                Log.i("json ",String.valueOf(values));
             } catch (Exception e) {
                 Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
                 e.printStackTrace();

@@ -25,7 +25,6 @@ public class AdaptadorImagenes extends BaseAdapter {
 
     @Override
     public int getCount() {
-        System.out.println("items "+ ImagenesViaje.ITEMS);
         return ImagenesViaje.ITEMS.length;
     }
 
@@ -48,21 +47,21 @@ public class AdaptadorImagenes extends BaseAdapter {
             view = inflater.inflate(R.layout.grid_item, viewGroup, false);
         }
 
-        ImageView imagenCoche = (ImageView) view.findViewById(R.id.imagen);
-        TextView nombreCoche = (TextView) view.findViewById(R.id.nombre);
+        ImageView imagen = (ImageView) view.findViewById(R.id.imagen);
+        TextView nombre = (TextView) view.findViewById(R.id.nombre);
 
         final ImagenesViaje item = getItem(position);
 
 
         System.out.println("selec "+item.getIdDrawable());
-        String imagen = item.getIdDrawable();
-        Bitmap imagenUsar= Usuario.decodeBase64(imagen);
-        imagenCoche.setImageBitmap(imagenUsar);
+        String image = item.getIdDrawable();
+        Bitmap imagenUsar= Usuario.decodeBase64(image);
+        imagen.setImageBitmap(imagenUsar);
        /* Glide.with(imagenCoche.getContext())
                 .load(item.getIdDrawable())
                 .into(imagenCoche);
 */
-        nombreCoche.setText(item.getNombre());
+        nombre.setText(item.getNombre());
 
         return view;
     }
