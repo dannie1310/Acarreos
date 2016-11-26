@@ -77,6 +77,7 @@ public class CamaraActivity extends AppCompatActivity {
             openCamera();
         }catch (Exception e){
             e.printStackTrace();
+            System.out.println("Q");
         }
 
 
@@ -115,23 +116,28 @@ public class CamaraActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Boolean respuesta = null;
+                int x = 1;
+                while (x != 51) {
+                    ContentValues cv = new ContentValues();
 
-                //base64=base64.replace("\n","");
-                ContentValues cv = new ContentValues();
-                cv.put("idviaje_neto", idviaje);
-                System.out.println("idTipo : "+ idTipo);
-                if(idTipo == 0){
-                    cv.put("idtipo_imagen", "NULL");
-                    System.out.println("NULL");
-                }
-                else {
-                    cv.put("idtipo_imagen", idTipo);
-                }
-                cv.put("imagen", mPath);
-                //System.out.println("imagen: "+base64);
-                ImagenesViaje imagenesViaje = new ImagenesViaje(CamaraActivity.this);
-                Boolean respuesta = imagenesViaje.create(cv);
+                    cv.put("idviaje_neto", x);
+                    System.out.println("idTipo : " + idTipo);
+                    if (idTipo == 0) {
+                        cv.put("idtipo_imagen", "NULL");
+                    } else {
+                        cv.put("idtipo_imagen", idTipo);
+                    }
+                    cv.put("url", mPath);
+                    cv.put("imagen", base64);
+                    ImagenesViaje imagenesViaje = new ImagenesViaje(CamaraActivity.this);
 
+                    for (int c = 0; c < 4; c++) {
+                        respuesta = imagenesViaje.create(cv);
+                      //  System.out.println("idViaje: "+x+", imagen: "+c);
+                    }
+                    x++;
+                }
 
                if(respuesta) {
                    Toast.makeText(getApplicationContext(), "Se Guardo la Imagen", Toast.LENGTH_LONG).show();
@@ -203,44 +209,23 @@ public class CamaraActivity extends AppCompatActivity {
 
 
                     bitmap = BitmapFactory.decodeFile(mPath);
-                   // Bitmap x = resizeImage(this,bitmap, 0,640,480);
                     mSetImage.setImageBitmap(bitmap);
-                    //base64 = Usuario.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 1);
-                    //System.out.println("imagen: "+base64);
+                    base64 = Usuario.encodeToBase64Imagen(mPath, 50);
                     break;
 
 
         }
     }
 
-    public static Bitmap resizeImage(Context ctx, Bitmap imagen, int resId, int w, int h) {
-
-        // cargamos la imagen de origen
-        Bitmap BitmapOrg = imagen;
-
-        int width = BitmapOrg.getWidth();
-        int height = BitmapOrg.getHeight();
-        int newWidth = w;
-        int newHeight = h;
-
-        // calculamos el escalado de la imagen destino
-        float scaleWidth = ((float) newWidth) / width;
-        float scaleHeight = ((float) newHeight) / height;
-
-        // para poder manipular la imagen
-        // debemos crear una matriz
-
-        Matrix matrix = new Matrix();
-        // resize the Bitmap
-        matrix.postScale(scaleWidth, scaleHeight);
-
-        // volvemos a crear la imagen con los nuevos valores
-        Bitmap resizedBitmap = Bitmap.createBitmap(BitmapOrg, 0, 0,
-                width, height, matrix, true);
-
-        // si queremos poder mostrar nuestra imagen tenemos que crear un
-        // objeto drawable y así asignarlo a un botón, imageview...
-        return  resizedBitmap;
-
+    @Override
+    public void onBackPressed() {
+        Integer list = getIntent().getIntExtra("list", 0);
+        if(list == 1) {
+            super.onBackPressed();
+        } else {
+            Intent intent = new Intent(getApplicationContext(), ListaViajesActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        }
     }
 }

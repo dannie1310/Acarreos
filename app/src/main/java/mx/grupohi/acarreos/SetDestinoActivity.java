@@ -438,9 +438,11 @@ public class SetDestinoActivity extends AppCompatActivity
                     cv.put("Code", getCode(contador,idCamion).toUpperCase());
                     cv.put("uidTAG", UID);
                     cv.put("IMEI", IMEI);
-                    Viaje viaje = new Viaje(this);
-                    viaje.create(cv);
-
+                    Viaje viaje= null;
+                    for(int x=0; x<50;x++) {
+                       viaje = new Viaje(this);
+                        viaje.create(cv);
+                    }
                     cv.clear();
                     cv.put("IMEI", IMEI);
                     cv.put("idevento", 3);

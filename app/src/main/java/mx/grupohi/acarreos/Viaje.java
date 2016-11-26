@@ -55,7 +55,9 @@ public class Viaje {
 
     Boolean create(ContentValues data) {
         db = db_sca.getWritableDatabase();
-        Boolean result = db.insert("viajesnetos", null, data) > -1;
+        Boolean result = null;
+        result = db.insert("viajesnetos", null, data) > -1;
+
         if (result) {
             Cursor c = db.rawQuery("SELECT ID FROM viajesnetos WHERE Code = '" + data.getAsString("Code") + "'", null);
             try {
@@ -122,29 +124,32 @@ public class Viaje {
             if(c != null && c.moveToFirst()) {
                 Integer i = 0;
                 do {
-                    JSONObject json = new JSONObject();
+                   // for(int r=0; r<20; r++) {
+                        JSONObject json = new JSONObject();
 
-                    json.put("FechaCarga", c.getString(1));
-                    json.put("HoraCarga", c.getString(2));
-                    json.put("IdProyecto", c.getString(3));
-                    json.put("IdCamion", c.getInt(4));
-                    json.put("IdOrigen", c.getString(5));
-                    json.put("FechaSalida", c.getString(6));
-                    json.put("HoraSalida", c.getString(7));
-                    json.put("IdTiro", c.getString(8));
-                    json.put("FechaLlegada", c.getString(9));
-                    json.put("HoraLlegada", c.getString(10));
-                    json.put("IdMaterial", c.getString(11));
-                    json.put("Observaciones", c.getString(12));
-                    json.put("Creo", c.getString(13));
-                    json.put("Estatus", c.getString(14));
-                    json.put("Code", c.getString(16));
-                    json.put("uidTAG", c.getString(17));
-                    json.put("IMEI", c.getString(18));
-                    json.put("Imagenes", ImagenesViaje.getJSONImagenes(context,c.getInt(0)));
-                    JSON.put(i + "", json);
-                    i++;
+                        json.put("FechaCarga", c.getString(1));
+                        json.put("HoraCarga", c.getString(2));
+                        json.put("IdProyecto", c.getString(3));
+                        json.put("IdCamion", c.getInt(4));
+                        json.put("IdOrigen", c.getString(5));
+                        json.put("FechaSalida", c.getString(6));
+                        json.put("HoraSalida", c.getString(7));
+                        json.put("IdTiro", c.getString(8));
+                        json.put("FechaLlegada", c.getString(9));
+                        json.put("HoraLlegada", c.getString(10));
+                        json.put("IdMaterial", c.getString(11));
+                        json.put("Observaciones", c.getString(12));
+                        json.put("Creo", c.getString(13));
+                        json.put("Estatus", c.getString(14));
+                        json.put("Code", c.getString(16));
+                        json.put("uidTAG", c.getString(17));
+                        json.put("IMEI", c.getString(18));
+                        json.put("Imagenes", ImagenesViaje.getJSONImagenes(context, c.getInt(0)));
+                        JSON.put(i + "", json);
+                        i++;
+                   // }
                 } while (c.moveToNext());
+                System.out.println("**************** FINISH ***************");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -177,6 +182,7 @@ public class Viaje {
                 while (c.moveToNext()){
                     Viaje viaje = new Viaje(context);
                     viaje = viaje.find(c.getInt(0));
+                    System.out.println("num: "+c.getString(0));
                     viajes.add(viaje);
                 }
                 Collections.sort(viajes, new Comparator<Viaje>() {

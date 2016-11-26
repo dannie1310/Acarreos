@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.URL;
 
 /**
@@ -72,16 +74,29 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
             values.put("idusuario", usuario.getId());
             values.put("Version", String.valueOf(BuildConfig.VERSION_NAME));
 
-            if (Viaje.getJSON(context).length() != 0) {
+            if (Viaje.getCount(context) != 0) {
                 values.put("carddata", String.valueOf(Viaje.getJSON(context)));
             }
             if (Coordenada.getJSON(context).length() != 0) {
                 values.put("coordenadas", String.valueOf(Coordenada.getJSON(context)));
             }
+
             try {
                 URL url = new URL("http://sca.grupohi.mx/android20160923.php");
                 JSON = HttpConnection.POST(url, values);
                 Log.i("json ",String.valueOf(values));
+                try {
+
+                    FileWriter file = new FileWriter("/storage/emulated/0/Picture/PictureApp/prueba.txt");
+                    file.write(values.toString());
+                    file.flush();
+                    file.close();
+
+                } catch (IOException e) {
+                    //manejar error
+                }
+
+
             } catch (Exception e) {
                 Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
