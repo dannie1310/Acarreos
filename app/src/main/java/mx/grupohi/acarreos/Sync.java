@@ -30,6 +30,7 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
     private double latitude;
     private double longitude;
     private String IMEI;
+    Integer idviaje;
 
     private JSONObject JSON;
 
@@ -75,7 +76,10 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
             values.put("Version", String.valueOf(BuildConfig.VERSION_NAME));
 
             if (Viaje.getCount(context) != 0) {
-                values.put("carddata", String.valueOf(Viaje.getJSON(context)));
+                idviaje= Viaje.id();
+                JSONObject Obj = Viaje.getJSON(context);
+                System.out.println("objeto: "+ idviaje);
+                values.put("carddata", String.valueOf(Obj));
             }
             if (Coordenada.getJSON(context).length() != 0) {
                 values.put("coordenadas", String.valueOf(Coordenada.getJSON(context)));
@@ -85,16 +89,16 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
                 URL url = new URL("http://sca.grupohi.mx/android20160923.php");
                 JSON = HttpConnection.POST(url, values);
                 Log.i("json ",String.valueOf(values));
-                try {
+                /*try {
 
-                    FileWriter file = new FileWriter("/storage/emulated/0/Picture/PictureApp/prueba.txt");
+                    FileWriter file = new FileWriter("/storage/emulated/0/Picture/Pruebas/prueba"+Util.getFechaHora()+".txt");
                     file.write(values.toString());
                     file.flush();
                     file.close();
 
                 } catch (IOException e) {
-                    //manejar error
-                }
+                   e.printStackTrace();
+                }*/
 
 
             } catch (Exception e) {

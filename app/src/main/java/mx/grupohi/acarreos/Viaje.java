@@ -7,6 +7,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.widget.SimpleCursorAdapter;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -39,7 +41,7 @@ public class Viaje {
     Ruta ruta;
 
     private static SQLiteDatabase db;
-    private DBScaSqlite db_sca;
+    private static DBScaSqlite db_sca;
 
     private Context context;
 
@@ -115,11 +117,25 @@ public class Viaje {
                 '}';
     }
 
+    public static Integer id() {
+        db = db_sca.getWritableDatabase();
+        Integer x = 0;
+        Cursor c = db.rawQuery("SELECT id FROM viajesnetos ORDER BY id ASC LIMIT 1", null);
+        try {
+                if(c != null && c.moveToFirst()) {
+                     x = c.getInt(0);
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        return  x;
+    }
+
     static JSONObject getJSON(Context context) {
         JSONObject JSON = new JSONObject();
         DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
         SQLiteDatabase db = db_sca.getWritableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM viajesnetos", null);
+        Cursor c = db.rawQuery("SELECT * FROM viajesnetos ORDER BY id ASC LIMIT 20", null);
         try {
             if(c != null && c.moveToFirst()) {
                 Integer i = 0;
@@ -149,7 +165,8 @@ public class Viaje {
                         i++;
                    // }
                 } while (c.moveToNext());
-                System.out.println("**************** FINISH ***************");
+
+
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -157,6 +174,8 @@ public class Viaje {
             c.close();
             db.close();
         }
+
+        System.out.println("**************** FINISH ***************");
         return JSON;
     }
 
@@ -226,6 +245,16 @@ public class Viaje {
         db.execSQL("DELETE FROM viajesnetos");
         db.execSQL("DELETE FROM coordenadas");
         db.execSQL("DELETE FROM imagenes_viaje");
+
+        db.close();
+    }
+
+    static void syncLimit(Context context, Integer idViaje) {
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+
+        db.execSQL("DELETE FROM viajesnetos WHERE id = "+idViaje);
+        db.execSQL("DELETE FROM imagenes_viaje WHERE idviaje_neto= "+idViaje);
 
         db.close();
     }

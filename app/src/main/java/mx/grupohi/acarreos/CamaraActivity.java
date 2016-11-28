@@ -117,11 +117,11 @@ public class CamaraActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Boolean respuesta = null;
-                int x = 1;
-                while (x != 51) {
+                int x = 0;
+                //while (x != 25) {
                     ContentValues cv = new ContentValues();
-
-                    cv.put("idviaje_neto", x);
+                    Integer aux = Integer.valueOf(idviaje)+x;
+                    cv.put("idviaje_neto", aux);
                     System.out.println("idTipo : " + idTipo);
                     if (idTipo == 0) {
                         cv.put("idtipo_imagen", "NULL");
@@ -132,12 +132,12 @@ public class CamaraActivity extends AppCompatActivity {
                     cv.put("imagen", base64);
                     ImagenesViaje imagenesViaje = new ImagenesViaje(CamaraActivity.this);
 
-                    for (int c = 0; c < 4; c++) {
+                   // for (int c = 0; c < 4; c++) {
                         respuesta = imagenesViaje.create(cv);
                       //  System.out.println("idViaje: "+x+", imagen: "+c);
-                    }
-                    x++;
-                }
+                  // }
+                    //x++;
+                //}
 
                if(respuesta) {
                    Toast.makeText(getApplicationContext(), "Se Guardo la Imagen", Toast.LENGTH_LONG).show();
@@ -210,22 +210,18 @@ public class CamaraActivity extends AppCompatActivity {
 
                     bitmap = BitmapFactory.decodeFile(mPath);
                     mSetImage.setImageBitmap(bitmap);
-                    base64 = Usuario.encodeToBase64Imagen(mPath, 50);
+                    try {
+                        base64 = Usuario.encodeToBase64Imagen(bitmap, 30);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        Intent intent = new Intent(getApplicationContext(), ListaViajesActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                    }
                     break;
 
 
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        Integer list = getIntent().getIntExtra("list", 0);
-        if(list == 1) {
-            super.onBackPressed();
-        } else {
-            Intent intent = new Intent(getApplicationContext(), ListaViajesActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-        }
-    }
 }

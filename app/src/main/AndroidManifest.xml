@@ -60,9 +60,12 @@
             android:label="@string/title_activity_success_destino"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ImagenesActivity" />
-        <activity android:name=".ImagenDetalle" />
-        <activity android:name=".CamaraActivity"></activity>
+        <activity android:name=".ImagenesActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ImagenDetalle"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".CamaraActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

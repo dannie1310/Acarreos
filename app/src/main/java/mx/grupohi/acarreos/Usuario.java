@@ -225,9 +225,9 @@ class Usuario {
         return Base64.encodeToString(byteArrayOS.toByteArray(), Base64.DEFAULT);
     }
 
-    public static String encodeToBase64Imagen(String URL, int quality)
+    public static String encodeToBase64Imagen(Bitmap image, int quality)
     {
-        Bitmap image = BitmapFactory.decodeFile(URL);
+
         Bitmap.CompressFormat compressFormat = Bitmap.CompressFormat.JPEG;
         ByteArrayOutputStream byteArrayOS = new ByteArrayOutputStream();
         image.compress(compressFormat, quality, byteArrayOS);
