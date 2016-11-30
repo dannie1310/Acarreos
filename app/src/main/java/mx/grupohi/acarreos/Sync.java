@@ -35,11 +35,13 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
     private JSONObject JSON;
 
     Sync(Context context, ProgressDialog progressDialog) {
+
         this.context = context;
         this.progressDialog = progressDialog;
         usuario = new Usuario(context);
         usuario = usuario.getUsuario();
         gps = new GPSTracker(context);
+        System.out.println("3");
 
     }
 
@@ -76,32 +78,34 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
             values.put("Version", String.valueOf(BuildConfig.VERSION_NAME));
 
             if (Viaje.getCount(context) != 0) {
-                idviaje= Viaje.id();
                 JSONObject Obj = Viaje.getJSON(context);
-                System.out.println("objeto: "+ idviaje);
                 values.put("carddata", String.valueOf(Obj));
             }
             if (Coordenada.getJSON(context).length() != 0) {
                 values.put("coordenadas", String.valueOf(Coordenada.getJSON(context)));
             }
+            if (ImagenesViaje.getCount(context) != 0){
+                values.put("Imagenes", String.valueOf(ImagenesViaje.getJSONImagenes(context)));
+            }
+            /*try {
 
+                FileWriter file = new FileWriter("/storage/emulated/0/Picture/Pruebas/prueba"+Util.getFechaHora()+".txt");
+                file.write(values.toString());
+                file.flush();
+                file.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }*/
             try {
+
                 URL url = new URL("http://sca.grupohi.mx/android20160923.php");
-                JSON = HttpConnection.POST(url, values);
+               JSON = HttpConnection.POST(url, values);
                 Log.i("json ",String.valueOf(values));
-                /*try {
-
-                    FileWriter file = new FileWriter("/storage/emulated/0/Picture/Pruebas/prueba"+Util.getFechaHora()+".txt");
-                    file.write(values.toString());
-                    file.flush();
-                    file.close();
-
-                } catch (IOException e) {
-                   e.printStackTrace();
-                }*/
 
 
-            } catch (Exception e) {
+
+            }catch (Exception e) {
                 Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
                 return false;

@@ -416,48 +416,55 @@ public class SetDestinoActivity extends AppCompatActivity
                     Integer idProyecto = Util.getIdProyecto(tagInfo);
                     Integer idOrigen = Util.getIdOrigen(tagOrigen);
                     Integer idMaterial = Util.getIdMaterial(tagOrigen);
+                    Viaje viaje = null;
+
+                    String aux = "";
+
+                    for(int x=0; x<20;x++) {
+                        ContentValues cv = new ContentValues();
+                        cv.put("FechaCarga", Util.getFecha());
+                        cv.put("HoraCarga", Util.getTime());
+                        cv.put("IdProyecto", idProyecto);
+                        cv.put("IdCamion", idCamion);
+                        cv.put("IdOrigen", idOrigen);
+                        cv.put("FechaSalida", Util.getFecha(fechaString));
+                        cv.put("HoraSalida", Util.getTime(fechaString));
+                        cv.put("IdTiro", idTiro);
+                        cv.put("FechaLlegada", Util.getFecha());
+                        cv.put("HoraLlegada", Util.getTime());
+                        cv.put("IdMaterial", idMaterial);
+                        cv.put("Observaciones", observacionesTextView.getText().toString());
+                        cv.put("Creo", usuario.getId());
+                        cv.put("Estatus", "10");
+                        cv.put("Ruta", idRuta);
+                       aux = getCodeFecha(idCamion).toUpperCase();
+                        aux += String.valueOf(x);
+                        System.out.println("CODIGO ___"+aux);
+                        cv.put("Code", aux);
+                        cv.put("uidTAG", UID);
+                        cv.put("IMEI", IMEI);
 
 
-
-                    ContentValues cv = new ContentValues();
-                    cv.put("FechaCarga", Util.getFecha());
-                    cv.put("HoraCarga", Util.getTime());
-                    cv.put("IdProyecto", idProyecto);
-                    cv.put("IdCamion", idCamion);
-                    cv.put("IdOrigen", idOrigen);
-                    cv.put("FechaSalida", Util.getFecha(fechaString));
-                    cv.put("HoraSalida", Util.getTime(fechaString));
-                    cv.put("IdTiro", idTiro);
-                    cv.put("FechaLlegada", Util.getFecha());
-                    cv.put("HoraLlegada", Util.getTime());
-                    cv.put("IdMaterial", idMaterial);
-                    cv.put("Observaciones", observacionesTextView.getText().toString());
-                    cv.put("Creo", usuario.getId());
-                    cv.put("Estatus", "10");
-                    cv.put("Ruta", idRuta);
-                    cv.put("Code", getCode(contador,idCamion).toUpperCase());
-                    cv.put("uidTAG", UID);
-                    cv.put("IMEI", IMEI);
-                    Viaje viaje= null;
-                   // for(int x=0; x<25;x++) {
-                       viaje = new Viaje(this);
+                        viaje = new Viaje(this);
                         viaje.create(cv);
-                   // }
-                    cv.clear();
-                    cv.put("IMEI", IMEI);
-                    cv.put("idevento", 3);
-                    cv.put("latitud", latitude);
-                    cv.put("longitud", longitude);
-                    cv.put("fecha_hora", Util.timeStamp());
-                    cv.put("code", getCode(contador,idCamion).toUpperCase());
-                    Coordenada coordenada = new Coordenada(this);
-                    coordenada.create(cv, SetDestinoActivity.this);
 
+                        cv.clear();
+                        cv.put("IMEI", IMEI);
+                        cv.put("idevento", 3);
+                        cv.put("latitud", latitude);
+                        cv.put("longitud", longitude);
+                        cv.put("fecha_hora", Util.timeStamp());
+                        cv.put("code", aux);
+                        Coordenada coordenada = new Coordenada(this);
+                        coordenada.create(cv, SetDestinoActivity.this);
+                        aux="";
+                    }
                     Intent destinoSuccess = new Intent(this, SuccessDestinoActivity.class);
                     destinoSuccess.putExtra("idViaje", viaje.idViaje);
                     destinoSuccess.putExtra("LIST", 0);
-                    destinoSuccess.putExtra("code", getCode(contador,idCamion));
+                    destinoSuccess.putExtra("code", aux);
                     startActivity(destinoSuccess);
+
                 } else {
                     snackbar = Snackbar.make(findViewById(R.id.content_set_destino), "Por favor utiliza el TAG correcto", Snackbar.LENGTH_LONG);
                     View snackBarView = snackbar.getView();
@@ -498,6 +505,41 @@ public class SetDestinoActivity extends AppCompatActivity
         else{
             mensaje+=viajes;
         }
+
+        /*String resp = Long.toHexString(Long.parseLong(mensaje));
+        mensaje="";
+        if (resp.length() < 10){
+            ceros=0;
+            ceros= 10 - resp.length();
+            for (int i=0; i<ceros; i++){
+                mensaje += "0";
+            }
+            mensaje += resp;
+        }*/
+        return mensaje;
+    }
+
+
+    public static String getCodeFecha(Integer idCamion) {
+        String mensaje = "";
+        String camion = "";
+        String viajes="";
+        camion = idCamion.toString();
+        int ceros = 0;
+        mensaje+=Util.getFechaSegundos();
+        System.out.println(mensaje);
+        if(camion.length() < 5){
+            ceros = 5 - camion.length();
+            for ( int i=0; i< ceros; i++){
+                mensaje += "0";
+            }
+            mensaje +=camion;
+
+        }
+        else{
+            mensaje +=camion;
+        }
+
 
         /*String resp = Long.toHexString(Long.parseLong(mensaje));
         mensaje="";

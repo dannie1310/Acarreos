@@ -87,6 +87,18 @@ public class ImagenesViaje {
             }
     }
 
+    public static Integer getCount(Context context) {
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM imagenes_viaje",null);
+        try {
+            return c.getCount();
+        } finally {
+            c.close();
+            db.close();
+        }
+    }
+
     public void getImagen(Integer idViaje) {
         db = db_sca.getWritableDatabase();
         int i=0;
@@ -148,19 +160,20 @@ public class ImagenesViaje {
     }
 
 
-    static JSONObject getJSONImagenes(Context context, Integer idViaje) {
+    static JSONObject getJSONImagenes(Context context) {
         JSONObject JSON = new JSONObject();
         DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
         SQLiteDatabase db = db_sca.getWritableDatabase();
 
-        Cursor c = db.rawQuery("SELECT * FROM imagenes_viaje WHERE idviaje_neto = '" + idViaje +"'" , null);
+        Cursor c = db.rawQuery("SELECT * FROM imagenes_viaje  ORDER BY id ASC" , null);
         try {
             if(c != null && c.moveToFirst()) {
                 Integer i = 0;
                 do {
-                    System.out.println("-------------------json imagenes viaje: "+ idViaje);
+                    System.out.println("**------"+c.getInt(0)+"---------"+c.getString(5)+"----**");
                     JSONObject json = new JSONObject();
-                    json.put("idtipo_imagen", c.getString(2));
+                    json.put("code", c.getString(5));
+                    json.put("idtipo_imagen", c.getInt(2));
                     json.put("imagen", c.getString(4));
                     JSON.put(i + "", json);
                     i++;
@@ -173,5 +186,33 @@ public class ImagenesViaje {
             db.close();
         }
         return JSON;
+    }
+
+    static void syncLimit(Context context) {
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM imagenes_viaje  ORDER BY id ASC LIMIT 60", null);
+
+        try {
+            if (c != null && c.moveToFirst()) {
+
+                do {
+                    System.out.println("ELIMINAR*****");
+                    try {
+                        db.execSQL("DELETE FROM imagenes_viaje WHERE id= " + c.getInt(0));
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        System.out.println("error imagenes_viaje");
+                    }
+
+                } while (c.moveToNext());
+            }
+        } catch (Exception e) {
+            System.out.println("ERRORSYCNLIMIT");
+            e.printStackTrace();
+        } finally {
+            c.close();
+            db.close();
+        }
     }
 }

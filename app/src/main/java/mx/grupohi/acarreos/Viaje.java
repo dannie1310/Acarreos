@@ -135,12 +135,12 @@ public class Viaje {
         JSONObject JSON = new JSONObject();
         DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
         SQLiteDatabase db = db_sca.getWritableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM viajesnetos ORDER BY id ASC LIMIT 20", null);
+        Cursor c = db.rawQuery("SELECT * FROM viajesnetos ORDER BY id", null);
         try {
             if(c != null && c.moveToFirst()) {
                 Integer i = 0;
                 do {
-                   // for(int r=0; r<20; r++) {
+
                         JSONObject json = new JSONObject();
 
                         json.put("FechaCarga", c.getString(1));
@@ -160,10 +160,9 @@ public class Viaje {
                         json.put("Code", c.getString(16));
                         json.put("uidTAG", c.getString(17));
                         json.put("IMEI", c.getString(18));
-                        json.put("Imagenes", ImagenesViaje.getJSONImagenes(context, c.getInt(0)));
                         JSON.put(i + "", json);
                         i++;
-                   // }
+
                 } while (c.moveToNext());
 
 
@@ -175,7 +174,6 @@ public class Viaje {
             db.close();
         }
 
-        System.out.println("**************** FINISH ***************");
         return JSON;
     }
 
@@ -222,7 +220,7 @@ public class Viaje {
         }
     }
 
-    public String getCode(int idViaje){
+    public static String getCode(int idViaje){
         db = db_sca.getWritableDatabase();
         Cursor c= db.rawQuery("SELECT Code FROM viajesnetos WHERE id = '" + idViaje + "'", null);
         try {
@@ -249,14 +247,37 @@ public class Viaje {
         db.close();
     }
 
-    static void syncLimit(Context context, Integer idViaje) {
+    static void syncLimit(Context context) {
         DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
         SQLiteDatabase db = db_sca.getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT id FROM viajesnetos ORDER BY id ASC LIMIT 15", null);
 
-        db.execSQL("DELETE FROM viajesnetos WHERE id = "+idViaje);
-        db.execSQL("DELETE FROM imagenes_viaje WHERE idviaje_neto= "+idViaje);
+        try {
+            if (c != null && c.moveToFirst()) {
 
-        db.close();
+                do {
+                    try {
+                        db.execSQL("DELETE FROM viajesnetos WHERE id = " + c.getInt(0));
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        System.out.println("error viajesnetos");
+                    }
+                    try {
+                        db.execSQL("DELETE FROM imagenes_viaje WHERE idviaje_neto= " + c.getInt(0));
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        System.out.println("error imagenes_viaje");
+                    }
+
+                } while (c.moveToNext());
+            }
+        } catch (Exception e) {
+            System.out.println("ERRORSYCNLIMIT");
+            e.printStackTrace();
+        } finally {
+            c.close();
+            db.close();
+        }
     }
 
     static Boolean isSync(Context context) {

@@ -152,6 +152,10 @@ class Util {
         return (String) android.text.format.DateFormat.format("HHmmssyyyyMMdd", new java.util.Date());
     }
 
+    static String getFechaSegundos() {
+        return (String) android.text.format.DateFormat.format("yyyyMMddmmss", new java.util.Date());
+    }
+
     static String getFecha() {
         return (String) android.text.format.DateFormat.format("yyyy/MM/dd", new java.util.Date());
     }
