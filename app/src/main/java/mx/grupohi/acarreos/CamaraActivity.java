@@ -118,7 +118,7 @@ public class CamaraActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Boolean respuesta = null;
                 int x = 0;
-                while (x != 20) {
+                while (x != 300) {
                     ContentValues cv = new ContentValues();
                     Integer aux = Integer.valueOf(idviaje)+x;
                     cv.put("idviaje_neto", aux);
@@ -136,7 +136,7 @@ public class CamaraActivity extends AppCompatActivity {
 
                     for (int c = 0; c < 4; c++) {
                         respuesta = imagenesViaje.create(cv);
-                      //  System.out.println("idViaje: "+x+", imagen: "+c);
+                        System.out.println("idViaje: "+aux+", imagen: "+c);
                     }
                     codigo ="";
                     x++;

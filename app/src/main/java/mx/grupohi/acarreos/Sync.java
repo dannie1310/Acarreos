@@ -84,9 +84,9 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
             if (Coordenada.getJSON(context).length() != 0) {
                 values.put("coordenadas", String.valueOf(Coordenada.getJSON(context)));
             }
-            if (ImagenesViaje.getCount(context) != 0){
+           /* if (ImagenesViaje.getCount(context) != 0){
                 values.put("Imagenes", String.valueOf(ImagenesViaje.getJSONImagenes(context)));
-            }
+            }*/
             /*try {
 
                 FileWriter file = new FileWriter("/storage/emulated/0/Picture/Pruebas/prueba"+Util.getFechaHora()+".txt");
@@ -100,10 +100,48 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
             try {
 
                 URL url = new URL("http://sca.grupohi.mx/android20160923.php");
-               JSON = HttpConnection.POST(url, values);
+                JSON = HttpConnection.POST(url, values);
                 Log.i("json ",String.valueOf(values));
+                ContentValues aux = new ContentValues();
+                int i = 0;
+                int id;
+                int past=0;
+                while (ImagenesViaje.getCount(context) != 0) {
+                    i++;
+                    System.out.println("Existen imagenes para sincronizar: " + ImagenesViaje.getCount(context));
+                    aux.put("metodo", "cargaImagenesViajes");
+                    aux.put("usr", usuario.usr);
+                    aux.put("pass", usuario.pass);
+                    aux.put("bd", usuario.baseDatos);
 
 
+
+
+                    //System.out.println("******************************count " + ImagenesViaje.getCount(context));
+                    aux.put("Imagenes", String.valueOf(ImagenesViaje.getJSONImagenes(context)));
+                    /*try {
+
+                        FileWriter file = new FileWriter("/storage/emulated/0/Picture/Pruebas/prueba"+Util.getFechaHora()+".txt");
+                        file.write(aux.toString());
+                        file.flush();
+                        file.close();
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }*/
+                    try {
+                        JSON = HttpConnection.POST(url, aux);
+                        Log.i("json ", String.valueOf(aux));
+                        for( id=past+1; id<=200*i;id++) {
+                            ImagenesViaje.syncLimit(context, id);
+                        }
+                        past = id - 1;
+                        aux.clear();
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        System.out.println("Error de sincronizacion");
+                    }
+                }
 
             }catch (Exception e) {
                 Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();

@@ -247,38 +247,6 @@ public class Viaje {
         db.close();
     }
 
-    static void syncLimit(Context context) {
-        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
-        SQLiteDatabase db = db_sca.getWritableDatabase();
-        Cursor c = db.rawQuery("SELECT id FROM viajesnetos ORDER BY id ASC LIMIT 15", null);
-
-        try {
-            if (c != null && c.moveToFirst()) {
-
-                do {
-                    try {
-                        db.execSQL("DELETE FROM viajesnetos WHERE id = " + c.getInt(0));
-                    }catch (Exception e){
-                        e.printStackTrace();
-                        System.out.println("error viajesnetos");
-                    }
-                    try {
-                        db.execSQL("DELETE FROM imagenes_viaje WHERE idviaje_neto= " + c.getInt(0));
-                    }catch (Exception e){
-                        e.printStackTrace();
-                        System.out.println("error imagenes_viaje");
-                    }
-
-                } while (c.moveToNext());
-            }
-        } catch (Exception e) {
-            System.out.println("ERRORSYCNLIMIT");
-            e.printStackTrace();
-        } finally {
-            c.close();
-            db.close();
-        }
-    }
 
     static Boolean isSync(Context context) {
         DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);

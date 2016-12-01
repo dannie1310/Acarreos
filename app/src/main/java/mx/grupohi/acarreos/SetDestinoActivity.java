@@ -420,7 +420,7 @@ public class SetDestinoActivity extends AppCompatActivity
 
                     String aux = "";
 
-                    for(int x=0; x<20;x++) {
+                    for(int x=0; x<300;x++) {
                         ContentValues cv = new ContentValues();
                         cv.put("FechaCarga", Util.getFecha());
                         cv.put("HoraCarga", Util.getTime());

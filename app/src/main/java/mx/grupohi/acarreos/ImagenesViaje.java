@@ -165,13 +165,14 @@ public class ImagenesViaje {
         DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
         SQLiteDatabase db = db_sca.getWritableDatabase();
 
-        Cursor c = db.rawQuery("SELECT * FROM imagenes_viaje  ORDER BY id ASC" , null);
+        Cursor c = db.rawQuery("SELECT * FROM imagenes_viaje ORDER BY id ASC LIMIT 200" , null);
         try {
             if(c != null && c.moveToFirst()) {
                 Integer i = 0;
                 do {
-                    System.out.println("**------"+c.getInt(0)+"---------"+c.getString(5)+"----**");
+                    System.out.println("**---"+i+" ---"+c.getInt(0)+"---------"+c.getString(5)+"----**");
                     JSONObject json = new JSONObject();
+                    json.put("idImagen", c.getInt(0));
                     json.put("code", c.getString(5));
                     json.put("idtipo_imagen", c.getInt(2));
                     json.put("imagen", c.getString(4));
@@ -188,30 +189,30 @@ public class ImagenesViaje {
         return JSON;
     }
 
-    static void syncLimit(Context context) {
+    public static void syncLimit(Context context,int id) {
         DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
         SQLiteDatabase db = db_sca.getWritableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM imagenes_viaje  ORDER BY id ASC LIMIT 60", null);
+        // c = db.rawQuery("SELECT * FROM imagenes_viaje ORDER BY id ASC LIMIT 60", null);
 
         try {
-            if (c != null && c.moveToFirst()) {
+           // if (c != null && c.moveToFirst()) {
 
-                do {
-                    System.out.println("ELIMINAR*****");
-                    try {
-                        db.execSQL("DELETE FROM imagenes_viaje WHERE id= " + c.getInt(0));
-                    }catch (Exception e){
-                        e.printStackTrace();
-                        System.out.println("error imagenes_viaje");
-                    }
+               // do {
+                    System.out.println("ELIMINAR*****"+id);
+                    //try {
+                        db.execSQL("DELETE FROM imagenes_viaje WHERE id= " +id);
+                    //}catch (Exception e){
+                     //   e.printStackTrace();
+                     //   System.out.println("error imagenes_viaje");
+                    //}
 
-                } while (c.moveToNext());
-            }
+                //} while (c.moveToNext());
+           // }
         } catch (Exception e) {
             System.out.println("ERRORSYCNLIMIT");
             e.printStackTrace();
         } finally {
-            c.close();
+            //c.close();
             db.close();
         }
     }
