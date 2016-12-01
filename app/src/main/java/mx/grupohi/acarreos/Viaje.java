@@ -127,7 +127,10 @@ public class Viaje {
                 }
             }catch (Exception e){
                 e.printStackTrace();
-            }
+            } finally {
+            c.close();
+            db.close();
+        }
         return  x;
     }
 

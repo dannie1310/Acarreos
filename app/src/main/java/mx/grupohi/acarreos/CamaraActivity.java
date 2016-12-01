@@ -118,7 +118,7 @@ public class CamaraActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Boolean respuesta = null;
                 int x = 0;
-                while (x != 300) {
+                while (x != 150) {
                     ContentValues cv = new ContentValues();
                     Integer aux = Integer.valueOf(idviaje)+x;
                     cv.put("idviaje_neto", aux);

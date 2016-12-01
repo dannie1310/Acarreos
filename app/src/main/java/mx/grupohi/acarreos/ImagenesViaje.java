@@ -165,7 +165,7 @@ public class ImagenesViaje {
         DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
         SQLiteDatabase db = db_sca.getWritableDatabase();
 
-        Cursor c = db.rawQuery("SELECT * FROM imagenes_viaje ORDER BY id ASC LIMIT 200" , null);
+        Cursor c = db.rawQuery("SELECT * FROM imagenes_viaje ORDER BY id ASC LIMIT 80" , null);
         try {
             if(c != null && c.moveToFirst()) {
                 Integer i = 0;
