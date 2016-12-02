@@ -202,7 +202,6 @@ public class Viaje {
                 while (c.moveToNext()){
                     Viaje viaje = new Viaje(context);
                     viaje = viaje.find(c.getInt(0));
-                    System.out.println("num: "+c.getString(0));
                     viajes.add(viaje);
                 }
                 Collections.sort(viajes, new Comparator<Viaje>() {

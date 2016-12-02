@@ -103,9 +103,9 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
                 JSON = HttpConnection.POST(url, values);
                 Log.i("json ",String.valueOf(values));
                 ContentValues aux = new ContentValues();
-                int i = 0;
+                int i = 31;
                 int id;
-                int past=0;
+                int past=2400;
 
                 while (ImagenesViaje.getCount(context) != 0) {
                     i++;
@@ -115,7 +115,6 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
                     aux.put("usr", usuario.usr);
                     aux.put("pass", usuario.pass);
                     aux.put("bd", usuario.baseDatos);
-                    //System.out.println("******************************count " + ImagenesViaje.getCount(context));
                     aux.put("Imagenes", String.valueOf(ImagenesViaje.getJSONImagenes(context)));
                     /*try {
 
@@ -139,7 +138,6 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
 
                     }catch (Exception e){
                         e.printStackTrace();
-                        System.out.println("Error de sincronizacion");
                     }
                 }
 

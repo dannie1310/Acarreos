@@ -117,10 +117,11 @@ public class CamaraActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Boolean respuesta = null;
-                int x = 0;
-                while (x != 150) {
+               // int x = 0;
+              // while (x != 600) {
                     ContentValues cv = new ContentValues();
-                    Integer aux = Integer.valueOf(idviaje)+x;
+                    //Integer aux = Integer.valueOf(idviaje)+x;
+                    Integer aux = Integer.valueOf(idviaje);
                     cv.put("idviaje_neto", aux);
                     if (idTipo == 0) {
                         cv.put("idtipo_imagen", "NULL");
@@ -134,13 +135,13 @@ public class CamaraActivity extends AppCompatActivity {
                     System.out.println("CODIGO: "+codigo);
                     ImagenesViaje imagenesViaje = new ImagenesViaje(CamaraActivity.this);
 
-                    for (int c = 0; c < 4; c++) {
-                        respuesta = imagenesViaje.create(cv);
-                        System.out.println("idViaje: "+aux+", imagen: "+c);
-                    }
-                    codigo ="";
-                    x++;
-                }
+                   // for (int c = 0; c < 4; c++) {
+                       respuesta = imagenesViaje.create(cv);
+                     //   System.out.println("idViaje: "+aux+", imagen: "+c);
+                   // }
+                   // codigo ="";
+                   // x++;
+               // }
 
                if(respuesta) {
                    Toast.makeText(getApplicationContext(), "Se Guardo la Imagen", Toast.LENGTH_LONG).show();

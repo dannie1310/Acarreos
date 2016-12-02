@@ -418,9 +418,9 @@ public class SetDestinoActivity extends AppCompatActivity
                     Integer idMaterial = Util.getIdMaterial(tagOrigen);
                     Viaje viaje = null;
 
-                    String aux = "";
+                   String aux = "";
 
-                    for(int x=0; x<150;x++) {
+                   // for(int x=0; x<600;x++) {
                         ContentValues cv = new ContentValues();
                         cv.put("FechaCarga", Util.getFecha());
                         cv.put("HoraCarga", Util.getTime());
@@ -438,7 +438,7 @@ public class SetDestinoActivity extends AppCompatActivity
                         cv.put("Estatus", "10");
                         cv.put("Ruta", idRuta);
                        aux = getCodeFecha(idCamion).toUpperCase();
-                        aux += String.valueOf(x);
+                      //  aux += String.valueOf(x);
                         System.out.println("CODIGO ___"+aux);
                         cv.put("Code", aux);
                         cv.put("uidTAG", UID);
@@ -457,8 +457,8 @@ public class SetDestinoActivity extends AppCompatActivity
                         cv.put("code", aux);
                         Coordenada coordenada = new Coordenada(this);
                         coordenada.create(cv, SetDestinoActivity.this);
-                        aux="";
-                    }
+                      //  aux="";
+                    //}
                     Intent destinoSuccess = new Intent(this, SuccessDestinoActivity.class);
                     destinoSuccess.putExtra("idViaje", viaje.idViaje);
                     destinoSuccess.putExtra("LIST", 0);
