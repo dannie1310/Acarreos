@@ -9,6 +9,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.FileWriter;
@@ -84,19 +85,7 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
             if (Coordenada.getJSON(context).length() != 0) {
                 values.put("coordenadas", String.valueOf(Coordenada.getJSON(context)));
             }
-           /* if (ImagenesViaje.getCount(context) != 0){
-                values.put("Imagenes", String.valueOf(ImagenesViaje.getJSONImagenes(context)));
-            }*/
-            /*try {
 
-                FileWriter file = new FileWriter("/storage/emulated/0/Picture/Pruebas/prueba"+Util.getFechaHora()+".txt");
-                file.write(values.toString());
-                file.flush();
-                file.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }*/
             try {
 
                 URL url = new URL("http://sca.grupohi.mx/android20160923.php");
@@ -116,26 +105,18 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
                     aux.put("pass", usuario.pass);
                     aux.put("bd", usuario.baseDatos);
                     aux.put("Imagenes", String.valueOf(ImagenesViaje.getJSONImagenes(context)));
-                    /*try {
 
-                        FileWriter file = new FileWriter("/storage/emulated/0/Picture/Pruebas/prueba"+Util.getFechaHora()+".txt");
-                        file.write(aux.toString());
-                        file.flush();
-                        file.close();
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }*/
                     try {
                         JSON = HttpConnection.POST(url, aux);
                         Log.i("json ", String.valueOf(aux));
-                        for( id=past+1; id<=80*i;id++) {
-
-                            ImagenesViaje.syncLimit(context, id);
+                        try {
+                            final JSONArray imagenes = new JSONArray(JSON.getString("imagenes_registradas"));
+                            for (int r = 0; r < imagenes.length(); r++) {
+                                ImagenesViaje.syncLimit(context, imagenes.getInt(r));
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                        past = id - 1;
-                        aux.clear();
-
                     }catch (Exception e){
                         e.printStackTrace();
                     }

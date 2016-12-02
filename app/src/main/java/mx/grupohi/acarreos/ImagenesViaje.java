@@ -170,11 +170,11 @@ public class ImagenesViaje {
             if(c != null && c.moveToFirst()) {
                 Integer i = 0;
                 do {
-                    System.out.println("**---"+i+" ---"+c.getInt(0)+"---------"+c.getString(5)+"----**");
+                    System.out.println("**---"+i+" ---"+c.getInt(0)+"-----**"+c.getString(2)+"**----"+c.getString(5)+"----**");
                     JSONObject json = new JSONObject();
                     json.put("idImagen", c.getInt(0));
                     json.put("code", c.getString(5));
-                    json.put("idtipo_imagen", c.getInt(2));
+                    json.put("idtipo_imagen", c.getString(2));
                     json.put("imagen", c.getString(4));
                     JSON.put(i + "", json);
                     i++;
@@ -192,28 +192,45 @@ public class ImagenesViaje {
     public static void syncLimit(Context context,int id) {
         DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
         SQLiteDatabase db = db_sca.getWritableDatabase();
-        // c = db.rawQuery("SELECT * FROM imagenes_viaje ORDER BY id ASC LIMIT 60", null);
+        Integer idviaje = getIdViaje(context, id);
+        Cursor c = db.rawQuery("SELECT * FROM imagenes_viaje WHERE idviaje_neto = '" + idviaje +"'", null);
 
         try {
-           // if (c != null && c.moveToFirst()) {
 
-               // do {
-                    System.out.println("ELIMINAR*****"+id);
-                    //try {
-                        db.execSQL("DELETE FROM imagenes_viaje WHERE id= " +id);
-                    //}catch (Exception e){
-                     //   e.printStackTrace();
-                     //   System.out.println("error imagenes_viaje");
-                    //}
+            Integer imagenes = c.getCount();
+            System.out.println("ELIMINAR*****" + id + "viaje num : "+idviaje+" faltan: "+imagenes);
+            if(imagenes == 1){
+                db.execSQL("DELETE FROM viajesnetos WHERE id= " + idviaje );
+            }
 
-                //} while (c.moveToNext());
-           // }
+            db.execSQL("DELETE FROM imagenes_viaje WHERE id= " + id);
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            c.close();
+            db.close();
+        }
+    }
+
+    public static Integer getIdViaje(Context context, Integer idViaje) {
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+        Integer resp = 0;
+        Cursor c = db.rawQuery("SELECT idviaje_neto FROM imagenes_viaje WHERE id = '" + idViaje + "'", null);
+        try {
+            if (c != null && c.moveToFirst()) {
+                resp=c.getInt(0);
+            }
+
         } catch (Exception e) {
             System.out.println("ERRORSYCNLIMIT");
             e.printStackTrace();
+
         } finally {
-            //c.close();
+            c.close();
             db.close();
+            return resp;
         }
     }
 }

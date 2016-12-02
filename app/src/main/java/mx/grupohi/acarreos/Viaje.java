@@ -242,9 +242,9 @@ public class Viaje {
         DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
         SQLiteDatabase db = db_sca.getWritableDatabase();
 
-        db.execSQL("DELETE FROM viajesnetos");
+       // db.execSQL("DELETE FROM viajesnetos");
         db.execSQL("DELETE FROM coordenadas");
-        db.execSQL("DELETE FROM imagenes_viaje");
+        //db.execSQL("DELETE FROM imagenes_viaje");
 
         db.close();
     }
