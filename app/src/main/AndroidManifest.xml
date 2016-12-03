@@ -18,9 +18,9 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:largeHeap="true" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".LoginActivity"
             android:label="@string/app_name"
@@ -60,12 +60,18 @@
             android:label="@string/title_activity_success_destino"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ImagenesActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ImagenDetalle"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".CamaraActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ImagenDetalle"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".CamaraActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ImagenesActivity"
+            android:label="@string/title_activity_imagenes"
+            android:parentActivityName=".ImagenesActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
     </application>
 
 </manifest>
