@@ -170,7 +170,7 @@ public class ImagenesViaje {
             if(c != null && c.moveToFirst()) {
                 Integer i = 0;
                 do {
-                    System.out.println("**---"+i+" ---"+c.getInt(0)+"-----**"+c.getString(2)+"**----"+c.getString(5)+"----**");
+                   // System.out.println("**---"+i+" ---"+c.getInt(0)+"-----**"+c.getString(2)+"**----"+c.getString(5)+"----**");
                     JSONObject json = new JSONObject();
                     json.put("idImagen", c.getInt(0));
                     json.put("code", c.getString(5));
@@ -198,7 +198,7 @@ public class ImagenesViaje {
         try {
 
             Integer imagenes = c.getCount();
-            System.out.println("ELIMINAR*****" + id + "viaje num : "+idviaje+" faltan: "+imagenes);
+            //System.out.println("ELIMINAR*****" + id + "viaje num : "+idviaje+" faltan: "+imagenes);
             if(imagenes == 1){
                 db.execSQL("DELETE FROM viajesnetos WHERE id= " + idviaje );
             }
@@ -224,7 +224,7 @@ public class ImagenesViaje {
             }
 
         } catch (Exception e) {
-            System.out.println("ERRORSYCNLIMIT");
+            //System.out.println("ERRORSYCNLIMIT");
             e.printStackTrace();
 
         } finally {

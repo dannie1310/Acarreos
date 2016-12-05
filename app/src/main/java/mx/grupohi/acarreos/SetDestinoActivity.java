@@ -200,12 +200,13 @@ public class SetDestinoActivity extends AppCompatActivity
         escribirDestinoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(idRuta == 0) {
-                    Toast.makeText(getApplicationContext(), "Por favor seleccione la Ruta de la lista", Toast.LENGTH_LONG).show();
-                    rutasSpinner.requestFocus();
-                } else if (idTiro == 0) {
-                    Toast.makeText(getApplicationContext(), "Por favor seleccione el Tiro de la lista", Toast.LENGTH_LONG).show();
+                if (idTiro == 0) {
+                    Toast.makeText(getApplicationContext(), "Por favor seleccione el Tiro de la lista", Toast.LENGTH_SHORT).show();
                     tirosSpinner.requestFocus();
+                }
+                else if(idRuta == 0) {
+                    Toast.makeText(getApplicationContext(), "Por favor seleccione la Ruta de la lista", Toast.LENGTH_SHORT).show();
+                    rutasSpinner.requestFocus();
                 } else {
                     checkNfcEnabled();
                     WriteModeOn();
@@ -437,9 +438,10 @@ public class SetDestinoActivity extends AppCompatActivity
                         cv.put("Creo", usuario.getId());
                         cv.put("Estatus", "10");
                         cv.put("Ruta", idRuta);
-                       aux = getCodeFecha(idCamion).toUpperCase();
+                        //aux = getCodeFecha(idCamion).toUpperCase();
+                        aux = getCode(contador,idCamion).toUpperCase();
                       //  aux += String.valueOf(x);
-                        System.out.println("CODIGO ___"+aux);
+                        //System.out.println("CODIGO ___"+aux);
                         cv.put("Code", aux);
                         cv.put("uidTAG", UID);
                         cv.put("IMEI", IMEI);
@@ -527,7 +529,7 @@ public class SetDestinoActivity extends AppCompatActivity
         camion = idCamion.toString();
         int ceros = 0;
         mensaje+=Util.getFechaSegundos();
-        System.out.println(mensaje);
+        //System.out.println(mensaje);
         if(camion.length() < 5){
             ceros = 5 - camion.length();
             for ( int i=0; i< ceros; i++){

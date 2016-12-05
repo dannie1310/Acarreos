@@ -75,9 +75,8 @@ public class CamaraActivity extends AppCompatActivity {
         button = (Button) findViewById(R.id.buttonGuardar);
         try {
             openCamera();
-        }catch (Exception e){
+        }catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Q");
         }
 
 
@@ -132,7 +131,7 @@ public class CamaraActivity extends AppCompatActivity {
                     cv.put("imagen", base64);
                     String codigo = Viaje.getCode(aux);
                     cv.put("code", codigo);
-                    System.out.println("CODIGO: "+codigo);
+                   // System.out.println("CODIGO: "+codigo);
                     ImagenesViaje imagenesViaje = new ImagenesViaje(CamaraActivity.this);
 
                    // for (int c = 0; c < 4; c++) {

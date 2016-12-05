@@ -161,6 +161,8 @@ public class ImagenesActivity extends AppCompatActivity implements NavigationVie
                                 if(!Viaje.isSync(getApplicationContext())) {
                                      progressDialogSync = ProgressDialog.show(ImagenesActivity.this, "Sincronizando datos", "Por favor espere...", true);
                                     new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
+                                    Intent intent = new Intent(ImagenesActivity.this, MainActivity.class);
+                                    startActivity(intent);
                                 } else {
                                     Toast.makeText(getApplicationContext(), "No es necesaria la sincronización en este momento", Toast.LENGTH_LONG).show();
                                 }

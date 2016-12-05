@@ -161,7 +161,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
                 ImagenesViaje im = new ImagenesViaje(getApplicationContext());
                 Integer numImagenes = im.getCount(idViaje);
                 //im.getAll();
-                System.out.println("open:  "+numImagenes+ " "+idViaje.toString());
+                //System.out.println("open:  "+numImagenes+ " "+idViaje.toString());
                 if(numImagenes == 0){
                     Intent intent = new Intent(getApplicationContext(), CamaraActivity.class);
                     intent.putExtra("idviaje_neto", idViaje.toString());
