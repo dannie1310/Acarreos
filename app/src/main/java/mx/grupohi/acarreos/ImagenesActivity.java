@@ -28,7 +28,7 @@ import android.widget.Toast;
 
 import java.util.List;
 
-public class ImagenesActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class ImagenesActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemClickListener {
 
 
     private String x;
@@ -69,7 +69,7 @@ public class ImagenesActivity extends AppCompatActivity implements NavigationVie
         gridView = (GridView) findViewById(R.id.grid);
         adaptador = new AdaptadorImagenes(getApplicationContext());
         gridView.setAdapter(adaptador);
-        gridView.setOnItemClickListener((AdapterView.OnItemClickListener) this);
+        gridView.setOnItemClickListener(this);
 
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -148,9 +148,8 @@ public class ImagenesActivity extends AppCompatActivity implements NavigationVie
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            Intent intent = getIntent();
-            finish();
-            startActivity(intent);
+            Intent mainActivity = new Intent(this, MainActivity.class);
+            startActivity(mainActivity);
         } else if (id == R.id.nav_sync) {
             new AlertDialog.Builder(ImagenesActivity.this)
                     .setTitle("¡ADVERTENCIA!")
