@@ -129,9 +129,9 @@ public class CamaraActivity extends AppCompatActivity {
                     }
                     cv.put("url", mPath);
                     cv.put("imagen", base64);
-                    String codigo = Viaje.getCode(aux);
+                    String codigo = Viaje.getCodeImagen(aux);
                     cv.put("code", codigo);
-                   // System.out.println("CODIGO: "+codigo);
+                    System.out.println("CODIGO: "+codigo);
                     ImagenesViaje imagenesViaje = new ImagenesViaje(CamaraActivity.this);
 
                    // for (int c = 0; c < 4; c++) {

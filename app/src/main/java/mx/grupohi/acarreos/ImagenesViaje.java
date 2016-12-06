@@ -170,7 +170,7 @@ public class ImagenesViaje {
             if(c != null && c.moveToFirst()) {
                 Integer i = 0;
                 do {
-                   // System.out.println("**---"+i+" ---"+c.getInt(0)+"-----**"+c.getString(2)+"**----"+c.getString(5)+"----**");
+                    System.out.println("**---"+i+" ---"+c.getInt(0)+"-----**"+c.getString(2)+"**----"+c.getString(5)+"----**");
                     JSONObject json = new JSONObject();
                     json.put("idImagen", c.getInt(0));
                     json.put("code", c.getString(5));

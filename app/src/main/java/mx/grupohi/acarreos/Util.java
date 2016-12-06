@@ -153,7 +153,7 @@ class Util {
     }
 
     static String getFechaSegundos() {
-        return (String) android.text.format.DateFormat.format("yyyyMMddmmss", new java.util.Date());
+        return (String) android.text.format.DateFormat.format("yyMMddHHmmss", new java.util.Date());
     }
 
     static String getFecha() {

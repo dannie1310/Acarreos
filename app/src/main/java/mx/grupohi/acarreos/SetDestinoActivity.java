@@ -445,6 +445,7 @@ public class SetDestinoActivity extends AppCompatActivity
                         cv.put("Code", aux);
                         cv.put("uidTAG", UID);
                         cv.put("IMEI", IMEI);
+                        cv.put("CodeImagen", getCodeFecha(idCamion));
 
 
                         viaje = new Viaje(this);

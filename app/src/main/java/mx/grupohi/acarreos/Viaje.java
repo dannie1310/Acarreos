@@ -160,9 +160,10 @@ public class Viaje {
                         json.put("Observaciones", c.getString(12));
                         json.put("Creo", c.getString(13));
                         json.put("Estatus", c.getString(14));
-                        json.put("Code", c.getString(16));
+                        json.put("Code", c.getString(19));
                         json.put("uidTAG", c.getString(17));
                         json.put("IMEI", c.getString(18));
+                        json.put("CodeImagen",c.getString(16));
                         JSON.put(i + "", json);
                         i++;
 
@@ -225,6 +226,22 @@ public class Viaje {
     public static String getCode(int idViaje){
         db = db_sca.getWritableDatabase();
         Cursor c= db.rawQuery("SELECT Code FROM viajesnetos WHERE id = '" + idViaje + "'", null);
+        try {
+            if(c!=null && c.moveToFirst()){
+                return c.getString(0);
+            }
+            else {
+                return null;
+            }
+        } finally {
+            c.close();
+            db.close();
+        }
+    }
+
+    public static String getCodeImagen(int idViaje){
+        db = db_sca.getWritableDatabase();
+        Cursor c= db.rawQuery("SELECT CodeImagen FROM viajesnetos WHERE id = '" + idViaje + "'", null);
         try {
             if(c!=null && c.moveToFirst()){
                 return c.getString(0);
