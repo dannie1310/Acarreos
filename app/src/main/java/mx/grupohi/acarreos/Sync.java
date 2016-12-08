@@ -32,7 +32,10 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
     private double longitude;
     private String IMEI;
     Integer idviaje;
+    Integer imagenesTotales = 0;
+    Integer imagenesRegistradas = 0;
 
+    private JSONObject JSONVIAJES;
     private JSONObject JSON;
 
     Sync(Context context, ProgressDialog progressDialog) {
@@ -42,7 +45,6 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
         usuario = new Usuario(context);
         usuario = usuario.getUsuario();
         gps = new GPSTracker(context);
-        System.out.println("3");
 
     }
 
@@ -89,17 +91,16 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
             try {
 
                 URL url = new URL("http://sca.grupohi.mx/android20160923.php");
-                JSON = HttpConnection.POST(url, values);
-                Log.i("json ",String.valueOf(values));
+                JSONVIAJES = HttpConnection.POST(url, values);
+                Log.i("jsonviajes:  ",String.valueOf(values));
                 ContentValues aux = new ContentValues();
-                int i = 31;
-                int id;
-                int past=2400;
-
+                imagenesTotales= ImagenesViaje.getCount(context);
+                int i = 0;
+                //System.out.println("imagenes totales: "+imagenesTotales);
                 while (ImagenesViaje.getCount(context) != 0) {
                     i++;
-                    JSON= null;
-                    System.out.println("Existen imagenes para sincronizar: " + ImagenesViaje.getCount(context));
+                    JSON = null;
+                    //System.out.println("Existen imagenes para sincronizar: " + ImagenesViaje.getCount(context));
                     aux.put("metodo", "cargaImagenesViajes");
                     aux.put("usr", usuario.usr);
                     aux.put("pass", usuario.pass);
@@ -110,14 +111,34 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
                         JSON = HttpConnection.POST(url, aux);
                         Log.i("json ", String.valueOf(aux));
                         try {
-                            final JSONArray imagenes = new JSONArray(JSON.getString("imagenes_registradas"));
-                            for (int r = 0; r < imagenes.length(); r++) {
-                                ImagenesViaje.syncLimit(context, imagenes.getInt(r));
+                            if (JSON.has("imagenes_registradas")) {
+                                final JSONArray imagenes = new JSONArray(JSON.getString("imagenes_registradas"));
+                                for (int r = 0; r < imagenes.length(); r++) {
+                                    ImagenesViaje.syncLimit(context, imagenes.getInt(r));
+                                    imagenesRegistradas++;
+                                }
+                            }
+
+                            //System.out.println("imagenesRegiustradas: "+imagenesRegistradas);
+
+                            if (JSON.has("imagenes_no_registradas_sv")) {
+                                final JSONArray errores = new JSONArray(JSON.getString("imagenes_no_registradas_sv"));
+                                //System.out.println("Errores1: " + errores);
+                                for (int r = 0; r < errores.length(); r++) {
+                                    ImagenesViaje.cambioEstatus(context, errores.getInt(r));
+                                }
+                            }
+                            if (JSON.has("imagenes_no_registradas")) {
+                                final JSONArray errores = new JSONArray(JSON.getString("imagenes_no_registradas"));
+                               // System.out.println("Errores2: " + errores);
+                                for (int r = 0; r < errores.length(); r++) {
+                                    ImagenesViaje.cambioEstatus(context, errores.getInt(r));
+                                }
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -135,13 +156,16 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
     protected void onPostExecute(Boolean aBoolean) {
         super.onPostExecute(aBoolean);
         progressDialog.dismiss();
+        Integer errores = ImagenesViaje.getCountErrores(context);
         if(aBoolean) {
             try {
-                if (JSON.has("error")) {
-                    Toast.makeText(context, (String) JSON.get("error"), Toast.LENGTH_SHORT).show();
-                } else if(JSON.has("msj")) {
+                if (JSONVIAJES.has("error")) {
+                    System.out.println("error");
+                    Toast.makeText(context, (String) JSONVIAJES.get("error"), Toast.LENGTH_SHORT).show();
+                } else if(JSONVIAJES.has("msj")) {
                     Viaje.sync(context);
-                    Toast.makeText(context, (String) JSON.get("msj"), Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, (String) JSONVIAJES.get("msj") + "Imagenes Registradas: "+imagenesRegistradas+" de "+imagenesTotales, Toast.LENGTH_LONG).show();
+                    System.out.println("mensaje");
                 }
             } catch (Exception e) {
                 Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();

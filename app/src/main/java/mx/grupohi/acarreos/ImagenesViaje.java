@@ -90,7 +90,7 @@ public class ImagenesViaje {
     public static Integer getCount(Context context) {
         DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
         SQLiteDatabase db = db_sca.getWritableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM imagenes_viaje",null);
+        Cursor c = db.rawQuery("SELECT * FROM imagenes_viaje WHERE estatus = 1",null);
         try {
             return c.getCount();
         } finally {
@@ -165,15 +165,15 @@ public class ImagenesViaje {
         DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
         SQLiteDatabase db = db_sca.getWritableDatabase();
 
-        Cursor c = db.rawQuery("SELECT * FROM imagenes_viaje ORDER BY id ASC LIMIT 80" , null);
+        Cursor c = db.rawQuery("SELECT * FROM imagenes_viaje WHERE estatus = 1 ORDER BY id ASC LIMIT 80" , null);
         try {
             if(c != null && c.moveToFirst()) {
                 Integer i = 0;
                 do {
-                    System.out.println("**---"+i+" ---"+c.getInt(0)+"-----**"+c.getString(2)+"**----"+c.getString(5)+"----**");
+                   // System.out.println("**---"+i+" ---"+c.getInt(0)+"-----**"+c.getString(2)+"**----"+c.getString(5)+"----**");
                     JSONObject json = new JSONObject();
                     json.put("idImagen", c.getInt(0));
-                    json.put("code", c.getString(5));
+                    json.put("CodeImagen", c.getString(5));
                     json.put("idtipo_imagen", c.getString(2));
                     json.put("imagen", c.getString(4));
                     JSON.put(i + "", json);
@@ -198,7 +198,7 @@ public class ImagenesViaje {
         try {
 
             Integer imagenes = c.getCount();
-            //System.out.println("ELIMINAR*****" + id + "viaje num : "+idviaje+" faltan: "+imagenes);
+           // System.out.println("ELIMINAR*****" + id + "viaje num : "+idviaje+" faltan: "+imagenes);
             if(imagenes == 1){
                 db.execSQL("DELETE FROM viajesnetos WHERE id= " + idviaje );
             }
@@ -231,6 +231,36 @@ public class ImagenesViaje {
             c.close();
             db.close();
             return resp;
+        }
+    }
+
+    public static void cambioEstatus(Context context,int id) {//editar ********************
+        ContentValues data = new ContentValues();
+
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+        try {
+            data.put("estatus", "0");
+            db.update("imagenes_viaje", data,"id = '"+id+"'", null);
+           // System.out.println("imagenes_errores: "+id +"datos: "+ data.toString());
+        }catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+
+            db.close();
+        }
+    }
+
+    public static Integer getCountErrores(Context context) {
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM imagenes_viaje WHERE estatus = 0 ",null);
+        try {
+           // System.out.println("error = "+ c.getCount());
+            return c.getCount();
+        } finally {
+            c.close();
+            db.close();
         }
     }
 }

@@ -45,9 +45,7 @@ public class CamaraActivity extends AppCompatActivity {
     private static String APP_DIRECTORY = "Picture/";
     private static String MEDIA_DIRECTORY = APP_DIRECTORY + "PictureApp";
 
-    private final int MY_PERMISSIONS = 100;
     private final int PHOTO_CODE = 200;
-    private final int SELECT_PICTURE = 300;
 
     private ImageView mSetImage;
     private Button button;
@@ -130,8 +128,9 @@ public class CamaraActivity extends AppCompatActivity {
                     cv.put("url", mPath);
                     cv.put("imagen", base64);
                     String codigo = Viaje.getCodeImagen(aux);
-                    cv.put("code", codigo);
-                    System.out.println("CODIGO: "+codigo);
+                    cv.put("code", "w23www");
+                    cv.put("estatus", "1");
+                    //System.out.println("CODIGO: "+codigo);
                     ImagenesViaje imagenesViaje = new ImagenesViaje(CamaraActivity.this);
 
                    // for (int c = 0; c < 4; c++) {
