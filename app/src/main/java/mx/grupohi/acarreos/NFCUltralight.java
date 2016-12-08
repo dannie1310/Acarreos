@@ -3,6 +3,7 @@ package mx.grupohi.acarreos;
 import android.content.Context;
 import android.nfc.Tag;
 import android.nfc.tech.MifareUltralight;
+import android.widget.Toast;
 
 import java.math.BigInteger;
 
@@ -207,9 +208,11 @@ public class NFCUltralight {
             }
 
             mf.close();
+            Toast.makeText(context, context.getString(R.string.tag_configurado), Toast.LENGTH_LONG).show();
             return true;
-        }catch(Exception e){
-            e.printStackTrace();
+        } catch (Exception fe) {
+            Toast.makeText(context, context.getString(R.string.error_tag_comunicacion), Toast.LENGTH_LONG).show();
+            fe.printStackTrace();
             return false;
         }
     }
