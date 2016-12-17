@@ -14,6 +14,10 @@
             android:id="@+id/nav_list"
             android:icon="@drawable/ic_action_list"
             android:title="Lista de Viajes" />
+        <item
+            android:id="@+id/nav_desc"
+            android:icon="@drawable/ic_action_desc"
+            android:title="Descarga de Catálogos" />
 
     </group>
 

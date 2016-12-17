@@ -104,6 +104,25 @@ public class ListaViajesActivity extends AppCompatActivity
         if (id == R.id.nav_home) {
             Intent mainActivity = new Intent(this, MainActivity.class);
             startActivity(mainActivity);
+        }
+        else if (id == R.id.nav_desc) {
+            new AlertDialog.Builder(ListaViajesActivity.this)
+                    .setTitle("¡Descarga!")
+                    .setMessage("¿Deséas continuar con la descarga de catálogos?")
+                    .setNegativeButton("NO", null)
+                    .setPositiveButton("SI", new DialogInterface.OnClickListener() {
+                        @Override public void onClick(DialogInterface dialog, int which) {
+                            if (Util.isNetworkStatusAvialable(getApplicationContext())) {
+                                progressDialogSync = ProgressDialog.show(ListaViajesActivity.this, "Descargando datos", "Por favor espere...", true);
+                                new DescargaCatalogos(getApplicationContext(), progressDialogSync).execute((Void) null);
+                            } else {
+                                Toast.makeText(getApplicationContext(), R.string.error_internet, Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    })
+                    .create()
+                    .show();
+
         } else if (id == R.id.nav_sync) {
             new AlertDialog.Builder(ListaViajesActivity.this)
                     .setTitle("¡ADVERTENCIA!")

@@ -88,4 +88,16 @@ import java.util.GregorianCalendar;
 
         db.close();
     }
+
+    void descargaCatalogos() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        System.out.println("desc: ");
+        db.execSQL("DELETE FROM tiros");
+        db.execSQL("DELETE FROM origenes");
+        db.execSQL("DELETE FROM rutas");
+        db.execSQL("DELETE FROM materiales");
+        db.execSQL("DELETE FROM tags");
+
+        db.close();
+    }
 }

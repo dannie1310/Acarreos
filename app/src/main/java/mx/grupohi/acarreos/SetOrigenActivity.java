@@ -379,7 +379,26 @@ public class SetOrigenActivity extends AppCompatActivity
             Intent listActivity = new Intent(this, ListaViajesActivity.class);
             startActivity(listActivity);
 
-        } else if (id == R.id.nav_logout) {
+        } else if (id == R.id.nav_desc) {
+
+            new AlertDialog.Builder(SetOrigenActivity.this)
+                    .setTitle("¡Descarga!")
+                    .setMessage("¿Deséas continuar con la descarga de catálogos?")
+                    .setNegativeButton("NO", null)
+                    .setPositiveButton("SI", new DialogInterface.OnClickListener() {
+                        @Override public void onClick(DialogInterface dialog, int which) {
+                            if (Util.isNetworkStatusAvialable(getApplicationContext())) {
+                                progressDialogSync = ProgressDialog.show(SetOrigenActivity.this, "Descargando datos", "Por favor espere...", true);
+                                new DescargaCatalogos(getApplicationContext(), progressDialogSync).execute((Void) null);
+                            } else {
+                                Toast.makeText(getApplicationContext(), R.string.error_internet, Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    })
+                    .create()
+                    .show();
+
+        }  else if (id == R.id.nav_logout) {
             if(!Viaje.isSync(getApplicationContext())){
                 new AlertDialog.Builder(SetOrigenActivity.this)
                         .setTitle("¡ADVERTENCIA!")
