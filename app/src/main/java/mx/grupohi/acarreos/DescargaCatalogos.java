@@ -221,7 +221,7 @@ public class DescargaCatalogos extends AsyncTask<Void, Void, Boolean> {
         if (aBoolean) {
            Toast.makeText(context, "Se Actualizaron los Catálogos", Toast.LENGTH_LONG).show();
         }else {
-            Toast.makeText(context, "ERROR", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "ERROR!  al descargar los Catálogos", Toast.LENGTH_SHORT).show();
         }
     }
 
