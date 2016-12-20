@@ -496,23 +496,8 @@ public class SuccessDestinoActivity extends AppCompatActivity
             Intent mainActivity = new Intent(this, MainActivity.class);
             startActivity(mainActivity);
         } else if (id == R.id.nav_desc) {
-            new AlertDialog.Builder(SuccessDestinoActivity.this)
-                    .setTitle("¡Descarga!")
-                    .setMessage("¿Deséas continuar con la descarga de catálogos?")
-                    .setNegativeButton("NO", null)
-                    .setPositiveButton("SI", new DialogInterface.OnClickListener() {
-                        @Override public void onClick(DialogInterface dialog, int which) {
-                            if (Util.isNetworkStatusAvialable(getApplicationContext())) {
-                                progressDialogSync = ProgressDialog.show(SuccessDestinoActivity.this, "Descargando datos", "Por favor espere...", true);
-                                new DescargaCatalogos(getApplicationContext(), progressDialogSync).execute((Void) null);
-                            } else {
-                                Toast.makeText(getApplicationContext(), R.string.error_internet, Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    })
-                    .create()
-                    .show();
-
+            Intent descarga = new Intent(this, DescargaActivity.class);
+            startActivity(descarga);
         }  else if (id == R.id.nav_sync) {
             new AlertDialog.Builder(SuccessDestinoActivity.this)
                     .setTitle("¡ADVERTENCIA!")
