@@ -129,6 +129,12 @@ public class DescargaActivity extends AppCompatActivity {
                 } else {
 
                     db_sca.descargaCatalogos();
+                    try {
+                        String logo = JSON.getString("logo");
+                        Usuario.updateLogo(logo, getApplicationContext());
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                     //Camiones
                     Camion camion = new Camion(context);
                     try {
