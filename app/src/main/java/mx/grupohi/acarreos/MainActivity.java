@@ -76,6 +76,8 @@ public class MainActivity extends AppCompatActivity
     private TextView tFecha;
     private TextView tHora;
 
+    Intent descarga;
+
     private Boolean writeMode;
 
     Usuario usuario;
@@ -87,7 +89,6 @@ public class MainActivity extends AppCompatActivity
         setOrigenActivity = new Intent(this, SetOrigenActivity.class);
         setDestinoActivity = new Intent(this, SetDestinoActivity.class);
         listaViajes =new Intent(this, ListaViajesActivity.class);
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle(getString(R.string.title_activity_main));
@@ -416,6 +417,9 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_list) {
             startActivity(listaViajes);
+        }else if (id == R.id.nav_desc) {
+            descarga = new Intent(this, DescargaActivity.class);
+            startActivity(descarga);
         } else if (id == R.id.nav_logout) {
             if(!Viaje.isSync(getApplicationContext())){
                 new AlertDialog.Builder(MainActivity.this)

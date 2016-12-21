@@ -114,6 +114,11 @@ public class ListaViajesActivity extends AppCompatActivity
         if (id == R.id.nav_home) {
             Intent mainActivity = new Intent(this, MainActivity.class);
             startActivity(mainActivity);
+        }
+        else if (id == R.id.nav_desc) {
+            Intent descarga = new Intent(this, DescargaActivity.class);
+            startActivity(descarga);
+
         } else if (id == R.id.nav_sync) {
             new AlertDialog.Builder(ListaViajesActivity.this)
                     .setTitle("¡ADVERTENCIA!")

@@ -379,7 +379,12 @@ public class SetOrigenActivity extends AppCompatActivity
             Intent listActivity = new Intent(this, ListaViajesActivity.class);
             startActivity(listActivity);
 
-        } else if (id == R.id.nav_logout) {
+        } else if (id == R.id.nav_desc) {
+
+            Intent descarga = new Intent(this, DescargaActivity.class);
+            startActivity(descarga);
+
+        }  else if (id == R.id.nav_logout) {
             if(!Viaje.isSync(getApplicationContext())){
                 new AlertDialog.Builder(SetOrigenActivity.this)
                         .setTitle("¡ADVERTENCIA!")

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.renderscript.Double2;
 import android.util.Log;
 
@@ -67,6 +68,23 @@ class Camion {
             }
         } finally {
             assert c != null;
+            c.close();
+            db.close();
+        }
+    }
+
+    public static Boolean findId(Integer idCamion,Context context) {
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+
+        Cursor c = db.rawQuery("SELECT * FROM camiones WHERE idcamion = '" + idCamion + "'", null);
+        try {
+            if(c != null && c.moveToFirst()) {
+                return true;
+            } else {
+                return false;
+            }
+        } finally {
             c.close();
             db.close();
         }
