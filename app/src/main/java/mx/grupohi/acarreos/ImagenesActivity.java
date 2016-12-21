@@ -176,7 +176,10 @@ public class ImagenesActivity extends AppCompatActivity implements NavigationVie
 
         } else if (id == R.id.nav_list) {
             startActivity(listaViajes);
-        } else if (id == R.id.nav_logout) {
+        } else if (id == R.id.nav_desc) {
+            Intent descarga = new Intent(this, DescargaActivity.class);
+            startActivity(descarga);
+        }else if (id == R.id.nav_logout) {
             if(!Viaje.isSync(getApplicationContext())){
                 new AlertDialog.Builder(ImagenesActivity.this)
                         .setTitle("¡ADVERTENCIA!")
