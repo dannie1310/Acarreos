@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity
     private NFCUltralight nfcUltra;
     private NfcAdapter nfc_adapter;
     private PendingIntent pendingIntent;
+    private PendingIntent resp;
     private IntentFilter writeTagFilters[];
     private Snackbar snackbar;
     private String UID;
@@ -75,8 +76,10 @@ public class MainActivity extends AppCompatActivity
     private TextView tMaterial;
     private TextView tFecha;
     private TextView tHora;
+    String validacion;
 
     Intent descarga;
+    Camion camion;
 
     private Boolean writeMode;
 
@@ -93,6 +96,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         setTitle(getString(R.string.title_activity_main));
         usuario = new Usuario(this);
+        camion = new Camion(getApplicationContext());
         usuario = usuario.getUsuario();
         viaje = new Viaje(this);
         coordenada = new Coordenada(this);
@@ -121,6 +125,9 @@ public class MainActivity extends AppCompatActivity
         origenLayout.setVisibility(View.GONE);
         actionButton.setVisibility(View.GONE);
 
+        validacion = getIntent().getStringExtra("validacion");
+        //resp = PendingIntent.getActivity(this,0,new Intent(this, ValidacionActivity.class),0);
+       // System.out.println("activar: "+resp.toString());
         pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
         IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
         writeTagFilters = new IntentFilter[]{tagDetected};
@@ -186,7 +193,9 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+            finish();
         } else {
+            finish();
             Intent intent = new Intent(Intent.ACTION_MAIN);
             intent.addCategory(Intent.CATEGORY_HOME);
             startActivity(intent);
@@ -201,6 +210,7 @@ public class MainActivity extends AppCompatActivity
         Integer tagOrigen =0;
         Integer tagMaterial = 0;
         String fechaString = "";
+        System.out.println("prueba: "+intent.getAction().toString());
         if (nfc_adapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
             clearCamionInfo();
             clearOrigenInfo();
@@ -210,6 +220,7 @@ public class MainActivity extends AppCompatActivity
             Origen origen = new Origen(getApplicationContext());
             Material material = new Material(getApplicationContext());
             String[] techs = myTag.getTechList();
+
             for (String t : techs) {
                 if (MifareClassic.class.getName().equals(t)) {
                     nfc = new NFCTag(myTag, this);
@@ -257,31 +268,47 @@ public class MainActivity extends AppCompatActivity
 
 
             if (tagModel != null) {
-                Camion camion = new Camion(getApplicationContext());
+
                 try {
                     camion = camion.find(tagModel.idCamion);
                     setCamionInfo(camion);
                     setTitle("INFORMACIÓN DEL TAG");
-                    if (origen != null && material != null) {
-                        setOrigenInfo(origen, material, fechaString);
-                        idOrigen = origen.idOrigen;
-                        actionButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                setDestinoActivity.putExtra("UID", UID);
-                                setDestinoActivity.putExtra("idOrigen", idOrigen);
-                                startActivity(setDestinoActivity);
-                            }
-                        });
-                    } else {
-                        actionButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                setOrigenActivity.putExtra("UID", UID);
-                                startActivity(setOrigenActivity);
-                            }
-                        });
+                    System.out.println("camion: "+camion.placasCaja+" : "+camion.placas);
+                    if(validacion == null){
+                        Intent validacion = new Intent(getApplicationContext(), ValidacionActivity.class);
+                        validacion.putExtra("economico", camion.economico);
+                        if(!camion.placasCaja.isEmpty()){
+                            validacion.putExtra("caja","1");
+                            validacion.putExtra("placas", camion.placasCaja);
+                        }else{
+                            validacion.putExtra("placas", camion.placas);
+                        }
+
+                        startActivityForResult(validacion,0);
+
                     }
+
+                        if (origen != null && material != null) {
+                            setOrigenInfo(origen, material, fechaString);
+                            idOrigen = origen.idOrigen;
+                            actionButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    setDestinoActivity.putExtra("UID", UID);
+                                    setDestinoActivity.putExtra("idOrigen", idOrigen);
+                                    startActivity(setDestinoActivity);
+                                }
+                            });
+                        } else {
+                            actionButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    setOrigenActivity.putExtra("UID", UID);
+                                    startActivity(setOrigenActivity);
+                                }
+                            });
+                        }
+
                 }catch (Exception e){
                     snackbar = Snackbar.make(findViewById(R.id.content_main),R.string.error_tag, Snackbar.LENGTH_LONG);
                     View snackBarView = snackbar.getView();
@@ -454,4 +481,5 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 }

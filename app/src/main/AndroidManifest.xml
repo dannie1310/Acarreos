@@ -70,11 +70,17 @@
             android:name=".ImagenesActivity"
             android:label="@string/title_activity_imagenes"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".DescargaActivity"
             android:label="@string/title_activity_descarga"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ValidacionActivity"
+            android:label="@string/title_activity_validacion"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

@@ -163,6 +163,7 @@ public class DescargaActivity extends AppCompatActivity {
                                 data.put("alto", info.getString("alto"));
                                 data.put("economico", info.getString("economico"));
                                 data.put("capacidad", info.getString("capacidad"));
+                                data.put("placasCaja", info.getString("placas_caja"));
 
                                 if (!camion.create(data)) {
                                     return false;

@@ -234,6 +234,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
                             printTextTwoColumns("Ruta: ",textViewRuta.getText()+ "\n");
                            // if(textViewObservaciones.getText().length()!=0) {
                             printTextTwoColumns("Observaciones: ", textViewObservaciones.getText() + "\n");
+                            printTextTwoColumns("Checador: "+ usuario.getNombre(), Util.getTiempo() + "\n");
                            // }
                             //bixolonPrinterApi.lineFeed(1,true);
                             printfoot("Checador: "+ usuario.getNombre(), viaje.getCode(idViaje));
@@ -319,7 +320,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
         int size = 0;
 
         bixolonPrinterApi.setSingleByteFont(BixolonPrinter.CODE_PAGE_858_EURO);
-        bixolonPrinterApi.printText(text, alignment, attribute, size, false);
+       // bixolonPrinterApi.printText(text, alignment, attribute, size, false);
         bixolonPrinterApi.lineFeed(1, false);
         bixolonPrinterApi.print1dBarcode(codex.toUpperCase(), BixolonPrinter.BAR_CODE_ITF, BixolonPrinter.ALIGNMENT_CENTER, 4, 200, BixolonPrinter.HRI_CHARACTER_NOT_PRINTED, true);
        // bixolonPrinterApi.formFeed(true);

@@ -9,6 +9,7 @@
     <color name="background_footer">#90000000</color>
 
     <color name="backgroundColor">#212121</color>
+    <color name="error">#a43739</color>
 </resources>
 
 

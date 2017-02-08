@@ -18,6 +18,7 @@ class Camion {
 
     public Integer idCamion;
     public String placas;
+    public String placasCaja;
     public String marca;
     public String modelo;
     public Double ancho;
@@ -53,14 +54,15 @@ class Camion {
             if(c != null && c.moveToFirst()) {
                 this.idCamion   = c.getInt(0);
                 this.placas     = c.getString(1);
-                this.marca      = c.getString(2);
-                this.modelo     = c.getString(3);
-                this.ancho      = c.getDouble(4);
-                this.largo      = c.getDouble(5);
-                this.alto       = c.getDouble(6);
-                this.economico  = c.getString(7);
-                this.capacidad  = c.getInt(8);
-                this.numero_viajes = c.getInt(9);
+                this.placasCaja = c.getString(c.getColumnIndex("placasCaja"));
+                this.marca      = c.getString(3);
+                this.modelo     = c.getString(4);
+                this.ancho      = c.getDouble(5);
+                this.largo      = c.getDouble(6);
+                this.alto       = c.getDouble(7);
+                this.economico  = c.getString(8);
+                this.capacidad  = c.getInt(9);
+                this.numero_viajes = c.getInt(10);
 
                 return this;
             } else {

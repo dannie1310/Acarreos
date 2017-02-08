@@ -1,4 +1,4 @@
-<resources  xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Módulo de Acarreos</string>
     <string name="error_internet">Por favor habilite su conexión a Internet para poder iniciar sesión</string>
 
@@ -65,6 +65,7 @@
     <string name="contentImagen">Imagen Tomada</string>
     <string name="title_activity_imagenes">IMAGENES DEL VIAJE</string>
     <string name="title_activity_descarga">Descarga de Catálogos</string>
+    <string name="title_activity_validacion">VALIDACIÓN DE CAMIÓN</string>
 
 
 </resources>

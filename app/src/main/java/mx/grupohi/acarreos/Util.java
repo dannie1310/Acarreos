@@ -189,4 +189,8 @@ class Util {
             return null;
         }
     }
+
+    static String getTiempo() {
+        return (String) android.text.format.DateFormat.format("yyyy/MM/dd HH:mm:ss", new java.util.Date());
+    }
 }
