@@ -72,7 +72,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="3dp"
             android:background="@color/colorAccent"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp" />
@@ -80,13 +80,13 @@
         <LinearLayout
             android:orientation="vertical"
             android:id="@+id/PeticionGondola"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="15dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:weightSum="1"
             android:visibility="gone"
+            android:weightSum="1"
             android:layout_weight="0.90">
 
             <LinearLayout
@@ -206,9 +206,9 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="5dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp" />
+                android:layout_height="3dp"
+                android:layout_marginBottom="1dp"
+                android:layout_marginTop="3dp" />
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -240,12 +240,11 @@
                 <Button
                     android:text="Validar"
                     android:layout_width="154dp"
-                    android:layout_height="73dp"
+                    android:layout_height="59dp"
                     android:id="@+id/buttonRecibir"
                     android:textAlignment="center"
                     style="@style/Widget.AppCompat.Button.Colored"
-                    android:textSize="20sp"
-                    android:layout_weight="0.10" />
+                    android:textSize="20sp" />
                 <Button
                     android:text="Cancelar"
                     android:layout_width="144dp"
