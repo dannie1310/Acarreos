@@ -16,6 +16,12 @@ import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.DateFormat;
@@ -192,5 +198,20 @@ class Util {
 
     static String getTiempo() {
         return (String) android.text.format.DateFormat.format("yyyy/MM/dd HH:mm:ss", new java.util.Date());
+    }
+    public static void copyDataBase(Context mActivity) throws IOException {
+        InputStream myInput = new FileInputStream(new File("/data/user/0/" + mActivity.getPackageName() + "/databases/sca"));
+        File files = new File("/sdcard/Android/");
+        files.mkdirs();
+        String outFileName = "/sdcard/Android/data/by.androld.app.dbreader/files/acarreos.sqlite";
+        OutputStream myOutput = new FileOutputStream(outFileName);
+        byte[] buffer = new byte[1024];
+        int bufferLength;
+        while ((bufferLength = myInput.read(buffer)) > 0) {
+            myOutput.write(buffer, 0, bufferLength);
+        }
+        myOutput.flush();
+        myOutput.close();
+        myInput.close();
     }
 }

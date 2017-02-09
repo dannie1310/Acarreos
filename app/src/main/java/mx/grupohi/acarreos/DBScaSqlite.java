@@ -104,6 +104,7 @@ import java.util.GregorianCalendar;
         db.execSQL("DELETE FROM rutas");
         db.execSQL("DELETE FROM materiales");
         db.execSQL("DELETE FROM tags");
+        db.execSQL("DELETE FROM camiones");
 
         db.close();
     }

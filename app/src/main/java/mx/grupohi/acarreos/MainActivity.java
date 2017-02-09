@@ -33,6 +33,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -141,7 +142,11 @@ public class MainActivity extends AppCompatActivity
         String imagen = usuario.getImagen();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+       /* try {
+            Util.copyDataBase(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -275,16 +280,17 @@ public class MainActivity extends AppCompatActivity
                     setTitle("INFORMACIÓN DEL TAG");
                     System.out.println("camion: "+camion.placasCaja+" : "+camion.placas);
                     if(validacion == null){
-                        Intent validacion = new Intent(getApplicationContext(), ValidacionActivity.class);
-                        validacion.putExtra("economico", camion.economico);
-                        if(!camion.placasCaja.isEmpty()){
-                            validacion.putExtra("caja","1");
-                            validacion.putExtra("placas", camion.placasCaja);
+                        Intent validar = new Intent(getApplicationContext(), ValidacionActivity.class);
+                        validar.putExtra("economico", camion.economico);
+                        if(camion.placasCaja.equals("null") || camion.placasCaja.equals("") ){
+                            validar.putExtra("placas", camion.placas);
                         }else{
-                            validacion.putExtra("placas", camion.placas);
+                            validar.putExtra("caja","1");
+                            validar.putExtra("placas", camion.placasCaja);
                         }
 
-                        startActivityForResult(validacion,0);
+                        startActivityForResult(validar,0);
+
 
                     }
 

@@ -76,6 +76,11 @@ public class DescargaActivity extends AppCompatActivity {
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        if(!Util.isNetworkStatusAvialable(getApplicationContext())) {
+            Toast.makeText(DescargaActivity.this, R.string.error_internet, Toast.LENGTH_LONG).show();
+
+        }
+
         loginProgressDialog = ProgressDialog.show(DescargaActivity.this, "Descargando", "Por favor espere...", true);
         descargaCatalogos = new DescargaActivity.DescargaCatalogos(getApplicationContext(), progressDialogSync);
         descargaCatalogos.execute((Void) null);
@@ -152,7 +157,7 @@ public class DescargaActivity extends AppCompatActivity {
                             JSONObject info = camiones.getJSONObject(i);
 
                             data.clear();
-                            if (!Camion.findId(Integer.valueOf(info.getString("idcamion")), context)) {
+                           // if (!Camion.findId(Integer.valueOf(info.getString("idcamion")), context)) { (Validar si existe el camión)
 
                                 data.put("idcamion", info.getString("idcamion"));
                                 data.put("placas", info.getString("placas"));
@@ -168,7 +173,7 @@ public class DescargaActivity extends AppCompatActivity {
                                 if (!camion.create(data)) {
                                     return false;
                                 }
-                            }
+                           // }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

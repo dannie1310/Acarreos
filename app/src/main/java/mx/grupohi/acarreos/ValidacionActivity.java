@@ -51,6 +51,7 @@ public class ValidacionActivity extends AppCompatActivity
         viaje = new Viaje(this);
         coordenada = new Coordenada(this);
         main = new Intent(getApplicationContext(), MainActivity.class);
+        final Bundle aux = new Bundle();
 
         placas = getIntent().getStringExtra("placas");
         economico = getIntent().getStringExtra("economico");
@@ -82,9 +83,9 @@ public class ValidacionActivity extends AppCompatActivity
                                            }
                                            else{
                                                error.setText("");
-                                               if(placas.toUpperCase().equals(tex_placas.getText().toString().toUpperCase()) && economico.toUpperCase().equals(tex_economico.getText().toString().toUpperCase())){
+                                               if(placas.replace("-","").toUpperCase().equals(tex_placas.getText().toString().replace("-","").toUpperCase()) && economico.replace("-","").toUpperCase().equals(tex_economico.getText().toString().replace("-","").toUpperCase())){
                                                   main.putExtra("validacion", "correcta");
-                                                   finish();
+                                                  finish();
                                                }else{
                                                    error.setText("DATOS INCORRECTOS, FAVOR DE VERIFICAR.");
                                                }
