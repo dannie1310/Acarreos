@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/content_validacion"
@@ -15,122 +15,249 @@
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:weightSum="1"
         android:layout_weight="0.90">
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:weightSum="1"
-            android:layout_weight="1.13">
-            <TextView
-                android:text="Escribe el Economico del Camión:"
+        <TextView
+                android:text="Seleccione el tipo de camión: "
                 android:layout_width="wrap_content"
                 android:layout_height="23dp"
                 android:textStyle="bold"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="18sp" />
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp" />
 
-            <EditText
+        <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/textEscribirEconomico"
-                android:inputType="textCapCharacters"
-                android:textAppearance="@android:style/TextAppearance.DeviceDefault"
-                android:textStyle="normal" />
+                android:weightSum="1"
+                android:layout_weight="1.13">
 
+            <TextView
+                android:text="Góndola"
+                android:layout_width="87dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="18sp"
+                android:layout_weight="0.57" />
+
+            <RadioButton
+                android:layout_width="44dp"
+                android:shadowColor="@color/colorAccent"
+                android:layout_height="wrap_content"
+                android:id="@+id/checkBoxG" />
+
+            <TextView
+                    android:text="Volteo"
+                    android:layout_width="108dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="18sp" />
+
+                <RadioButton
+                    android:layout_width="44dp"
+                    android:shadowColor="@color/colorAccent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/checkBoxV" />
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="3dp"
+            android:layout_height="1dp"
+            android:background="@color/colorAccent"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp" />
 
-
         <LinearLayout
             android:orientation="vertical"
+            android:id="@+id/PeticionGondola"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:weightSum="1">
-            <TextView
-                android:id="@+id/textoPlacas"
-                android:text="Escribe las Placas"
-                android:layout_width="match_parent"
-                android:textStyle="bold"
-                android:layout_height="26dp"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="18sp" />
+            android:weightSum="1"
+            android:visibility="gone"
+            android:layout_weight="0.90">
 
-            <EditText
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/textEscribirPlacas"
-                android:inputType="textCapCharacters"
-                android:textAppearance="@android:style/TextAppearance.DeviceDefault"
-                android:textStyle="normal" />
+                android:weightSum="1"
+                android:layout_weight="1.13">
+                <TextView
+                    android:text="Escribe el Economico del Camión:"
+                    android:layout_width="wrap_content"
+                    android:layout_height="23dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="18sp" />
 
-        </LinearLayout>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textEscribirEconomico"
+                    android:inputType="textCapCharacters"
+                    android:textAppearance="@android:style/TextAppearance.DeviceDefault"
+                    android:textStyle="normal" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="8dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp" />
+            </LinearLayout>
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:weightSum="1">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp" />
 
-            <TextView
-                android:text=""
-                android:layout_width="wrap_content"
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/error"
-                android:id="@+id/textError"
-                android:textSize="14sp"
-                android:layout_weight="0.25" />
+                android:weightSum="1">
+                <TextView
+                    android:id="@+id/textoPlacas"
+                    android:text="Escribe las Placas de Tractor: "
+                    android:layout_width="match_parent"
+                    android:textStyle="bold"
+                    android:layout_height="26dp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textEscribirPlacas"
+                    android:inputType="textCapCharacters"
+                    android:textAppearance="@android:style/TextAppearance.DeviceDefault"
+                    android:textStyle="normal" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginBottom="2dp"
+                android:layout_marginTop="2dp" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="1">
+
+                <TextView
+                    android:id="@+id/textoPlacasCaja"
+                    android:text="Escribe las Placas de la Caja: "
+                    android:layout_width="match_parent"
+                    android:textStyle="bold"
+                    android:layout_height="26dp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textEscribirPlacasCaja"
+                    android:inputType="textCapCharacters"
+                    android:textAppearance="@android:style/TextAppearance.DeviceDefault"
+                    android:textStyle="normal" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="1">
+                <TextView
+                    android:text="Escribe los Metros Cúbicos: "
+                    android:layout_width="match_parent"
+                    android:textStyle="bold"
+                    android:layout_height="26dp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textEscribirMetros"
+                    android:inputType="numberDecimal"
+                    android:textAppearance="@android:style/TextAppearance.DeviceDefault"
+                    android:textStyle="normal" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="1">
+
+                <TextView
+                    android:text=""
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/error"
+                    android:id="@+id/textError"
+                    android:textSize="14sp"
+                    android:layout_weight="0.25" />
 
 
-        </LinearLayout>
+            </LinearLayout>
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:weightSum="1">
+            <LinearLayout
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="1">
 
 
-            <Button
-                android:text="Validar"
-                android:layout_width="154dp"
-                android:layout_height="73dp"
-                android:id="@+id/buttonRecibir"
-                android:textAlignment="center"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:textSize="20sp"
-                android:layout_weight="0.10" />
-            <Button
-                android:text="Cancelar"
-                android:layout_width="144dp"
-                android:layout_height="match_parent"
-                android:textAlignment="center"
-                android:id="@+id/buttoncancelar"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:textSize="20sp"
-                android:layout_weight="0.36" />
+                <Button
+                    android:text="Validar"
+                    android:layout_width="154dp"
+                    android:layout_height="73dp"
+                    android:id="@+id/buttonRecibir"
+                    android:textAlignment="center"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:textSize="20sp"
+                    android:layout_weight="0.10" />
+                <Button
+                    android:text="Cancelar"
+                    android:layout_width="144dp"
+                    android:layout_height="match_parent"
+                    android:textAlignment="center"
+                    android:id="@+id/buttoncancelar"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:textSize="20sp"
+                    android:layout_weight="0.36" />
 
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
-</LinearLayout>
+</ScrollView>

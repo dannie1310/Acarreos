@@ -127,8 +127,7 @@ public class MainActivity extends AppCompatActivity
         actionButton.setVisibility(View.GONE);
 
         validacion = getIntent().getStringExtra("validacion");
-        //resp = PendingIntent.getActivity(this,0,new Intent(this, ValidacionActivity.class),0);
-       // System.out.println("activar: "+resp.toString());
+
         pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
         IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
         writeTagFilters = new IntentFilter[]{tagDetected};
@@ -215,7 +214,6 @@ public class MainActivity extends AppCompatActivity
         Integer tagOrigen =0;
         Integer tagMaterial = 0;
         String fechaString = "";
-        System.out.println("prueba: "+intent.getAction().toString());
         if (nfc_adapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
             clearCamionInfo();
             clearOrigenInfo();
@@ -278,20 +276,14 @@ public class MainActivity extends AppCompatActivity
                     camion = camion.find(tagModel.idCamion);
                     setCamionInfo(camion);
                     setTitle("INFORMACIÓN DEL TAG");
-                    System.out.println("camion: "+camion.placasCaja+" : "+camion.placas);
                     if(validacion == null){
                         Intent validar = new Intent(getApplicationContext(), ValidacionActivity.class);
                         validar.putExtra("economico", camion.economico);
-                        if(camion.placasCaja.equals("null") || camion.placasCaja.equals("") ){
-                            validar.putExtra("placas", camion.placas);
-                        }else{
-                            validar.putExtra("caja","1");
-                            validar.putExtra("placas", camion.placasCaja);
-                        }
+                        validar.putExtra("placas", camion.placas);
+                        validar.putExtra("placasCaja", camion.placasCaja);
+                        validar.putExtra("capacidad", String.valueOf(camion.capacidad));
 
                         startActivityForResult(validar,0);
-
-
                     }
 
                         if (origen != null && material != null) {

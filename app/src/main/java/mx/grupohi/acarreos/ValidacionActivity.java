@@ -17,7 +17,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,12 +34,20 @@ public class ValidacionActivity extends AppCompatActivity
     String placas;
     String economico;
     String caja;
+    String capacidad;
     EditText tex_economico;
     EditText tex_placas;
+    EditText tex_placasCaja;
+    EditText metros;
     TextView texto;
     TextView error;
+    RadioButton gondola;
+    RadioButton volteo;
     Button validar;
     Button  cancelar;
+    LinearLayout checkbox;
+    LinearLayout pGondola;
+
     Intent main;
 
 
@@ -51,25 +62,66 @@ public class ValidacionActivity extends AppCompatActivity
         viaje = new Viaje(this);
         coordenada = new Coordenada(this);
         main = new Intent(getApplicationContext(), MainActivity.class);
-        final Bundle aux = new Bundle();
 
         placas = getIntent().getStringExtra("placas");
         economico = getIntent().getStringExtra("economico");
-        caja = getIntent().getStringExtra("caja");
-        System.out.println("datos camion: "+placas + economico);
+        caja = getIntent().getStringExtra("placasCaja");
+        capacidad = getIntent().getStringExtra("capacidad");
 
         tex_economico = (EditText) findViewById(R.id.textEscribirEconomico);
         tex_placas = (EditText) findViewById(R.id.textEscribirPlacas);
-        texto = (TextView) findViewById(R.id.textoPlacas);
+        tex_placasCaja = (EditText) findViewById(R.id.textEscribirPlacasCaja);
+        metros = (EditText) findViewById(R.id.textEscribirMetros);
+        texto = (TextView) findViewById(R.id.textoPlacasCaja);
         error = (TextView) findViewById(R.id.textError);
         validar = (Button) findViewById(R.id.buttonRecibir);
         cancelar = (Button) findViewById(R.id.buttoncancelar);
-        if (caja != null){
-            texto.setText(texto.getText().toString()+" (Caja): ");
-        }else{
-            texto.setText(texto.getText().toString()+" (Camión): ");
-        }
+        gondola = (RadioButton) findViewById(R.id.checkBoxG);
+        volteo = (RadioButton) findViewById(R.id.checkBoxV);
+        pGondola = (LinearLayout) findViewById(R.id.PeticionGondola);
 
+
+        pGondola.setVisibility(View.GONE);
+        texto.setVisibility(View.GONE);
+        tex_placasCaja.setVisibility(View.GONE);
+
+        gondola.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(gondola.isChecked()){
+                    pGondola.setVisibility(View.VISIBLE);
+                    texto.setVisibility(View.VISIBLE);
+                    tex_placasCaja.setVisibility(View.VISIBLE);
+                    volteo.setChecked(false);
+                    tex_placasCaja.setText("");
+                    tex_placas.setText("");
+                    metros.setText("");
+                    tex_economico.setText("");
+                    error.setText("");
+
+                }
+            }
+
+        });
+        volteo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(volteo.isChecked()){
+                    pGondola.setVisibility(View.VISIBLE);
+                    texto.setVisibility(View.GONE);
+                    tex_placasCaja.setVisibility(View.GONE);
+                    gondola.setChecked(false);
+                    tex_placasCaja.setText("");
+                    tex_placas.setText("");
+                    metros.setText("");
+                    tex_economico.setText("");
+                    error.setText("");
+                }
+            }
+
+        });
 
         validar.setOnClickListener(new View.OnClickListener() {
                                        @Override
@@ -79,19 +131,34 @@ public class ValidacionActivity extends AppCompatActivity
                                                error.setText("DEBE ESCRIBIR EL ECONOMICO DEL CAMIÓN.");
                                            }
                                            else if (tex_placas.getText().toString().isEmpty()){
-                                               error.setText("DEBE ESCRIBIR LAS PLACAS DEL CAMIÓN.");
+                                               error.setText("DEBE ESCRIBIR LAS PLACAS DEL TRACTOR.");
+                                           }
+                                           else if (!caja.equals("null") && tex_placasCaja.getText().toString().isEmpty()){
+                                               error.setText("DEBE ESCRIBIR LAS PLACAS DE LA CAJA.");
+                                           }
+                                           else if (metros.getText().toString().isEmpty()){
+                                               error.setText("DEBE ESCRIBIR LA CAPACIDAD (METROS CUADRADOS).");
                                            }
                                            else{
                                                error.setText("");
-                                               if(placas.replace("-","").toUpperCase().equals(tex_placas.getText().toString().replace("-","").toUpperCase()) && economico.replace("-","").toUpperCase().equals(tex_economico.getText().toString().replace("-","").toUpperCase())){
-                                                  main.putExtra("validacion", "correcta");
-                                                  finish();
-                                               }else{
-                                                   error.setText("DATOS INCORRECTOS, FAVOR DE VERIFICAR.");
+                                               if(gondola.isChecked() && !caja.equals("null")){
+                                                   if(caja.replace("-","").toUpperCase().equals(tex_placasCaja.getText().toString().replace("-","").toUpperCase()) && placas.replace("-","").toUpperCase().equals(tex_placas.getText().toString().replace("-","").toUpperCase()) && economico.replace("-","").toUpperCase().equals(tex_economico.getText().toString().replace("-","").toUpperCase()) && capacidad.equals(metros.getText().toString())){
+                                                       main.putExtra("validacion", "correcta");
+                                                       finish();
+                                                   }else{
+                                                       mensaje();
+                                                   }
+                                               }else if(volteo.isChecked() && caja.equals("null")){
+                                                   if(placas.replace("-","").toUpperCase().equals(tex_placas.getText().toString().replace("-","").toUpperCase()) && economico.replace("-","").toUpperCase().equals(tex_economico.getText().toString().replace("-","").toUpperCase()) && capacidad.equals(metros.getText().toString())){
+                                                       main.putExtra("validacion", "correcta");
+                                                       finish();
+                                                   }else{
+                                                       mensaje();
+                                                   }
+                                               }else {
+                                                mensaje();
                                                }
                                            }
-
-
                                        }
                                    });
 
@@ -141,7 +208,9 @@ public class ValidacionActivity extends AppCompatActivity
     }
 
 
-
+    public  void mensaje(){
+        error.setText("DATOS INCORRECTOS, FAVOR DE VERIFICAR.");
+    }
 
 
     @SuppressWarnings("StatementWithEmptyBody")
