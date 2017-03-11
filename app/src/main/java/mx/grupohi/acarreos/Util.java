@@ -214,4 +214,14 @@ class Util {
         myOutput.close();
         myInput.close();
     }
+
+    public static String folio() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyMMddHHmmssSS");
+        String currentDateandTime = sdf.format(new Date());
+        Log.e("tiempo decimal", currentDateandTime);
+        //Log.e("exadecimal",   Hex.getHex(currentDateandTime));
+        Log.e("exadecimal to ", Long.toHexString(Long.parseLong(currentDateandTime)));
+        //return Long.toHexString(Long.parseLong(currentDateandTime)).toUpperCase();
+        return currentDateandTime+123456789;
+    }
 }
