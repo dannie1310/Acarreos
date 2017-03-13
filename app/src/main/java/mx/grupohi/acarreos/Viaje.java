@@ -39,6 +39,8 @@ public class Viaje {
     Origen origen;
     Tiro tiro;
     Ruta ruta;
+    String deductiva;
+    String FolioRandom;
 
     private static SQLiteDatabase db;
     private static DBScaSqlite db_sca;
@@ -95,6 +97,8 @@ public class Viaje {
                 this.origen = this.origen.find(idOrigen);
                 this.tiro = this.tiro.find(idTiro);
                 this.ruta = this.ruta.find(idRuta);
+                this.deductiva = c.getString(c.getColumnIndex("deductiva"));
+                this.FolioRandom = c.getString(c.getColumnIndex("FolioRandom"));
 
                 return this;
             } else {
@@ -164,6 +168,8 @@ public class Viaje {
                         json.put("uidTAG", c.getString(17));
                         json.put("IMEI", c.getString(18));
                         json.put("CodeImagen",c.getString(19));
+                        json.put("Deductiva", c.getString(20));
+                        json.put("FolioRandom", c.getString(21));
                         JSON.put(i + "", json);
                         i++;
 

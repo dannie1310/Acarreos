@@ -54,6 +54,19 @@
             android:id="@+id/spinnerRutas" />
 
         <TextView
+            android:text="DEDUCTIVA:"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@android:style/TextAppearance.Material.Menu" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@android:style/TextAppearance.Material.Menu"
+            android:id="@+id/textDeductiva"
+            android:inputType="number"/>
+
+        <TextView
             android:text="OBSERVACIONES:"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -67,10 +80,11 @@
             android:maxLength="50"/>
 
 
+
         <Button
             android:text="ESCRIBIR DESTINO"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="60dp"
             android:id="@+id/buttonEscribir"
             style="@style/Widget.AppCompat.Button.Colored"
             android:textSize="18sp" />

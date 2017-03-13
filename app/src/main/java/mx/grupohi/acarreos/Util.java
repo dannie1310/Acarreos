@@ -215,13 +215,44 @@ class Util {
         myInput.close();
     }
 
-    public static String folio() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyMMddHHmmssSS");
-        String currentDateandTime = sdf.format(new Date());
+    public static String folio(String date) {
+       // SimpleDateFormat sdf = new SimpleDateFormat("yyMMddHHmmssSSS");
+        String currentDateandTime =date;
+
         Log.e("tiempo decimal", currentDateandTime);
         //Log.e("exadecimal",   Hex.getHex(currentDateandTime));
         Log.e("exadecimal to ", Long.toHexString(Long.parseLong(currentDateandTime)));
-        //return Long.toHexString(Long.parseLong(currentDateandTime)).toUpperCase();
-        return currentDateandTime+123456789;
+        return Long.toHexString(Long.parseLong(currentDateandTime)).toUpperCase();
+        //return currentDateandTime;
     }
+    public static String dateFolios() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyMMddHHmmssSSS");
+        String currentDateandTime = sdf.format(new Date());
+
+        return currentDateandTime;
+    }
+    public static String getCodeFecha(Integer idCamion, String date) {
+        String mensaje = "";
+        String camion = "";
+
+        camion = idCamion.toString();
+        int ceros = 0;
+        mensaje+=date;
+        //System.out.println(mensaje);
+        if(camion.length() < 5){
+            ceros = 5 - camion.length();
+            for ( int i=0; i< ceros; i++){
+                mensaje += "0";
+            }
+            mensaje +=camion;
+
+        }
+        else{
+            mensaje +=camion;
+        }
+
+        return mensaje;
+    }
+
+
 }

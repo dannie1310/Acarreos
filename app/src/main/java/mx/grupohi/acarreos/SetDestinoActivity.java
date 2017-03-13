@@ -70,6 +70,7 @@ public class SetDestinoActivity extends AppCompatActivity
     private FloatingActionButton fabCancel;
     private TextView mensajeTextView;
     private EditText observacionesTextView;
+    private  EditText deductiva;
     private Snackbar snackbar;
     private ProgressDialog progressDialogSync;
 
@@ -113,6 +114,7 @@ public class SetDestinoActivity extends AppCompatActivity
         mensajeTextView = (TextView) findViewById(R.id.textViewMensaje);
         observacionesTextView = (EditText) findViewById(R.id.textObservaciones);
         fabCancel = (FloatingActionButton) findViewById(R.id.fabCancel);
+        deductiva = (EditText) findViewById(R.id.textDeductiva);
 
         mensajeTextView.setVisibility(View.INVISIBLE);
         nfcImage.setVisibility(View.INVISIBLE);
@@ -441,17 +443,21 @@ public class SetDestinoActivity extends AppCompatActivity
                         cv.put("Creo", usuario.getId());
                         cv.put("Estatus", "10");
                         cv.put("Ruta", idRuta);
-                        //aux = getCodeFecha(idCamion).toUpperCase();
-                       // aux = getCode(contador,idCamion).toUpperCase();
-                        aux=Util.folio();
-                      //  aux += String.valueOf(x);
-                        //System.out.println("CODIGO ___"+aux);
-                        cv.put("Code", aux);
+
+                        aux=Util.dateFolios();
+
+                        cv.put("Code", Util.folio(aux)+1210+idCamion);
                         cv.put("uidTAG", UID);
                         cv.put("IMEI", IMEI);
-                        cv.put("CodeImagen", getCodeFecha(idCamion));
+                        cv.put("CodeImagen", Util.getCodeFecha(idCamion,aux));
 
-
+                        if( deductiva.getText().toString().equals("")){
+                            cv.put("deductiva", 0);
+                        }else {
+                            cv.put("deductiva", deductiva.getText().toString());
+                        }
+                        RandomString r = new RandomString(10);
+                        cv.put("FolioRandom", r.nextString().toUpperCase());
                         viaje = new Viaje(this);
                         viaje.create(cv);
 
@@ -527,37 +533,5 @@ public class SetDestinoActivity extends AppCompatActivity
     }
 
 
-    public static String getCodeFecha(Integer idCamion) {
-        String mensaje = "";
-        String camion = "";
-        String viajes="";
-        camion = idCamion.toString();
-        int ceros = 0;
-        mensaje+=Util.getFechaSegundos();
-        //System.out.println(mensaje);
-        if(camion.length() < 5){
-            ceros = 5 - camion.length();
-            for ( int i=0; i< ceros; i++){
-                mensaje += "0";
-            }
-            mensaje +=camion;
 
-        }
-        else{
-            mensaje +=camion;
-        }
-
-
-        /*String resp = Long.toHexString(Long.parseLong(mensaje));
-        mensaje="";
-        if (resp.length() < 10){
-            ceros=0;
-            ceros= 10 - resp.length();
-            for (int i=0; i<ceros; i++){
-                mensaje += "0";
-            }
-            mensaje += resp;
-        }*/
-        return mensaje;
-    }
 }

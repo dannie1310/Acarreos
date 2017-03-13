@@ -37,6 +37,7 @@ import com.bixolon.printer.BixolonPrinter;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 import java.util.Set;
 
 public class SuccessDestinoActivity extends AppCompatActivity
@@ -50,7 +51,8 @@ public class SuccessDestinoActivity extends AppCompatActivity
             textViewDestino,
             textViewFechaHoraLlegada,
             textViewRuta,
-            textViewObservaciones;
+            textViewObservaciones,
+            textViewDeductiva;
 
     private Toolbar toolbar;
 
@@ -108,6 +110,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
         textViewFechaHoraLlegada = (TextView) findViewById(R.id.textViewFechaHoraLlegada);
         textViewRuta = (TextView) findViewById(R.id.textViewRuta);
         textViewObservaciones = (TextView) findViewById(R.id.textViewObservaciones);
+        textViewDeductiva = (TextView) findViewById(R.id.textViewDeductiva);
 
         btnImprimir = (Button) findViewById(R.id.buttonImprimir);
         btnImagenes = (Button) findViewById(R.id.buttonImagenes);
@@ -233,8 +236,10 @@ public class SuccessDestinoActivity extends AppCompatActivity
                             printTextTwoColumns("Fecha Llegada: ", textViewFechaHoraLlegada.getText()+"\n");
                             printTextTwoColumns("Ruta: ",textViewRuta.getText()+ "\n");
                            // if(textViewObservaciones.getText().length()!=0) {
+                            printTextTwoColumns("Deductiva: ",textViewDeductiva.getText()+"\n");
                             printTextTwoColumns("Observaciones: ", textViewObservaciones.getText() + "\n");
                             printTextTwoColumns("Checador: "+ usuario.getNombre(), Util.getTiempo() + "\n");
+
                            // }
                             //bixolonPrinterApi.lineFeed(1,true);
                             printfoot("Checador: "+ usuario.getNombre(), viaje.getCode(idViaje));
@@ -322,7 +327,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
         bixolonPrinterApi.setSingleByteFont(BixolonPrinter.CODE_PAGE_858_EURO);
        // bixolonPrinterApi.printText(text, alignment, attribute, size, false);
         bixolonPrinterApi.lineFeed(1, false);
-        bixolonPrinterApi.print1dBarcode(codex.toUpperCase(), BixolonPrinter.BAR_CODE_ITF, BixolonPrinter.ALIGNMENT_CENTER, 4, 200, BixolonPrinter.HRI_CHARACTER_NOT_PRINTED, true);
+        bixolonPrinterApi.print1dBarcode(codex.toUpperCase(), BixolonPrinter.BAR_CODE_CODE39, BixolonPrinter.ALIGNMENT_CENTER, 4, 200, BixolonPrinter.HRI_CHARACTER_NOT_PRINTED, true);
        // bixolonPrinterApi.formFeed(true);
         bixolonPrinterApi.printText(codex.toUpperCase(), BixolonPrinter.ALIGNMENT_CENTER, attribute, size, false);
 
@@ -483,6 +488,8 @@ public class SuccessDestinoActivity extends AppCompatActivity
         textViewFechaHoraLlegada.setText(viaje.fechaLlegada + " " + viaje.horaLlegada);
         textViewRuta.setText(viaje.ruta.toString());
         textViewObservaciones.setText(viaje.observaciones);
+        textViewDeductiva.setText(viaje.deductiva);
+
     }
 
     @Override
