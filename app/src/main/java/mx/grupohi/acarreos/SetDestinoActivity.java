@@ -403,7 +403,7 @@ public class SetDestinoActivity extends AppCompatActivity
                         tagInfo = nfcTag.readSector(myTag, 0, 1);
                         tagOrigen = nfcTag.readSector(myTag, 1, 4);
                         fechaString = nfcTag.readSector(myTag, 1, 5);
-                       // nfcTag.cleanSector(myTag, 1);
+                        nfcTag.cleanSector(myTag, 1);
                     }
                     if(tipo==2){
                         viajes = nfcUltra.readPage(myTag,7);
@@ -413,7 +413,7 @@ public class SetDestinoActivity extends AppCompatActivity
                         tagInfo = nfcUltra.readPage(myTag, 4) + nfcUltra.readPage(myTag, 5);
                         tagOrigen = nfcUltra.readPage(myTag,8) + nfcUltra.readPage(myTag,9);
                         fechaString = nfcUltra.readPage(myTag,10) + nfcUltra.readPage(myTag,11) +nfcUltra.readPage(myTag,12) + nfcUltra.readPage(myTag,13).substring(0,2);
-                        //nfcUltra.cleanTag(myTag);
+                        nfcUltra.cleanTag(myTag);
                     }
 
                    // Toast.makeText(getApplicationContext(),"numero de viaje: " + contador, Toast.LENGTH_SHORT).show();
