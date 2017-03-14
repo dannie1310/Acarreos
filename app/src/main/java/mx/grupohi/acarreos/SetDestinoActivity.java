@@ -446,7 +446,7 @@ public class SetDestinoActivity extends AppCompatActivity
 
                         aux=Util.dateFolios();
 
-                        cv.put("Code", Util.folio(aux)+idCamion);
+                        cv.put("Code", Util.folio(aux)+getCode(String.valueOf(idCamion)));
                         cv.put("uidTAG", UID);
                         cv.put("IMEI", IMEI);
                         cv.put("CodeImagen", Util.getCodeFecha(idCamion,aux));
@@ -488,47 +488,22 @@ public class SetDestinoActivity extends AppCompatActivity
         }
     }
 
-    public static String getCode(Integer viaje, Integer idCamion) {
+    public static String getCode(String idcamion) {
         String mensaje = "";
-        String camion = "";
-        String viajes="";
-        viajes= viaje.toString();
-        camion = idCamion.toString();
         int ceros = 0;
 
-        if(camion.length() < 5){
-            ceros = 5 - camion.length();
+        if(idcamion.length() < 5){
+            ceros = 5 - idcamion.length();
             for ( int i=0; i< ceros; i++){
                 mensaje += "0";
             }
-            mensaje +=camion;
+            mensaje +=idcamion;
 
         }
         else{
-            mensaje +=camion;
-        }
-        if(viajes.length() < 5){
-            ceros=0;
-            ceros = 5 - viajes.length();
-            for(int i=0; i< ceros; i++){
-                mensaje+="0";
-            }
-            mensaje+=viajes;
-        }
-        else{
-            mensaje+=viajes;
+            mensaje +=idcamion;
         }
 
-        /*String resp = Long.toHexString(Long.parseLong(mensaje));
-        mensaje="";
-        if (resp.length() < 10){
-            ceros=0;
-            ceros= 10 - resp.length();
-            for (int i=0; i<ceros; i++){
-                mensaje += "0";
-            }
-            mensaje += resp;
-        }*/
         return mensaje;
     }
 
