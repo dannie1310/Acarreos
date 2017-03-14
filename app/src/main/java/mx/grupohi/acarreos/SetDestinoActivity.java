@@ -446,7 +446,7 @@ public class SetDestinoActivity extends AppCompatActivity
 
                         aux=Util.dateFolios();
 
-                        cv.put("Code", Util.folio(aux)+1210+idCamion);
+                        cv.put("Code", Util.folio(aux)+idCamion);
                         cv.put("uidTAG", UID);
                         cv.put("IMEI", IMEI);
                         cv.put("CodeImagen", Util.getCodeFecha(idCamion,aux));

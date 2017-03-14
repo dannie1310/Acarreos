@@ -169,7 +169,7 @@ public class Viaje {
                         json.put("IMEI", c.getString(18));
                         json.put("CodeImagen",c.getString(19));
                         json.put("Deductiva", c.getString(20));
-                        json.put("FolioRandom", c.getString(21));
+                        json.put("CodeRandom", c.getString(21));
                         JSON.put(i + "", json);
                         i++;
 
