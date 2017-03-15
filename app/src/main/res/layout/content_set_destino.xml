@@ -65,6 +65,17 @@
             android:textAppearance="@android:style/TextAppearance.Material.Menu"
             android:id="@+id/textDeductiva"
             android:inputType="number"/>
+        <TextView
+            android:text="SELECCIONE EL MOTIVO:"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewMotivo"
+            android:textAppearance="@android:style/TextAppearance.Material.Menu" />
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinnerMotivo" />
 
         <TextView
             android:text="OBSERVACIONES:"

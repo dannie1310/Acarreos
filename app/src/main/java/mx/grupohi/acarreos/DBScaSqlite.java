@@ -50,7 +50,8 @@ import java.util.GregorianCalendar;
             "CREATE TABLE coordenadas (IMEI TEXT, idevento INT, latitud TEXT, longitud TEXT, fecha_hora TEXT, code TEXT)",
             "CREATE TABLE camion_tag (ID INTEGER PRIMARY KEY AUTOINCREMENT, IMEI TEXT, id_camion INT, id_tags TEXT, created_at DATETIME DEFAULT CURRENT_TIMESTAMP);",
             "CREATE TABLE tipos_imagenes (id INTEGER, descripcion TEXT);",
-            "CREATE TABLE imagenes_viaje (ID INTEGER PRIMARY KEY AUTOINCREMENT, idviaje_neto INTEGER, idtipo_imagen TEXT, url TEXT, imagen BLOB, code TEXT, estatus INTEGER);"
+            "CREATE TABLE imagenes_viaje (ID INTEGER PRIMARY KEY AUTOINCREMENT, idviaje_neto INTEGER, idtipo_imagen TEXT, url TEXT, imagen BLOB, code TEXT, estatus INTEGER);",
+            "CREATE TABLE motivos (id INTEGER, descripcion TEXT)",
     };
 
     @Override
@@ -74,6 +75,7 @@ import java.util.GregorianCalendar;
         db.execSQL("DROP TABLE IF EXISTS camion_tag");
         db.execSQL("DROP TABLE IF EXISTS tipos_imagenes");
         db.execSQL("DROP TABLE IF EXISTS imagenes_viaje");
+        db.execSQL("DROP TABLE IF EXISTS motivos");
 
         for (String query: queries){
             db.execSQL(query);
@@ -94,6 +96,7 @@ import java.util.GregorianCalendar;
         db.execSQL("DELETE FROM tags");
         db.execSQL("DELETE FROM tipos_imagenes");
         db.execSQL("DELETE FROM imagenes_viaje");
+        db.execSQL("DELETE FROM motivos");
 
         db.close();
     }
@@ -107,6 +110,7 @@ import java.util.GregorianCalendar;
         db.execSQL("DELETE FROM materiales");
         db.execSQL("DELETE FROM tags");
         db.execSQL("DELETE FROM camiones");
+        db.execSQL("DELETE FROM motivos");
 
         db.close();
     }

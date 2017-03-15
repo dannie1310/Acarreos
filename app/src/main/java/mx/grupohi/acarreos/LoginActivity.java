@@ -460,6 +460,33 @@ public class LoginActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
+                    //Motivo Deduccion
+
+                    Motivo motivo = new Motivo(getApplicationContext());
+                    try {
+                        final JSONArray motivos = new JSONArray(JSON.getString("MotivosDeductiva"));
+                        for (int i = 0; i < motivos.length(); i++) {
+                            final int finalI = i + 1;
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    loginProgressDialog.setMessage("Actualizando catálogo de motivos... \n Motivo " + finalI + " de " + motivos.length());
+                                }
+                            });
+                            JSONObject info = motivos.getJSONObject(i);
+
+                            data.clear();
+                            data.put("id", info.getString("id"));
+                            data.put("descripcion", info.getString("motivo"));
+
+                            if (!motivo.create(data)) {
+                                return false;
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
 
                     //Tags
 

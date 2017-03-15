@@ -64,11 +64,13 @@ public class SetDestinoActivity extends AppCompatActivity
     //Referencias UI
     private Spinner tirosSpinner;
     private Spinner rutasSpinner;
+    private Spinner motivos;
     private Button escribirDestinoButton;
     private LinearLayout mainLayout;
     private ImageView nfcImage;
     private FloatingActionButton fabCancel;
     private TextView mensajeTextView;
+    private TextView textmotivo;
     private EditText observacionesTextView;
     private  EditText deductiva;
     private Snackbar snackbar;
@@ -78,6 +80,7 @@ public class SetDestinoActivity extends AppCompatActivity
     private Integer idRuta;
     private HashMap<String, String> spinnerTirosMap;
     private HashMap<String, String> spinnerRutasMap;
+    private  HashMap<String, String> spinnerMotivosMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +118,8 @@ public class SetDestinoActivity extends AppCompatActivity
         observacionesTextView = (EditText) findViewById(R.id.textObservaciones);
         fabCancel = (FloatingActionButton) findViewById(R.id.fabCancel);
         deductiva = (EditText) findViewById(R.id.textDeductiva);
+        textmotivo = (TextView) findViewById(R.id.textViewMotivo);
+        motivos = (Spinner) findViewById(R.id.spinnerMotivo);
 
         mensajeTextView.setVisibility(View.INVISIBLE);
         nfcImage.setVisibility(View.INVISIBLE);
@@ -186,6 +191,21 @@ public class SetDestinoActivity extends AppCompatActivity
 
             }
         });
+        Motivo motivo = new Motivo(getApplicationContext());
+        final ArrayList<String> descripcionesMotivos = motivo.getArrayListDescripciones();
+        final ArrayList <String> idsMotivos = motivo.getArrayListId();
+
+        final String[] spinnerMotivosA = new String[idsMotivos.size()];
+        spinnerMotivosMap = new HashMap<>();
+
+        for (int i = 0; i < idsMotivos.size(); i++) {
+            spinnerMotivosMap.put(descripcionesMotivos.get(i), idsMotivos.get(i));
+            spinnerMotivosA[i] = descripcionesMotivos.get(i);
+        }
+        final ArrayAdapter<String> arrayAdapterMotivos = new ArrayAdapter<>(this,R.layout.support_simple_spinner_dropdown_item, spinnerMotivosA);
+        arrayAdapterTiros.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        motivos.setAdapter(arrayAdapterMotivos);
+
 
         rutasSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
