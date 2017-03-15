@@ -16,7 +16,10 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.view.menu.ActionMenuItemView;
 import android.telephony.TelephonyManager;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -26,6 +29,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -78,6 +82,7 @@ public class SetDestinoActivity extends AppCompatActivity
 
     private Integer idTiro;
     private Integer idRuta;
+    private Integer idMotivo;
     private HashMap<String, String> spinnerTirosMap;
     private HashMap<String, String> spinnerRutasMap;
     private  HashMap<String, String> spinnerMotivosMap;
@@ -120,10 +125,22 @@ public class SetDestinoActivity extends AppCompatActivity
         deductiva = (EditText) findViewById(R.id.textDeductiva);
         textmotivo = (TextView) findViewById(R.id.textViewMotivo);
         motivos = (Spinner) findViewById(R.id.spinnerMotivo);
-
+        textmotivo.setVisibility(View.GONE);
+        motivos.setVisibility(View.GONE);
         mensajeTextView.setVisibility(View.INVISIBLE);
         nfcImage.setVisibility(View.INVISIBLE);
         fabCancel.setVisibility(View.INVISIBLE);
+
+        deductiva.setOnClickListener(new View.OnClickListener() {
+                                         @Override
+                                         public void onClick(View v) {
+                                                 textmotivo.setVisibility(View.VISIBLE);
+                                                 motivos.setVisibility(View.VISIBLE);
+                                         }
+                                     }
+
+        );
+
 
         final ArrayList<String> descripcionesTiros = tiro.getArrayListDescripciones(getIntent().getIntExtra("idOrigen", 1));
         final ArrayList <String> idsTiros = tiro.getArrayListId(getIntent().getIntExtra("idOrigen", 1));
@@ -203,9 +220,21 @@ public class SetDestinoActivity extends AppCompatActivity
             spinnerMotivosA[i] = descripcionesMotivos.get(i);
         }
         final ArrayAdapter<String> arrayAdapterMotivos = new ArrayAdapter<>(this,R.layout.support_simple_spinner_dropdown_item, spinnerMotivosA);
-        arrayAdapterTiros.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        arrayAdapterMotivos.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         motivos.setAdapter(arrayAdapterMotivos);
 
+        motivos.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String Mo = String.valueOf(parent.getItemAtPosition(position));
+                idMotivo = Integer.valueOf(spinnerMotivosMap.get(Mo));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         rutasSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -229,7 +258,16 @@ public class SetDestinoActivity extends AppCompatActivity
                 else if(idRuta == 0) {
                     Toast.makeText(getApplicationContext(), "Por favor seleccione la Ruta de la lista", Toast.LENGTH_SHORT).show();
                     rutasSpinner.requestFocus();
-                } else {
+                }
+                else if (( deductiva.getText().toString().equals("")==false ) && idMotivo == 0){
+                    Toast.makeText(getApplicationContext(), "Por favor seleccione un motivo", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    if(deductiva.getText().toString().equals("") || deductiva.getText().toString().equals("0")){
+                        motivos.setSelection(0);
+                        textmotivo.setVisibility(View.GONE);
+                        motivos.setVisibility(View.GONE);
+                    }
                     checkNfcEnabled();
                     WriteModeOn();
                 }
@@ -388,6 +426,7 @@ public class SetDestinoActivity extends AppCompatActivity
 
     @Override
     protected void onNewIntent(Intent intent) {
+
         if (writeMode) {
             if(NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
                 Tag myTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
@@ -461,7 +500,7 @@ public class SetDestinoActivity extends AppCompatActivity
                         cv.put("IdMaterial", idMaterial);
                         cv.put("Observaciones", observacionesTextView.getText().toString());
                         cv.put("Creo", usuario.getId());
-                        cv.put("Estatus", "10");
+                        cv.put("Estatus", "1");
                         cv.put("Ruta", idRuta);
 
                         aux=Util.dateFolios();
@@ -471,13 +510,16 @@ public class SetDestinoActivity extends AppCompatActivity
                         cv.put("IMEI", IMEI);
                         cv.put("CodeImagen", Util.getCodeFecha(idCamion,aux));
 
-                        if( deductiva.getText().toString().equals("")){
+                        if(deductiva.getText().toString().equals("")){
                             cv.put("deductiva", 0);
+                            cv.put("idMotivo", 0);
                         }else {
                             cv.put("deductiva", deductiva.getText().toString());
+                            cv.put("idMotivo", idMotivo);
                         }
                         RandomString r = new RandomString(10);
                         cv.put("FolioRandom", r.nextString().toUpperCase());
+
                         viaje = new Viaje(this);
                         viaje.create(cv);
 

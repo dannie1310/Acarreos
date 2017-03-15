@@ -58,7 +58,7 @@ class Motivo {
     ArrayList<String> getArrayListDescripciones() {
         ArrayList<String> data = new ArrayList<>();
         db = db_sca.getWritableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM motivos ORDER BY descripcion ASC", null);
+        Cursor c = db.rawQuery("SELECT * FROM motivos ORDER BY id ASC", null);
         if (c != null && c.moveToFirst())
             try {
                 if (c.getCount() == 1) {
@@ -80,7 +80,7 @@ class Motivo {
     ArrayList<String> getArrayListId() {
         ArrayList<String> data = new ArrayList<>();
         db = db_sca.getWritableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM motivos ORDER BY descripcion ASC", null);
+        Cursor c = db.rawQuery("SELECT * FROM motivos ORDER BY id ASC", null);
         if (c != null && c.moveToFirst())
             try {
                 if (c.getCount() == 1) {

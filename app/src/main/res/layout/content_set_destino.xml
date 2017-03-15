@@ -60,11 +60,11 @@
             android:textAppearance="@android:style/TextAppearance.Material.Menu" />
 
         <EditText
+            android:id="@+id/textDeductiva"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="@android:style/TextAppearance.Material.Menu"
-            android:id="@+id/textDeductiva"
-            android:inputType="number"/>
+            android:inputType="number"
+            android:textAppearance="@android:style/TextAppearance.Material.Menu" />
         <TextView
             android:text="SELECCIONE EL MOTIVO:"
             android:layout_width="match_parent"
@@ -102,16 +102,39 @@
 
     </LinearLayout>
 
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="1"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
     <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="359dp"
         app:srcCompat="@drawable/nfc_back"
         android:id="@+id/imageViewNFC"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_above="@+id/textViewMensaje" />
+        android:layout_above="@+id/textViewMensaje"
+        android:layout_weight="0.08" />
 
-    <TextView
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabCancel"
+            android:layout_width="47dp"
+            android:layout_height="48dp"
+            android:layout_below="@+id/MainLayout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="28dp"
+            android:clickable="true"
+            app:backgroundTint="@android:color/holo_red_light"
+            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+
+        <TextView
         android:text="ACERQUE EL TAG PARA ESCRIBIR EL DESTINO"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -122,15 +145,5 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        app:srcCompat="@android:drawable/ic_menu_close_clear_cancel"
-        android:layout_below="@+id/MainLayout"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="28dp"
-        android:id="@+id/fabCancel"
-        app:backgroundTint="@android:color/holo_red_light" />
-
+    </LinearLayout>
 </RelativeLayout>

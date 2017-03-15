@@ -52,7 +52,8 @@ public class SuccessDestinoActivity extends AppCompatActivity
             textViewFechaHoraLlegada,
             textViewRuta,
             textViewObservaciones,
-            textViewDeductiva;
+            textViewDeductiva,
+            motivo;
 
     private Toolbar toolbar;
 
@@ -111,6 +112,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
         textViewRuta = (TextView) findViewById(R.id.textViewRuta);
         textViewObservaciones = (TextView) findViewById(R.id.textViewObservaciones);
         textViewDeductiva = (TextView) findViewById(R.id.textViewDeductiva);
+        motivo = (TextView) findViewById(R.id.textViewMotivoDeductiva);
 
         btnImprimir = (Button) findViewById(R.id.buttonImprimir);
         btnImagenes = (Button) findViewById(R.id.buttonImagenes);
@@ -237,6 +239,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
                             printTextTwoColumns("Ruta: ",textViewRuta.getText()+ "\n");
                            // if(textViewObservaciones.getText().length()!=0) {
                             printTextTwoColumns("Deductiva: ",textViewDeductiva.getText()+"\n");
+                            printTextTwoColumns("Motivo Deductiva: ", motivo.getText()+"\n");
                             printTextTwoColumns("Observaciones: ", textViewObservaciones.getText() + "\n");
                             printTextTwoColumns("Checador: "+ usuario.getNombre(), Util.getTiempo() + "\n");
 
@@ -478,6 +481,13 @@ public class SuccessDestinoActivity extends AppCompatActivity
         idViaje = getIntent().getIntExtra("idViaje", 0);
         Viaje viaje = new Viaje(getApplicationContext());
         viaje = viaje.find(idViaje);
+        Motivo motivoss = new Motivo(getApplicationContext());
+        if(viaje.deductiva.equals("0")) {
+            motivo.setText("NA");
+        }else{
+            motivoss.find(Integer.valueOf(viaje.idmotivo));
+            motivo.setText(motivoss.descripcion);
+        }
 
         textViewCamion.setText(viaje.camion.economico);
         textViewCubicacion.setText(viaje.camion.capacidad + " m3");
@@ -489,6 +499,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
         textViewRuta.setText(viaje.ruta.toString());
         textViewObservaciones.setText(viaje.observaciones);
         textViewDeductiva.setText(viaje.deductiva);
+
 
     }
 
