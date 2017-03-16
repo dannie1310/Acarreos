@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity
     Usuario usuario;
     Viaje viaje;
     Coordenada coordenada;
+    Configuraciones c;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,6 +128,8 @@ public class MainActivity extends AppCompatActivity
         actionButton.setVisibility(View.GONE);
 
         validacion = getIntent().getStringExtra("validacion");
+        c = new  Configuraciones(getApplicationContext());
+        c = c.find();
 
         pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
         IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
@@ -276,7 +279,7 @@ public class MainActivity extends AppCompatActivity
                     camion = camion.find(tagModel.idCamion);
                     setCamionInfo(camion);
                     setTitle("INFORMACIÓN DEL TAG");
-                    if(validacion == null){
+                    if(validacion == null && c.validacion == 1){
                         Intent validar = new Intent(getApplicationContext(), ValidacionActivity.class);
                         validar.putExtra("economico", camion.economico);
                         validar.putExtra("placas", camion.placas);

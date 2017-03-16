@@ -14,6 +14,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -55,7 +56,6 @@ public class DescargaActivity extends AppCompatActivity {
     private Integer idOrigen;
     private Intent mainActivity;
     private Intent listaViajes;
-
 
     Usuario usuario;
     Viaje viaje;
@@ -318,6 +318,24 @@ public class DescargaActivity extends AppCompatActivity {
                                 return false;
                             }
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    //Configuraciones
+
+                    Configuraciones co = new Configuraciones(getApplicationContext());
+                    try {
+
+                        JSONObject aq = new JSONObject(JSON.getString("Configuracion"));
+
+                            data.clear();
+                            data.put("validacion_placas", aq.getString("ValidacionPlacas"));
+
+                            if (!co.create(data)) {
+                                return false;
+                            }
+                       // }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

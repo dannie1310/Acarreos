@@ -52,7 +52,8 @@ import java.util.GregorianCalendar;
             "CREATE TABLE camion_tag (ID INTEGER PRIMARY KEY AUTOINCREMENT, IMEI TEXT, id_camion INT, id_tags TEXT, created_at DATETIME DEFAULT CURRENT_TIMESTAMP);",
             "CREATE TABLE tipos_imagenes (id INTEGER, descripcion TEXT);",
             "CREATE TABLE imagenes_viaje (ID INTEGER PRIMARY KEY AUTOINCREMENT, idviaje_neto INTEGER, idtipo_imagen TEXT, url TEXT, imagen BLOB, code TEXT, estatus INTEGER);",
-            "CREATE TABLE motivos (id INTEGER, descripcion TEXT)",
+            "CREATE TABLE motivos (id INTEGER, descripcion TEXT);",
+            "CREATE TABLE configuraciones (ID INTEGER PRIMARY KEY AUTOINCREMENT, validacion_placas INTEGER);",
     };
 
     @Override
@@ -77,6 +78,7 @@ import java.util.GregorianCalendar;
         db.execSQL("DROP TABLE IF EXISTS tipos_imagenes");
         db.execSQL("DROP TABLE IF EXISTS imagenes_viaje");
         db.execSQL("DROP TABLE IF EXISTS motivos");
+        db.execSQL("DROP TABLE IF EXISTS configuraciones");
 
         for (String query: queries){
             db.execSQL(query);
@@ -98,6 +100,7 @@ import java.util.GregorianCalendar;
         db.execSQL("DELETE FROM tipos_imagenes");
         db.execSQL("DELETE FROM imagenes_viaje");
         db.execSQL("DELETE FROM motivos");
+        db.execSQL("DELETE FROM configuraciones");
 
         db.close();
     }
@@ -112,6 +115,7 @@ import java.util.GregorianCalendar;
         db.execSQL("DELETE FROM tags");
         db.execSQL("DELETE FROM camiones");
         db.execSQL("DELETE FROM motivos");
+        db.execSQL("DELETE FROM configuraciones");
 
         db.close();
     }

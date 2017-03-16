@@ -487,6 +487,23 @@ public class LoginActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
+                    //Configuraciones
+
+                    Configuraciones co = new Configuraciones(getApplicationContext());
+                    try {
+
+                        JSONObject aq = new JSONObject(JSON.getString("Configuracion"));
+
+                        data.clear();
+                        data.put("validacion_placas", aq.getString("ValidacionPlacas"));
+
+                        if (!co.create(data)) {
+                            return false;
+                        }
+                        // }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
                     //Tags
 
