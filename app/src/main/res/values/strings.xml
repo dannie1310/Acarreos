@@ -66,6 +66,7 @@
     <string name="title_activity_imagenes">IMAGENES DEL VIAJE</string>
     <string name="title_activity_descarga">Descarga de Catálogos</string>
     <string name="title_activity_validacion">VALIDACIÓN DE CAMIÓN</string>
+    <string name="error_deductiva">La deductiva es mayor a la capacidad del camión.</string>
 
 
 </resources>

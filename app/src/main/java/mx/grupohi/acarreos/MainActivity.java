@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity
     private Intent setOrigenActivity;
     private Intent setDestinoActivity;
     private Intent listaViajes;
+    private Integer CamionID;
 
 
     //Referencias UI
@@ -277,6 +278,7 @@ public class MainActivity extends AppCompatActivity
 
                 try {
                     camion = camion.find(tagModel.idCamion);
+                    CamionID = camion.idCamion;
                     setCamionInfo(camion);
                     setTitle("INFORMACIÓN DEL TAG");
                     if(validacion == null && c.validacion == 1){
@@ -297,6 +299,7 @@ public class MainActivity extends AppCompatActivity
                                 public void onClick(View v) {
                                     setDestinoActivity.putExtra("UID", UID);
                                     setDestinoActivity.putExtra("idOrigen", idOrigen);
+                                    setDestinoActivity.putExtra("camion", String.valueOf(CamionID));
                                     startActivity(setDestinoActivity);
                                 }
                             });

@@ -500,7 +500,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (!co.create(data)) {
                             return false;
                         }
-                        // }
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

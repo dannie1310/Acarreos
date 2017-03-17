@@ -50,6 +50,7 @@ public class SetDestinoActivity extends AppCompatActivity
     Usuario usuario;
     Tiro tiro;
     Ruta ruta;
+    Camion c;
 
     //GPS
     private GPSTracker gps;
@@ -87,6 +88,8 @@ public class SetDestinoActivity extends AppCompatActivity
     private HashMap<String, String> spinnerRutasMap;
     private  HashMap<String, String> spinnerMotivosMap;
 
+    String camionId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,7 +106,9 @@ public class SetDestinoActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
+        camionId = getIntent().getStringExtra("camion");
+        c = new Camion(getApplicationContext());
+        c = c.find(Integer.valueOf(camionId));
 
         usuario = new Usuario(this);
         usuario = usuario.getUsuario();
@@ -261,6 +266,9 @@ public class SetDestinoActivity extends AppCompatActivity
                 }
                 else if (( deductiva.getText().toString().equals("")==false ) && idMotivo == 0){
                     Toast.makeText(getApplicationContext(), "Por favor seleccione un motivo", Toast.LENGTH_SHORT).show();
+                }
+                else if(Integer.valueOf(deductiva.getText().toString()) >= c.capacidad){
+                    Toast.makeText(getApplicationContext(), R.string.error_deductiva, Toast.LENGTH_LONG).show();
                 }
                 else {
                     if(deductiva.getText().toString().equals("") || deductiva.getText().toString().equals("0")){
@@ -514,8 +522,8 @@ public class SetDestinoActivity extends AppCompatActivity
                             cv.put("deductiva", 0);
                             cv.put("idMotivo", 0);
                         }else {
-                            cv.put("deductiva", deductiva.getText().toString());
-                            cv.put("idMotivo", idMotivo);
+                                cv.put("deductiva", deductiva.getText().toString());
+                                cv.put("idMotivo", idMotivo);
                         }
                         RandomString r = new RandomString(10);
                         cv.put("FolioRandom", r.nextString().toUpperCase());
