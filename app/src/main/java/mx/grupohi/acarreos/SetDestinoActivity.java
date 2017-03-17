@@ -107,8 +107,11 @@ public class SetDestinoActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         camionId = getIntent().getStringExtra("camion");
+
         c = new Camion(getApplicationContext());
         c = c.find(Integer.valueOf(camionId));
+
+
 
         usuario = new Usuario(this);
         usuario = usuario.getUsuario();
@@ -264,11 +267,12 @@ public class SetDestinoActivity extends AppCompatActivity
                     Toast.makeText(getApplicationContext(), "Por favor seleccione la Ruta de la lista", Toast.LENGTH_SHORT).show();
                     rutasSpinner.requestFocus();
                 }
+
+                else if(c.capacidad != 0 && c.capacidad!= null && !deductiva.getText().toString().equals("") && Integer.valueOf(deductiva.getText().toString()) != 0 && Integer.valueOf(deductiva.getText().toString()) >= c.capacidad) {
+                     Toast.makeText(getApplicationContext(), R.string.error_deductiva, Toast.LENGTH_LONG).show();
+                }
                 else if (( deductiva.getText().toString().equals("")==false ) && idMotivo == 0){
                     Toast.makeText(getApplicationContext(), "Por favor seleccione un motivo", Toast.LENGTH_SHORT).show();
-                }
-                else if(Integer.valueOf(deductiva.getText().toString()) >= c.capacidad){
-                    Toast.makeText(getApplicationContext(), R.string.error_deductiva, Toast.LENGTH_LONG).show();
                 }
                 else {
                     if(deductiva.getText().toString().equals("") || deductiva.getText().toString().equals("0")){
