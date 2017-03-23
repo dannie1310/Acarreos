@@ -175,7 +175,7 @@ public class Viaje {
                         json.put("Deductiva", c.getString(20));
                         json.put("CodeRandom", c.getString(21));
                         json.put("IdMotivoDeductiva",c.getString(22));
-                        json.put("primerToque", c.getString(c.getColumnIndex("primerToque")));
+                        json.put("CreoPrimerToque", c.getString(c.getColumnIndex("primerToque")));
                         JSON.put(i + "", json);
                         i++;
 
