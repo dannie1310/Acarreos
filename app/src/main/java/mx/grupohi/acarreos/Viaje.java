@@ -42,6 +42,7 @@ public class Viaje {
     String deductiva;
     String FolioRandom;
     Integer idmotivo;
+    String primerToque;
 
     private static SQLiteDatabase db;
     private static DBScaSqlite db_sca;
@@ -101,6 +102,7 @@ public class Viaje {
                 this.deductiva = c.getString(c.getColumnIndex("deductiva"));
                 this.FolioRandom = c.getString(c.getColumnIndex("FolioRandom"));
                 this.idmotivo = c.getInt(c.getColumnIndex("idMotivo"));
+                this.primerToque = c.getString(c.getColumnIndex("primerToque"));
 
                 return this;
             } else {
@@ -173,6 +175,7 @@ public class Viaje {
                         json.put("Deductiva", c.getString(20));
                         json.put("CodeRandom", c.getString(21));
                         json.put("IdMotivoDeductiva",c.getString(22));
+                        json.put("primerToque", c.getString(c.getColumnIndex("primerToque")));
                         JSON.put(i + "", json);
                         i++;
 

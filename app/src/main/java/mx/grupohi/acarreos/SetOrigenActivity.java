@@ -235,6 +235,8 @@ public class SetOrigenActivity extends AppCompatActivity
     @Override
     protected void onNewIntent(Intent intent) {
         String UID="";
+        Usuario u = new Usuario(getApplicationContext());
+        u = u.getUsuario();
         int tipo=0;
         if(writeMode) {
             if(NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
@@ -262,16 +264,19 @@ public class SetOrigenActivity extends AppCompatActivity
                     longitude = gps.getLongitude();
                     boolean datos=false;
                     boolean dia=false;
+                    boolean uss=false;
                     String dataTime = Util.getFechaHora();
                     if(tipo==1){
                         datos = nfcTag.writeSector(myTag, 1, 4, data);
                         dia = nfcTag.writeSector(myTag, 1, 5, dataTime);
+                        uss = nfcTag.writeSector(myTag, 2, 8, String.valueOf(u.getId()));
                     }
                     if(tipo==2){
                         datos = nfcUltra.writePagina(myTag,8,data);
                         dia = nfcUltra.writePagina(myTag,10,dataTime);
+                        uss = nfcUltra.writePagina(myTag,16,String.valueOf(u.getId()));
                     }
-                    if (datos && dia) {
+                    if (datos && dia && uss) {
                         ContentValues cv = new ContentValues();
                         cv.put("IMEI", IMEI);
                         cv.put("idevento", 2);

@@ -464,6 +464,7 @@ public class SetDestinoActivity extends AppCompatActivity
                     String viajes = "";
                     String tagOrigen = "";
                     String fechaString = "";
+                    String idUsuario = "";
                     latitude = gps.getLatitude();
                     longitude = gps.getLongitude();
                     if(tipo==1) {
@@ -474,6 +475,7 @@ public class SetDestinoActivity extends AppCompatActivity
                         tagInfo = nfcTag.readSector(myTag, 0, 1);
                         tagOrigen = nfcTag.readSector(myTag, 1, 4);
                         fechaString = nfcTag.readSector(myTag, 1, 5);
+                        idUsuario = nfcTag.readSector(myTag, 2, 8);
                         nfcTag.cleanSector(myTag, 1);
                     }
                     if(tipo==2){
@@ -484,6 +486,7 @@ public class SetDestinoActivity extends AppCompatActivity
                         tagInfo = nfcUltra.readPage(myTag, 4) + nfcUltra.readPage(myTag, 5);
                         tagOrigen = nfcUltra.readPage(myTag,8) + nfcUltra.readPage(myTag,9);
                         fechaString = nfcUltra.readPage(myTag,10) + nfcUltra.readPage(myTag,11) +nfcUltra.readPage(myTag,12) + nfcUltra.readPage(myTag,13).substring(0,2);
+                        idUsuario = nfcUltra.readPage(myTag,16) + nfcUltra.readPage(myTag,17) + nfcUltra.readPage(myTag, 18);
                         nfcUltra.cleanTag(myTag);
                     }
 
@@ -531,6 +534,7 @@ public class SetDestinoActivity extends AppCompatActivity
                         }
                         RandomString r = new RandomString(10);
                         cv.put("FolioRandom", r.nextString().toUpperCase());
+                        cv.put("primerToque",idUsuario);
 
                         viaje = new Viaje(this);
                         viaje.create(cv);
