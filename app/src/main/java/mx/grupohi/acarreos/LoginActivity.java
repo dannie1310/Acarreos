@@ -505,7 +505,33 @@ public class LoginActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
+                    //Checadores
 
+                    Checador checador = new Checador(getApplicationContext());
+                    try{
+                        final JSONArray ch = new JSONArray(JSON.getString("Checadores"));
+                        for (int i = 0; i < ch.length(); i++) {
+                            final int finalI = i + 1;
+                            // Toast.makeText(context, "Actualizando catálogo de tiros...", Toast.LENGTH_SHORT).show();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    loginProgressDialog.setMessage("Actualizando catálogo de Checadores... \n Checador " + finalI + " de " + ch.length());
+                                }
+                            });
+                            JSONObject info = ch.getJSONObject(i);
+
+                            data.clear();
+                            data.put("idChecador", info.getString("id"));
+                            data.put("nombre", info.getString("descripcion"));
+
+                            if (!checador.create(data)) {
+                                return false;
+                            }
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
 
                     //Tags
 

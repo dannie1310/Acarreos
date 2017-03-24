@@ -60,6 +60,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
     private ProgressDialog progressDialogSync;
     private Usuario usuario;
     private Viaje viaje;
+    private Checador checador;
     private Integer idViaje;
     private String empresa;
     private Integer logo;
@@ -99,6 +100,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
         viaje = new Viaje(this);
         empresa=usuario.getEmpresa();
         logo=usuario.getLogo();
+        checador = new Checador(getApplicationContext());
 
         bixolonPrinterApi = new BixolonPrinter(this, mHandler, null);
 
@@ -225,6 +227,12 @@ public class SuccessDestinoActivity extends AppCompatActivity
                             if(!empresa.equals("null")) {
                                 printheadproyecto(empresa);
                             }
+                            viaje = viaje.find(idViaje);
+                            String nombreChecador = checador.findNombre(Integer.valueOf(viaje.primerToque));
+
+                            if(nombreChecador == null) {
+                                nombreChecador = "SIN PERFIL";
+                            }
                             bixolonPrinterApi.lineFeed(1,true);
                             printTextTwoColumns("Proyecto: ",usuario.getDescripcion()+ " \n");
                             printTextTwoColumns("Camión: ", textViewCamion.getText()+ " \n");
@@ -241,7 +249,9 @@ public class SuccessDestinoActivity extends AppCompatActivity
                             printTextTwoColumns("Deductiva: ",textViewDeductiva.getText()+"\n");
                             printTextTwoColumns("Motivo Deductiva: ", motivo.getText()+"\n");
                             printTextTwoColumns("Observaciones: ", textViewObservaciones.getText() + "\n");
-                            printTextTwoColumns("Checador: "+ usuario.getNombre(), Util.getTiempo() + "\n");
+
+                            printTextTwoColumns("Checador Inicio: ", nombreChecador + "\n");
+                            printTextTwoColumns("Checador Cierre: "+ usuario.getNombre(), Util.getTiempo() + "\n");
 
                            // }
                             //bixolonPrinterApi.lineFeed(1,true);
