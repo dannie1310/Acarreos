@@ -48,13 +48,15 @@ import java.util.GregorianCalendar;
                     "deductiva TEXT," +
                     "FolioRandom TEXT," +
                     "idMotivo INTEGER," +
-                    "primerToque TEXT);",
+                    "primerToque TEXT," +
+                    "cubicacion TEXT);",
             "CREATE TABLE coordenadas (IMEI TEXT, idevento INT, latitud TEXT, longitud TEXT, fecha_hora TEXT, code TEXT)",
             "CREATE TABLE camion_tag (ID INTEGER PRIMARY KEY AUTOINCREMENT, IMEI TEXT, id_camion INT, id_tags TEXT, created_at DATETIME DEFAULT CURRENT_TIMESTAMP);",
             "CREATE TABLE tipos_imagenes (id INTEGER, descripcion TEXT);",
             "CREATE TABLE imagenes_viaje (ID INTEGER PRIMARY KEY AUTOINCREMENT, idviaje_neto INTEGER, idtipo_imagen TEXT, url TEXT, imagen BLOB, code TEXT, estatus INTEGER);",
             "CREATE TABLE motivos (id INTEGER, descripcion TEXT);",
             "CREATE TABLE configuraciones (ID INTEGER PRIMARY KEY AUTOINCREMENT, validacion_placas INTEGER);",
+
     };
 
     @Override

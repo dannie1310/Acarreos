@@ -497,6 +497,8 @@ public class SetDestinoActivity extends AppCompatActivity
                     Integer idOrigen = Util.getIdOrigen(tagOrigen);
                     Integer idMaterial = Util.getIdMaterial(tagOrigen);
                     Viaje viaje = null;
+                    Camion c = new Camion(getApplicationContext());
+
 
                    String aux = "";
 
@@ -535,6 +537,8 @@ public class SetDestinoActivity extends AppCompatActivity
                         RandomString r = new RandomString(10);
                         cv.put("FolioRandom", r.nextString().toUpperCase());
                         cv.put("primerToque",idUsuario.replace(" ",""));
+                        c = c.find(idCamion);
+                        cv.put("cubicacion", String.valueOf(c.capacidad));
 
                         viaje = new Viaje(this);
                         viaje.create(cv);

@@ -74,7 +74,7 @@ public class PrintViaje implements Runnable {
             printTextTwoColumns("Observaciones: ", viaje.observaciones + "\n");
 
             bixolonPrinterApi.lineFeed(1,true);
-            printfoot("   Checador: "+ usuario.getNombre(), Viaje.getCode(viaje.idViaje));
+            printfoot("Checador: "+ usuario.getNombre(), Viaje.getCode(viaje.idViaje));
             bixolonPrinterApi.printQrCode(viaje.getCode(viaje.idViaje), BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.QR_CODE_MODEL1, 5, false);
 
             bixolonPrinterApi.lineFeed(2, false);

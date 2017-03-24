@@ -505,6 +505,8 @@ public class LoginActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
+
+
                     //Tags
 
                     TagModel tag = new TagModel(getApplicationContext());
