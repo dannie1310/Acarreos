@@ -269,7 +269,7 @@ public class SetOrigenActivity extends AppCompatActivity
                     if(tipo==1){
                         datos = nfcTag.writeSector(myTag, 1, 4, data);
                         dia = nfcTag.writeSector(myTag, 1, 5, dataTime);
-                        uss = nfcTag.writeSector(myTag, 2, 9, String.valueOf(u.getId()));
+                        uss = nfcTag.writeSector(myTag, 3, 12, String.valueOf(u.getId()));
                     }
                     if(tipo==2){
                         datos = nfcUltra.writePagina(myTag,8,data);

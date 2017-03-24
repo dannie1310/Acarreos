@@ -228,11 +228,16 @@ public class SuccessDestinoActivity extends AppCompatActivity
                                 printheadproyecto(empresa);
                             }
                             viaje = viaje.find(idViaje);
-                            String nombreChecador = checador.findNombre(Integer.valueOf(viaje.primerToque));
+                            String nombreChecador="SIN PERFIL";
 
-                            if(nombreChecador == null) {
-                                nombreChecador = "SIN PERFIL";
+                            if(!viaje.primerToque.isEmpty()) {
+                                nombreChecador = checador.findNombre(Integer.valueOf(viaje.primerToque));
+                                if(nombreChecador == null){
+                                    nombreChecador="SIN PERFIL";
+                                }
                             }
+
+
                             bixolonPrinterApi.lineFeed(1,true);
                             printTextTwoColumns("Proyecto: ",usuario.getDescripcion()+ " \n");
                             printTextTwoColumns("Camión: ", textViewCamion.getText()+ " \n");

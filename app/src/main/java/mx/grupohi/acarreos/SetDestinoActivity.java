@@ -464,7 +464,7 @@ public class SetDestinoActivity extends AppCompatActivity
                     String viajes = "";
                     String tagOrigen = "";
                     String fechaString = "";
-                    String idUsuario = "";
+                    String idUsuario = null;
                     latitude = gps.getLatitude();
                     longitude = gps.getLongitude();
                     if(tipo==1) {
@@ -475,8 +475,9 @@ public class SetDestinoActivity extends AppCompatActivity
                         tagInfo = nfcTag.readSector(myTag, 0, 1);
                         tagOrigen = nfcTag.readSector(myTag, 1, 4);
                         fechaString = nfcTag.readSector(myTag, 1, 5);
-                        idUsuario = nfcTag.readSector(myTag, 2, 9);
+                        idUsuario = nfcTag.readSector(myTag, 3, 12);
                         nfcTag.cleanSector(myTag, 1);
+                        nfcTag.cleanSector(myTag, 3);
                     }
                     if(tipo==2){
                         viajes = nfcUltra.readPage(myTag,7);
@@ -498,7 +499,6 @@ public class SetDestinoActivity extends AppCompatActivity
                     Integer idMaterial = Util.getIdMaterial(tagOrigen);
                     Viaje viaje = null;
                     Camion c = new Camion(getApplicationContext());
-
 
                    String aux = "";
 
