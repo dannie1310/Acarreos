@@ -5,7 +5,14 @@
     <!-- Strings related to login -->
     <string name="prompt_user">Nombre de Usuario</string>
     <string name="prompt_password">Contraseña</string>
+    <string name="prompt_pass">Contraseña Nueva.</string>
+    <string name="prompt_passwordConfirma">Confirmar Contraseña Nueva.</string>
+    <string name="cambio">Cambiar Contraseña</string>
     <string name="action_sign_in">Iniciar Sesión</string>
+    <string name="action_chance">Cambio de Contraseña</string>
+    <string name="title_activity_cambio_clave">Cambio de Clave de Acceso</string>
+    <string name="error_pass">Las contraseñas no coinciden. Intente de nuevo.</string>
+    <string name="prompt_passAnterior">Escriba la Contraseña Actual.</string>
     <string name="error_field_required">Este campo es requerido</string>
     <string name="title_activity_main">INICIO</string>
     <string name="title_activity_set_origen">ESCRIBIR ORIGEN</string>
@@ -67,6 +74,8 @@
     <string name="title_activity_descarga">Descarga de Catálogos</string>
     <string name="title_activity_validacion">VALIDACIÓN DE CAMIÓN</string>
     <string name="error_deductiva">La deductiva es mayor a la capacidad del camión.</string>
+    <string name="error_uss">Error usuario NO coincide con la sesión.</string>
+    <string name="error_anter">Error contraseña NO coincide con la sesión.</string>
 
 
 </resources>

@@ -417,6 +417,9 @@ public class SetOrigenActivity extends AppCompatActivity
                 usuario.destroy();
                 startActivity(login_activity);
             }
+        }else if(id == R.id.nav_cambio){
+            Intent cambio = new Intent(this, CambioClaveActivity.class);
+            startActivity(cambio);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

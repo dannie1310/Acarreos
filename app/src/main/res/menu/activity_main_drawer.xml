@@ -24,6 +24,10 @@
     <item android:title="Sesión Actual">
         <menu>
             <item
+                android:id="@+id/nav_cambio"
+                android:icon="@drawable/ic_action_cambio"
+                android:title="Cambiar Clave de Acceso" />
+            <item
                 android:id="@+id/nav_logout"
                 android:icon="@drawable/ic_action_logout"
                 android:title="Cerrar Sesión" />
