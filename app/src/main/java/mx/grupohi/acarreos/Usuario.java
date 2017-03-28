@@ -255,5 +255,24 @@ class Usuario {
             }
         return resp;
     }
+
+    static boolean updatePass(String pass, Context context) {
+        boolean resp=false;
+        ContentValues data = new ContentValues();
+
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+
+        try{
+
+            data.put("pass", pass);
+
+            db.update("user", data, "", null);
+            resp = true;
+        } finally {
+            db.close();
+        }
+        return resp;
+    }
 }
 

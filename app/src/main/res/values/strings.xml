@@ -14,6 +14,7 @@
     <string name="error_pass">Las contraseñas no coinciden. Intente de nuevo.</string>
     <string name="prompt_passAnterior">Escriba la Contraseña Actual.</string>
     <string name="error_field_required">Este campo es requerido</string>
+    <string name="error_field_requiredpass">La contraseña debe ser mayor a 8 digitos.</string>
     <string name="title_activity_main">INICIO</string>
     <string name="title_activity_set_origen">ESCRIBIR ORIGEN</string>
     <string name="title_activity_login">INICIAR SESIÓN</string>

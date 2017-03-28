@@ -22,35 +22,6 @@
         android:layout_alignParentStart="true"
         android:layout_marginTop="10dp">
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:weightSum="1">
-
-            <ImageView
-                android:layout_width="58dp"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_action_cambio"
-                android:id="@+id/imageView3" />
-
-            <TextView
-                android:text="Cambio de Clave de Acceso"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="18sp"
-
-                android:textStyle="normal|bold"
-                android:id="@+id/textTitulo" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="3dp"
-            android:background="@color/colorAccent"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"

@@ -26,6 +26,7 @@ public class CambioClaveActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private ProgressDialog progressDialogSync;
+    private ProgressDialog progressDialogCambio;
     private Usuario usuario;
     private EditText uss;
     private EditText actual;
@@ -45,8 +46,9 @@ public class CambioClaveActivity extends AppCompatActivity
         uss = (EditText) findViewById(R.id.user);
         pass = (EditText) findViewById(R.id.pass);
         passConfirmacion = (EditText)findViewById(R.id.passCambio);
-        actual = (EditText) findViewById(R.id.anterior);
+        actual = (EditText) findViewById(R.id.passAnterior);
         cambio = (Button) findViewById(R.id.CambioButton);
+
 
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         setSupportActionBar(toolbar);
@@ -58,20 +60,39 @@ public class CambioClaveActivity extends AppCompatActivity
         cambio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               if(checar()){
-                   if(uss.getText().toString().equals(usuario.usr) && actual.getText().toString().equals(usuario.pass)) {
 
-                       if (pass.getText().toString().equals(passConfirmacion.getText().toString())){
-                            //guardar
+               if(!checar()){
+                   if(uss.getText().toString().toUpperCase().equals(usuario.usr.toUpperCase()) && actual.getText().toString().equals(usuario.pass)) {
+
+                       if (pass.getText().toString().length()>= 8 && passConfirmacion.getText().toString().length()>=8){
+
+                           if(pass.getText().toString().equals(passConfirmacion.getText().toString())){
+                               //OK
+                               new AlertDialog.Builder(CambioClaveActivity.this)
+                                       .setTitle("¡ADVERTENCIA!")
+                                       .setMessage("Se actualizara la contraseña de la Intranet. \n ¿Deséas continuar con el cambio de clave de acceso?")
+                                       .setNegativeButton("NO", null)
+                                       .setPositiveButton("SI", new DialogInterface.OnClickListener() {
+                                           @Override public void onClick(DialogInterface dialog, int which) {
+                                               progressDialogCambio = ProgressDialog.show(CambioClaveActivity.this, "Cambiando Contraseña", "Por favor espere...", true);
+                                               new SincronizarCambioClave(getApplicationContext(), progressDialogCambio,pass.getText().toString()).execute((Void) null);
+                                           }
+                                       })
+                                       .create()
+                                       .show();
+
+                           }else{
+                               Toast.makeText(getApplicationContext(), R.string.error_pass, Toast.LENGTH_SHORT).show();
+                           }
                        } else {
-                           Toast.makeText(getApplicationContext(), R.string.error_pass, Toast.LENGTH_LONG).show();
+                           Toast.makeText(getApplicationContext(), R.string.error_field_requiredpass, Toast.LENGTH_SHORT).show();
                        }
                    }else{
                        if(!uss.getText().toString().equals(usuario.usr)) {
-                           Toast.makeText(getApplicationContext(), R.string.error_uss, Toast.LENGTH_LONG).show();
+                           Toast.makeText(getApplicationContext(), R.string.error_uss, Toast.LENGTH_SHORT).show();
                        }
-                       if(actual.getText().toString().equals(usuario.pass)) {
-                           Toast.makeText(getApplicationContext(), R.string.error_anter, Toast.LENGTH_LONG).show();
+                       else if(!actual.getText().toString().equals(usuario.pass)) {
+                           Toast.makeText(getApplicationContext(), R.string.error_anter, Toast.LENGTH_SHORT).show();
                        }
                    }
                }
@@ -138,6 +159,11 @@ public class CambioClaveActivity extends AppCompatActivity
             focusView = uss;
             cancel = true;
         }
+        if(TextUtils.isEmpty(vieja)) {
+            actual.setError(getString(R.string.error_field_required));
+            focusView = actual;
+            cancel = true;
+        }
         if(TextUtils.isEmpty(passw)) {
             pass.setError(getString(R.string.error_field_required));
             focusView = pass;
@@ -148,11 +174,7 @@ public class CambioClaveActivity extends AppCompatActivity
             focusView = passConfirmacion;
             cancel = true;
         }
-        if(TextUtils.isEmpty(vieja)) {
-            actual.setError(getString(R.string.error_field_required));
-            focusView = actual;
-            cancel = true;
-        }
+
         return cancel;
 
     }
