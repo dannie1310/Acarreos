@@ -265,18 +265,27 @@ public class SetOrigenActivity extends AppCompatActivity
                     boolean datos=false;
                     boolean dia=false;
                     boolean uss=false;
+                    String camion = null;
+                    String fecha = null;
+                    String usuario = null;
+                    String user = String.valueOf(u.getId());
+
                     String dataTime = Util.getFechaHora();
                     if(tipo==1){
                         datos = nfcTag.writeSector(myTag, 1, 4, data);
                         dia = nfcTag.writeSector(myTag, 1, 5, dataTime);
-                        uss = nfcTag.writeSector(myTag, 3, 12, String.valueOf(u.getId()));
+                        uss = nfcTag.writeSector(myTag, 3, 12, user);
+                        camion = nfcTag.readSector(myTag,1,4);
+                        fecha = nfcTag.readSector(myTag,1,5);
+                        usuario = nfcTag.readSector(myTag,3,12);
                     }
                     if(tipo==2){
                         datos = nfcUltra.writePagina(myTag,8,data);
                         dia = nfcUltra.writePagina(myTag,10,dataTime);
-                        uss = nfcUltra.writePagina(myTag,16,String.valueOf(u.getId()));
+                        uss = nfcUltra.writePagina(myTag,16,user);
                     }
-                    if (datos && dia && uss) {
+                    if (data.equals(camion.replace(" ","")) && dataTime.equals(fecha.replace(" ","")) && user.equals(usuario.replace(" ",""))) {
+
                         ContentValues cv = new ContentValues();
                         cv.put("IMEI", IMEI);
                         cv.put("idevento", 2);
@@ -285,8 +294,17 @@ public class SetOrigenActivity extends AppCompatActivity
                         cv.put("fecha_hora", Util.timeStamp());
                         cv.put("code", "");
 
+
                         Coordenada coordenada = new Coordenada(getApplicationContext());
                         coordenada.create(cv, getApplicationContext());
+                        cv.clear();
+                        cv.put("camion", data);
+                        cv.put("fecha", dataTime);
+
+                        cv.put("usua", user);
+                        cv.put("camion1", camion.replace(" ",""));
+                        cv.put("fecha1", fecha.replace(" ",""));
+                        cv.put("usua1", usuario.replace(" ",""));
 
                         Intent success = new Intent(SetOrigenActivity.this, SuccessOrigenActivity.class);
                         startActivity(success);

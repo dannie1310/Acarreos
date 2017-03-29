@@ -51,8 +51,8 @@ public class SincronizarCambioClave extends AsyncTask<Void, Void, Boolean> {
             values.put("metodo", "ActualizarAcceso");
             values.put("usr", usuario.usr);
             values.put("pass", usuario.pass);
-            values.put("bd", usuario.baseDatos);
             values.put("idusuario", usuario.getId());
+            values.put("bd", usuario.baseDatos);
             values.put("IMEI", IMEI);
             values.put("Version", String.valueOf(BuildConfig.VERSION_NAME));
             values.put("NuevaClave", NuevaClave);
@@ -60,7 +60,8 @@ public class SincronizarCambioClave extends AsyncTask<Void, Void, Boolean> {
             try {
 
                 URL url = new URL("http://sca.grupohi.mx/android20160923.php");
-               // JSONVIAJES = HttpConnection.POST(url, values);
+                JSONVIAJES = HttpConnection.POST(url, values);
+                Log.i("josn", String.valueOf(JSONVIAJES));
                 Log.i("jsonviajes:  ",String.valueOf(values));
 
 
