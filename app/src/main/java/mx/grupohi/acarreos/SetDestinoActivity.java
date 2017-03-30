@@ -512,7 +512,13 @@ public class SetDestinoActivity extends AppCompatActivity
                         cv.put("IdProyecto", idProyecto);
                         cv.put("IdCamion", idCamion);
                         cv.put("IdOrigen", idOrigen);
-                        cv.put("FechaSalida", Util.getFecha(fechaString));
+
+                        if(fechaString.equals("null")){//probar cambio....
+                            cv.put("FechaSalida","3");//funcion 15 min antes
+                        }else{
+                            cv.put("FechaSalida", Util.getFecha(fechaString));
+                        }
+
                         cv.put("HoraSalida", Util.getTime(fechaString));
                         cv.put("IdTiro", idTiro);
                         cv.put("FechaLlegada", Util.getFecha());

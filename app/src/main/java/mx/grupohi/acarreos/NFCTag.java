@@ -12,7 +12,6 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 
-import static java.nio.charset.StandardCharsets.US_ASCII;
 
 /**
  * Created by Usuario on 29/09/2016.
@@ -204,7 +203,8 @@ public class NFCTag {
             mf.close();
         } catch (Exception e) {
             e.printStackTrace();
-            return context.getString(R.string.error_conexion_tag);
+            //return context.getString(R.string.error_conexion_tag);
+            return null;
         }
         return  aux;
     }
