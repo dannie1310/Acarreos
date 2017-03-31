@@ -512,18 +512,30 @@ public class SetDestinoActivity extends AppCompatActivity
                         cv.put("IdProyecto", idProyecto);
                         cv.put("IdCamion", idCamion);
                         cv.put("IdOrigen", idOrigen);
-
-                        if(fechaString.equals("null")){//probar cambio....
-                            cv.put("FechaSalida","3");//funcion 15 min antes
+                        cv.put("IdTiro", idTiro);
+                        String fechaLlegada = Util.getFecha();
+                        String horaLlegada = Util.getTime();
+                        cv.put("FechaLlegada", fechaLlegada);
+                        cv.put("HoraLlegada",horaLlegada);
+                        String fechaOrigen = Util.getFecha(fechaString);
+                        String horaOrigen = Util.getTime(fechaString);
+                        if(fechaString.replace(" ","").isEmpty()){
+                            String fecha = Util.getFechaDisminucion(fechaLlegada+" "+horaLlegada);
+                            cv.put("FechaSalida",Util.getFecha(fecha));
+                            cv.put("HoraSalida", Util.getTime(fecha));
                         }else{
-                            cv.put("FechaSalida", Util.getFecha(fechaString));
+                            if(horaOrigen==null || fechaOrigen==null){
+                                String fecha = Util.getFechaDisminucion(fechaLlegada+" "+horaLlegada);
+                                cv.put("FechaSalida",Util.getFecha(fecha));
+                                cv.put("HoraSalida", Util.getTime(fecha));
+                            }else{
+                                cv.put("FechaSalida",fechaOrigen);
+                                cv.put("HoraSalida", horaOrigen);
+                            }
+
                         }
 
-                        cv.put("HoraSalida", Util.getTime(fechaString));
-                        cv.put("IdTiro", idTiro);
-                        cv.put("FechaLlegada", Util.getFecha());
-                        cv.put("HoraLlegada", Util.getTime());
-                        cv.put("IdMaterial", idMaterial);
+                    cv.put("IdMaterial", idMaterial);
                         cv.put("Observaciones", observacionesTextView.getText().toString());
                         cv.put("Creo", usuario.getId());
                         cv.put("Estatus", "1");

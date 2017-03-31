@@ -165,6 +165,32 @@ public class NFCUltralight {
         return aux;
     }
 
+    public String readConfirmar(Tag nfc, int page){
+        MifareUltralight mf=MifareUltralight.get(nfc);
+        byte[] toRead = null;
+        byte[] auxRead =  new byte[4];
+        String aux="";
+        try{
+            mf.connect();
+            toRead = mf.readPages(page);
+            for(int i=0; i<4; i++) {
+                auxRead[i] = toRead[i];
+            }
+            String x = byteArrayToHexString(auxRead);
+            if(x.equalsIgnoreCase("00000000")){
+                aux=" ";
+            }
+            else {
+                String s = new String(auxRead);
+                aux += s;
+                toRead = null;
+            }
+            mf.close();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return aux;
+    }
 
     public boolean writeViaje(Tag mytag, String contador){
 

@@ -76,6 +76,10 @@ public class CambioClaveActivity extends AppCompatActivity
                                            @Override public void onClick(DialogInterface dialog, int which) {
                                                progressDialogCambio = ProgressDialog.show(CambioClaveActivity.this, "Cambiando Contraseña", "Por favor espere...", true);
                                                new SincronizarCambioClave(getApplicationContext(), progressDialogCambio,pass.getText().toString()).execute((Void) null);
+                                               uss.setText("");
+                                               pass.setText("");
+                                               actual.setText("");
+                                               passConfirmacion.setText("");
                                            }
                                        })
                                        .create()

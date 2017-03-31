@@ -158,6 +158,7 @@ class Util {
         return (String) android.text.format.DateFormat.format("HHmmssyyyyMMdd", new java.util.Date());
     }
 
+
     static String getFechaSegundos() {
         return (String) android.text.format.DateFormat.format("yyMMddHHmmss", new java.util.Date());
     }
@@ -252,6 +253,23 @@ class Util {
         }
 
         return mensaje;
+    }
+    static String getFechaDisminucion(String fecha) {
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        try {
+            Date date = format.parse(fecha);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.add(Calendar.MINUTE, -15);
+            Date fechaS = calendar.getTime();
+            SimpleDateFormat timeFormat = new SimpleDateFormat("HHmmssyyyyMMdd");
+            String c = timeFormat.format(fechaS);
+            return c;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 

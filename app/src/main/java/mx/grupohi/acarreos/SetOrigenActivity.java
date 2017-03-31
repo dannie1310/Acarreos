@@ -283,6 +283,10 @@ public class SetOrigenActivity extends AppCompatActivity
                         datos = nfcUltra.writePagina(myTag,8,data);
                         dia = nfcUltra.writePagina(myTag,10,dataTime);
                         uss = nfcUltra.writePagina(myTag,16,user);
+                        camion = nfcUltra.readConfirmar(myTag, 8)+ nfcUltra.readConfirmar(myTag, 9);
+                        fecha = nfcUltra.readConfirmar(myTag,10) + nfcUltra.readConfirmar(myTag,11) +nfcUltra.readConfirmar(myTag,12) + nfcUltra.readConfirmar(myTag,13).substring(0,2);
+                        usuario = nfcUltra.readConfirmar(myTag, 16) + nfcUltra.readConfirmar(myTag, 17);
+
                     }
                     if (data.equals(camion.replace(" ","")) && dataTime.equals(fecha.replace(" ","")) && user.equals(usuario.replace(" ",""))) {
 
@@ -297,14 +301,6 @@ public class SetOrigenActivity extends AppCompatActivity
 
                         Coordenada coordenada = new Coordenada(getApplicationContext());
                         coordenada.create(cv, getApplicationContext());
-                        cv.clear();
-                        cv.put("camion", data);
-                        cv.put("fecha", dataTime);
-
-                        cv.put("usua", user);
-                        cv.put("camion1", camion.replace(" ",""));
-                        cv.put("fecha1", fecha.replace(" ",""));
-                        cv.put("usua1", usuario.replace(" ",""));
 
                         Intent success = new Intent(SetOrigenActivity.this, SuccessOrigenActivity.class);
                         startActivity(success);
