@@ -59,7 +59,7 @@ public class SincronizarCambioClave extends AsyncTask<Void, Void, Boolean> {
 
             try {
 
-                URL url = new URL("http://172.50.32.106/sca.grupohi.mx/android20160923.php");
+                URL url = new URL("http://sca.grupohi.mx/android20160923.php");
                 JSONVIAJES = HttpConnection.POST(url, values);
                 Log.i("josn", String.valueOf(JSONVIAJES));
                 Log.i("jsonviajes:  ",String.valueOf(values));

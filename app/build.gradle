@@ -7,7 +7,7 @@ android {
         applicationId "mx.grupohi.acarreos"
         minSdkVersion 16
         targetSdkVersion 24
-        versionCode 1
+        versionCode 6
         versionName "6.2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
