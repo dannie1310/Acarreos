@@ -5,32 +5,32 @@
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_action_home"
-            android:title="Inicio" />
-        <item
-            android:id="@+id/nav_sync"
-            android:icon="@drawable/ic_action_sync"
-            android:title="Sincronizar viajes" />
+            android:title="@string/title_activity_main" />
         <item
             android:id="@+id/nav_list"
             android:icon="@drawable/ic_action_list"
-            android:title="Lista de Viajes" />
+            android:title="@string/title_activity_lista_viajes" />
         <item
             android:id="@+id/nav_desc"
             android:icon="@drawable/ic_action_desc"
-            android:title="Descarga de Catálogos" />
+            android:title="@string/title_activity_descarga" />
+        <item
+            android:id="@+id/nav_sync"
+            android:icon="@drawable/ic_action_sync"
+            android:title="@string/title_activity_sync" />
 
     </group>
 
-    <item android:title="Sesión Actual">
+    <item android:title="@string/title_group_sesion">
         <menu>
             <item
                 android:id="@+id/nav_cambio"
                 android:icon="@drawable/ic_action_cambio"
-                android:title="Cambiar Clave de Acceso" />
+                android:title="@string/title_activity_cambio_clave" />
             <item
                 android:id="@+id/nav_logout"
                 android:icon="@drawable/ic_action_logout"
-                android:title="Cerrar Sesión" />
+                android:title="@string/title_activity_cerrar_sesion" />
         </menu>
     </item>
 

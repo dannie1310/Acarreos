@@ -132,7 +132,7 @@ public class CambioClaveActivity extends AppCompatActivity
                             tvu.setText(usuario.nombre);
                         }
                         if (tvv != null) {
-                            tvv.setText("Versión " + String.valueOf(BuildConfig.VERSION_NAME));
+                            tvv.setText(getString(R.string.app_name)+"     "+"Versión " + String.valueOf(BuildConfig.VERSION_NAME));
                         }
                     }
                 }

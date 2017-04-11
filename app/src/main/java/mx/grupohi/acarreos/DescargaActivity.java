@@ -14,6 +14,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.view.menu.MenuAdapter;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -35,7 +36,8 @@ import org.json.JSONObject;
 
 import java.net.URL;
 
-public class DescargaActivity extends AppCompatActivity {
+public class DescargaActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener{
 
     //Referencias UI
     private LinearLayout infoLayout;
@@ -69,12 +71,40 @@ public class DescargaActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         usuario = new Usuario(this);
+        usuario = usuario.getUsuario();
         mainActivity = new Intent(this, MainActivity.class);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+
+        if(drawer != null)
+            drawer.post(new Runnable() {
+                @Override
+                public void run() {
+                    for (int i = 0; i < drawer.getChildCount(); i++) {
+                        View child = drawer.getChildAt(i);
+                        TextView tvp = (TextView) child.findViewById(R.id.textViewProyecto);
+                        TextView tvu = (TextView) child.findViewById(R.id.textViewUser);
+                        TextView tvv = (TextView) child.findViewById(R.id.textViewVersion);
+
+                        if (tvp != null) {
+                            tvp.setText(usuario.descripcionBaseDatos);
+                        }
+                        if (tvu != null) {
+                            tvu.setText(usuario.nombre);
+                        }
+                        if (tvv != null) {
+                            tvv.setText(getString(R.string.app_name)+"     "+"Versión " + String.valueOf(BuildConfig.VERSION_NAME));
+                        }
+                    }
+                }
+            });
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
         if(!Util.isNetworkStatusAvialable(getApplicationContext())) {
             Toast.makeText(DescargaActivity.this, R.string.error_internet, Toast.LENGTH_LONG).show();
@@ -84,6 +114,8 @@ public class DescargaActivity extends AppCompatActivity {
         loginProgressDialog = ProgressDialog.show(DescargaActivity.this, "Descargando", "Por favor espere...", true);
         descargaCatalogos = new DescargaActivity.DescargaCatalogos(getApplicationContext(), progressDialogSync);
         descargaCatalogos.execute((Void) null);
+
+
     }
 
     @Override
@@ -97,6 +129,80 @@ public class DescargaActivity extends AppCompatActivity {
     }
 
 
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_home) {
+            Intent descarga = new Intent(this, MainActivity.class);
+            startActivity(descarga);
+        } else if (id == R.id.nav_sync) {
+            new AlertDialog.Builder(DescargaActivity.this)
+                    .setTitle("¡ADVERTENCIA!")
+                    .setMessage("Se borrarán los registros de viajes almacenados en este dispositivo. \n ¿Deséas continuar con la sincronización?")
+                    .setNegativeButton("NO", null)
+                    .setPositiveButton("SI", new DialogInterface.OnClickListener() {
+                        @Override public void onClick(DialogInterface dialog, int which) {
+                            if (Util.isNetworkStatusAvialable(getApplicationContext())) {
+                                if(!Viaje.isSync(getApplicationContext())) {
+                                    progressDialogSync = ProgressDialog.show(DescargaActivity.this, "Sincronizando datos", "Por favor espere...", true);
+                                    new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "No es necesaria la sincronización en este momento", Toast.LENGTH_LONG).show();
+                                }
+                            } else {
+                                Toast.makeText(getApplicationContext(), R.string.error_internet, Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    })
+                    .create()
+                    .show();
+
+        } else if (id == R.id.nav_list) {
+            startActivity(listaViajes);
+        }else if (id == R.id.nav_desc) {
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+        } else if (id == R.id.nav_logout) {
+            if(!Viaje.isSync(getApplicationContext())){
+                new AlertDialog.Builder(DescargaActivity.this)
+                        .setTitle("¡ADVERTENCIA!")
+                        .setMessage("Hay viajes aún sin sincronizar, se borrarán los registros de viajes almacenados en este dispositivo,  \n ¿Deséas sincronizar?")
+                        .setNegativeButton("NO", null)
+                        .setPositiveButton("SI", new DialogInterface.OnClickListener() {
+                            @Override public void onClick(DialogInterface dialog, int which) {
+                                if (Util.isNetworkStatusAvialable(getApplicationContext())) {
+                                    progressDialogSync = ProgressDialog.show(DescargaActivity.this, "Sincronizando datos", "Por favor espere...", true);
+                                    new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
+
+                                    Intent login_activity = new Intent(getApplicationContext(), LoginActivity.class);
+                                    usuario.destroy();
+                                    startActivity(login_activity);
+                                } else {
+                                    Toast.makeText(getApplicationContext(), R.string.error_internet, Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        })
+                        .create()
+                        .show();
+            }
+            else {
+                Intent login_activity = new Intent(getApplicationContext(), LoginActivity.class);
+                usuario.destroy();
+                startActivity(login_activity);
+            }
+        }else if(id == R.id.nav_cambio){
+            Intent cambio = new Intent(this, CambioClaveActivity.class);
+            startActivity(cambio);
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
 
     public class DescargaCatalogos extends AsyncTask<Void, Void, Boolean> {
 

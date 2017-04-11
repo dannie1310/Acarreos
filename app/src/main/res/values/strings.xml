@@ -10,12 +10,10 @@
     <string name="cambio">Cambiar Contraseña</string>
     <string name="action_sign_in">Iniciar Sesión</string>
     <string name="action_chance">Cambio de Contraseña</string>
-    <string name="title_activity_cambio_clave">Cambio de Clave de Acceso</string>
     <string name="error_pass">Las contraseñas no coinciden. Intente de nuevo.</string>
     <string name="prompt_passAnterior">Escriba la Contraseña Actual.</string>
     <string name="error_field_required">Este campo es requerido</string>
     <string name="error_field_requiredpass">La contraseña debe ser mayor a 8 digitos.</string>
-    <string name="title_activity_main">INICIO</string>
     <string name="title_activity_set_origen">ESCRIBIR ORIGEN</string>
     <string name="title_activity_login">INICIAR SESIÓN</string>
 
@@ -52,7 +50,6 @@
     <string name="mensaje_no_bluetooth">No esta activado</string>
     <string name="text_warning_blue_is_off">bluethooth apagado</string>
     <string name="text_turn_on_blue">bluethooth prendido</string>
-    <string name="title_activity_lista_viajes">LISTA DE VIAJES</string>
     <string name="title_activity_success_destino">INFORMACIÓN DEL VIAJE</string>
 
     <!--Mensajes Impresora -->
@@ -72,11 +69,21 @@
     <string name="nombre_transicion_imagen">imagen_compartida</string>
     <string name="contentImagen">Imagen Tomada</string>
     <string name="title_activity_imagenes">IMAGENES DEL VIAJE</string>
-    <string name="title_activity_descarga">Descarga de Catálogos</string>
     <string name="title_activity_validacion">VALIDACIÓN DE CAMIÓN</string>
     <string name="error_deductiva">La deductiva es mayor a la capacidad del camión.</string>
     <string name="error_uss">Error usuario NO coincide con la sesión.</string>
     <string name="error_anter">Error contraseña NO coincide con la sesión.</string>
+
+
+    <!--Titulos-->
+    <string name="title_group_registro">Viajes</string>
+    <string name="title_activity_main">Inicio</string>
+    <string name="title_activity_lista_viajes">Lista de Viajes</string>
+    <string name="title_activity_descarga">Descargar Catálogos</string>
+    <string name="title_activity_sync">Enviar Viajes</string>
+    <string name="title_group_sesion">Sesión Actual</string>
+    <string name="title_activity_cambio_clave">Cambiar Clave de Acceso</string>
+    <string name="title_activity_cerrar_sesion">Cerrar Sesión</string>
 
 
 </resources>
