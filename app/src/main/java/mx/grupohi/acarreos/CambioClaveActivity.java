@@ -1,13 +1,18 @@
 package mx.grupohi.acarreos;
 
 import android.app.ProgressDialog;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -22,6 +27,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.URL;
+
 public class CambioClaveActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -33,6 +43,9 @@ public class CambioClaveActivity extends AppCompatActivity
     private EditText pass;
     private EditText passConfirmacion;
     private Button cambio;
+    private String us_sesion;
+    private String us_escrito;
+    CambioClave c;
 
 
     @Override
@@ -43,6 +56,7 @@ public class CambioClaveActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         usuario = new Usuario(this);
         usuario = usuario.getUsuario();
+        us_sesion = usuario.usr.toUpperCase();
         uss = (EditText) findViewById(R.id.user);
         pass = (EditText) findViewById(R.id.pass);
         passConfirmacion = (EditText)findViewById(R.id.passCambio);
@@ -57,33 +71,31 @@ public class CambioClaveActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        if (!Util.isNetworkStatusAvialable(getApplicationContext())) {
+            Toast.makeText(CambioClaveActivity.this, R.string.error_internet, Toast.LENGTH_LONG).show();
+
+        }
+
         cambio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                if(!checar()){
-                   if(uss.getText().toString().toUpperCase().equals(usuario.usr.toUpperCase()) && actual.getText().toString().equals(usuario.pass)) {
+                   us_escrito = uss.getText().toString().toUpperCase();
+                   if (us_escrito.equals(us_sesion) && actual.getText().toString().equals(usuario.pass)) {
 
                        if (pass.getText().toString().length()>= 8 && passConfirmacion.getText().toString().length()>=8){
 
                            if(pass.getText().toString().equals(passConfirmacion.getText().toString())){
-                               //OK
-                               new AlertDialog.Builder(CambioClaveActivity.this)
-                                       .setTitle("¡ADVERTENCIA!")
-                                       .setMessage("Se actualizara la contraseña de la Intranet. \n ¿Deséas continuar con el cambio de clave de acceso?")
-                                       .setNegativeButton("NO", null)
-                                       .setPositiveButton("SI", new DialogInterface.OnClickListener() {
-                                           @Override public void onClick(DialogInterface dialog, int which) {
-                                               progressDialogCambio = ProgressDialog.show(CambioClaveActivity.this, "Cambiando Contraseña", "Por favor espere...", true);
-                                               new SincronizarCambioClave(getApplicationContext(), progressDialogCambio,pass.getText().toString()).execute((Void) null);
-                                               uss.setText("");
-                                               pass.setText("");
-                                               actual.setText("");
-                                               passConfirmacion.setText("");
-                                           }
-                                       })
-                                       .create()
-                                       .show();
+                               if (!Util.isNetworkStatusAvialable(getApplicationContext())) {
+                                   Toast.makeText(CambioClaveActivity.this, R.string.error_internet, Toast.LENGTH_LONG).show();
+
+                               }else {
+                                   //OK
+                                   progressDialogCambio = ProgressDialog.show(CambioClaveActivity.this, "Cambiando Contraseña", "Por favor espere...", true);
+                                   c = new CambioClave(getApplicationContext(), progressDialogSync, pass.getText().toString());
+                                   c.execute((Void) null);
+                               }
 
                            }else{
                                Toast.makeText(getApplicationContext(), R.string.error_pass, Toast.LENGTH_SHORT).show();
@@ -92,7 +104,7 @@ public class CambioClaveActivity extends AppCompatActivity
                            Toast.makeText(getApplicationContext(), R.string.error_field_requiredpass, Toast.LENGTH_SHORT).show();
                        }
                    }else{
-                       if(!uss.getText().toString().equals(usuario.usr)) {
+                       if (!us_escrito.equals(us_sesion)) {
                            Toast.makeText(getApplicationContext(), R.string.error_uss, Toast.LENGTH_SHORT).show();
                        }
                        else if(!actual.getText().toString().equals(usuario.pass)) {
@@ -131,19 +143,15 @@ public class CambioClaveActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
     private boolean checar() {
 
         //Reset Errors
 
-        //sindicato.setError(null);
         uss.setError(null);
         pass.setError(null);
         passConfirmacion.setError(null);
@@ -258,5 +266,90 @@ public class CambioClaveActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public class CambioClave extends AsyncTask<Void, Void, Boolean> {
+        private Context context;
+        private ProgressDialog progressDialog;
+        private Usuario usuario;
+
+
+        private String IMEI;
+        private String NuevaClave;
+
+        private JSONObject JSONVIAJES;
+        private JSONObject JSON;
+        Intent in;
+
+        CambioClave(Context context, ProgressDialog progressDialog, String clavenueva) {
+
+            this.context = context;
+            this.progressDialog = progressDialog;
+            this.NuevaClave = clavenueva;
+            usuario = new Usuario(context);
+            usuario = usuario.getUsuario();
+
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+
+            TelephonyManager phneMgr = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            IMEI = phneMgr.getDeviceId();
+            in = new Intent(context, CambioClaveActivity.class);
+            ContentValues values = new ContentValues();
+            Boolean resp = null;
+            values.clear();
+
+            values.put("metodo", "ActualizarAcceso");
+            values.put("usr", usuario.usr);
+            values.put("pass", usuario.pass);
+            values.put("idusuario", usuario.getId());
+            values.put("bd", usuario.baseDatos);
+            values.put("IMEI", IMEI);
+            values.put("Version", String.valueOf(BuildConfig.VERSION_NAME));
+            values.put("NuevaClave", NuevaClave);
+
+            try {
+
+                URL url = new URL("http://sca.grupohi.mx/android20160923.php");
+                JSONVIAJES = HttpConnection.POST(url, values);
+                Log.i("josn", String.valueOf(JSONVIAJES));
+                Log.i("jsonviajes:  ", String.valueOf(values));
+                if (JSONVIAJES.has("error")) {
+                    //Toast.makeText(context, (String) JSONVIAJES.get("error"), Toast.LENGTH_SHORT).show();
+                    resp = false;
+                } else if (JSONVIAJES.has("msj")) {
+                    Usuario.updatePass(NuevaClave, context);
+                    //Toast.makeText(context, (String) JSONVIAJES.get("msj"), Toast.LENGTH_LONG).show();
+                    resp = true;
+                }
+
+            } catch (Exception e) {
+                Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+                resp =  false;
+            }
+            return resp;
+
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            c = null;
+            progressDialogCambio.dismiss();
+            if (aBoolean) {
+                try {
+                    Toast.makeText(context, (String) JSONVIAJES.get("msj"), Toast.LENGTH_LONG).show();
+                    //startActivity(in);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                startActivity(in);
+            }else{
+                Toast.makeText(context, "Error al cambiar la contraseña, verifique su conexión.", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }
