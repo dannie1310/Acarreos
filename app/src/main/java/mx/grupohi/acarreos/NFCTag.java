@@ -8,6 +8,10 @@ import android.util.Log;
 import android.widget.Toast;
 
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
@@ -201,7 +205,7 @@ public class NFCTag {
                 }
             }
             mf.close();
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
             //return context.getString(R.string.error_conexion_tag);
             return null;
@@ -249,7 +253,7 @@ public class NFCTag {
         }
     }
 
-    void cleanSector(Tag tag, int sector){
+    Boolean cleanSector(Tag tag, int sector){
         MifareClassic mfc = MifareClassic.get(tag);
         int bloque = mfc.sectorToBlock(sector);
         try {
@@ -272,11 +276,14 @@ public class NFCTag {
                     toWrite = new byte[MifareClassic.BLOCK_SIZE];
                 }
             }
-            Toast.makeText(context, context.getString(R.string.tag_configurado), Toast.LENGTH_LONG).show();
+           // Toast.makeText(context, context.getString(R.string.tag_configurado), Toast.LENGTH_LONG).show();
             mfc.close();
+            return true;
+
         } catch (Exception fe) {
-            Toast.makeText(context, context.getString(R.string.error_tag_comunicacion), Toast.LENGTH_LONG).show();
+            //Toast.makeText(context, context.getString(R.string.error_tag_comunicacion), Toast.LENGTH_LONG).show();
             fe.printStackTrace();
+            return false;
         }
     }
 
@@ -425,6 +432,64 @@ public class NFCTag {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    byte[] readSector (MifareClassic mf, Boolean auth, Tag tag, int sector, int bloque) { //Leer solo un sector y bloque especifico
+        byte[] toRead=null;
+        String aux="";
+        try{
+            if (mf.authenticateSectorWithKeyA(sector, pw)) {
+                toRead = mf.readBlock(bloque);
+            }
+            // mf.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return  toRead;
+    }
+
+    JSONObject destino (Tag mytag){
+        Boolean auth = false;
+        MifareClassic mf = MifareClassic.get(mytag);
+        byte[] viaje = new byte[0];
+        byte[] taginfo = new byte[0];
+        JSONObject JSON = new JSONObject();
+        try {
+            mf.connect();
+            viaje = readSector(mf, auth, mytag, 2, 8);
+            taginfo = readSector(mf, auth, mytag, 0, 1);
+               // JSON.put("viaje", readSector(mf, auth, mytag, 2, 8));
+               // JSON.put("tagInfo", readSector(mf, auth, mytag, 0, 1));
+            mf.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        try {
+            JSON.put("viaje", cambio(viaje));
+            JSON.put("tagInfo", cambio(taginfo));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return JSON;
+    }
+
+    public String cambio(byte[] toRead){
+        String aux = "";
+        byte[] limpio=new byte[toRead.length];
+        if (toRead != null) {
+            for (int i = 0; i < toRead.length; i++) {
+                if (toRead[i] != 0) {
+                    limpio[i] += toRead[i];
+                } else {
+                    limpio[i] += ' ';
+                }
+            }
+            String s= new String(limpio);
+            aux += s;
+        }
+        return aux;
     }
 
 }

@@ -40,6 +40,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -65,6 +68,7 @@ public class SetDestinoActivity extends AppCompatActivity
     private PendingIntent pendingIntent;
     private IntentFilter writeTagFilters[];
     private Boolean writeMode;
+    Intent destinoSuccess;
 
     //Referencias UI
     private Spinner tirosSpinner;
@@ -87,6 +91,7 @@ public class SetDestinoActivity extends AppCompatActivity
     private HashMap<String, String> spinnerTirosMap;
     private HashMap<String, String> spinnerRutasMap;
     private  HashMap<String, String> spinnerMotivosMap;
+    int error_eliminar = 0;// error de borrado de Tag (si es 0 no se ha realizado ninguna lectura, si es 1 no elimino correctamente)
 
     String camionId;
 
@@ -103,7 +108,7 @@ public class SetDestinoActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
+        destinoSuccess = new Intent(this, SuccessDestinoActivity.class);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         camionId = getIntent().getStringExtra("camion");
@@ -441,11 +446,21 @@ public class SetDestinoActivity extends AppCompatActivity
 
     @Override
     protected void onNewIntent(Intent intent) {
-
+        int contador=0;
+        JSONObject json = new JSONObject();
+        String tagInfo ="";
+        String viajes = "";
+        String tagOrigen = "";
+        String fechaString = "";
+        String idUsuario = null;
+        Boolean limpiarorigen = false;
+        Boolean limpiarusuario = false;
+        boolean continuar = false;
+        String UID ="";
         if (writeMode) {
             if(NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
                 Tag myTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-                String UID ="";
+
                 int tipo=0;
                 String[] techs = myTag.getTechList();
                 for (String t : techs) {
@@ -460,134 +475,162 @@ public class SetDestinoActivity extends AppCompatActivity
                         tipo=2;
                     }
                 }
+                if(error_eliminar == 0) {
+                    if (UID.equals(getIntent().getStringExtra("UID"))) {
 
-                if (UID.equals(getIntent().getStringExtra("UID"))) {
-                    int contador=0;
-                    String tagInfo ="";
-                    String viajes = "";
-                    String tagOrigen = "";
-                    String fechaString = "";
-                    String idUsuario = null;
-                    latitude = gps.getLatitude();
-                    longitude = gps.getLongitude();
-                    if(tipo==1) {
-                        viajes = nfcTag.readSector(myTag, 2, 8);
-                        viajes=viajes.replace(" ","");
-                        contador = Integer.valueOf(viajes) + 1;
-                        nfcTag.writeSector(myTag, 2, 8, String.valueOf(contador));
-                        tagInfo = nfcTag.readSector(myTag, 0, 1);
-                        tagOrigen = nfcTag.readSector(myTag, 1, 4);
-                        fechaString = nfcTag.readSector(myTag, 1, 5);
-                        idUsuario = nfcTag.readSector(myTag, 3, 12);
-                        nfcTag.cleanSector(myTag, 1);
-                        nfcTag.cleanSector(myTag, 3);
-                    }
-                    if(tipo==2){
-                        viajes = nfcUltra.readPage(myTag,7);
-                        viajes=viajes.replace(" ","");
-                        contador = Integer.valueOf(viajes) + 1;
-                        boolean r=nfcUltra.writeViaje(myTag,String.valueOf(contador));
-                        tagInfo = nfcUltra.readPage(myTag, 4) + nfcUltra.readPage(myTag, 5);
-                        tagOrigen = nfcUltra.readPage(myTag,8) + nfcUltra.readPage(myTag,9);
-                        fechaString = nfcUltra.readPage(myTag,10) + nfcUltra.readPage(myTag,11) +nfcUltra.readPage(myTag,12) + nfcUltra.readPage(myTag,13).substring(0,2);
-                        idUsuario = nfcUltra.readUsuario(myTag,16) + nfcUltra.readUsuario(myTag,17);
-                        nfcUltra.cleanTag(myTag);
-                    }
+                        latitude = gps.getLatitude();
+                        longitude = gps.getLongitude();
+                        if (tipo == 1) {
+                            viajes = nfcTag.readSector(myTag, 2, 8);
+                            viajes = viajes.replace(" ", "");
+                           // contador = Integer.valueOf(viajes) + 1;
+                            boolean write = nfcTag.writeSector(myTag, 2, 8, String.valueOf(contador));
+                            tagInfo = nfcTag.readSector(myTag, 0, 1);
+                            tagOrigen = nfcTag.readSector(myTag, 1, 4);
+                            fechaString = nfcTag.readSector(myTag, 1, 5);
+                            idUsuario = nfcTag.readSector(myTag, 3, 12);
 
-                   // Toast.makeText(getApplicationContext(),"numero de viaje: " + contador, Toast.LENGTH_SHORT).show();
-
-                    Integer idCamion = Util.getIdCamion(tagInfo);
-                    Integer idProyecto = Util.getIdProyecto(tagInfo);
-                    Integer idOrigen = Util.getIdOrigen(tagOrigen);
-                    Integer idMaterial = Util.getIdMaterial(tagOrigen);
-                    Viaje viaje = null;
-                    Camion c = new Camion(getApplicationContext());
-
-                   String aux = "";
-
-                   // for(int x=0; x<600;x++) {
-                        ContentValues cv = new ContentValues();
-                        cv.put("FechaCarga", Util.getFecha());
-                        cv.put("HoraCarga", Util.getTime());
-                        cv.put("IdProyecto", idProyecto);
-                        cv.put("IdCamion", idCamion);
-                        cv.put("IdOrigen", idOrigen);
-                        cv.put("IdTiro", idTiro);
-                        String fechaLlegada = Util.getFecha();
-                        String horaLlegada = Util.getTime();
-                        cv.put("FechaLlegada", fechaLlegada);
-                        cv.put("HoraLlegada",horaLlegada);
-                        String fechaOrigen = Util.getFecha(fechaString);
-                        String horaOrigen = Util.getTime(fechaString);
-                        if(fechaString.replace(" ","").isEmpty()){
-                            String fecha = Util.getFechaDisminucion(fechaLlegada+" "+horaLlegada);
-                            cv.put("FechaSalida",Util.getFecha(fecha));
-                            cv.put("HoraSalida", Util.getTime(fecha));
-                        }else{
-                            if(horaOrigen==null || fechaOrigen==null){
-                                String fecha = Util.getFechaDisminucion(fechaLlegada+" "+horaLlegada);
-                                cv.put("FechaSalida",Util.getFecha(fecha));
-                                cv.put("HoraSalida", Util.getTime(fecha));
-                            }else{
-                                cv.put("FechaSalida",fechaOrigen);
-                                cv.put("HoraSalida", horaOrigen);
+                            if (write && tagInfo != null && tagOrigen != null && fechaString != null && idUsuario != null) {
+                                limpiarorigen = nfcTag.cleanSector(myTag, 1);
+                                limpiarusuario = nfcTag.cleanSector(myTag, 3);
+                                if (!limpiarorigen || !limpiarusuario){
+                                    error_eliminar = 1;
+                                }else{
+                                    error_eliminar = 2;
+                                }
+                                continuar = true;
+                            } else {
+                                //getString(R.string.error_tag_comunicacion)
+                                snackbar = Snackbar.make(findViewById(R.id.content_set_destino),getString(R.string.error_tag_comunicacion) , Snackbar.LENGTH_SHORT);
+                                View snackBarView = snackbar.getView();
+                                snackBarView.setBackgroundColor(Color.RED);
+                                snackbar.show();
                             }
-
+                        }
+                        if (tipo == 2) {
+                            viajes = nfcUltra.readPage(myTag, 7);
+                            viajes = viajes.replace(" ", "");
+                            contador = Integer.valueOf(viajes) + 1;
+                            boolean r = nfcUltra.writeViaje(myTag, String.valueOf(contador));
+                            tagInfo = nfcUltra.readPage(myTag, 4) + nfcUltra.readPage(myTag, 5);
+                            tagOrigen = nfcUltra.readPage(myTag, 8) + nfcUltra.readPage(myTag, 9);
+                            fechaString = nfcUltra.readPage(myTag, 10) + nfcUltra.readPage(myTag, 11) + nfcUltra.readPage(myTag, 12) + nfcUltra.readPage(myTag, 13).substring(0, 2);
+                            idUsuario = nfcUltra.readUsuario(myTag, 16) + nfcUltra.readUsuario(myTag, 17);
+                            nfcUltra.cleanTag(myTag);
                         }
 
-                    cv.put("IdMaterial", idMaterial);
-                        cv.put("Observaciones", observacionesTextView.getText().toString());
-                        cv.put("Creo", usuario.getId());
-                        cv.put("Estatus", "1");
-                        cv.put("Ruta", idRuta);
+                    } else {
+                        snackbar = Snackbar.make(findViewById(R.id.content_set_destino), "Por favor utiliza el TAG correcto", Snackbar.LENGTH_LONG);
+                        View snackBarView = snackbar.getView();
+                        snackBarView.setBackgroundColor(Color.RED);
+                        snackbar.show();
+                    }
+                } else if(error_eliminar == 1){
+                    limpiarorigen = nfcTag.cleanSector(myTag, 1);
+                    limpiarusuario = nfcTag.cleanSector(myTag, 3);
 
-                        aux=Util.dateFolios();
-
-                        cv.put("Code", Util.folio(aux)+String.valueOf(idCamion));
-                        cv.put("uidTAG", UID);
-                        cv.put("IMEI", IMEI);
-                        cv.put("CodeImagen", Util.getCodeFecha(idCamion,aux));
-
-                        if(deductiva.getText().toString().equals("")){
-                            cv.put("deductiva", 0);
-                            cv.put("idMotivo", 0);
-                        }else {
-                                cv.put("deductiva", deductiva.getText().toString());
-                                cv.put("idMotivo", idMotivo);
-                        }
-                        RandomString r = new RandomString(10);
-                        cv.put("FolioRandom", r.nextString().toUpperCase());
-                        cv.put("primerToque",idUsuario.replace(" ",""));
-                        c = c.find(idCamion);
-                        cv.put("cubicacion", String.valueOf(c.capacidad));
-
-                        viaje = new Viaje(this);
-                        viaje.create(cv);
-
-                        cv.clear();
-                        cv.put("IMEI", IMEI);
-                        cv.put("idevento", 3);
-                        cv.put("latitud", latitude);
-                        cv.put("longitud", longitude);
-                        cv.put("fecha_hora", Util.timeStamp());
-                        cv.put("code", aux);
-                        Coordenada coordenada = new Coordenada(this);
-                        coordenada.create(cv, SetDestinoActivity.this);
-                      //  aux="";
-                    //}
-                    Intent destinoSuccess = new Intent(this, SuccessDestinoActivity.class);
-                    destinoSuccess.putExtra("idViaje", viaje.idViaje);
-                    destinoSuccess.putExtra("LIST", 0);
-                    destinoSuccess.putExtra("code", aux);
-                    startActivity(destinoSuccess);
-
-                } else {
-                    snackbar = Snackbar.make(findViewById(R.id.content_set_destino), "Por favor utiliza el TAG correcto", Snackbar.LENGTH_LONG);
-                    View snackBarView = snackbar.getView();
-                    snackBarView.setBackgroundColor(Color.RED);
-                    snackbar.show();
+                    if (limpiarorigen && limpiarusuario){
+                        error_eliminar = 2;
+                    }
                 }
             }
+        }
+
+                   // Toast.makeText(getApplicationContext(),"numero de viaje: " + contador, Toast.LENGTH_SHORT).show();
+            if(continuar) {
+                Integer idCamion = Util.getIdCamion(tagInfo);
+                Integer idProyecto = Util.getIdProyecto(tagInfo);
+                Integer idOrigen = Util.getIdOrigen(tagOrigen);
+                Integer idMaterial = Util.getIdMaterial(tagOrigen);
+                Viaje viaje = null;
+                Camion c = new Camion(getApplicationContext());
+
+                String aux = "";
+
+                // for(int x=0; x<600;x++) {
+                ContentValues cv = new ContentValues();
+                cv.put("FechaCarga", Util.getFecha());
+                cv.put("HoraCarga", Util.getTime());
+                cv.put("IdProyecto", idProyecto);
+                cv.put("IdCamion", idCamion);
+                cv.put("IdOrigen", idOrigen);
+                cv.put("IdTiro", idTiro);
+                String fechaLlegada = Util.getFecha();
+                String horaLlegada = Util.getTime();
+                cv.put("FechaLlegada", fechaLlegada);
+                cv.put("HoraLlegada", horaLlegada);
+                String fechaOrigen = Util.getFecha(fechaString);
+                String horaOrigen = Util.getTime(fechaString);
+                if (fechaString.replace(" ", "").isEmpty()) {
+                    String fecha = Util.getFechaDisminucion(fechaLlegada + " " + horaLlegada);
+                    cv.put("FechaSalida", Util.getFecha(fecha));
+                    cv.put("HoraSalida", Util.getTime(fecha));
+                } else {
+                    if (horaOrigen == null || fechaOrigen == null) {
+                        String fecha = Util.getFechaDisminucion(fechaLlegada + " " + horaLlegada);
+                        cv.put("FechaSalida", Util.getFecha(fecha));
+                        cv.put("HoraSalida", Util.getTime(fecha));
+                    } else {
+                        cv.put("FechaSalida", fechaOrigen);
+                        cv.put("HoraSalida", horaOrigen);
+                    }
+
+                }
+
+                cv.put("IdMaterial", idMaterial);
+                cv.put("Observaciones", observacionesTextView.getText().toString());
+                cv.put("Creo", usuario.getId());
+                cv.put("Estatus", "1");
+                cv.put("Ruta", idRuta);
+
+                aux = Util.dateFolios();
+
+                cv.put("Code", Util.folio(aux) + String.valueOf(idCamion));
+                cv.put("uidTAG", UID);
+                cv.put("IMEI", IMEI);
+                cv.put("CodeImagen", Util.getCodeFecha(idCamion, aux));
+
+                if (deductiva.getText().toString().equals("")) {
+                    cv.put("deductiva", 0);
+                    cv.put("idMotivo", 0);
+                } else {
+                    cv.put("deductiva", deductiva.getText().toString());
+                    cv.put("idMotivo", idMotivo);
+                }
+                RandomString r = new RandomString(10);
+                cv.put("FolioRandom", r.nextString().toUpperCase());
+                cv.put("primerToque", idUsuario.replace(" ", ""));
+                c = c.find(idCamion);
+                cv.put("cubicacion", String.valueOf(c.capacidad));
+
+                viaje = new Viaje(this);
+                viaje.create(cv);
+
+                cv.clear();
+                cv.put("IMEI", IMEI);
+                cv.put("idevento", 3);
+                cv.put("latitud", latitude);
+                cv.put("longitud", longitude);
+                cv.put("fecha_hora", Util.timeStamp());
+                cv.put("code", aux);
+                Coordenada coordenada = new Coordenada(this);
+                coordenada.create(cv, SetDestinoActivity.this);
+                //  aux="";
+                //}
+
+
+                destinoSuccess.putExtra("idViaje", viaje.idViaje);
+                destinoSuccess.putExtra("LIST", 0);
+                destinoSuccess.putExtra("code", aux);
+            }
+        if(error_eliminar == 2){
+            startActivity(destinoSuccess);
+        }else{
+            //getString(R.string.error_tag_comunicacion)
+            snackbar = Snackbar.make(findViewById(R.id.content_set_destino), getString(R.string.error_tag_comunicacion), Snackbar.LENGTH_SHORT);
+            View snackBarView = snackbar.getView();
+            snackBarView.setBackgroundColor(Color.RED);
+            snackbar.show();
         }
     }
 
@@ -609,7 +652,5 @@ public class SetDestinoActivity extends AppCompatActivity
 
         return mensaje;
     }
-
-
 
 }
