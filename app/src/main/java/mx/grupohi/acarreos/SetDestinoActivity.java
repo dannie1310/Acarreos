@@ -353,8 +353,18 @@ public class SetDestinoActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            Intent mainActivity = new Intent(this, MainActivity.class);
-            startActivity(mainActivity);
+
+            Intent mainActivity;
+            Integer tipo = usuario.getTipo_permiso();
+            if(tipo == 0){
+                mainActivity = new Intent(getApplicationContext(), SetOrigenActivity.class);
+                mainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(mainActivity);
+            }else if(tipo == 1){
+                mainActivity = new Intent(getApplicationContext(), MainActivity.class);
+                mainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(mainActivity);
+            }
         } else if (id == R.id.nav_desc) {
             Intent descarga = new Intent(this, DescargaActivity.class);
             startActivity(descarga);

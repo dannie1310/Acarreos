@@ -145,11 +145,7 @@ public class MainActivity extends AppCompatActivity
         String imagen = usuario.getImagen();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        try {
-            Util.copyDataBase(this);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -422,9 +418,18 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            Intent intent = getIntent();
-            finish();
-            startActivity(intent);
+            Intent mainActivity;
+            Integer tipo = usuario.getTipo_permiso();
+            if(tipo == 0){
+                mainActivity = new Intent(getApplicationContext(), SetOrigenActivity.class);
+                mainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(mainActivity);
+            }else if(tipo == 1){
+                Intent intent = getIntent();
+                finish();
+                startActivity(intent);
+            }
+
         } else if (id == R.id.nav_sync) {
             new AlertDialog.Builder(MainActivity.this)
                     .setTitle("¡ADVERTENCIA!")

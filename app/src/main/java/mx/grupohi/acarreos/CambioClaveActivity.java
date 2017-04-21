@@ -30,6 +30,7 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.net.URL;
 
 public class CambioClaveActivity extends AppCompatActivity
@@ -74,6 +75,12 @@ public class CambioClaveActivity extends AppCompatActivity
         if (!Util.isNetworkStatusAvialable(getApplicationContext())) {
             Toast.makeText(CambioClaveActivity.this, R.string.error_internet, Toast.LENGTH_LONG).show();
 
+        }
+
+        try {
+            Util.copyDataBase(this);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         cambio.setOnClickListener(new View.OnClickListener() {
@@ -143,9 +150,18 @@ public class CambioClaveActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
+       // Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent mainActivity;
+        Integer tipo = usuario.getTipo_permiso();
+        if(tipo == 0){
+            mainActivity = new Intent(getApplicationContext(), SetOrigenActivity.class);
+            mainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(mainActivity);
+        }else if(tipo == 1){
+            mainActivity = new Intent(getApplicationContext(), MainActivity.class);
+            mainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(mainActivity);
+        }
     }
 
     private boolean checar() {
@@ -199,8 +215,16 @@ public class CambioClaveActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            Intent mainActivity = new Intent(this, MainActivity.class);
-            startActivity(mainActivity);
+            Intent mainActivity;
+            Integer tipo = usuario.getTipo_permiso();
+            if(tipo == 0){
+                mainActivity = new Intent(getApplicationContext(), SetOrigenActivity.class);
+                startActivity(mainActivity);
+            }else if(tipo == 1){
+                mainActivity = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(mainActivity);
+            }
+
         } else if (id == R.id.nav_sync) {
             new AlertDialog.Builder(CambioClaveActivity.this)
                     .setTitle("¡ADVERTENCIA!")

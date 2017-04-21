@@ -48,7 +48,7 @@ public class ValidacionActivity extends AppCompatActivity
     LinearLayout checkbox;
     LinearLayout pGondola;
 
-    Intent main;
+    Intent mainActivity;
 
 
     @Override
@@ -61,7 +61,18 @@ public class ValidacionActivity extends AppCompatActivity
         usuario = usuario.getUsuario();
         viaje = new Viaje(this);
         coordenada = new Coordenada(this);
-        main = new Intent(getApplicationContext(), MainActivity.class);
+
+        Integer tipo = usuario.getTipo_permiso();
+        if(tipo == 0){
+            mainActivity = new Intent(getApplicationContext(), SetOrigenActivity.class);
+            mainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(mainActivity);
+        }else if(tipo == 1){
+            mainActivity = new Intent(getApplicationContext(), MainActivity.class);
+            mainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(mainActivity);
+        }
+        //main = new Intent(getApplicationContext(), MainActivity.class);
 
         placas = getIntent().getStringExtra("placas");
         economico = getIntent().getStringExtra("economico");
@@ -143,14 +154,14 @@ public class ValidacionActivity extends AppCompatActivity
                                                error.setText("");
                                                if(gondola.isChecked() && !caja.equals("null")){
                                                    if(caja.replace("-","").toUpperCase().equals(tex_placasCaja.getText().toString().replace("-","").toUpperCase()) && placas.replace("-","").toUpperCase().equals(tex_placas.getText().toString().replace("-","").toUpperCase()) && economico.replace("-","").toUpperCase().equals(tex_economico.getText().toString().replace("-","").toUpperCase()) && capacidad.equals(metros.getText().toString())){
-                                                       main.putExtra("validacion", "correcta");
+                                                       mainActivity.putExtra("validacion", "correcta");
                                                        finish();
                                                    }else{
                                                        mensaje();
                                                    }
                                                }else if(volteo.isChecked() && caja.equals("null")){
                                                    if(placas.replace("-","").toUpperCase().equals(tex_placas.getText().toString().replace("-","").toUpperCase()) && economico.replace("-","").toUpperCase().equals(tex_economico.getText().toString().replace("-","").toUpperCase()) && capacidad.equals(metros.getText().toString())){
-                                                       main.putExtra("validacion", "correcta");
+                                                       mainActivity.putExtra("validacion", "correcta");
                                                        finish();
                                                    }else{
                                                        mensaje();
@@ -165,7 +176,7 @@ public class ValidacionActivity extends AppCompatActivity
         cancelar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(main);
+                startActivity(mainActivity);
             }
         });
 
@@ -204,7 +215,7 @@ public class ValidacionActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-       startActivity(main);
+       startActivity(mainActivity);
     }
 
 
@@ -220,8 +231,17 @@ public class ValidacionActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            Intent main = new Intent(this, MainActivity.class);
-            startActivity(main);
+            Intent mainActivity;
+            Integer tipo = usuario.getTipo_permiso();
+            if(tipo == 0){
+                mainActivity = new Intent(getApplicationContext(), SetOrigenActivity.class);
+                mainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(mainActivity);
+            }else if(tipo == 1){
+                mainActivity = new Intent(getApplicationContext(), MainActivity.class);
+                mainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(mainActivity);
+            }
         } else if (id == R.id.nav_sync) {
             new AlertDialog.Builder(ValidacionActivity.this)
                     .setTitle("¡ADVERTENCIA!")

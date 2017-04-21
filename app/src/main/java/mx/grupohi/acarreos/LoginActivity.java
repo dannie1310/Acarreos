@@ -56,6 +56,7 @@ public class LoginActivity extends AppCompatActivity {
     private DBScaSqlite db_sca;
     Intent mainActivity;
     Usuario usuario;
+    Integer tipo;
 
     // GPSTracker class
     GPSTracker gps;
@@ -66,11 +67,17 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        mainActivity = new Intent(this, MainActivity.class);
+        //mainActivity = new Intent(this, MainActivity.class);
         usuario = new Usuario(this);
+        tipo = usuario.getTipo_permiso();
         if (usuario.isAuth()) {
-            mainActivity = new Intent(this, MainActivity.class);
-            startActivity(mainActivity);
+            if(tipo == 0){
+                mainActivity = new Intent(this, SetOrigenActivity.class);
+                startActivity(mainActivity);
+            }else if(tipo == 1){
+                mainActivity = new Intent(this, MainActivity.class);
+                startActivity(mainActivity);
+            }
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
@@ -281,6 +288,7 @@ public class LoginActivity extends AppCompatActivity {
                     data.put("empresa", JSON.getString("empresa"));
                     data.put("logo", JSON.getInt("tiene_logo"));
                     data.put("imagen", JSON.getString("logo"));
+                    data.put("tipo_permiso", "1");
 
                     if (!usuario.create(data)) {
                         return false;
@@ -576,6 +584,7 @@ public class LoginActivity extends AppCompatActivity {
             } catch (Exception e) {
                 return false;
             }
+
             return true;
         }
 
@@ -585,7 +594,16 @@ public class LoginActivity extends AppCompatActivity {
             mAuthTask = null;
             loginProgressDialog.dismiss();
             if (success) {
-                startActivity(mainActivity);
+                if (usuario.isAuth()) {
+                    tipo = usuario.getTipo_permiso();
+                    if(tipo == 0){
+                        mainActivity = new Intent(getApplicationContext(), SetOrigenActivity.class);
+                    }else if(tipo == 1){
+                        mainActivity = new Intent(getApplicationContext(), MainActivity.class);
+                    }
+                    startActivity(mainActivity);
+                }
+
             }
         }
 

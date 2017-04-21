@@ -136,8 +136,16 @@ public class DescargaActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            Intent descarga = new Intent(this, MainActivity.class);
-            startActivity(descarga);
+            Intent mainActivity;
+            Integer tipo = usuario.getTipo_permiso();
+            if(tipo == 0){
+                mainActivity = new Intent(getApplicationContext(), SetOrigenActivity.class);
+                startActivity(mainActivity);
+            }else if(tipo == 1){
+                mainActivity = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(mainActivity);
+            }
+
         } else if (id == R.id.nav_sync) {
             new AlertDialog.Builder(DescargaActivity.this)
                     .setTitle("¡ADVERTENCIA!")
@@ -517,7 +525,16 @@ public class DescargaActivity extends AppCompatActivity
             descargaCatalogos = null;
             loginProgressDialog.dismiss();
             if (success) {
-                startActivity(mainActivity);
+               // startActivity(mainActivity);
+                Intent mainActivity;
+                Integer tipo = usuario.getTipo_permiso();
+                if(tipo == 0){
+                    mainActivity = new Intent(getApplicationContext(), SetOrigenActivity.class);
+                    startActivity(mainActivity);
+                }else if(tipo == 1){
+                    mainActivity = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(mainActivity);
+                }
             }
         }
     }

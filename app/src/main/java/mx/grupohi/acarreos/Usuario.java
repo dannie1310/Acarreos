@@ -277,5 +277,27 @@ class Usuario {
         }
         return resp;
     }
+
+    public Integer getTipo_permiso(){
+        db = db_sca.getWritableDatabase();
+        Integer tipo;
+        Cursor c = db.rawQuery("SELECT tipo_permiso FROM user LIMIT 1", null);
+        try {
+            if(c!=null && c.moveToFirst()){
+                tipo = c.getInt(0);
+                if(tipo == 1 || tipo == 3){
+                    return 0; //Origen
+                }else{
+                    return 1;
+                }
+            }
+            else{
+                return null;
+            }
+        } finally {
+            c.close();
+            db.close();
+        }
+    }
 }
 

@@ -371,8 +371,17 @@ public class SetOrigenActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            Intent mainActivity = new Intent(this, MainActivity.class);
-            startActivity(mainActivity);
+            Intent mainActivity;
+            Integer tipo = usuario.getTipo_permiso();
+            if(tipo == 0){
+                Intent intent = getIntent();
+                finish();
+                startActivity(intent);
+            }else if(tipo == 1){
+                mainActivity = new Intent(getApplicationContext(), MainActivity.class);
+                mainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(mainActivity);
+            }
         } else if (id == R.id.nav_sync) {
             new AlertDialog.Builder(SetOrigenActivity.this)
                     .setTitle("¡ADVERTENCIA!")
