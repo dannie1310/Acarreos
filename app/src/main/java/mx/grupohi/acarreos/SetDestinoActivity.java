@@ -510,13 +510,26 @@ public class SetDestinoActivity extends AppCompatActivity
                         if (tipo == 2) {
                             viajes = nfcUltra.readPage(myTag, 7);
                             viajes = viajes.replace(" ", "");
-                            contador = Integer.valueOf(viajes) + 1;
-                            boolean r = nfcUltra.writeViaje(myTag, String.valueOf(contador));
-                            tagInfo = nfcUltra.readPage(myTag, 4) + nfcUltra.readPage(myTag, 5);
-                            tagOrigen = nfcUltra.readPage(myTag, 8) + nfcUltra.readPage(myTag, 9);
-                            fechaString = nfcUltra.readPage(myTag, 10) + nfcUltra.readPage(myTag, 11) + nfcUltra.readPage(myTag, 12) + nfcUltra.readPage(myTag, 13).substring(0, 2);
-                            idUsuario = nfcUltra.readUsuario(myTag, 16) + nfcUltra.readUsuario(myTag, 17);
-                            nfcUltra.cleanTag(myTag);
+                            //contador = Integer.valueOf(viajes) + 1;
+                            try{
+                                boolean r = nfcUltra.writeViaje(myTag, String.valueOf(contador));
+                                tagInfo = nfcUltra.readPage(myTag, 4) + nfcUltra.readPage(myTag, 5);
+                                tagOrigen = nfcUltra.readPage(myTag, 8) + nfcUltra.readPage(myTag, 9);
+                                fechaString = nfcUltra.readPage(myTag, 10) + nfcUltra.readPage(myTag, 11) + nfcUltra.readPage(myTag, 12) + nfcUltra.readPage(myTag, 13).substring(0, 2);
+                                idUsuario = nfcUltra.readUsuario(myTag, 16) + nfcUltra.readUsuario(myTag, 17);
+                                Boolean  limpiar = nfcUltra.cleanTag(myTag);
+                                if (!limpiar){
+                                    error_eliminar = 1;
+                                }else{
+                                    error_eliminar = 2;
+                                }
+                                continuar = true;
+                            }
+                            catch (Exception e){
+                                e.printStackTrace();
+                            }
+
+
                         }
 
                     } else {
@@ -526,12 +539,20 @@ public class SetDestinoActivity extends AppCompatActivity
                         snackbar.show();
                     }
                 } else if(error_eliminar == 1){
-                    limpiarorigen = nfcTag.cleanSector(myTag, 1);
-                    limpiarusuario = nfcTag.cleanSector(myTag, 3);
-
-                    if (limpiarorigen && limpiarusuario){
-                        error_eliminar = 2;
+                    if(tipo == 1) {
+                        limpiarorigen = nfcTag.cleanSector(myTag, 1);
+                        limpiarusuario = nfcTag.cleanSector(myTag, 3);
+                        if (limpiarorigen && limpiarusuario){
+                            error_eliminar = 2;
+                        }
+                    } else if( tipo == 2){
+                        Boolean  limpiar = nfcUltra.cleanTag(myTag);
+                        if (limpiar){
+                            error_eliminar = 2;
+                        }
                     }
+
+
                 }
             }
         }

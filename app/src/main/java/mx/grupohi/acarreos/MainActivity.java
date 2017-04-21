@@ -232,18 +232,18 @@ public class MainActivity extends AppCompatActivity
                 if (MifareClassic.class.getName().equals(t)) {
                     nfc = new NFCTag(myTag, this);
                     try {
-                        UID = nfc.idTag(myTag);
+                        UID =  nfc.byteArrayToHexString(myTag.getId());
                         String tagString = nfc.readSector(myTag, 0, 1);
+                        String origenString = nfc.readSector(myTag, 1, 4);
+                        fechaString = nfc.readSector(myTag, 1, 5);
                         tagCamion = Util.getIdCamion(tagString);
                         tagProyecto = Util.getIdProyecto(tagString);
                         tagModel = tagModel.find(UID, tagCamion, tagProyecto);
-
-                        String origenString = nfc.readSector(myTag, 1, 4);
                         tagOrigen = Util.getIdOrigen(origenString);
                         tagMaterial = Util.getIdMaterial(origenString);
                         origen = origen.find(tagOrigen);
                         material = material.find(tagMaterial);
-                        fechaString = nfc.readSector(myTag, 1, 5);
+
                     }catch (Exception e){
                         tagModel=null;
                     }
@@ -253,9 +253,10 @@ public class MainActivity extends AppCompatActivity
                     try {
                         tagCamion = Integer.valueOf(nfcUltra.readPage(myTag, 4));
                         tagProyecto = Integer.valueOf(nfcUltra.readPage(myTag, 5));
-                        tagModel = tagModel.find(UID, tagCamion, tagProyecto);
                         String origen1 = nfcUltra.readPage(myTag, 9);
                         String material1 = nfcUltra.readPage(myTag, 8);
+                        tagModel = tagModel.find(UID, tagCamion, tagProyecto);
+
                         if (origen1 != null && material1 != null) {
                             tagOrigen = Integer.valueOf(origen1);
                             tagMaterial = Integer.valueOf(material1);

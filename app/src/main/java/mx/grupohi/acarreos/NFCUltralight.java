@@ -234,10 +234,10 @@ public class NFCUltralight {
             }
 
             mf.close();
-            Toast.makeText(context, context.getString(R.string.tag_configurado), Toast.LENGTH_LONG).show();
+            //Toast.makeText(context, context.getString(R.string.tag_configurado), Toast.LENGTH_LONG).show();
             return true;
         } catch (Exception fe) {
-            Toast.makeText(context, context.getString(R.string.error_tag_comunicacion), Toast.LENGTH_LONG).show();
+            //Toast.makeText(context, context.getString(R.string.error_tag_comunicacion), Toast.LENGTH_LONG).show();
             fe.printStackTrace();
             return false;
         }
