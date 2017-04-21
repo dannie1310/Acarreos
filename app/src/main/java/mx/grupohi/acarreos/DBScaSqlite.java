@@ -18,7 +18,7 @@ import java.util.GregorianCalendar;
     }
 
     private static String[] queries = new String[] {
-            "CREATE TABLE user (idusuario INTEGER, idproyecto INTEGER, nombre, TEXT, base_datos TEXT, descripcion_database TEXT, user TEXT, pass TEXT, empresa TEXT, logo INTEGER, imagen BLOB)",
+            "CREATE TABLE user (idusuario INTEGER, idproyecto INTEGER, nombre, TEXT, base_datos TEXT, descripcion_database TEXT, user TEXT, pass TEXT, empresa TEXT, logo INTEGER, imagen BLOB, tipo_permiso INTEGER)",
             "CREATE TABLE camiones (idcamion INTEGER, placas TEXT, placasCaja TEXT, marca TEXT, modelo TEXT, ancho REAL, largo REAL, alto REAL, economico TEXT, capacidad INTEGER, numero_viajes INTEGER)",
             "CREATE TABLE tiros (idtiro INTEGER, descripcion TEXT)",
             "CREATE TABLE origenes (idorigen INTEGER, descripcion TEXT, estado INTEGER)",
@@ -57,18 +57,20 @@ import java.util.GregorianCalendar;
             "CREATE TABLE motivos (id INTEGER, descripcion TEXT);",
             "CREATE TABLE configuraciones (ID INTEGER PRIMARY KEY AUTOINCREMENT, validacion_placas INTEGER);",
             "CREATE TABLE checadores (idChecador INTEGER PRIMARY KEY, nombre TEXT);",
+            "CREATE TABLE inicio_viajes (ID INTEGER PRIMARY KEY AUTOINCREMENT, idcamion INTEGER, idmaterial INTEGER, idorigen INTEGER, fecha_origen VARCHAR(8), idusuario INTEGER, uidTAG TEXT, IMEI TEXT, version TEXT, estatus INTEGER, created_at DATETIME DEFAULT CURRENT_TIMESTAMP);",
+            "CREATE TABLE entrada_tiros (ID INTEGER PRIMARY KEY AUTOINCREMENT, idcamion INTEGER, idtiro INTEGER, fecha_entrada VARCHAR(8), idusuario INTEGER, uidTAG TEXT, IMEI TEXT, version TEXT, estatus INTEGER, created_at DATETIME DEFAULT CURRENT_TIMESTAMP );",
     };
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         for (String query: queries){
             db.execSQL(query);
-        }
-    }
+        }    }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS user");
+
         db.execSQL("DROP TABLE IF EXISTS camiones");
         db.execSQL("DROP TABLE IF EXISTS origenes");
         db.execSQL("DROP TABLE IF EXISTS rutas");
@@ -83,6 +85,8 @@ import java.util.GregorianCalendar;
         db.execSQL("DROP TABLE IF EXISTS motivos");
         db.execSQL("DROP TABLE IF EXISTS configuraciones");
         db.execSQL("DROP TABLE IF EXISTS checadores");
+        db.execSQL("DROP TABLE IF EXISTS inicio_viajes");
+        db.execSQL("DROP TABLE IF EXISTS entrada_tiros");
 
         for (String query: queries){
             db.execSQL(query);
@@ -106,6 +110,8 @@ import java.util.GregorianCalendar;
         db.execSQL("DELETE FROM motivos");
         db.execSQL("DELETE FROM configuraciones");
         db.execSQL("DELETE FROM checadores");
+        db.execSQL("DELETE FROM inicio_viajes");
+        db.execSQL("DELETE FROM entrada_tiros");
 
         db.close();
     }

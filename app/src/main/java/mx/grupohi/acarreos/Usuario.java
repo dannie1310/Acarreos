@@ -28,6 +28,7 @@ class Usuario {
     String empresa;
     Integer logo;
     String imagen;
+    Integer tipo_permiso;
 
     private Context context;
 
@@ -51,6 +52,7 @@ class Usuario {
             this.empresa = data.getAsString("empresa");
             this.logo = data.getAsInteger("logo");
             this.imagen = data.getAsString("imagen");
+            this.tipo_permiso = data.getAsInteger("tipo_permiso");
         }
         db.close();
         return result;
@@ -99,6 +101,7 @@ class Usuario {
                 this.descripcionBaseDatos = c.getString(c.getColumnIndex("descripcion_database"));
                 this.usr = c.getString(c.getColumnIndex("user"));
                 this.pass = c.getString(c.getColumnIndex("pass"));
+                this.tipo_permiso = c.getInt(c.getColumnIndex("tipo_permiso"));
 
                 return this;
             } else {
