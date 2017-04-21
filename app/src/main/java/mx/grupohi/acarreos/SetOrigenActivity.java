@@ -57,6 +57,7 @@ public class SetOrigenActivity extends AppCompatActivity
     private ImageView nfcImage;
     private FloatingActionButton fabCancel;
     private TextView tagAlertTextView;
+    private TextView text_origen;
     private ProgressDialog progressDialogSync;
 
     private Snackbar snackbar;
@@ -74,6 +75,7 @@ public class SetOrigenActivity extends AppCompatActivity
     private PendingIntent pendingIntent;
     private IntentFilter writeTagFilters[];
     private Boolean writeMode;
+    private Integer tipo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,9 +113,45 @@ public class SetOrigenActivity extends AppCompatActivity
         tagAlertTextView.setVisibility(View.INVISIBLE);
         nfcImage.setVisibility(View.INVISIBLE);
         fabCancel.setVisibility(View.INVISIBLE);
-
+        text_origen = (TextView) findViewById(R.id.textView5);
         materialesSpinner = (Spinner) findViewById(R.id.spinnerMateriales);
         origenesSpinner = (Spinner) findViewById(R.id.spinnerOrigenes);
+
+        if(usuario.tipo_permiso == 1 || usuario.tipo_permiso == 3){
+            origenesSpinner.setVisibility(View.GONE);
+            text_origen.setVisibility(View.GONE);
+            tipo = 0;
+        }else{
+            tipo = 1;
+            final ArrayList<String> descripcionesOrigenes = origen.getArrayListDescripciones();
+            final ArrayList <String> idsOrigenes = origen.getArrayListId();
+
+            final String[] spinnerOrigenesArray = new String[idsOrigenes.size()];
+            final HashMap<String, String> spinnerOrigenesMap = new HashMap<>();
+
+            for (int i = 0; i < idsOrigenes.size(); i++) {
+                spinnerOrigenesMap.put(descripcionesOrigenes.get(i), idsOrigenes.get(i));
+                spinnerOrigenesArray[i] = descripcionesOrigenes.get(i);
+               // idOrigen = usuario.idorigen; // origen o tiro asignado
+            }
+
+            final ArrayAdapter<String> arrayAdapterOrigenes = new ArrayAdapter<>(this,R.layout.support_simple_spinner_dropdown_item, spinnerOrigenesArray);
+            arrayAdapterOrigenes.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+            origenesSpinner.setAdapter(arrayAdapterOrigenes);
+
+            origenesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    String descripcion = origenesSpinner.getSelectedItem().toString();
+                    idOrigen = Integer.valueOf(spinnerOrigenesMap.get(descripcion));
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+        }
 
         final ArrayList<String> descripcionesMateriales = material.getArrayListDescripciones();
         final ArrayList <String> idsMateriales = material.getArrayListId();
@@ -129,21 +167,6 @@ public class SetOrigenActivity extends AppCompatActivity
         final ArrayAdapter<String> arrayAdapterMateriales = new ArrayAdapter<>(this,R.layout.support_simple_spinner_dropdown_item, spinnerMaterialesArray);
         arrayAdapterMateriales.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         materialesSpinner.setAdapter(arrayAdapterMateriales);
-
-        final ArrayList<String> descripcionesOrigenes = origen.getArrayListDescripciones();
-        final ArrayList <String> idsOrigenes = origen.getArrayListId();
-
-        final String[] spinnerOrigenesArray = new String[idsOrigenes.size()];
-        final HashMap<String, String> spinnerOrigenesMap = new HashMap<>();
-
-        for (int i = 0; i < idsOrigenes.size(); i++) {
-            spinnerOrigenesMap.put(descripcionesOrigenes.get(i), idsOrigenes.get(i));
-            spinnerOrigenesArray[i] = descripcionesOrigenes.get(i);
-        }
-
-        final ArrayAdapter<String> arrayAdapterOrigenes = new ArrayAdapter<>(this,R.layout.support_simple_spinner_dropdown_item, spinnerOrigenesArray);
-        arrayAdapterOrigenes.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-        origenesSpinner.setAdapter(arrayAdapterOrigenes);
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if (nfcAdapter == null) {
@@ -172,18 +195,6 @@ public class SetOrigenActivity extends AppCompatActivity
             }
         });
 
-        origenesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String descripcion = origenesSpinner.getSelectedItem().toString();
-                idOrigen = Integer.valueOf(spinnerOrigenesMap.get(descripcion));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
 
         escribirOrigenButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -191,9 +202,11 @@ public class SetOrigenActivity extends AppCompatActivity
                 if(idMaterial == 0) {
                     Toast.makeText(getApplicationContext(), "Por favor seleccione un Material de la lista", Toast.LENGTH_LONG).show();
                     materialesSpinner.requestFocus();
-                } else if(idOrigen == 0) {
-                    Toast.makeText(getApplicationContext(), "Por favor seleccione un Origen de la lista", Toast.LENGTH_LONG).show();
-                    origenesSpinner.requestFocus();
+                } else if(tipo == 1){
+                    if (idOrigen == 0) {
+                        Toast.makeText(getApplicationContext(), "Por favor seleccione un Origen de la lista", Toast.LENGTH_LONG).show();
+                        origenesSpinner.requestFocus();
+                    }
                 } else {
                     checkNfcEnabled();
                     WriteModeOn();
@@ -245,15 +258,12 @@ public class SetOrigenActivity extends AppCompatActivity
                 for (String t : techs) {
                     if (MifareClassic.class.getName().equals(t)) {
                         nfcTag = new NFCTag(myTag, this);
-                       // Toast.makeText(getApplicationContext(), "MIFARECLASSIC", Toast.LENGTH_SHORT).show();
-                        UID = nfcTag.idTag(myTag);
+                        UID = nfcTag.byteArrayToHexString(myTag.getId());
                         tipo=1;
                     }
                     else if (MifareUltralight.class.getName().equals(t)) {
                         nfcUltra = new NFCUltralight(myTag, this);
                         UID = nfcUltra.byteArrayToHexString(myTag.getId());
-
-                        //Toast.makeText(getApplicationContext(), "MIFAREULTRALIGHT", Toast.LENGTH_SHORT).show();
                         tipo=2;
                     }
                 }
