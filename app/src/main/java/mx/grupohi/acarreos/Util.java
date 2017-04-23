@@ -272,5 +272,17 @@ class Util {
         }
     }
 
+    static String getFormatDate(String string) {
+        SimpleDateFormat format = new SimpleDateFormat("HHmmssyyyyMMdd");
+        try {
+            Date date = format.parse(string);
+            SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+            return timeFormat.format(date);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
 }
