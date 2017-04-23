@@ -120,6 +120,7 @@ public class SetOrigenActivity extends AppCompatActivity
         if(usuario.tipo_permiso == 1 || usuario.tipo_permiso == 3){
             origenesSpinner.setVisibility(View.GONE);
             text_origen.setVisibility(View.GONE);
+            idOrigen = usuario.idorigen;
             tipo = 0;
         }else{
             tipo = 1;
@@ -275,9 +276,7 @@ public class SetOrigenActivity extends AppCompatActivity
                         tipo=2;
                     }
                 }
-
-                if(UID.equals(getIntent().getStringExtra("UID"))) {
-                    String data = Util.concatenar(String.valueOf(idMaterial), String.valueOf(idOrigen));
+                String data = Util.concatenar(String.valueOf(idMaterial), String.valueOf(idOrigen));
                     latitude = gps.getLatitude();
                     longitude = gps.getLongitude();
                     boolean datos=false;
@@ -287,15 +286,17 @@ public class SetOrigenActivity extends AppCompatActivity
                     String fecha = null;
                     String usuario = null;
                     String user = String.valueOf(u.getId());
+                    String idcamion;
+                    String idproyecto;
 
                     String dataTime = Util.getFechaHora();
                     if(tipo==1){
                         datos = nfcTag.writeSector(myTag, 1, 4, data);
                         dia = nfcTag.writeSector(myTag, 1, 5, dataTime);
-                        uss = nfcTag.writeSector(myTag, 3, 12, user);
+                        uss = nfcTag.writeSector(myTag, 1, 6, user);
                         camion = nfcTag.readSector(myTag,1,4);
                         fecha = nfcTag.readSector(myTag,1,5);
-                        usuario = nfcTag.readSector(myTag,3,12);
+                        usuario = nfcTag.readSector(myTag,1,6);
                     }
                     if(tipo==2){
                         datos = nfcUltra.writePagina(myTag,8,data);
@@ -320,17 +321,15 @@ public class SetOrigenActivity extends AppCompatActivity
                         Coordenada coordenada = new Coordenada(getApplicationContext());
                         coordenada.create(cv, getApplicationContext());
 
+                        cv.clear();
+                        cv.put("idcamion",id);
+
                         Intent success = new Intent(SetOrigenActivity.this, SuccessOrigenActivity.class);
                         startActivity(success);
                     } else {
                         Toast.makeText(SetOrigenActivity.this, getString(R.string.error_tag_comunicacion), Toast.LENGTH_LONG).show();
                     }
-                } else {
-                    snackbar = Snackbar.make(findViewById(R.id.content_set_origen), "Por favor utiliza el TGA correcto", Snackbar.LENGTH_LONG);
-                    View snackBarView = snackbar.getView();
-                    snackBarView.setBackgroundColor(Color.RED);
-                    snackbar.show();
-                }
+
             }
         }
     }
