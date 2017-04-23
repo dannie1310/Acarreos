@@ -18,7 +18,7 @@ import java.util.GregorianCalendar;
     }
 
     private static String[] queries = new String[] {
-            "CREATE TABLE user (idusuario INTEGER, idproyecto INTEGER, nombre, TEXT, base_datos TEXT, descripcion_database TEXT, user TEXT, pass TEXT, empresa TEXT, logo INTEGER, imagen BLOB, tipo_permiso INTEGER)",
+            "CREATE TABLE user (idusuario INTEGER, idproyecto INTEGER, nombre, TEXT, base_datos TEXT, descripcion_database TEXT, user TEXT, pass TEXT, empresa TEXT, logo INTEGER, imagen BLOB, tipo_permiso INTEGER, idorigen INTEGER, idtiro INTEGER)",
             "CREATE TABLE camiones (idcamion INTEGER, placas TEXT, placasCaja TEXT, marca TEXT, modelo TEXT, ancho REAL, largo REAL, alto REAL, economico TEXT, capacidad INTEGER, numero_viajes INTEGER)",
             "CREATE TABLE tiros (idtiro INTEGER, descripcion TEXT)",
             "CREATE TABLE origenes (idorigen INTEGER, descripcion TEXT, estado INTEGER)",

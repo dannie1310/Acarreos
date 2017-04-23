@@ -29,15 +29,23 @@ class Usuario {
     Integer logo;
     String imagen;
     Integer tipo_permiso;
+    Integer idorigen;
+    String origen_name;
+    String tiro_name;
+    Integer  idtiro;
 
     private Context context;
 
     private SQLiteDatabase db;
     private DBScaSqlite db_sca;
+    Tiro tiro;
+    Origen origen;
 
     Usuario(Context context) {
         this.context = context;
         db_sca = new DBScaSqlite(context, "sca", null, 1);
+        origen = new Origen(context);
+        tiro = new Tiro(context);
     }
 
     boolean create(ContentValues data) {
@@ -94,6 +102,7 @@ class Usuario {
         Cursor c = db.rawQuery("SELECT * FROM user LIMIT 1", null);
         try {
             if(c != null && c.moveToFirst()) {
+
                 this.idUsuario = c.getInt(c.getColumnIndex("idusuario"));
                 this.idProyecto = c.getInt(c.getColumnIndex("idproyecto"));
                 this.nombre = c.getString(c.getColumnIndex("nombre"));
@@ -102,7 +111,19 @@ class Usuario {
                 this.usr = c.getString(c.getColumnIndex("user"));
                 this.pass = c.getString(c.getColumnIndex("pass"));
                 this.tipo_permiso = c.getInt(c.getColumnIndex("tipo_permiso"));
+                this.idorigen = c.getInt(c.getColumnIndex("idorigen"));
+                this.idtiro = c.getInt(c.getColumnIndex("idtiro"));
 
+                if(idorigen.toString() == "0"){
+                    tiro = tiro.find(c.getInt(c.getColumnIndex("idtiro")));
+                    this.tiro_name = tiro.descripcion;
+                    this.origen_name = "0";
+                }
+                else if (idtiro.toString() == "0") {
+                    origen = origen.find(c.getInt(c.getColumnIndex("idorigen")));
+                    this.origen_name = origen.descripcion;
+                    this.tiro_name = "0";
+                }
                 return this;
             } else {
                 return null;
