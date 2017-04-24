@@ -61,6 +61,8 @@ public class SuccessDestinoActivity extends AppCompatActivity
             textMotivo,
             textObservacion;
 
+    private View view2;
+
     private Toolbar toolbar;
 
     private ProgressDialog progressDialogSync;
@@ -111,7 +113,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
         checador = new Checador(getApplicationContext());
 
         bixolonPrinterApi = new BixolonPrinter(this, mHandler, null);
-
+        view2 = (View) findViewById(R.id.view2);
         textViewCamion = (TextView) findViewById(R.id.textViewCamion);
         textViewCubicacion = (TextView) findViewById(R.id.textViewCubicacion);
         textViewMaterial = (TextView) findViewById(R.id.textViewMaterial);
@@ -143,6 +145,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
             textDeductiva.setVisibility(View.GONE);
             textMotivo.setVisibility(View.GONE);
             textObservacion.setVisibility(View.GONE);
+            view2.setVisibility(View.GONE);
         }
         fillInfo();
 
@@ -189,9 +192,17 @@ public class SuccessDestinoActivity extends AppCompatActivity
         btnSalir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+                Intent mainActivity;
+                Integer tipo = usuario.getTipo_permiso();
+                if(tipo == 0){
+                    mainActivity = new Intent(getApplicationContext(), SetOrigenActivity.class);
+                    mainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(mainActivity);
+                }else if(tipo == 1){
+                    mainActivity = new Intent(getApplicationContext(), MainActivity.class);
+                    mainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(mainActivity);
+                }
             }
         });
         btnImagenes.setOnClickListener(new View.OnClickListener() {

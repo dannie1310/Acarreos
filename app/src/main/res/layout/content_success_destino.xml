@@ -274,6 +274,7 @@
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
         </LinearLayout>
         <View
+            android:id="@+id/view2"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@android:color/darker_gray"
