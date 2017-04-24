@@ -18,9 +18,18 @@ public class SuccessOrigenActivity extends AppCompatActivity {
         btnSalir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+                Integer tipo = usuario.getTipo_permiso();
+                Intent mainActivity;
+                if(tipo == 0){
+                    mainActivity = new Intent(getApplicationContext(), SetOrigenActivity.class);
+                    mainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(mainActivity);
+                }else if(tipo == 1){
+                    mainActivity = new Intent(getApplicationContext(), MainActivity.class);
+                    mainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(mainActivity);
+                }
+
             }
         });
     }

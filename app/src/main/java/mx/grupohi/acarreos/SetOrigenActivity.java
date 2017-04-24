@@ -333,16 +333,18 @@ public class SetOrigenActivity extends AppCompatActivity
                             cv.put("idusuario", user);
                             cv.put("uidTAG", UID);
                             cv.put("IMEI", IMEI);
-                            cv.put("version", String.valueOf(BuildConfig.VERSION_NAME) );
+                            cv.put("version", String.valueOf(BuildConfig.VERSION_NAME));
                             cv.put("estatus",1);
 
                             InicioViaje in = new InicioViaje(getApplicationContext());
                             Boolean guardar = in.create(cv);
 
                             if(guardar) {
-                                Intent success = new Intent(SetOrigenActivity.this, SuccessOrigenActivity.class);
+                                Intent success = new Intent(getApplicationContext(), SuccessDestinoActivity.class);
+                                success.putExtra("idInicio",in.id);
                                 startActivity(success);
                             }
+
                         } else {
                             Toast.makeText(SetOrigenActivity.this, getString(R.string.error_tag_comunicacion), Toast.LENGTH_LONG).show();
                         }

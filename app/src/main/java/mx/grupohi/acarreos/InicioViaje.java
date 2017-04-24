@@ -41,6 +41,17 @@ public class InicioViaje {
         db = db_sca.getWritableDatabase();
         Boolean result = null;
         result = db.insert("inicio_viajes", null, data) > -1;
+        if (result) {
+            Cursor c = db.rawQuery("SELECT ID FROM inicio_viajes WHERE fecha_origen = '" + data.getAsString("fecha_origen") + "'", null);
+            try {
+                if(c != null && c.moveToFirst()) {
+                    this.id = c.getInt(0);
+                }
+            } finally {
+                c.close();
+                db.close();
+            }
+        }
         return result;
     }
 

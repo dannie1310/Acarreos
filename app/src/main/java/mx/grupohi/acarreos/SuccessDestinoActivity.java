@@ -53,18 +53,26 @@ public class SuccessDestinoActivity extends AppCompatActivity
             textViewRuta,
             textViewObservaciones,
             textViewDeductiva,
-            motivo;
+            motivo,
+            textDestino,
+            textFechaDestino,
+            textRuta,
+            textDeductiva,
+            textMotivo,
+            textObservacion;
 
     private Toolbar toolbar;
 
     private ProgressDialog progressDialogSync;
     private Usuario usuario;
     private Viaje viaje;
+    private InicioViaje inicioViaje;
     private Checador checador;
     private Integer idViaje;
+    private Integer inicio;
     private String empresa;
     private Integer logo;
-
+    Boolean tipo_usuario = false; // true - origen ; false - tiro
     private Button btnImprimir,
             btnSalir,
             btnImagenes;
@@ -115,11 +123,27 @@ public class SuccessDestinoActivity extends AppCompatActivity
         textViewObservaciones = (TextView) findViewById(R.id.textViewObservaciones);
         textViewDeductiva = (TextView) findViewById(R.id.textViewDeductiva);
         motivo = (TextView) findViewById(R.id.textViewMotivoDeductiva);
+        textDestino = (TextView) findViewById(R.id.textDestino);
+        textFechaDestino = (TextView) findViewById(R.id.textFechaDestino);
+        textRuta = (TextView) findViewById(R.id.textRuta);
+        textDeductiva = (TextView) findViewById(R.id.textDeductiva);
+        textMotivo = (TextView) findViewById(R.id.textMotivo);
+        textObservacion = (TextView) findViewById(R.id.textObservaciones);
 
         btnImprimir = (Button) findViewById(R.id.buttonImprimir);
         btnImagenes = (Button) findViewById(R.id.buttonImagenes);
         btnSalir = (Button) findViewById(R.id.buttonSalir);
 
+        if(usuario.tiro_name == "0"){
+            btnImagenes.setVisibility(View.GONE);
+            tipo_usuario = true;
+            textDestino.setVisibility(View.GONE);
+            textFechaDestino.setVisibility(View.GONE);
+            textRuta.setVisibility(View.GONE);
+            textDeductiva.setVisibility(View.GONE);
+            textMotivo.setVisibility(View.GONE);
+            textObservacion.setVisibility(View.GONE);
+        }
         fillInfo();
 
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -137,12 +161,20 @@ public class SuccessDestinoActivity extends AppCompatActivity
                         TextView tvp = (TextView) child.findViewById(R.id.textViewProyecto);
                         TextView tvu = (TextView) child.findViewById(R.id.textViewUser);
                         TextView tvv = (TextView) child.findViewById(R.id.textViewVersion);
+                        TextView tpe = (TextView) child.findViewById(R.id.textViewPerfil);
 
                         if (tvp != null) {
                             tvp.setText(usuario.descripcionBaseDatos);
                         }
                         if (tvu != null) {
                             tvu.setText(usuario.nombre);
+                        }
+                        if (tpe != null){
+                            if(usuario.origen_name == "0"){
+                                tpe.setText(usuario.tiro_name);
+                            }else if(usuario.tiro_name == "0"){
+                                tpe.setText(usuario.origen_name);
+                            }
                         }
                         if (tvv != null) {
                             tvv.setText(getString(R.string.app_name)+"     "+"Versión " + String.valueOf(BuildConfig.VERSION_NAME));
@@ -227,43 +259,76 @@ public class SuccessDestinoActivity extends AppCompatActivity
                             if(!empresa.equals("null")) {
                                 printheadproyecto(empresa);
                             }
-                            viaje = viaje.find(idViaje);
-                            String nombreChecador="SIN PERFIL";
+                            if(tipo_usuario == false) {
+                                viaje = viaje.find(idViaje);
+                                String nombreChecador = "SIN PERFIL";
 
-                            if(!viaje.primerToque.isEmpty()) {
-                                nombreChecador = checador.findNombre(Integer.valueOf(viaje.primerToque));
-                                if(nombreChecador == null){
-                                    nombreChecador="SIN PERFIL";
+                                if (!viaje.primerToque.isEmpty()) {
+                                    nombreChecador = checador.findNombre(Integer.valueOf(viaje.primerToque));
+                                    if (nombreChecador == null) {
+                                        nombreChecador = "SIN PERFIL";
+                                    }
                                 }
+
+
+                                bixolonPrinterApi.lineFeed(1, true);
+                                printTextTwoColumns("Proyecto: ", usuario.getDescripcion() + " \n");
+                                printTextTwoColumns("Camión: ", textViewCamion.getText() + " \n");
+                                printTextTwoColumns("Cubicación: ", textViewCubicacion.getText() + " \n");
+
+                                printTextTwoColumns("Material: ", textViewMaterial.getText() + "\n");
+                                printTextTwoColumns("Origen: ", textViewOrigen.getText() + "\n");
+                                printTextTwoColumns("Fecha de Salida: ", textViewFechaHoraSalida.getText() + "\n");
+
+                                printTextTwoColumns("Destino: ", textViewDestino.getText() + "\n");
+                                printTextTwoColumns("Fecha Llegada: ", textViewFechaHoraLlegada.getText() + "\n");
+                                printTextTwoColumns("Ruta: ", textViewRuta.getText() + "\n");
+                                // if(textViewObservaciones.getText().length()!=0) {
+                                printTextTwoColumns("Deductiva: ", textViewDeductiva.getText() + "\n");
+                                printTextTwoColumns("Motivo Deductiva: ", motivo.getText() + "\n");
+                                printTextTwoColumns("Observaciones: ", textViewObservaciones.getText() + "\n");
+
+                                printTextTwoColumns("Checador Inicio: ", nombreChecador + "\n");
+                                printTextTwoColumns("Checador Cierre: " + usuario.getNombre(), Util.getTiempo() + "\n");
+
+                                // }
+                                //bixolonPrinterApi.lineFeed(1,true);
+                                printfoot("Checador: " + usuario.getNombre(), viaje.getCode(idViaje));
+                                bixolonPrinterApi.printQrCode(viaje.getCode(idViaje), BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.QR_CODE_MODEL2, 5, false);
+
+                                bixolonPrinterApi.lineFeed(2, true);
+                            }else{
+                                inicioViaje = new InicioViaje(getApplicationContext());
+                                inicioViaje = inicioViaje.find(inicio);
+
+
+                                bixolonPrinterApi.lineFeed(1, true);
+                                printTextTwoColumns("Proyecto: ", usuario.getDescripcion() + " \n");
+                                printTextTwoColumns("Camión: ", textViewCamion.getText() + " \n");
+                                printTextTwoColumns("Cubicación: ", textViewCubicacion.getText() + " \n");
+
+                                printTextTwoColumns("Material: ", textViewMaterial.getText() + "\n");
+                                printTextTwoColumns("Origen: ", textViewOrigen.getText() + "\n");
+                                printTextTwoColumns("Fecha de Salida: ", textViewFechaHoraSalida.getText() + "\n");
+
+                               // printTextTwoColumns("Destino: ", textViewDestino.getText() + "\n");
+                                //printTextTwoColumns("Fecha Llegada: ", textViewFechaHoraLlegada.getText() + "\n");
+                                //printTextTwoColumns("Ruta: ", textViewRuta.getText() + "\n");
+                                // if(textViewObservaciones.getText().length()!=0) {
+                                //printTextTwoColumns("Deductiva: ", textViewDeductiva.getText() + "\n");
+                                //printTextTwoColumns("Motivo Deductiva: ", motivo.getText() + "\n");
+                                //printTextTwoColumns("Observaciones: ", textViewObservaciones.getText() + "\n");
+
+                                printTextTwoColumns("Checador Inicio: "+  usuario.getNombre(), Util.getTiempo() + "\n");
+                               // printTextTwoColumns("Checador Cierre: " + usuario.getNombre(), Util.getTiempo() + "\n");
+
+                                // }
+                                //bixolonPrinterApi.lineFeed(1,true);
+                              //  printfoot("Checador: " + usuario.getNombre(), viaje.getCode(idViaje));
+                               // bixolonPrinterApi.printQrCode(viaje.getCode(idViaje), BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.QR_CODE_MODEL2, 5, false);
+
+                                bixolonPrinterApi.lineFeed(2, true);
                             }
-
-
-                            bixolonPrinterApi.lineFeed(1,true);
-                            printTextTwoColumns("Proyecto: ",usuario.getDescripcion()+ " \n");
-                            printTextTwoColumns("Camión: ", textViewCamion.getText()+ " \n");
-                            printTextTwoColumns("Cubicación: ", textViewCubicacion.getText()+" \n");
-
-                            printTextTwoColumns("Material: ",textViewMaterial.getText()+ "\n");
-                            printTextTwoColumns("Origen: ", textViewOrigen.getText()+"\n");
-                            printTextTwoColumns("Fecha de Salida: ", textViewFechaHoraSalida.getText()+"\n");
-
-                            printTextTwoColumns("Destino: ",textViewDestino.getText()+ "\n");
-                            printTextTwoColumns("Fecha Llegada: ", textViewFechaHoraLlegada.getText()+"\n");
-                            printTextTwoColumns("Ruta: ",textViewRuta.getText()+ "\n");
-                           // if(textViewObservaciones.getText().length()!=0) {
-                            printTextTwoColumns("Deductiva: ",textViewDeductiva.getText()+"\n");
-                            printTextTwoColumns("Motivo Deductiva: ", motivo.getText()+"\n");
-                            printTextTwoColumns("Observaciones: ", textViewObservaciones.getText() + "\n");
-
-                            printTextTwoColumns("Checador Inicio: ", nombreChecador + "\n");
-                            printTextTwoColumns("Checador Cierre: "+ usuario.getNombre(), Util.getTiempo() + "\n");
-
-                           // }
-                            //bixolonPrinterApi.lineFeed(1,true);
-                            printfoot("Checador: "+ usuario.getNombre(), viaje.getCode(idViaje));
-                            bixolonPrinterApi.printQrCode(viaje.getCode(idViaje), BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.QR_CODE_MODEL2, 5, false);
-
-                            bixolonPrinterApi.lineFeed(2, true);
                         } catch (Exception e) {
                             Toast.makeText(getApplicationContext(), R.string.error_impresion, Toast.LENGTH_LONG).show();
                         }
@@ -493,27 +558,47 @@ public class SuccessDestinoActivity extends AppCompatActivity
     };
 
     public void fillInfo() {
+        inicio = getIntent().getIntExtra("idInicio", 0);
         idViaje = getIntent().getIntExtra("idViaje", 0);
-        Viaje viaje = new Viaje(getApplicationContext());
-        viaje = viaje.find(idViaje);
-        Motivo motivoss = new Motivo(getApplicationContext());
-        if(viaje.deductiva.equals("0")) {
-            motivo.setText("NA");
-        }else{
-            motivoss.find(Integer.valueOf(viaje.idmotivo));
-            motivo.setText(motivoss.descripcion);
-        }
+        if(idViaje != 0) {
+            Viaje viaje = new Viaje(getApplicationContext());
+            viaje = viaje.find(idViaje);
+            Motivo motivoss = new Motivo(getApplicationContext());
+            if(viaje.deductiva.equals("0")) {
+                motivo.setText("NA");
+            }else{
+                motivoss.find(Integer.valueOf(viaje.idmotivo));
+                motivo.setText(motivoss.descripcion);
+            }
 
-        textViewCamion.setText(viaje.camion.economico);
-        textViewCubicacion.setText(viaje.camion.capacidad + " m3");
-        textViewMaterial.setText(viaje.material.descripcion);
-        textViewOrigen.setText(viaje.origen.descripcion);
-        textViewFechaHoraSalida.setText(viaje.fechaSalida + " " + viaje.horaSalida);
-        textViewDestino.setText(viaje.tiro.descripcion);
-        textViewFechaHoraLlegada.setText(viaje.fechaLlegada + " " + viaje.horaLlegada);
-        textViewRuta.setText(viaje.ruta.toString());
-        textViewObservaciones.setText(viaje.observaciones);
-        textViewDeductiva.setText(viaje.deductiva);
+            textViewCamion.setText(viaje.camion.economico);
+            textViewCubicacion.setText(viaje.camion.capacidad + " m3");
+            textViewMaterial.setText(viaje.material.descripcion);
+            textViewOrigen.setText(viaje.origen.descripcion);
+            textViewFechaHoraSalida.setText(viaje.fechaSalida + " " + viaje.horaSalida);
+            textViewDestino.setText(viaje.tiro.descripcion);
+            textViewFechaHoraLlegada.setText(viaje.fechaLlegada + " " + viaje.horaLlegada);
+            textViewRuta.setText(viaje.ruta.toString());
+            textViewObservaciones.setText(viaje.observaciones);
+            textViewDeductiva.setText(viaje.deductiva);
+
+        }
+        else if(inicio != 0){
+            InicioViaje in = new InicioViaje(getApplicationContext());
+            in = in.find(inicio);
+
+            textViewCamion.setText(in.camion.economico);
+            textViewCubicacion.setText(in.camion.capacidad + " m3");
+            textViewMaterial.setText(in.material.descripcion);
+            textViewOrigen.setText(in.origen.descripcion);
+            textViewFechaHoraSalida.setText(in.fecha_origen);
+            textViewDestino.setVisibility(View.GONE);
+            textViewFechaHoraLlegada.setVisibility(View.GONE);
+            textViewRuta.setVisibility(View.GONE);
+            textViewObservaciones.setVisibility(View.GONE);
+            textViewDeductiva.setVisibility(View.GONE);
+
+        }
 
 
     }
