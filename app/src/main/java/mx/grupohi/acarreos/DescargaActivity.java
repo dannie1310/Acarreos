@@ -250,7 +250,7 @@ public class DescargaActivity extends AppCompatActivity
                     db_sca.descargaCatalogos();
                     try {
                         String logo = JSON.getString("logo");
-                        Usuario.updateLogo(logo, getApplicationContext());
+                        Usuario.updateLogo(logo, 1,1,0, getApplicationContext());
                     }catch (Exception e){
                         e.printStackTrace();
                     }

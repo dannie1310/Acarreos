@@ -261,7 +261,7 @@ class Usuario {
     }
 
 
-    static boolean updateLogo(String logo, Context context) {
+    static boolean updateLogo(String logo, Integer tipo, Integer idorigen, Integer idtiro, Context context) {
         boolean resp=false;
         ContentValues data = new ContentValues();
 
@@ -271,6 +271,9 @@ class Usuario {
             try{
 
                 data.put("imagen", logo);
+                data.put("tipo_permiso", tipo);//idperfil
+                data.put("idorigen", idorigen);//idorigen
+                data.put("idtiro",idtiro);//idtiro
 
                 db.update("user", data, "", null);
                 resp = true;

@@ -160,6 +160,7 @@ public class MainActivity extends AppCompatActivity
                         View child = drawer.getChildAt(i);
                         TextView tvp = (TextView) child.findViewById(R.id.textViewProyecto);
                         TextView tvu = (TextView) child.findViewById(R.id.textViewUser);
+                        TextView tpe = (TextView) child.findViewById(R.id.textViewPerfil);
                         TextView tvv = (TextView) child.findViewById(R.id.textViewVersion);
 
                         if (tvp != null) {
@@ -167,6 +168,13 @@ public class MainActivity extends AppCompatActivity
                         }
                         if (tvu != null) {
                             tvu.setText(usuario.nombre);
+                        }
+                        if (tpe != null){
+                            if(usuario.origen_name == "0"){
+                                tpe.setText(usuario.tiro_name);
+                            }else if(usuario.tiro_name == "0"){
+                                tpe.setText(usuario.origen_name);
+                            }
                         }
                         if (tvv != null) {
                             tvv.setText(getString(R.string.app_name)+"     "+"Versión " + String.valueOf(BuildConfig.VERSION_NAME));
@@ -274,21 +282,21 @@ public class MainActivity extends AppCompatActivity
             if (tagModel != null) {
 
                 try {
-                    camion = camion.find(tagModel.idCamion);
-                    CamionID = camion.idCamion;
-                    setCamionInfo(camion);
-                    setTitle("INFORMACIÓN DEL TAG");
-                    if(validacion == null && c.validacion == 1){
-                        Intent validar = new Intent(getApplicationContext(), ValidacionActivity.class);
-                        validar.putExtra("economico", camion.economico);
-                        validar.putExtra("placas", camion.placas);
-                        validar.putExtra("placasCaja", camion.placasCaja);
-                        validar.putExtra("capacidad", String.valueOf(camion.capacidad));
-
-                        startActivityForResult(validar,0);
-                    }
-
                         if (origen != null && material != null) {
+                            camion = camion.find(tagModel.idCamion);
+                            CamionID = camion.idCamion;
+                            setCamionInfo(camion);
+                            setTitle("INFORMACIÓN DEL TAG");
+                            if(validacion == null && c.validacion == 1){
+                                Intent validar = new Intent(getApplicationContext(), ValidacionActivity.class);
+                                validar.putExtra("economico", camion.economico);
+                                validar.putExtra("placas", camion.placas);
+                                validar.putExtra("placasCaja", camion.placasCaja);
+                                validar.putExtra("capacidad", String.valueOf(camion.capacidad));
+
+                                startActivityForResult(validar,0);
+                            }
+
                             setOrigenInfo(origen, material, fechaString);
                             idOrigen = origen.idOrigen;
                             actionButton.setOnClickListener(new View.OnClickListener() {
@@ -300,14 +308,11 @@ public class MainActivity extends AppCompatActivity
                                     startActivity(setDestinoActivity);
                                 }
                             });
-                        } else {
-                            actionButton.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    setOrigenActivity.putExtra("UID", UID);
-                                    startActivity(setOrigenActivity);
-                                }
-                            });
+                        }else{
+                            snackbar = Snackbar.make(findViewById(R.id.content_main),R.string.error_sin_origen, Snackbar.LENGTH_LONG);
+                            View snackBarView = snackbar.getView();
+                            snackBarView.setBackgroundColor(Color.RED);
+                            snackbar.show();
                         }
 
                 }catch (Exception e){

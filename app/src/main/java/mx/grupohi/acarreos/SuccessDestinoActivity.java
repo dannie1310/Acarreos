@@ -146,6 +146,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
             textMotivo.setVisibility(View.GONE);
             textObservacion.setVisibility(View.GONE);
             view2.setVisibility(View.GONE);
+            btnImprimir.setText("IMPRIMIR COMPROBANTE");
         }
         fillInfo();
 

@@ -5,6 +5,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 /**
  * Created by DBENITEZ on 21/04/2017.
  */
@@ -60,6 +65,7 @@ public class InicioViaje {
         Cursor c = db.rawQuery("SELECT * FROM inicio_viajes WHERE ID = '" + idViaje + "'", null);
         try {
             if (c != null && c.moveToFirst()) {
+                this.id = c.getInt(c.getColumnIndex("ID"));
                 this.idcamion = c.getInt(c.getColumnIndex("idcamion"));
                 this.idmaterial=c.getInt(c.getColumnIndex("idmaterial"));
                 this.idorigen=c.getInt(c.getColumnIndex("idorigen"));
@@ -82,4 +88,28 @@ public class InicioViaje {
             db.close();
         }
     }
+
+    public static List<InicioViaje> getViajes(Context context){
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM inicio_viajes ORDER BY 'ID' ASC",null);
+        ArrayList viajes = new ArrayList<InicioViaje>();
+        try {
+            if (c != null){
+                while (c.moveToNext()){
+                    InicioViaje viaje = new InicioViaje(context);
+                    viaje = viaje.find(c.getInt(0));
+                    viajes.add(viaje);
+                }
+                return viajes;
+            }
+            else {
+                return new ArrayList<>();
+            }
+        } finally {
+            c.close();
+            db.close();
+        }
+    }
+
 }

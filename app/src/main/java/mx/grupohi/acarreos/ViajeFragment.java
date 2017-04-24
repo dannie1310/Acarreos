@@ -24,6 +24,8 @@ public class ViajeFragment extends Fragment {
 
     ListView mViajesList;
     ViajesAdapter mViajesAdapter;
+    InicioViajesAdapter inicioAdapter;
+    Usuario usuario;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -71,22 +73,39 @@ public class ViajeFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         final Context con = container.getContext();
+        usuario = new Usuario(con);
+        usuario = usuario.getUsuario();
         View root = inflater.inflate(R.layout.fragment_viaje, container, false);
         mViajesList = (ListView) root.findViewById(R.id.viajes_list);
-        mViajesAdapter = new ViajesAdapter(getActivity(), Viaje.getViajes(con));
-        mViajesList.setAdapter(mViajesAdapter);
+        if(usuario.getTipo_permiso() == 1){
+            mViajesAdapter = new ViajesAdapter(getActivity(), Viaje.getViajes(con));
+            mViajesList.setAdapter(mViajesAdapter);
+            mViajesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Viaje viajeActual = mViajesAdapter.getItem(position);
+                    Intent intent = new Intent(con, SuccessDestinoActivity.class);
+                    intent.putExtra("idViaje", viajeActual.idViaje);
+                    intent.putExtra("list", 1);
+                    startActivity(intent);
+                }
+            });
 
-        mViajesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Viaje viajeActual = mViajesAdapter.getItem(position);
-                Intent intent = new Intent(con, SuccessDestinoActivity.class);
-                intent.putExtra("idViaje", viajeActual.idViaje);
-                intent.putExtra("list", 1);
-                startActivity(intent);
-            }
-        });
+        }else {
+            inicioAdapter = new InicioViajesAdapter(getActivity(), InicioViaje.getViajes(con));
+            mViajesList.setAdapter(inicioAdapter);
+            mViajesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    InicioViaje viajeActual = inicioAdapter.getItem(position);
+                    Intent intent = new Intent(con, SuccessDestinoActivity.class);
+                    intent.putExtra("idInicio", viajeActual.id);
+                    intent.putExtra("list", 1);
+                    startActivity(intent);
+                }
+            });
 
+        }
         return root;
     }
 

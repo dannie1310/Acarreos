@@ -69,12 +69,20 @@ public class ListaViajesActivity extends AppCompatActivity
                         TextView tvp = (TextView) child.findViewById(R.id.textViewProyecto);
                         TextView tvu = (TextView) child.findViewById(R.id.textViewUser);
                         TextView tvv = (TextView) child.findViewById(R.id.textViewVersion);
+                        TextView tpe = (TextView) child.findViewById(R.id.textViewPerfil);
 
                         if (tvp != null) {
                             tvp.setText(usuario.descripcionBaseDatos);
                         }
                         if (tvu != null) {
                             tvu.setText(usuario.nombre);
+                        }
+                        if (tpe != null){
+                            if(usuario.origen_name == "0"){
+                                tpe.setText(usuario.tiro_name);
+                            }else if(usuario.tiro_name == "0"){
+                                tpe.setText(usuario.origen_name);
+                            }
                         }
                         if (tvv != null) {
                             tvv.setText(getString(R.string.app_name)+"     "+"Versión " + String.valueOf(BuildConfig.VERSION_NAME));
