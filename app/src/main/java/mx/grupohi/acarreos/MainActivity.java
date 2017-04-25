@@ -308,12 +308,16 @@ public class MainActivity extends AppCompatActivity
                                     startActivity(setDestinoActivity);
                                 }
                             });
+                        }else if(usuario.tipo_permiso == 3){
+                            Intent r = new Intent(getApplicationContext(), TiroUnicoActivity.class);
+                            startActivity(r);
                         }else{
                             snackbar = Snackbar.make(findViewById(R.id.content_main),R.string.error_sin_origen, Snackbar.LENGTH_LONG);
                             View snackBarView = snackbar.getView();
                             snackBarView.setBackgroundColor(Color.RED);
                             snackbar.show();
                         }
+
 
                 }catch (Exception e){
                     snackbar = Snackbar.make(findViewById(R.id.content_main),R.string.error_tag, Snackbar.LENGTH_LONG);

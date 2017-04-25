@@ -309,7 +309,7 @@ class Usuario {
         try {
             if(c!=null && c.moveToFirst()){
                 tipo = c.getInt(0);
-                if(tipo == 1 || tipo == 3){
+                if(tipo == 1){
                     return 0; //Origen
                 }else{
                     return 1;

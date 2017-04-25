@@ -316,30 +316,17 @@ public class SuccessDestinoActivity extends AppCompatActivity
 
                                 bixolonPrinterApi.lineFeed(1, true);
                                 printTextTwoColumns("Proyecto: ", usuario.getDescripcion() + " \n");
+                                bixolonPrinterApi.lineFeed(1, true);
                                 printTextTwoColumns("Camión: ", textViewCamion.getText() + " \n");
                                 printTextTwoColumns("Cubicación: ", textViewCubicacion.getText() + " \n");
-
+                                bixolonPrinterApi.lineFeed(1, true);
                                 printTextTwoColumns("Material: ", textViewMaterial.getText() + "\n");
                                 printTextTwoColumns("Origen: ", textViewOrigen.getText() + "\n");
-                                printTextTwoColumns("Fecha de Salida: ", textViewFechaHoraSalida.getText() + "\n");
+                                printTextTwoColumns("Fecha de Origen: ", textViewFechaHoraSalida.getText() + "\n");
 
-                               // printTextTwoColumns("Destino: ", textViewDestino.getText() + "\n");
-                                //printTextTwoColumns("Fecha Llegada: ", textViewFechaHoraLlegada.getText() + "\n");
-                                //printTextTwoColumns("Ruta: ", textViewRuta.getText() + "\n");
-                                // if(textViewObservaciones.getText().length()!=0) {
-                                //printTextTwoColumns("Deductiva: ", textViewDeductiva.getText() + "\n");
-                                //printTextTwoColumns("Motivo Deductiva: ", motivo.getText() + "\n");
-                                //printTextTwoColumns("Observaciones: ", textViewObservaciones.getText() + "\n");
+                                printTextTwoColumns("Checador: "+  usuario.getNombre(), Util.getTiempo() + "\n");
+                                printfootorigen();
 
-                                printTextTwoColumns("Checador Inicio: "+  usuario.getNombre(), Util.getTiempo() + "\n");
-                               // printTextTwoColumns("Checador Cierre: " + usuario.getNombre(), Util.getTiempo() + "\n");
-
-                                // }
-                                //bixolonPrinterApi.lineFeed(1,true);
-                              //  printfoot("Checador: " + usuario.getNombre(), viaje.getCode(idViaje));
-                               // bixolonPrinterApi.printQrCode(viaje.getCode(idViaje), BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.QR_CODE_MODEL2, 5, false);
-
-                                bixolonPrinterApi.lineFeed(2, true);
                             }
                         } catch (Exception e) {
                             Toast.makeText(getApplicationContext(), R.string.error_impresion, Toast.LENGTH_LONG).show();
@@ -434,6 +421,21 @@ public class SuccessDestinoActivity extends AppCompatActivity
 
     }
 
+    public static void printfootorigen() {
+        int alignment = BixolonPrinter.ALIGNMENT_LEFT;
+        int attribute = 1;
+        attribute |= BixolonPrinter.TEXT_ATTRIBUTE_FONT_A;
+        int size = 0;
+
+        bixolonPrinterApi.setSingleByteFont(BixolonPrinter.CODE_PAGE_858_EURO);
+
+        String cadena = "\n\nEste documento es un comprobante unicamente \ninformativo para el Sistema de Administración de \nObra, no representa un compromiso de pago.";
+        bixolonPrinterApi.printText(cadena, BixolonPrinter.ALIGNMENT_CENTER, attribute, size, false);
+        bixolonPrinterApi.lineFeed(4, false);
+        bixolonPrinterApi.cutPaper(true);
+        bixolonPrinterApi.kickOutDrawer(BixolonPrinter.DRAWER_CONNECTOR_PIN5);
+
+    }
     private void checkEnabled() {
         Boolean enabled = Bluetooth.statusBluetooth();
         if (!enabled) {

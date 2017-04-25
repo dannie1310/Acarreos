@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="mx.grupohi.acarreos.TiroUnicoActivity"
+    tools:showIn="@layout/app_bar_tiro_unico">
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/MainLayout"
+        android:layout_alignBottom="@+id/textViewMensaje"
+        android:layout_alignParentLeft="true">
+
+        <TextView
+            android:text="SELECCIONE EL MATERIAL:"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView4"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.SearchResult.Title" />
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:id="@+id/spinnerMateriales"
+            android:dropDownWidth="match_parent"
+            android:layout_height="60dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="5dp" />
+
+        <TextView
+            android:text="SELECCIONE EL ORIGEN:"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView5"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.SearchResult.Title" />
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:id="@+id/spinnerOrigenes"
+            android:layout_height="60dp"
+            android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:text="SELECCIONE EL TIRO:"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView6"
+            android:textAppearance="@android:style/TextAppearance.Material.Menu" />
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinnerTiros" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="5dp" />
+
+        <TextView
+            android:text="SELECCIONE LA RUTA:"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView7"
+            android:textAppearance="@android:style/TextAppearance.Material.Menu" />
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinnerRutas" />
+
+        <TextView
+            android:text="DEDUCTIVA:"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@android:style/TextAppearance.Material.Menu" />
+
+        <EditText
+            android:id="@+id/textDeductiva"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:textAppearance="@android:style/TextAppearance.Material.Menu" />
+        <TextView
+            android:text="SELECCIONE EL MOTIVO:"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewMotivo"
+            android:textAppearance="@android:style/TextAppearance.Material.Menu" />
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinnerMotivo" />
+
+        <TextView
+            android:text="OBSERVACIONES:"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@android:style/TextAppearance.Material.Menu" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@android:style/TextAppearance.Material.Menu"
+            android:id="@+id/textObservaciones"
+            android:maxLength="50"/>
+
+
+
+        <Button
+            android:text="ESCRIBIR DESTINO"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:id="@+id/buttonEscribir"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:textSize="18sp" />
+
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/nfc_back"
+        android:id="@+id/imageViewNFC"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/textViewMensaje" />
+
+    <TextView
+        android:text="ACERQUE EL TAG PARA ESCRIBIR EL ORIGEN"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewMensaje"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault"
+        android:layout_marginBottom="133dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:textSize="20sp"
+        android:textStyle="normal|bold"
+        android:textAlignment="center"
+        android:layout_alignParentLeft="true" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:srcCompat="@android:drawable/ic_menu_close_clear_cancel"
+        android:layout_below="@+id/MainLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="28dp"
+        android:id="@+id/fabCancel"
+        app:backgroundTint="@android:color/holo_red_light" />
+
+
+</RelativeLayout>

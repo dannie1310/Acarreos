@@ -464,7 +464,6 @@ public class SetDestinoActivity extends AppCompatActivity
         String fechaString = "";
         String idUsuario = null;
         Boolean limpiarorigen = false;
-        Boolean limpiarusuario = false;
         boolean continuar = false;
         String UID ="";
         if (writeMode) {
@@ -491,19 +490,19 @@ public class SetDestinoActivity extends AppCompatActivity
                         latitude = gps.getLatitude();
                         longitude = gps.getLongitude();
                         if (tipo == 1) {
-                            viajes = nfcTag.readSector(myTag, 2, 8);
-                            viajes = viajes.replace(" ", "");
+                           // viajes = nfcTag.readSector(myTag, 2, 8);
+                            //viajes = viajes.replace(" ", "");
                            // contador = Integer.valueOf(viajes) + 1;
-                            boolean write = nfcTag.writeSector(myTag, 2, 8, String.valueOf(contador));
+                            //boolean write = nfcTag.writeSector(myTag, 2, 8, String.valueOf(contador));
                             tagInfo = nfcTag.readSector(myTag, 0, 1);
                             tagOrigen = nfcTag.readSector(myTag, 1, 4);
                             fechaString = nfcTag.readSector(myTag, 1, 5);
-                            idUsuario = nfcTag.readSector(myTag, 3, 12);
+                            idUsuario = nfcTag.readSector(myTag, 1, 6);
 
-                            if (write && tagInfo != null && tagOrigen != null && fechaString != null && idUsuario != null) {
+                            if (tagInfo != null && tagOrigen != null && fechaString != null && idUsuario != null) {
                                 limpiarorigen = nfcTag.cleanSector(myTag, 1);
-                                limpiarusuario = nfcTag.cleanSector(myTag, 3);
-                                if (!limpiarorigen || !limpiarusuario){
+
+                                if (!limpiarorigen){
                                     error_eliminar = 1;
                                 }else{
                                     error_eliminar = 2;
@@ -518,8 +517,8 @@ public class SetDestinoActivity extends AppCompatActivity
                             }
                         }
                         if (tipo == 2) {
-                            viajes = nfcUltra.readPage(myTag, 7);
-                            viajes = viajes.replace(" ", "");
+                            //viajes = nfcUltra.readPage(myTag, 7);
+                            //viajes = viajes.replace(" ", "");
                             //contador = Integer.valueOf(viajes) + 1;
                             try{
                                 boolean r = nfcUltra.writeViaje(myTag, String.valueOf(contador));
@@ -551,8 +550,8 @@ public class SetDestinoActivity extends AppCompatActivity
                 } else if(error_eliminar == 1){
                     if(tipo == 1) {
                         limpiarorigen = nfcTag.cleanSector(myTag, 1);
-                        limpiarusuario = nfcTag.cleanSector(myTag, 3);
-                        if (limpiarorigen && limpiarusuario){
+
+                        if (limpiarorigen){
                             error_eliminar = 2;
                         }
                     } else if( tipo == 2){

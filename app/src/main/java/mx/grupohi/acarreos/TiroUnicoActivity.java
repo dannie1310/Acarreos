@@ -2,16 +2,11 @@ package mx.grupohi.acarreos;
 
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.nfc.NfcAdapter;
-import android.nfc.Tag;
-import android.nfc.tech.MifareClassic;
-import android.nfc.tech.MifareUltralight;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -38,8 +33,9 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class SetOrigenActivity extends AppCompatActivity
+public class TiroUnicoActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
     //Objetos
     private Usuario usuario;
     private Material material;
@@ -77,10 +73,14 @@ public class SetOrigenActivity extends AppCompatActivity
     private Boolean writeMode;
     private Integer tipo;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_set_origen);
+        setContentView(R.layout.activity_tiro_unico);
+        usuario = new Usuario(getApplicationContext());
+        usuario = usuario.getUsuario();
+
         escribirOrigenButton = (Button) findViewById(R.id.buttonEscribirOrigen);
 
         usuario = new Usuario(this);
@@ -88,7 +88,7 @@ public class SetOrigenActivity extends AppCompatActivity
         material = new Material(this);
         origen = new Origen(this);
 
-        gps = new GPSTracker(SetOrigenActivity.this);
+        gps = new GPSTracker(getApplicationContext());
 
         TelephonyManager phneMgr = (TelephonyManager)getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
         IMEI = phneMgr.getDeviceId();
@@ -133,7 +133,7 @@ public class SetOrigenActivity extends AppCompatActivity
             for (int i = 0; i < idsOrigenes.size(); i++) {
                 spinnerOrigenesMap.put(descripcionesOrigenes.get(i), idsOrigenes.get(i));
                 spinnerOrigenesArray[i] = descripcionesOrigenes.get(i);
-               // idOrigen = usuario.idorigen; // origen o tiro asignado
+                // idOrigen = usuario.idorigen; // origen o tiro asignado
             }
 
             final ArrayAdapter<String> arrayAdapterOrigenes = new ArrayAdapter<>(this,R.layout.support_simple_spinner_dropdown_item, spinnerOrigenesArray);
@@ -252,120 +252,7 @@ public class SetOrigenActivity extends AppCompatActivity
                     }
                 }
             });
-    }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        String UID="";
-        Usuario u = new Usuario(getApplicationContext());
-        u = u.getUsuario();
-        int tipo=0;
-        if(writeMode) {
-            if(NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
-                Tag myTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-                String[] techs = myTag.getTechList();
-                for (String t : techs) {
-                    if (MifareClassic.class.getName().equals(t)) {
-                        nfcTag = new NFCTag(myTag, this);
-                        UID = nfcTag.byteArrayToHexString(myTag.getId());
-                        tipo=1;
-                    }
-                    else if (MifareUltralight.class.getName().equals(t)) {
-                        nfcUltra = new NFCUltralight(myTag, this);
-                        UID = nfcUltra.byteArrayToHexString(myTag.getId());
-                        tipo=2;
-                    }
-                }
-                String data = Util.concatenar(String.valueOf(idMaterial), String.valueOf(idOrigen));
-                    latitude = gps.getLatitude();
-                    longitude = gps.getLongitude();
-                    boolean datos=false;
-                    boolean dia=false;
-                    boolean uss=false;
-                    String camion = null;
-                    String fecha = null;
-                    String idusuario = null;
-                    String user = String.valueOf(u.getId());
-                    Integer idcamion = 0;
-                    Integer idproyecto = 0;
-                    String camion_proyecto;
-                    String dataTime = Util.getFechaHora();
-                    if(tipo==1){
-                        datos = nfcTag.writeSector(myTag, 1, 4, data);
-                        dia = nfcTag.writeSector(myTag, 1, 5, dataTime);
-                        uss = nfcTag.writeSector(myTag, 1, 6, user);
-                        camion_proyecto = nfcTag.readSector(myTag,0,1);
-                        idcamion = Util.getIdCamion(camion_proyecto);
-                        idproyecto = Util.getIdProyecto(camion_proyecto);
-                        camion = nfcTag.readSector(myTag,1,4);
-                        fecha = nfcTag.readSector(myTag,1,5);
-                        idusuario = nfcTag.readSector(myTag,1,6);
-                    }
-                    if(tipo==2){
-                        datos = nfcUltra.writePagina(myTag,8,data);
-                        dia = nfcUltra.writePagina(myTag,10,dataTime);
-                        uss = nfcUltra.writePagina(myTag,16,user);
-                        camion = nfcUltra.readConfirmar(myTag, 8)+ nfcUltra.readConfirmar(myTag, 9);
-                        fecha = nfcUltra.readConfirmar(myTag,10) + nfcUltra.readConfirmar(myTag,11) +nfcUltra.readConfirmar(myTag,12) + nfcUltra.readConfirmar(myTag,13).substring(0,2);
-                        idusuario = nfcUltra.readConfirmar(myTag, 16) + nfcUltra.readConfirmar(myTag, 17);
-
-                    }
-                    if(idproyecto == usuario.getProyecto()) {
-                        if (data.equals(camion.replace(" ","")) && dataTime.equals(fecha.replace(" ","")) && user.equals(idusuario.replace(" ",""))) {
-
-                            ContentValues cv = new ContentValues();
-                            cv.put("IMEI", IMEI);
-                            cv.put("idevento", 2);
-                            cv.put("latitud", latitude);
-                            cv.put("longitud", longitude);
-                            cv.put("fecha_hora", Util.timeStamp());
-                            cv.put("code", "");
-
-
-                            Coordenada coordenada = new Coordenada(getApplicationContext());
-                            coordenada.create(cv, getApplicationContext());
-
-                            cv.clear();
-                            cv.put("idcamion",idcamion);
-                            cv.put("idmaterial", idMaterial);
-                            cv.put("idorigen", idOrigen);
-                            cv.put("fecha_origen", Util.getFormatDate(dataTime));
-                            cv.put("idusuario", user);
-                            cv.put("uidTAG", UID);
-                            cv.put("IMEI", IMEI);
-                            cv.put("version", String.valueOf(BuildConfig.VERSION_NAME));
-                            cv.put("estatus",1);
-
-                            InicioViaje in = new InicioViaje(getApplicationContext());
-                            Boolean guardar = in.create(cv);
-
-                            if(guardar) {
-                                Intent success = new Intent(getApplicationContext(), SuccessDestinoActivity.class);
-                                success.putExtra("idInicio",in.id);
-                                startActivity(success);
-                            }
-
-                        } else {
-                            Toast.makeText(SetOrigenActivity.this, getString(R.string.error_tag_comunicacion), Toast.LENGTH_LONG).show();
-                        }
-                    }else {
-                        Toast.makeText(SetOrigenActivity.this, getString(R.string.error_proyecto), Toast.LENGTH_LONG).show();
-                    }
-            }
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        checkNfcEnabled();
-        WriteModeOff();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        nfcAdapter.disableForegroundDispatch(this);
     }
 
     private void WriteModeOn() {
@@ -392,17 +279,32 @@ public class SetOrigenActivity extends AppCompatActivity
         tagAlertTextView.setVisibility(View.GONE);
     }
 
+    private void checkNfcEnabled() {
+        Boolean nfcEnabled = nfcAdapter.isEnabled();
+        if (!nfcEnabled) {
+            new android.app.AlertDialog.Builder(TiroUnicoActivity.this)
+                    .setTitle(getString(R.string.text_warning_nfc_is_off))
+                    .setMessage(getString(R.string.text_turn_on_nfc))
+                    .setCancelable(true)
+                    .setPositiveButton(
+                            getString(R.string.text_update_settings),
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+                                    startActivity(new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS));
+                                }
+                            })
+                    .create()
+                    .show();
+        }
+    }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-            finish();
         } else {
-            finish();
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_HOME);
-            startActivity(intent);
+            super.onBackPressed();
         }
     }
 
@@ -425,7 +327,7 @@ public class SetOrigenActivity extends AppCompatActivity
                 startActivity(mainActivity);
             }
         } else if (id == R.id.nav_sync) {
-            new AlertDialog.Builder(SetOrigenActivity.this)
+            new AlertDialog.Builder(TiroUnicoActivity.this)
                     .setTitle("¡ADVERTENCIA!")
                     .setMessage("Se borrarán los registros de viajes almacenados en este dispositivo. \n ¿Deséas continuar con la sincronización?")
                     .setNegativeButton("NO", null)
@@ -433,7 +335,7 @@ public class SetOrigenActivity extends AppCompatActivity
                         @Override public void onClick(DialogInterface dialog, int which) {
                             if (Util.isNetworkStatusAvialable(getApplicationContext())) {
                                 if(!Viaje.isSync(getApplicationContext())) {
-                                    progressDialogSync = ProgressDialog.show(SetOrigenActivity.this, "Sincronizando datos", "Por favor espere...", true);
+                                    progressDialogSync = ProgressDialog.show(TiroUnicoActivity.this, "Sincronizando datos", "Por favor espere...", true);
                                     new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
                                 } else {
                                     Toast.makeText(getApplicationContext(), "No es necesaria la sincronización en este momento", Toast.LENGTH_LONG).show();
@@ -456,14 +358,14 @@ public class SetOrigenActivity extends AppCompatActivity
 
         }  else if (id == R.id.nav_logout) {
             if(!Viaje.isSync(getApplicationContext())){
-                new AlertDialog.Builder(SetOrigenActivity.this)
+                new AlertDialog.Builder(TiroUnicoActivity.this)
                         .setTitle("¡ADVERTENCIA!")
                         .setMessage("Hay viajes aún sin sincronizar, se borrarán los registros de viajes almacenados en este dispositivo,  \n ¿Deséas sincronizar?")
                         .setNegativeButton("NO", null)
                         .setPositiveButton("SI", new DialogInterface.OnClickListener() {
                             @Override public void onClick(DialogInterface dialog, int which) {
                                 if (Util.isNetworkStatusAvialable(getApplicationContext())) {
-                                    progressDialogSync = ProgressDialog.show(SetOrigenActivity.this, "Sincronizando datos", "Por favor espere...", true);
+                                    progressDialogSync = ProgressDialog.show(TiroUnicoActivity.this, "Sincronizando datos", "Por favor espere...", true);
                                     new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
 
                                     Intent login_activity = new Intent(getApplicationContext(), LoginActivity.class);
@@ -486,29 +388,8 @@ public class SetOrigenActivity extends AppCompatActivity
             Intent cambio = new Intent(this, CambioClaveActivity.class);
             startActivity(cambio);
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    private void checkNfcEnabled() {
-        Boolean nfcEnabled = nfcAdapter.isEnabled();
-        if (!nfcEnabled) {
-            new android.app.AlertDialog.Builder(SetOrigenActivity.this)
-                    .setTitle(getString(R.string.text_warning_nfc_is_off))
-                    .setMessage(getString(R.string.text_turn_on_nfc))
-                    .setCancelable(true)
-                    .setPositiveButton(
-                            getString(R.string.text_update_settings),
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int id) {
-                                    startActivity(new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS));
-                                }
-                            })
-                    .create()
-                    .show();
-        }
     }
 }
