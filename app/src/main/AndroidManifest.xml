@@ -84,10 +84,12 @@
         <activity
             android:name=".CambioClaveActivity"
             android:label="CAMBIO DE CONTRASEÑA"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".TiroUnicoActivity"
             android:label="@string/title_activity_tiro_unico"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

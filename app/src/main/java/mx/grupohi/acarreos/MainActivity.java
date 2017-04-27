@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.StringTokenizer;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -282,9 +283,9 @@ public class MainActivity extends AppCompatActivity
             if (tagModel != null) {
 
                 try {
+                    camion = camion.find(tagModel.idCamion);
+                    CamionID = camion.idCamion;
                         if (origen != null && material != null) {
-                            camion = camion.find(tagModel.idCamion);
-                            CamionID = camion.idCamion;
                             setCamionInfo(camion);
                             setTitle("INFORMACIÓN DEL TAG");
                             if(validacion == null && c.validacion == 1){
@@ -310,6 +311,8 @@ public class MainActivity extends AppCompatActivity
                             });
                         }else if(usuario.tipo_permiso == 3){
                             Intent r = new Intent(getApplicationContext(), TiroUnicoActivity.class);
+                            r.putExtra("UID", UID);
+                            r.putExtra("camion", String.valueOf(CamionID));
                             startActivity(r);
                         }else{
                             snackbar = Snackbar.make(findViewById(R.id.content_main),R.string.error_sin_origen, Snackbar.LENGTH_LONG);

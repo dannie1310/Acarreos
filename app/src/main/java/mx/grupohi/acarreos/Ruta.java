@@ -72,6 +72,7 @@ class Ruta {
         try {
             if (c != null && c.moveToFirst()) {
                 if (c.getCount() == 1) {
+                    data.add("-- Seleccione --");
                     data.add(c.getString(1) + " - " + c.getString(0) + " " + c.getString(4) + " KM");
                 } else {
                     data.add("-- Seleccione --");
@@ -95,6 +96,7 @@ class Ruta {
         try {
             if (c != null && c.moveToFirst()) {
                 if (c.getCount() == 1) {
+                    data.add("0");
                     data.add(c.getString(c.getColumnIndex("idruta")));
                 } else {
                     data.add("0");

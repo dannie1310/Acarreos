@@ -191,28 +191,6 @@ public class SetDestinoActivity extends AppCompatActivity
                 arrayAdapterRutas.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
                 rutasSpinner.setAdapter(arrayAdapterRutas);
 
-                if(drawer != null)
-                    drawer.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            for (int i = 0; i < drawer.getChildCount(); i++) {
-                                View child = drawer.getChildAt(i);
-                                TextView tvp = (TextView) child.findViewById(R.id.textViewProyecto);
-                                TextView tvu = (TextView) child.findViewById(R.id.textViewUser);
-                                TextView tvv = (TextView) child.findViewById(R.id.textViewVersion);
-
-                                if (tvp != null) {
-                                    tvp.setText(usuario.descripcionBaseDatos);
-                                }
-                                if (tvu != null) {
-                                    tvu.setText(usuario.nombre);
-                                }
-                                if (tvv != null) {
-                                    tvv.setText(getString(R.string.app_name)+"     "+"Versión " + String.valueOf(BuildConfig.VERSION_NAME));
-                                }
-                            }
-                        }
-                    });
 
             }
 
@@ -221,6 +199,28 @@ public class SetDestinoActivity extends AppCompatActivity
 
             }
         });
+        if(drawer != null)
+            drawer.post(new Runnable() {
+                @Override
+                public void run() {
+                    for (int i = 0; i < drawer.getChildCount(); i++) {
+                        View child = drawer.getChildAt(i);
+                        TextView tvp = (TextView) child.findViewById(R.id.textViewProyecto);
+                        TextView tvu = (TextView) child.findViewById(R.id.textViewUser);
+                        TextView tvv = (TextView) child.findViewById(R.id.textViewVersion);
+
+                        if (tvp != null) {
+                            tvp.setText(usuario.descripcionBaseDatos);
+                        }
+                        if (tvu != null) {
+                            tvu.setText(usuario.nombre);
+                        }
+                        if (tvv != null) {
+                            tvv.setText(getString(R.string.app_name)+"     "+"Versión " + String.valueOf(BuildConfig.VERSION_NAME));
+                        }
+                    }
+                }
+            });
         Motivo motivo = new Motivo(getApplicationContext());
         final ArrayList<String> descripcionesMotivos = motivo.getArrayListDescripciones();
         final ArrayList <String> idsMotivos = motivo.getArrayListId();
@@ -475,7 +475,7 @@ public class SetDestinoActivity extends AppCompatActivity
                 for (String t : techs) {
                     if (MifareClassic.class.getName().equals(t)) {
                         nfcTag = new NFCTag(myTag, this);
-                        UID = nfcTag.idTag(myTag);
+                        UID = nfcTag.byteArrayToHexString(myTag.getId());
                         tipo=1;
                     }
                     else if (MifareUltralight.class.getName().equals(t)) {

@@ -101,4 +101,49 @@ class Origen {
         }
         return data;
     }
+
+    ArrayList<String> getArrayListDescripcionesOrigenTiro(Integer idtiro) {
+        ArrayList<String> data = new ArrayList<>();
+        db = db_sca.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM origenes WHERE idorigen IN (SELECT idorigen FROM rutas WHERE idtiro = '"+idtiro+"') ORDER BY descripcion ASC", null);
+        try {
+            if (c != null && c.moveToFirst()) {
+                if (c.getCount() == 1) {
+                    data.add(c.getString(c.getColumnIndex("descripcion")));
+                } else {
+                    data.add("-- Seleccione --");
+                    data.add(c.getString(c.getColumnIndex("descripcion")));
+                    while (c.moveToNext()) {
+                        data.add(c.getString(c.getColumnIndex("descripcion")));
+                    }
+                }
+            }
+        } finally {
+            c.close();
+            db.close();
+        }
+        return data;
+    }
+    ArrayList<String> getArrayListId(Integer idtiro) {
+        ArrayList<String> data = new ArrayList<>();
+        db = db_sca.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM origenes WHERE idorigen IN (SELECT idorigen FROM rutas WHERE idtiro = '"+idtiro+"') ORDER BY descripcion ASC", null);
+        try {
+            if (c != null && c.moveToFirst()) {
+                if (c.getCount() == 1) {
+                    data.add(c.getString(c.getColumnIndex("idorigen")));
+                } else {
+                    data.add("0");
+                    data.add(c.getString(c.getColumnIndex("idorigen")));
+                    while (c.moveToNext()) {
+                        data.add(c.getString(c.getColumnIndex("idorigen")));
+                    }
+                }
+            }
+        } finally {
+            c.close();
+            db.close();
+        }
+        return data;
+    }
 }
