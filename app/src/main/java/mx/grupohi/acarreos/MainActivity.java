@@ -285,40 +285,42 @@ public class MainActivity extends AppCompatActivity
                 try {
                     camion = camion.find(tagModel.idCamion);
                     CamionID = camion.idCamion;
-                        if (origen != null && material != null) {
-                            setCamionInfo(camion);
-                            setTitle("INFORMACIÓN DEL TAG");
-                            if(validacion == null && c.validacion == 1){
-                                Intent validar = new Intent(getApplicationContext(), ValidacionActivity.class);
-                                validar.putExtra("economico", camion.economico);
-                                validar.putExtra("placas", camion.placas);
-                                validar.putExtra("placasCaja", camion.placasCaja);
-                                validar.putExtra("capacidad", String.valueOf(camion.capacidad));
-
-                                startActivityForResult(validar,0);
-                            }
-
-                            setOrigenInfo(origen, material, fechaString);
-                            idOrigen = origen.idOrigen;
-                            actionButton.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    setDestinoActivity.putExtra("UID", UID);
-                                    setDestinoActivity.putExtra("idOrigen", idOrigen);
-                                    setDestinoActivity.putExtra("camion", String.valueOf(CamionID));
-                                    startActivity(setDestinoActivity);
-                                }
-                            });
-                        }else if(usuario.tipo_permiso == 3){
+                        if(usuario.tipo_permiso == 3){
                             Intent r = new Intent(getApplicationContext(), TiroUnicoActivity.class);
                             r.putExtra("UID", UID);
                             r.putExtra("camion", String.valueOf(CamionID));
                             startActivity(r);
-                        }else{
-                            snackbar = Snackbar.make(findViewById(R.id.content_main),R.string.error_sin_origen, Snackbar.LENGTH_LONG);
-                            View snackBarView = snackbar.getView();
-                            snackBarView.setBackgroundColor(Color.RED);
-                            snackbar.show();
+                        }else {
+                            if (origen != null && material != null) {
+                                setCamionInfo(camion);
+                                setTitle("INFORMACIÓN DEL TAG");
+                                if (validacion == null && c.validacion == 1) {
+                                    Intent validar = new Intent(getApplicationContext(), ValidacionActivity.class);
+                                    validar.putExtra("economico", camion.economico);
+                                    validar.putExtra("placas", camion.placas);
+                                    validar.putExtra("placasCaja", camion.placasCaja);
+                                    validar.putExtra("capacidad", String.valueOf(camion.capacidad));
+
+                                    startActivityForResult(validar, 0);
+                                }
+
+                                setOrigenInfo(origen, material, fechaString);
+                                idOrigen = origen.idOrigen;
+                                actionButton.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        setDestinoActivity.putExtra("UID", UID);
+                                        setDestinoActivity.putExtra("idOrigen", idOrigen);
+                                        setDestinoActivity.putExtra("camion", String.valueOf(CamionID));
+                                        startActivity(setDestinoActivity);
+                                    }
+                                });
+                            } else {
+                                snackbar = Snackbar.make(findViewById(R.id.content_main), R.string.error_sin_origen, Snackbar.LENGTH_LONG);
+                                View snackBarView = snackbar.getView();
+                                snackBarView.setBackgroundColor(Color.RED);
+                                snackbar.show();
+                            }
                         }
 
 

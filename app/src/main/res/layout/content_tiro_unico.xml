@@ -9,7 +9,6 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:scrollbarAlwaysDrawVerticalTrack="false"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="mx.grupohi.acarreos.TiroUnicoActivity"
     tools:showIn="@layout/app_bar_tiro_unico">
@@ -43,8 +42,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@android:color/darker_gray"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp" />
+                android:layout_marginBottom="1dp"
+                android:layout_marginTop="1dp" />
 
             <TextView
                 android:id="@+id/textView5"
@@ -62,8 +61,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@android:color/darker_gray"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp" />
+                android:layout_marginBottom="1dp"
+                android:layout_marginTop="1dp" />
             <TextView
                 android:id="@+id/textView7"
                 android:layout_width="match_parent"
@@ -79,8 +78,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@android:color/darker_gray"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp" />
+                android:layout_marginBottom="1dp"
+                android:layout_marginTop="1dp" />
 
             <TextView
                 android:layout_width="match_parent"

@@ -299,9 +299,13 @@ public class SuccessDestinoActivity extends AppCompatActivity
                                 printTextTwoColumns("Deductiva: ", textViewDeductiva.getText() + "\n");
                                 printTextTwoColumns("Motivo Deductiva: ", motivo.getText() + "\n");
                                 printTextTwoColumns("Observaciones: ", textViewObservaciones.getText() + "\n");
-
-                                printTextTwoColumns("Checador Inicio: ", nombreChecador + "\n");
-                                printTextTwoColumns("Checador Cierre: " + usuario.getNombre(), Util.getTiempo() + "\n");
+                                if(usuario.tipo_permiso == 3){
+                                    printTextTwoColumns("Checador: "+ usuario.getNombre(), Util.getTiempo()  + "\n");
+                                    bixolonPrinterApi.printText("TIRO LIBRE ABORDO", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_C, 0, false);
+                                }else {
+                                    printTextTwoColumns("Checador Inicio: ", nombreChecador + "\n");
+                                    printTextTwoColumns("Checador Cierre: " + usuario.getNombre(), Util.getTiempo() + "\n");
+                                }
 
                                 // }
                                 //bixolonPrinterApi.lineFeed(1,true);
@@ -381,7 +385,6 @@ public class SuccessDestinoActivity extends AppCompatActivity
             int attribute = 0;
             attribute |= BixolonPrinter.TEXT_ATTRIBUTE_FONT_C;
             bixolonPrinterApi.printText(leftText, alignment, attribute, BixolonPrinter.TEXT_SIZE_HORIZONTAL1, false);
-
             alignment = BixolonPrinter.ALIGNMENT_RIGHT;
             attribute = 0;
             attribute |= BixolonPrinter.TEXT_ATTRIBUTE_FONT_C;
