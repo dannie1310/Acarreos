@@ -203,11 +203,9 @@ public class SetOrigenActivity extends AppCompatActivity
                 if(idMaterial == 0) {
                     Toast.makeText(getApplicationContext(), "Por favor seleccione un Material de la lista", Toast.LENGTH_LONG).show();
                     materialesSpinner.requestFocus();
-                } else if(tipo == 1){
-                    if (idOrigen == 0) {
+                } else if(tipo == 1 && idOrigen == 0) {
                         Toast.makeText(getApplicationContext(), "Por favor seleccione un Origen de la lista", Toast.LENGTH_LONG).show();
                         origenesSpinner.requestFocus();
-                    }
                 } else {
                     checkNfcEnabled();
                     WriteModeOn();

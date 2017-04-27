@@ -136,18 +136,6 @@ public class SuccessDestinoActivity extends AppCompatActivity
         btnImagenes = (Button) findViewById(R.id.buttonImagenes);
         btnSalir = (Button) findViewById(R.id.buttonSalir);
 
-        if(usuario.tiro_name == "0"){
-            btnImagenes.setVisibility(View.GONE);
-            tipo_usuario = true;
-            textDestino.setVisibility(View.GONE);
-            textFechaDestino.setVisibility(View.GONE);
-            textRuta.setVisibility(View.GONE);
-            textDeductiva.setVisibility(View.GONE);
-            textMotivo.setVisibility(View.GONE);
-            textObservacion.setVisibility(View.GONE);
-            view2.setVisibility(View.GONE);
-            btnImprimir.setText("IMPRIMIR COMPROBANTE");
-        }
         fillInfo();
 
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -614,6 +602,16 @@ public class SuccessDestinoActivity extends AppCompatActivity
             textViewRuta.setVisibility(View.GONE);
             textViewObservaciones.setVisibility(View.GONE);
             textViewDeductiva.setVisibility(View.GONE);
+            btnImagenes.setVisibility(View.GONE);
+            tipo_usuario = true;
+            textDestino.setVisibility(View.GONE);
+            textFechaDestino.setVisibility(View.GONE);
+            textRuta.setVisibility(View.GONE);
+            textDeductiva.setVisibility(View.GONE);
+            textMotivo.setVisibility(View.GONE);
+            textObservacion.setVisibility(View.GONE);
+            view2.setVisibility(View.GONE);
+            btnImprimir.setText("IMPRIMIR COMPROBANTE");
 
         }
 

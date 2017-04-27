@@ -288,12 +288,12 @@ public class LoginActivity extends AppCompatActivity {
                     data.put("empresa", JSON.getString("empresa"));
                     data.put("logo", JSON.getInt("tiene_logo"));
                     data.put("imagen", JSON.getString("logo"));
-                    data.put("tipo_permiso", "3");//idperfil
+                    data.put("tipo_permiso", "4");//idperfil
                     data.put("idorigen","");//idorigen
                     data.put("idtiro","2");//idtiro
 
                     if (!usuario.create(data)) {
-                        return false;bb
+                        return false;
                     }
 
                     //Camiones
