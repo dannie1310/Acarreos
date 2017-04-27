@@ -71,7 +71,7 @@ public class TiroUnicoActivity extends AppCompatActivity
     private  Spinner rutasSpinner;
     private  EditText observaciones;
     private  HashMap<String, String> spinnerMotivosMap;
-    private  HashMap<String, String> spinnerRutasMap;
+    private  HashMap<String, String>  spinnerRutasMap;
     private TextView mensajeTextView;
 
     private ProgressDialog progressDialogSync;
@@ -150,8 +150,10 @@ public class TiroUnicoActivity extends AppCompatActivity
         textDeductiva = (EditText) findViewById(R.id.textDeductiva);
         textViewMotivo = (TextView) findViewById(R.id.textViewMotivo);
         spinnerMotivo = (Spinner) findViewById(R.id.spinnerMotivo);
-        observaciones = (EditText) findViewById(R.id.textViewObservaciones);
+        observaciones = (EditText) findViewById(R.id.textObservaciones);
         mensajeTextView.setVisibility(View.INVISIBLE);
+        textViewMotivo.setVisibility(View.GONE);
+        spinnerMotivo.setVisibility(View.GONE);
 
         textDeductiva.setOnClickListener(new View.OnClickListener() {
                                          @Override
@@ -187,17 +189,17 @@ public class TiroUnicoActivity extends AppCompatActivity
                 idOrigen = Integer.valueOf(spinnerOrigenesMap.get(descripcion));
 
                 final ArrayList<String> descripcionesRutas = ruta.getArrayListDescripciones(idOrigen, usuario.idtiro);
-                final ArrayList <String> idsRutas = ruta.getArrayListId(idOrigen, usuario.idtiro);
+                final ArrayList <String> idsRutas = ruta.getArrayListId(idOrigen,  usuario.idtiro);
 
                 final String[] spinnerRutasArray = new String[idsRutas.size()];
-                final HashMap<String, String> spinnerRutasMap = new HashMap<>();
+                spinnerRutasMap = new HashMap<>();
 
                 for (int i = 0; i < idsRutas.size(); i++) {
                     spinnerRutasMap.put(descripcionesRutas.get(i), idsRutas.get(i));
                     spinnerRutasArray[i] = descripcionesRutas.get(i);
                 }
 
-                final ArrayAdapter<String> arrayAdapterRutas = new ArrayAdapter<>(getApplicationContext(), R.layout.support_simple_spinner_dropdown_item, spinnerRutasArray);
+                final ArrayAdapter<String> arrayAdapterRutas = new ArrayAdapter<>(TiroUnicoActivity.this, R.layout.support_simple_spinner_dropdown_item, spinnerRutasArray);
                 arrayAdapterRutas.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
                 rutasSpinner.setAdapter(arrayAdapterRutas);
 
@@ -296,25 +298,29 @@ public class TiroUnicoActivity extends AppCompatActivity
         escribirButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if (idMaterial == 0) {
-//                    Toast.makeText(getApplicationContext(), "Por favor seleccione un Material de la lista", Toast.LENGTH_LONG).show();
-//                    materialesSpinner.requestFocus();
-//                } else if (idOrigen == 0) {
-//                    Toast.makeText(getApplicationContext(), "Por favor seleccione un Origen de la lista", Toast.LENGTH_LONG).show();
-//                    origenesSpinner.requestFocus();
-//                } else if (camion.capacidad != 0 && camion.capacidad != null && !textDeductiva.getText().toString().equals("") && Integer.valueOf(textDeductiva.getText().toString()) != 0 && Integer.valueOf(textDeductiva.getText().toString()) >= camion.capacidad) {
-//                    Toast.makeText(getApplicationContext(), R.string.error_deductiva, Toast.LENGTH_LONG).show();
-//                } else if ((textDeductiva.getText().toString().equals("") == false) && idMotivo == 0) {
-//                    Toast.makeText(getApplicationContext(), "Por favor seleccione un motivo", Toast.LENGTH_SHORT).show();
-//                } else {
-                    if (textDeductiva.getText().toString().equals("") || textDeductiva.getText().toString().equals("0")) {
+                if (idMaterial == 0) {
+                    Toast.makeText(getApplicationContext(), "Por favor seleccione un Material de la lista", Toast.LENGTH_LONG).show();
+                    materialesSpinner.requestFocus();
+                } else if (idOrigen == 0) {
+                    Toast.makeText(getApplicationContext(), "Por favor seleccione un Origen de la lista", Toast.LENGTH_LONG).show();
+                    origenesSpinner.requestFocus();
+                }else if (idruta == 0) {
+                    Toast.makeText(getApplicationContext(), "Por favor seleccione un Tiro de la lista", Toast.LENGTH_LONG).show();
+                    rutasSpinner.requestFocus();
+                }else if(camion.capacidad != 0 && camion.capacidad!= null && !textDeductiva.getText().toString().equals("") && Integer.valueOf(textDeductiva.getText().toString()) != 0 && Integer.valueOf(textDeductiva.getText().toString()) >= camion.capacidad) {
+                    Toast.makeText(getApplicationContext(), R.string.error_deductiva, Toast.LENGTH_LONG).show();
+                }
+                else if (( textDeductiva.getText().toString().equals("")==false ) && idMotivo == 0){
+                    Toast.makeText(getApplicationContext(), "Por favor seleccione un motivo", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    if(textDeductiva.getText().toString().equals("") || textDeductiva.getText().toString().equals("0")){
                         spinnerMotivo.setSelection(0);
                         textViewMotivo.setVisibility(View.GONE);
                         spinnerMotivo.setVisibility(View.GONE);
-                    } else {
-                        checkNfcEnabled();
-                        WriteModeOn();
-                    //}
+                    }
+                    checkNfcEnabled();
+                    WriteModeOn();
                 }
             }
         });
@@ -526,7 +532,7 @@ public class TiroUnicoActivity extends AppCompatActivity
             cv.put("Observaciones", observaciones.getText().toString());
             cv.put("Creo", usuario.getId());
             cv.put("Estatus", "1");
-           // cv.put("Ruta", idRuta);
+            cv.put("Ruta", idruta);
 
             aux = Util.dateFolios();
 
