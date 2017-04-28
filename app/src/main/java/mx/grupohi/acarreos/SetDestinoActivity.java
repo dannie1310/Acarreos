@@ -632,6 +632,7 @@ public class SetDestinoActivity extends AppCompatActivity
                 cv.put("primerToque", idUsuario.replace(" ", ""));
                 c = c.find(idCamion);
                 cv.put("cubicacion", String.valueOf(c.capacidad));
+                cv.put("tipoEsquema", usuario.getTipoEsquema());
 
                 viaje = new Viaje(this);
                 viaje.create(cv);

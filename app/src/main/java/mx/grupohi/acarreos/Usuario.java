@@ -323,5 +323,29 @@ class Usuario {
             db.close();
         }
     }
+
+    public Integer getTipoEsquema() {
+        db = db_sca.getWritableDatabase();
+        Integer tipo;
+        Integer resp = 0;
+        Cursor c = db.rawQuery("SELECT tipo_permiso FROM user LIMIT 1", null);
+        try {
+            if (c != null && c.moveToFirst()) {
+                tipo = c.getInt(0);
+                if (tipo == 1 || tipo == 2) {
+                    resp = 1; //Esquema 1:  Origen  y Tiro
+                } else if(tipo == 3){
+                    resp = 2; //Esquema 2: Tiro Libre Abordo
+                } else if (tipo == 4 || tipo == 5){
+                    resp = 3; //Esquema 3: Tiro con Control Entrada y Salida
+                }
+            }
+
+        } finally {
+            c.close();
+            db.close();
+            return resp;
+        }
+    }
 }
 

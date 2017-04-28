@@ -44,6 +44,7 @@ public class Viaje {
     Integer idmotivo;
     String primerToque;
     String cubicacion;
+    Integer tipoEsquema;
 
     private static SQLiteDatabase db;
     private static DBScaSqlite db_sca;
@@ -105,6 +106,7 @@ public class Viaje {
                 this.idmotivo = c.getInt(c.getColumnIndex("idMotivo"));
                 this.primerToque = c.getString(c.getColumnIndex("primerToque"));
                 this.cubicacion = c.getString(c.getColumnIndex("cubicacion"));
+                this.tipoEsquema = c.getInt(c.getColumnIndex("tipoEsquema"));
 
                 return this;
             } else {
@@ -179,6 +181,8 @@ public class Viaje {
                         json.put("IdMotivoDeductiva",c.getString(22));
                         json.put("CreoPrimerToque", c.getString(c.getColumnIndex("primerToque")));
                         json.put("CubicacionCamion", c.getString(c.getColumnIndex("cubicacion")));
+                        json.put("TipoEsquema", c.getInt(c.getColumnIndex("tipoEsquema")));
+
                         JSON.put(i + "", json);
                         i++;
 

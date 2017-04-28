@@ -331,8 +331,8 @@ public class SetOrigenActivity extends AppCompatActivity
                             cv.put("idusuario", user);
                             cv.put("uidTAG", UID);
                             cv.put("IMEI", IMEI);
-                            cv.put("version", String.valueOf(BuildConfig.VERSION_NAME));
                             cv.put("estatus",1);
+                            cv.put("tipoEsquema", usuario.getTipoEsquema());
 
                             InicioViaje in = new InicioViaje(getApplicationContext());
                             Boolean guardar = in.create(cv);

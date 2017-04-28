@@ -61,4 +61,16 @@ class Coordenada {
         }
         return JSON;
     }
+
+    static Integer getCount(Context context) {
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM coordenadas",null);
+        try {
+            return c.getCount();
+        } finally {
+            c.close();
+            db.close();
+        }
+    }
 }

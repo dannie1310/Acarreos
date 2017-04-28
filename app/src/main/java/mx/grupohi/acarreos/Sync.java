@@ -81,17 +81,19 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
             values.put("Version", String.valueOf(BuildConfig.VERSION_NAME));
 
             if (Viaje.getCount(context) != 0) {
-                JSONObject Obj = Viaje.getJSON(context);
-                values.put("carddata", String.valueOf(Obj));
+                values.put("carddata", String.valueOf(Viaje.getJSON(context)));
             }
-            if (Coordenada.getJSON(context).length() != 0) {
+            if (Coordenada.getCount(context) != 0) {
                 values.put("coordenadas", String.valueOf(Coordenada.getJSON(context)));
+            }
+            if (InicioViaje.getCount(context) != 0){
+                values.put("inicioCamion", String.valueOf(InicioViaje.getJSON(context)));
             }
 
             try {
 
                 URL url = new URL("http://sca.grupohi.mx/android20160923.php");
-                JSONVIAJES = HttpConnection.POST(url, values);
+               // JSONVIAJES = HttpConnection.POST(url, values);
                 Log.i("jsonviajes:  ",String.valueOf(values));
                 ContentValues aux = new ContentValues();
                 imagenesTotales= ImagenesViaje.getCount(context);

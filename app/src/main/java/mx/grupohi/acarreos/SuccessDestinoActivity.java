@@ -239,7 +239,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
                         try {
                             bixolonPrinterApi.setSingleByteFont(BixolonPrinter.CODE_PAGE_858_EURO);
                             Bitmap fewlapsBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.img_success);
-
+                            String MAC = bixolonPrinterApi.getMacAddress();
                            // Thread.sleep(PRINTING_SLEEP_TIME);
 
                             if (logo == 1) {
@@ -287,6 +287,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
                                 printTextTwoColumns("Deductiva: ", textViewDeductiva.getText() + "\n");
                                 printTextTwoColumns("Motivo Deductiva: ", motivo.getText() + "\n");
                                 printTextTwoColumns("Observaciones: ", textViewObservaciones.getText() + "\n");
+
                                 if(usuario.tipo_permiso == 3){
                                     printTextTwoColumns("Checador: "+ usuario.getNombre(), Util.getTiempo()  + "\n");
                                     bixolonPrinterApi.printText("TIRO LIBRE ABORDO", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_C, 0, false);

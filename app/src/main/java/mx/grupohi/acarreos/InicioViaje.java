@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -28,8 +30,8 @@ public class InicioViaje {
     Integer idusuario;
     String uidTAG;
     String IMEI;
-    String version;
     Integer estatus;
+    Integer tipoEsquema;
     private static SQLiteDatabase db;
     private static DBScaSqlite db_sca;
     private Context context;
@@ -76,8 +78,8 @@ public class InicioViaje {
                 this.idusuario = c.getInt(c.getColumnIndex("idusuario"));
                 this.uidTAG = c.getString(c.getColumnIndex("uidTAG"));
                 this.IMEI = c.getString(c.getColumnIndex("IMEI"));
-                this.version = c.getString(c.getColumnIndex("version"));
                 this.estatus = c.getInt(c.getColumnIndex("estatus"));
+                this.tipoEsquema = c.getInt(c.getColumnIndex("tipoEsquema"));
 
                 return this;
             } else {
@@ -106,6 +108,58 @@ public class InicioViaje {
             else {
                 return new ArrayList<>();
             }
+        } finally {
+            c.close();
+            db.close();
+        }
+    }
+
+    static JSONObject getJSON(Context context) {
+        JSONObject JSON = new JSONObject();
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM inicio_viajes ORDER BY id", null);
+        try {
+            if(c != null && c.moveToFirst()) {
+                Integer i = 0;
+                do {
+
+                    JSONObject json = new JSONObject();
+
+                    json.put("idcamion", c.getString(c.getColumnIndex("idcamion")));
+                    json.put("idmaterial", c.getString(c.getColumnIndex("idmaterial")));
+                    json.put("idorigen", c.getString(c.getColumnIndex("idorigen")));
+                    json.put("fecha_origen", c.getString(c.getColumnIndex("fecha_origen")));
+                    json.put("idusuario", c.getString(c.getColumnIndex("idusuario")));
+                    json.put("uidTAG", c.getString(c.getColumnIndex("uidTAG")));
+                    json.put("IMEI", c.getString(c.getColumnIndex("IMEI")));
+                    json.put("estatus", c.getString(c.getColumnIndex("estatus")));
+                    json.put("tipoEsquema", c.getString(c.getColumnIndex("tipoEsquema")));
+
+
+                    JSON.put(i + "", json);
+                    i++;
+
+                } while (c.moveToNext());
+
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            c.close();
+            db.close();
+        }
+
+        return JSON;
+    }
+
+    static Integer getCount(Context context) {
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM inicio_viajes",null);
+        try {
+            return c.getCount();
         } finally {
             c.close();
             db.close();
