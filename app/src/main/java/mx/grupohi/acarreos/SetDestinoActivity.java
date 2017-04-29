@@ -490,10 +490,7 @@ public class SetDestinoActivity extends AppCompatActivity
                         latitude = gps.getLatitude();
                         longitude = gps.getLongitude();
                         if (tipo == 1) {
-                           // viajes = nfcTag.readSector(myTag, 2, 8);
-                            //viajes = viajes.replace(" ", "");
-                           // contador = Integer.valueOf(viajes) + 1;
-                            //boolean write = nfcTag.writeSector(myTag, 2, 8, String.valueOf(contador));
+
                             tagInfo = nfcTag.readSector(myTag, 0, 1);
                             tagOrigen = nfcTag.readSector(myTag, 1, 4);
                             fechaString = nfcTag.readSector(myTag, 1, 5);
@@ -509,7 +506,6 @@ public class SetDestinoActivity extends AppCompatActivity
                                 }
                                 continuar = true;
                             } else {
-                                //getString(R.string.error_tag_comunicacion)
                                 snackbar = Snackbar.make(findViewById(R.id.content_set_destino),getString(R.string.error_tag_comunicacion) , Snackbar.LENGTH_SHORT);
                                 View snackBarView = snackbar.getView();
                                 snackBarView.setBackgroundColor(Color.RED);
@@ -517,15 +513,11 @@ public class SetDestinoActivity extends AppCompatActivity
                             }
                         }
                         if (tipo == 2) {
-                            //viajes = nfcUltra.readPage(myTag, 7);
-                            //viajes = viajes.replace(" ", "");
-                            //contador = Integer.valueOf(viajes) + 1;
                             try{
-                                boolean r = nfcUltra.writeViaje(myTag, String.valueOf(contador));
                                 tagInfo = nfcUltra.readPage(myTag, 4) + nfcUltra.readPage(myTag, 5);
-                                tagOrigen = nfcUltra.readPage(myTag, 8) + nfcUltra.readPage(myTag, 9);
-                                fechaString = nfcUltra.readPage(myTag, 10) + nfcUltra.readPage(myTag, 11) + nfcUltra.readPage(myTag, 12) + nfcUltra.readPage(myTag, 13).substring(0, 2);
-                                idUsuario = nfcUltra.readUsuario(myTag, 16) + nfcUltra.readUsuario(myTag, 17);
+                                tagOrigen = nfcUltra.readPage(myTag, 7) + nfcUltra.readPage(myTag, 8);
+                                fechaString = nfcUltra.readPage(myTag, 9) + nfcUltra.readPage(myTag, 10) + nfcUltra.readPage(myTag, 11) + nfcUltra.readPage(myTag, 12).substring(0, 2);
+                                idUsuario = nfcUltra.readUsuario(myTag, 13) + nfcUltra.readUsuario(myTag, 14);
                                 Boolean  limpiar = nfcUltra.cleanTag(myTag);
                                 if (!limpiar){
                                     error_eliminar = 1;

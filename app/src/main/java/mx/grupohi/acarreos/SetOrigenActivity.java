@@ -300,12 +300,12 @@ public class SetOrigenActivity extends AppCompatActivity
                         idusuario = nfcTag.readSector(myTag,1,6);
                     }
                     if(tipo==2){
-                        datos = nfcUltra.writePagina(myTag,8,data);
-                        dia = nfcUltra.writePagina(myTag,10,dataTime);
-                        uss = nfcUltra.writePagina(myTag,16,user);
-                        camion = nfcUltra.readConfirmar(myTag, 8)+ nfcUltra.readConfirmar(myTag, 9);
-                        fecha = nfcUltra.readConfirmar(myTag,10) + nfcUltra.readConfirmar(myTag,11) +nfcUltra.readConfirmar(myTag,12) + nfcUltra.readConfirmar(myTag,13).substring(0,2);
-                        idusuario = nfcUltra.readConfirmar(myTag, 16) + nfcUltra.readConfirmar(myTag, 17);
+                        datos = nfcUltra.writePagina(myTag,7,data);
+                        dia = nfcUltra.writePagina(myTag,9,dataTime);
+                        uss = nfcUltra.writePagina(myTag,13,user);
+                        camion = nfcUltra.readConfirmar(myTag, 7)+ nfcUltra.readConfirmar(myTag, 8);
+                        fecha = nfcUltra.readConfirmar(myTag,9) + nfcUltra.readConfirmar(myTag,10) +nfcUltra.readConfirmar(myTag,11) + nfcUltra.readConfirmar(myTag,12).substring(0,2);
+                        idusuario = nfcUltra.readConfirmar(myTag, 13) + nfcUltra.readConfirmar(myTag, 14);
 
                     }
                     if(idproyecto == usuario.getProyecto()) {

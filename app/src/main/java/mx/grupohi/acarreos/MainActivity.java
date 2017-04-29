@@ -258,8 +258,8 @@ public class MainActivity extends AppCompatActivity
                     try {
                         tagCamion = Integer.valueOf(nfcUltra.readPage(myTag, 4));
                         tagProyecto = Integer.valueOf(nfcUltra.readPage(myTag, 5));
-                        String origen1 = nfcUltra.readPage(myTag, 9);
-                        String material1 = nfcUltra.readPage(myTag, 8);
+                        String origen1 = nfcUltra.readPage(myTag, 8);
+                        String material1 = nfcUltra.readPage(myTag, 7);
                         tagModel = tagModel.find(UID, tagCamion, tagProyecto);
 
                         if (origen1 != null && material1 != null) {
@@ -267,7 +267,7 @@ public class MainActivity extends AppCompatActivity
                             tagMaterial = Integer.valueOf(material1);
                             origen = origen.find(tagOrigen);
                             material = material.find(tagMaterial);
-                            fechaString = nfcUltra.readPage(myTag, 10) + nfcUltra.readPage(myTag, 11) + nfcUltra.readPage(myTag, 12) + nfcUltra.readPage(myTag, 13).substring(0, 2);
+                            fechaString = nfcUltra.readPage(myTag, 9) + nfcUltra.readPage(myTag, 10) + nfcUltra.readPage(myTag, 11) + nfcUltra.readPage(myTag, 12).substring(0, 2);
                         } else {
                             origen = null;
                             material = null;
