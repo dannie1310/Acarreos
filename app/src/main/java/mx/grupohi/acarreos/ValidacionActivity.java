@@ -261,10 +261,6 @@ public class ValidacionActivity extends AppCompatActivity
                                 if (Util.isNetworkStatusAvialable(getApplicationContext())) {
                                     progressDialogSync = ProgressDialog.show(ValidacionActivity.this, "Sincronizando datos", "Por favor espere...", true);
                                     new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
-
-                                    Intent login_activity = new Intent(getApplicationContext(), LoginActivity.class);
-                                    usuario.destroy();
-                                    startActivity(login_activity);
                                 } else {
                                     Toast.makeText(getApplicationContext(), R.string.error_internet, Toast.LENGTH_LONG).show();
                                 }
@@ -273,7 +269,7 @@ public class ValidacionActivity extends AppCompatActivity
                         .create()
                         .show();
             }
-            else {
+            if(Viaje.getCount(getApplicationContext())== 0){
                 Intent login_activity = new Intent(getApplicationContext(), LoginActivity.class);
                 usuario.destroy();
                 startActivity(login_activity);

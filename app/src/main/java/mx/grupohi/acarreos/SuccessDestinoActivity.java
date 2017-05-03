@@ -64,6 +64,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
     private Integer idViaje;
     private String empresa;
     private Integer logo;
+    private Integer impresion = 0;
 
     private Button btnImprimir,
             btnSalir,
@@ -228,6 +229,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
                                 printheadproyecto(empresa);
                             }
                             viaje = viaje.find(idViaje);
+                            impresion = viaje.numImpresion;
                             String nombreChecador="SIN PERFIL";
 
                             if(!viaje.primerToque.isEmpty()) {
@@ -258,12 +260,24 @@ public class SuccessDestinoActivity extends AppCompatActivity
                             printTextTwoColumns("Checador Inicio: ", nombreChecador + "\n");
                             printTextTwoColumns("Checador Cierre: "+ usuario.getNombre(), Util.getTiempo() + "\n");
 
+                            if(impresion != 0){
+                                bixolonPrinterApi.printText("R E I M P R E S I O N "+impresion, BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_C, 0, false);
+                            }
+
+
                            // }
                             //bixolonPrinterApi.lineFeed(1,true);
-                            printfoot("Checador: "+ usuario.getNombre(), viaje.getCode(idViaje));
+                            printfoot(impresion, "Checador: "+ usuario.getNombre(), viaje.getCode(idViaje));
+
+
                             bixolonPrinterApi.printQrCode(viaje.getCode(idViaje), BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.QR_CODE_MODEL2, 5, false);
 
                             bixolonPrinterApi.lineFeed(2, true);
+                            if(connectedPrinter != false){
+                                Viaje.updateImpresion(viaje.idViaje,impresion, getApplicationContext());
+                            }
+
+
                         } catch (Exception e) {
                             Toast.makeText(getApplicationContext(), R.string.error_impresion, Toast.LENGTH_LONG).show();
                         }
@@ -274,6 +288,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
         });
         onPause();
         bixolonPrinterApi.kickOutDrawer(BixolonPrinter.DRAWER_CONNECTOR_PIN5);
+
     }
 
     @Override
@@ -336,7 +351,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
         }
     }
 
-    public static void printfoot(String text, String codex) {
+    public static void printfoot(Integer impresion, String text, String codex) {
         int alignment = BixolonPrinter.ALIGNMENT_LEFT;
         int attribute = 1;
         attribute |= BixolonPrinter.TEXT_ATTRIBUTE_FONT_A;
@@ -348,10 +363,13 @@ public class SuccessDestinoActivity extends AppCompatActivity
         bixolonPrinterApi.print1dBarcode(codex.toUpperCase(), BixolonPrinter.BAR_CODE_CODE39, BixolonPrinter.ALIGNMENT_CENTER, 2, 180, BixolonPrinter.HRI_CHARACTER_NOT_PRINTED, true);
        // bixolonPrinterApi.formFeed(true);
         bixolonPrinterApi.printText(codex.toUpperCase(), BixolonPrinter.ALIGNMENT_CENTER, attribute, size, false);
-
-        String cadena = "\n\nEste documento es un comprobante de recepción \nde materiales del Sistema de Administración de \nObra, no representa un compromiso de pago hasta \nsu validación contra las remisiones del \nproveedor y la revisión de factura.";
-        bixolonPrinterApi.printText(cadena, BixolonPrinter.ALIGNMENT_LEFT, attribute, size, false);
+        if(impresion != 0){
+            bixolonPrinterApi.printText("\nR E I M P R E S I O N "+impresion+"\n", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_C, 0, false);
+        }
+        String cadena = "\nEste documento es un comprobante de recepción \nde materiales del Sistema de Administración de \nObra, no representa un compromiso de pago hasta \nsu validación contra las remisiones del \nproveedor y la revisión de factura.";
+        bixolonPrinterApi.printText(cadena, BixolonPrinter.ALIGNMENT_CENTER, attribute, size, false);
         bixolonPrinterApi.lineFeed(1, false);
+
         bixolonPrinterApi.cutPaper(true);
         bixolonPrinterApi.kickOutDrawer(BixolonPrinter.DRAWER_CONNECTOR_PIN5);
 
@@ -394,7 +412,9 @@ public class SuccessDestinoActivity extends AppCompatActivity
                             connectedPrinter = true;
                             if(imprimir) {
                                 btnImprimir.performClick();
+
                             }
+
                             break;
 
                         case BixolonPrinter.STATE_CONNECTING:
@@ -603,10 +623,6 @@ public class SuccessDestinoActivity extends AppCompatActivity
                                 if (Util.isNetworkStatusAvialable(getApplicationContext())) {
                                     progressDialogSync = ProgressDialog.show(SuccessDestinoActivity.this, "Sincronizando datos", "Por favor espere...", true);
                                     new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
-
-                                    Intent login_activity = new Intent(getApplicationContext(), LoginActivity.class);
-                                    usuario.destroy();
-                                    startActivity(login_activity);
                                 } else {
                                     Toast.makeText(getApplicationContext(), R.string.error_internet, Toast.LENGTH_LONG).show();
                                 }
@@ -615,7 +631,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
                         .create()
                         .show();
             }
-            else {
+            if(Viaje.getCount(getApplicationContext())== 0){
                 Intent login_activity = new Intent(getApplicationContext(), LoginActivity.class);
                 usuario.destroy();
                 startActivity(login_activity);

@@ -44,6 +44,7 @@ public class Viaje {
     Integer idmotivo;
     String primerToque;
     String cubicacion;
+    Integer numImpresion;
 
     private static SQLiteDatabase db;
     private static DBScaSqlite db_sca;
@@ -105,6 +106,7 @@ public class Viaje {
                 this.idmotivo = c.getInt(c.getColumnIndex("idMotivo"));
                 this.primerToque = c.getString(c.getColumnIndex("primerToque"));
                 this.cubicacion = c.getString(c.getColumnIndex("cubicacion"));
+                this.numImpresion = c.getInt(c.getColumnIndex("numImpresion"));
 
                 return this;
             } else {
@@ -179,6 +181,7 @@ public class Viaje {
                         json.put("IdMotivoDeductiva",c.getString(22));
                         json.put("CreoPrimerToque", c.getString(c.getColumnIndex("primerToque")));
                         json.put("CubicacionCamion", c.getString(c.getColumnIndex("cubicacion")));
+                        json.put("numImpresion", c.getInt(c.getColumnIndex("numImpresion")));
                         JSON.put(i + "", json);
                         i++;
 
@@ -297,5 +300,23 @@ public class Viaje {
             c.close();
             db.close();
         }
+    }
+    static boolean updateImpresion(Integer idViaje,Integer numImpresion, Context context) {
+        boolean resp=false;
+        ContentValues data = new ContentValues();
+
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+
+        try{
+
+            data.put("numImpresion", numImpresion+1);
+
+            db.update("viajesnetos", data, "ID = "+idViaje, null);
+            resp = true;
+        } finally {
+            db.close();
+        }
+        return resp;
     }
 }

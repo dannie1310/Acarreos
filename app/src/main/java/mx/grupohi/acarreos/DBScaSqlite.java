@@ -49,7 +49,8 @@ import java.util.GregorianCalendar;
                     "FolioRandom TEXT," +
                     "idMotivo INTEGER," +
                     "primerToque TEXT," +
-                    "cubicacion TEXT);",
+                    "cubicacion TEXT," +
+                    "numImpresion INTEGER);",
             "CREATE TABLE coordenadas (IMEI TEXT, idevento INT, latitud TEXT, longitud TEXT, fecha_hora TEXT, code TEXT)",
             "CREATE TABLE camion_tag (ID INTEGER PRIMARY KEY AUTOINCREMENT, IMEI TEXT, id_camion INT, id_tags TEXT, created_at DATETIME DEFAULT CURRENT_TIMESTAMP);",
             "CREATE TABLE tipos_imagenes (id INTEGER, descripcion TEXT);",
