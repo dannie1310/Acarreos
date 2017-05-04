@@ -292,7 +292,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
 
                                 if(usuario.tipo_permiso == 3){
                                     printTextTwoColumns("Checador: "+ usuario.getNombre(), Util.getTiempo()  + "\n");
-                                    bixolonPrinterApi.printText("TIRO LIBRE ABORDO", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_C, 0, false);
+                                    bixolonPrinterApi.printText("TIRO LIBRE ABORDO\n", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_C, 0, false);
                                 }else {
                                     printTextTwoColumns("Checador Inicio: ", nombreChecador + "\n");
                                     printTextTwoColumns("Checador Cierre: " + usuario.getNombre(), Util.getTiempo() + "\n");

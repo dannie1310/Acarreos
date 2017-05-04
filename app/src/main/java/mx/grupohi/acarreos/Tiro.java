@@ -99,4 +99,57 @@ class Tiro {
             }
         return data;
     }
+
+
+    ArrayList<String> getArrayListDescripcionesTiro() {
+        ArrayList<String> data = new ArrayList<>();
+        db = db_sca.getWritableDatabase();
+        Usuario usuario = new Usuario(context);
+        usuario = usuario.getUsuario();
+        if(usuario.idtiro != null) {
+            Cursor c = db.rawQuery("SELECT * FROM tiros WHERE idtiro = '" + usuario.idtiro + "'", null);
+            if (c != null && c.moveToFirst())
+                try {
+                    if (c.getCount() == 1) {
+                        data.add(c.getString(c.getColumnIndex("descripcion")));
+                    } else {
+                        data.add("-- Seleccione --");
+                        data.add(c.getString(c.getColumnIndex("descripcion")));
+                        while (c.moveToNext()) {
+                            data.add(c.getString(c.getColumnIndex("descripcion")));
+                        }
+                    }
+                } finally {
+                    c.close();
+                    db.close();
+                }
+        }
+        return data;
+    }
+
+    ArrayList<String> getArrayListIdTiro() {
+        ArrayList<String> data = new ArrayList<>();
+        db = db_sca.getWritableDatabase();
+        Usuario usuario = new Usuario(context);
+        usuario = usuario.getUsuario();
+        if(usuario.idtiro != null) {
+            Cursor c = db.rawQuery("SELECT * FROM tiros WHERE idtiro = '" + usuario.idtiro + "'", null);
+            if (c != null && c.moveToFirst())
+                try {
+                    if (c.getCount() == 1) {
+                        data.add(c.getString(c.getColumnIndex("idtiro")));
+                    } else {
+                        data.add("0");
+                        data.add(c.getString(c.getColumnIndex("idtiro")));
+                        while (c.moveToNext()) {
+                            data.add(c.getString(c.getColumnIndex("idtiro")));
+                        }
+                    }
+                } finally {
+                    c.close();
+                    db.close();
+                }
+        }
+        return data;
+    }
 }

@@ -155,8 +155,8 @@ public class SetDestinoActivity extends AppCompatActivity
         );
 
 
-        final ArrayList<String> descripcionesTiros = tiro.getArrayListDescripciones(getIntent().getIntExtra("idOrigen", 1));
-        final ArrayList <String> idsTiros = tiro.getArrayListId(getIntent().getIntExtra("idOrigen", 1));
+        final ArrayList<String> descripcionesTiros = tiro.getArrayListDescripcionesTiro();
+        final ArrayList <String> idsTiros = tiro.getArrayListIdTiro();
 
         final String[] spinnerTirosArray = new String[idsTiros.size()];
         spinnerTirosMap = new HashMap<>();
