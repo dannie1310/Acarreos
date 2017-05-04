@@ -19,8 +19,7 @@
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/MainLayout"
-        android:layout_alignBottom="@+id/textViewMensaje">
+        android:id="@+id/MainLayout">
 
         <TextView
             android:text="SELECCIONE EL TIRO:"

@@ -261,7 +261,7 @@ class Usuario {
     }
 
 
-    static boolean updateLogo(String logo, Integer tipo, Integer idorigen, Integer idtiro, Context context) {
+    static boolean updateLogo(String logo, String tipo, String idorigen, String idtiro, Context context) {
         boolean resp=false;
         ContentValues data = new ContentValues();
 
