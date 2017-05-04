@@ -625,6 +625,7 @@ public class SetDestinoActivity extends AppCompatActivity
                 c = c.find(idCamion);
                 cv.put("cubicacion", String.valueOf(c.capacidad));
                 cv.put("tipoEsquema", usuario.getTipoEsquema());
+                cv.put("numImpresion", 0);
 
                 viaje = new Viaje(this);
                 viaje.create(cv);

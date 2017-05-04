@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.provider.Contacts;
 
 /**
  * Creado por JFEsquivel on 07/10/2016.
@@ -55,4 +56,22 @@ class TagModel {
             db.close();
         }
     }
+
+    static Boolean findTAG(Context context, String UID) {
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+
+        Boolean result = false;
+        Cursor c = db.rawQuery("SELECT * FROM tags WHERE uid = '"+ UID +"'", null);
+        try {
+            if(c != null && c.moveToFirst()) {
+                result = true;
+            }
+            return result;
+        } finally {
+            c.close();
+            db.close();
+        }
+    }
+
 }

@@ -64,6 +64,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
     private View view2;
 
     private Toolbar toolbar;
+    private Integer impresion;
 
     private ProgressDialog progressDialogSync;
     private Usuario usuario;
@@ -261,6 +262,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
                             }
                             if(tipo_usuario == false) {
                                 viaje = viaje.find(idViaje);
+                                impresion = viaje.numImpresion;
                                 String nombreChecador = "SIN PERFIL";
 
                                 if (!viaje.primerToque.isEmpty()) {
@@ -295,13 +297,18 @@ public class SuccessDestinoActivity extends AppCompatActivity
                                     printTextTwoColumns("Checador Inicio: ", nombreChecador + "\n");
                                     printTextTwoColumns("Checador Cierre: " + usuario.getNombre(), Util.getTiempo() + "\n");
                                 }
-
+                                if(impresion != 0){
+                                    bixolonPrinterApi.printText("R E I M P R E S I O N "+impresion, BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_C, 0, false);
+                                }
                                 // }
                                 //bixolonPrinterApi.lineFeed(1,true);
-                                printfoot("Checador: " + usuario.getNombre(), viaje.getCode(idViaje));
+                                printfoot(impresion,"Checador: " + usuario.getNombre(), viaje.getCode(idViaje));
                                 bixolonPrinterApi.printQrCode(viaje.getCode(idViaje), BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.QR_CODE_MODEL2, 5, false);
 
                                 bixolonPrinterApi.lineFeed(2, true);
+                                if(connectedPrinter != false){
+                                    Viaje.updateImpresion(viaje.idViaje,impresion, getApplicationContext());
+                                }
                             }else{
                                 inicioViaje = new InicioViaje(getApplicationContext());
                                 inicioViaje = inicioViaje.find(inicio);
@@ -321,6 +328,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
                                 printfootorigen();
 
                             }
+
                         } catch (Exception e) {
                             Toast.makeText(getApplicationContext(), R.string.error_impresion, Toast.LENGTH_LONG).show();
                         }
@@ -392,7 +400,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
         }
     }
 
-    public static void printfoot(String text, String codex) {
+    public static void printfoot(Integer impresion, String text, String codex) {
         int alignment = BixolonPrinter.ALIGNMENT_LEFT;
         int attribute = 1;
         attribute |= BixolonPrinter.TEXT_ATTRIBUTE_FONT_A;
@@ -404,9 +412,12 @@ public class SuccessDestinoActivity extends AppCompatActivity
         bixolonPrinterApi.print1dBarcode(codex.toUpperCase(), BixolonPrinter.BAR_CODE_CODE39, BixolonPrinter.ALIGNMENT_CENTER, 2, 180, BixolonPrinter.HRI_CHARACTER_NOT_PRINTED, true);
        // bixolonPrinterApi.formFeed(true);
         bixolonPrinterApi.printText(codex.toUpperCase(), BixolonPrinter.ALIGNMENT_CENTER, attribute, size, false);
+        if(impresion != 0){
+            bixolonPrinterApi.printText("\nR E I M P R E S I O N "+impresion+"\n", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_C, 0, false);
+        }
 
-        String cadena = "\n\nEste documento es un comprobante de recepción \nde materiales del Sistema de Administración de \nObra, no representa un compromiso de pago hasta \nsu validación contra las remisiones del \nproveedor y la revisión de factura.";
-        bixolonPrinterApi.printText(cadena, BixolonPrinter.ALIGNMENT_LEFT, attribute, size, false);
+        String cadena = "\nEste documento es un comprobante de recepción \nde materiales del Sistema de Administración de \nObra, no representa un compromiso de pago hasta \nsu validación contra las remisiones del \nproveedor y la revisión de factura.";
+        bixolonPrinterApi.printText(cadena, BixolonPrinter.ALIGNMENT_CENTER, attribute, size, false);
         bixolonPrinterApi.lineFeed(1, false);
         bixolonPrinterApi.cutPaper(true);
         bixolonPrinterApi.kickOutDrawer(BixolonPrinter.DRAWER_CONNECTOR_PIN5);

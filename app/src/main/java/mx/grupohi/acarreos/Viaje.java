@@ -45,6 +45,7 @@ public class Viaje {
     String primerToque;
     String cubicacion;
     Integer tipoEsquema;
+    Integer numImpresion;
 
     private static SQLiteDatabase db;
     private static DBScaSqlite db_sca;
@@ -107,6 +108,7 @@ public class Viaje {
                 this.primerToque = c.getString(c.getColumnIndex("primerToque"));
                 this.cubicacion = c.getString(c.getColumnIndex("cubicacion"));
                 this.tipoEsquema = c.getInt(c.getColumnIndex("tipoEsquema"));
+                this.numImpresion = c.getInt(c.getColumnIndex("numImpresion"));
 
                 return this;
             } else {
@@ -301,5 +303,24 @@ public class Viaje {
             c.close();
             db.close();
         }
+    }
+
+    static boolean updateImpresion(Integer idViaje,Integer numImpresion, Context context) {
+        boolean resp=false;
+        ContentValues data = new ContentValues();
+
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+
+        try{
+
+            data.put("numImpresion", numImpresion+1);
+
+            db.update("viajesnetos", data, "ID = "+idViaje, null);
+            resp = true;
+        } finally {
+            db.close();
+        }
+        return resp;
     }
 }
