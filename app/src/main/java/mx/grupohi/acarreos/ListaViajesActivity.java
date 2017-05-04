@@ -68,8 +68,8 @@ public class ListaViajesActivity extends AppCompatActivity
                         View child = drawer.getChildAt(i);
                         TextView tvp = (TextView) child.findViewById(R.id.textViewProyecto);
                         TextView tvu = (TextView) child.findViewById(R.id.textViewUser);
-                        TextView tvv = (TextView) child.findViewById(R.id.textViewVersion);
                         TextView tpe = (TextView) child.findViewById(R.id.textViewPerfil);
+                        TextView tvv = (TextView) child.findViewById(R.id.textViewVersion);
 
                         if (tvp != null) {
                             tvp.setText(usuario.descripcionBaseDatos);

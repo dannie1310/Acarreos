@@ -87,6 +87,7 @@ public class ImagenesActivity extends AppCompatActivity implements NavigationVie
                         View child = drawer.getChildAt(i);
                         TextView tvp = (TextView) child.findViewById(R.id.textViewProyecto);
                         TextView tvu = (TextView) child.findViewById(R.id.textViewUser);
+                        TextView tpe = (TextView) child.findViewById(R.id.textViewPerfil);
                         TextView tvv = (TextView) child.findViewById(R.id.textViewVersion);
 
                         if (tvp != null) {
@@ -94,6 +95,13 @@ public class ImagenesActivity extends AppCompatActivity implements NavigationVie
                         }
                         if (tvu != null) {
                             tvu.setText(usuario.nombre);
+                        }
+                        if (tpe != null){
+                            if(usuario.origen_name == "0"){
+                                tpe.setText(usuario.tiro_name);
+                            }else if(usuario.tiro_name == "0"){
+                                tpe.setText(usuario.origen_name);
+                            }
                         }
                         if (tvv != null) {
                             tvv.setText(getString(R.string.app_name)+"     "+"Versión " + String.valueOf(BuildConfig.VERSION_NAME));

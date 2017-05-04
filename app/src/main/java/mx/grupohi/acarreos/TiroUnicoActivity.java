@@ -349,15 +349,15 @@ public class TiroUnicoActivity extends AppCompatActivity
                         if (tvu != null) {
                             tvu.setText(usuario.nombre);
                         }
-                        if (tpe != null) {
-                            if (usuario.origen_name == "0") {
+                        if (tpe != null){
+                            if(usuario.origen_name == "0"){
                                 tpe.setText(usuario.tiro_name);
-                            } else if (usuario.tiro_name == "0") {
+                            }else if(usuario.tiro_name == "0"){
                                 tpe.setText(usuario.origen_name);
                             }
                         }
                         if (tvv != null) {
-                            tvv.setText(getString(R.string.app_name) + "     " + "Versión " + String.valueOf(BuildConfig.VERSION_NAME));
+                            tvv.setText(getString(R.string.app_name)+"     "+"Versión " + String.valueOf(BuildConfig.VERSION_NAME));
                         }
                     }
                 }
