@@ -467,7 +467,6 @@ public class SetOrigenActivity extends AppCompatActivity
                                 if (Util.isNetworkStatusAvialable(getApplicationContext())) {
                                     progressDialogSync = ProgressDialog.show(SetOrigenActivity.this, "Sincronizando datos", "Por favor espere...", true);
                                     new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
-
                                     Intent login_activity = new Intent(getApplicationContext(), LoginActivity.class);
                                     usuario.destroy();
                                     startActivity(login_activity);

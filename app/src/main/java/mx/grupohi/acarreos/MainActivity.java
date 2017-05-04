@@ -483,6 +483,7 @@ public class MainActivity extends AppCompatActivity
                                     Intent login_activity = new Intent(getApplicationContext(), LoginActivity.class);
                                     usuario.destroy();
                                     startActivity(login_activity);
+
                                 } else {
                                     Toast.makeText(getApplicationContext(), R.string.error_internet, Toast.LENGTH_LONG).show();
                                 }
@@ -490,12 +491,14 @@ public class MainActivity extends AppCompatActivity
                         })
                         .create()
                         .show();
+
             }
             else {
                 Intent login_activity = new Intent(getApplicationContext(), LoginActivity.class);
                 usuario.destroy();
                 startActivity(login_activity);
             }
+
         }else if(id == R.id.nav_cambio){
             Intent cambio = new Intent(this, CambioClaveActivity.class);
             startActivity(cambio);

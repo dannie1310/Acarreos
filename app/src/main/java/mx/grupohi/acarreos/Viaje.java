@@ -183,8 +183,6 @@ public class Viaje {
                         json.put("IdMotivoDeductiva",c.getString(22));
                         json.put("CreoPrimerToque", c.getString(c.getColumnIndex("primerToque")));
                         json.put("CubicacionCamion", c.getString(c.getColumnIndex("cubicacion")));
-                        json.put("TipoEsquema", c.getInt(c.getColumnIndex("tipoEsquema")));
-
                         JSON.put(i + "", json);
                         i++;
 

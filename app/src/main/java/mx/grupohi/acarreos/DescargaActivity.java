@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.nfc.NfcAdapter;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -39,6 +40,7 @@ import java.net.URL;
 public class DescargaActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
+    protected PowerManager.WakeLock wakeLock;
     //Referencias UI
     private LinearLayout infoLayout;
     private LinearLayout origenLayout;
@@ -73,6 +75,9 @@ public class DescargaActivity extends AppCompatActivity
         usuario = new Usuario(this);
         usuario = usuario.getUsuario();
         mainActivity = new Intent(this, MainActivity.class);
+        final PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
+        this.wakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "etiqueta");
+        wakeLock.acquire();
 
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         setSupportActionBar(toolbar);
@@ -193,7 +198,6 @@ public class DescargaActivity extends AppCompatActivity
                                 if (Util.isNetworkStatusAvialable(getApplicationContext())) {
                                     progressDialogSync = ProgressDialog.show(DescargaActivity.this, "Sincronizando datos", "Por favor espere...", true);
                                     new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
-
                                     Intent login_activity = new Intent(getApplicationContext(), LoginActivity.class);
                                     usuario.destroy();
                                     startActivity(login_activity);
@@ -205,7 +209,7 @@ public class DescargaActivity extends AppCompatActivity
                         .create()
                         .show();
             }
-            else {
+           else{
                 Intent login_activity = new Intent(getApplicationContext(), LoginActivity.class);
                 usuario.destroy();
                 startActivity(login_activity);

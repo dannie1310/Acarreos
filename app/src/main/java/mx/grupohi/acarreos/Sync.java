@@ -51,6 +51,12 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected Boolean doInBackground(Void... params) {
 
+        try {
+            Util.copyDataBaseSyns(context);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         if(!gps.canGetLocation()) {
             gps.showSettingsAlert();
             return false;

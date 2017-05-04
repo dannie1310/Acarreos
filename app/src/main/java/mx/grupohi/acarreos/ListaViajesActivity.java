@@ -177,7 +177,6 @@ public class ListaViajesActivity extends AppCompatActivity
                                 if (Util.isNetworkStatusAvialable(getApplicationContext())) {
                                     progressDialogSync = ProgressDialog.show(ListaViajesActivity.this, "Sincronizando datos", "Por favor espere...", true);
                                     new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
-
                                     Intent login_activity = new Intent(getApplicationContext(), LoginActivity.class);
                                     usuario.destroy();
                                     startActivity(login_activity);
@@ -189,7 +188,7 @@ public class ListaViajesActivity extends AppCompatActivity
                         .create()
                         .show();
             }
-            else {
+            else{
                 Intent login_activity = new Intent(getApplicationContext(), LoginActivity.class);
                 usuario.destroy();
                 startActivity(login_activity);

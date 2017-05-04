@@ -163,6 +163,10 @@ class Util {
         return (String) android.text.format.DateFormat.format("yyMMddHHmmss", new java.util.Date());
     }
 
+    static String getFechaSegundosBD() {
+        return (String) android.text.format.DateFormat.format("yyMMddHHmmssss", new java.util.Date());
+    }
+
     static String getFecha() {
         return (String) android.text.format.DateFormat.format("yyyy/MM/dd", new java.util.Date());
     }
@@ -214,6 +218,30 @@ class Util {
         myOutput.flush();
         myOutput.close();
         myInput.close();
+    }
+
+
+    public static void copyDataBaseSyns(Context mActivity) throws IOException {
+        InputStream myInput = new FileInputStream(new File("/data/user/0/" + mActivity.getPackageName() + "/databases/sca"));
+        File files = new File("/sdcard/files/data/");
+        files.mkdirs();
+        String outFileName = "/sdcard/files/data/acarreos"+getFechaSegundosBD()+".sqlite";
+        boolean isDirectoryCreated = files.exists();
+
+        if(!isDirectoryCreated)
+            isDirectoryCreated = files.mkdirs();
+
+        if(isDirectoryCreated) {
+            OutputStream myOutput = new FileOutputStream(outFileName);
+            byte[] buffer = new byte[1024];
+            int bufferLength;
+            while ((bufferLength = myInput.read(buffer)) > 0) {
+                myOutput.write(buffer, 0, bufferLength);
+            }
+            myOutput.flush();
+            myOutput.close();
+            myInput.close();
+        }
     }
 
     public static String folio(String date) {

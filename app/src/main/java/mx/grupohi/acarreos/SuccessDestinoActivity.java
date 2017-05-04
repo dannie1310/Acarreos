@@ -240,7 +240,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
                         try {
                             bixolonPrinterApi.setSingleByteFont(BixolonPrinter.CODE_PAGE_858_EURO);
                             Bitmap fewlapsBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.img_success);
-                            String MAC = bixolonPrinterApi.getMacAddress();
+
                            // Thread.sleep(PRINTING_SLEEP_TIME);
 
                             if (logo == 1) {
@@ -409,16 +409,23 @@ public class SuccessDestinoActivity extends AppCompatActivity
         bixolonPrinterApi.setSingleByteFont(BixolonPrinter.CODE_PAGE_858_EURO);
        // bixolonPrinterApi.printText(text, alignment, attribute, size, false);
         bixolonPrinterApi.lineFeed(1, false);
-        bixolonPrinterApi.print1dBarcode(codex.toUpperCase(), BixolonPrinter.BAR_CODE_CODE39, BixolonPrinter.ALIGNMENT_CENTER, 2, 180, BixolonPrinter.HRI_CHARACTER_NOT_PRINTED, true);
+        bixolonPrinterApi.print1dBarcode(codex.toUpperCase(), BixolonPrinter.BAR_CODE_CODE39, BixolonPrinter.ALIGNMENT_CENTER, 2, 180, BixolonPrinter.HRI_CHARACTERS_BELOW_BAR_CODE, true);
        // bixolonPrinterApi.formFeed(true);
         bixolonPrinterApi.printText(codex.toUpperCase(), BixolonPrinter.ALIGNMENT_CENTER, attribute, size, false);
         if(impresion != 0){
             bixolonPrinterApi.printText("\nR E I M P R E S I O N "+impresion+"\n", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_C, 0, false);
         }
+       // bixolonPrinterApi.printText(codex.toUpperCase(), BixolonPrinter.ALIGNMENT_CENTER, attribute, 0, false);
 
         String cadena = "\nEste documento es un comprobante de recepción \nde materiales del Sistema de Administración de \nObra, no representa un compromiso de pago hasta \nsu validación contra las remisiones del \nproveedor y la revisión de factura.";
         bixolonPrinterApi.printText(cadena, BixolonPrinter.ALIGNMENT_CENTER, attribute, size, false);
+        if(impresion != 0){
+            bixolonPrinterApi.printText("R E I M P R E S I O N "+impresion+"\n", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_A, 2, false);
+        }
+        String cadena = "\nEste documento es un comprobante de recepción \nde materiales del Sistema de Administración de \nObra, no representa un compromiso de pago hasta \nsu validación contra las remisiones del \nproveedor y la revisión de factura.";
+        bixolonPrinterApi.printText(cadena, BixolonPrinter.ALIGNMENT_CENTER, attribute, size, false);
         bixolonPrinterApi.lineFeed(1, false);
+
         bixolonPrinterApi.cutPaper(true);
         bixolonPrinterApi.kickOutDrawer(BixolonPrinter.DRAWER_CONNECTOR_PIN5);
 
@@ -476,7 +483,9 @@ public class SuccessDestinoActivity extends AppCompatActivity
                             connectedPrinter = true;
                             if(imprimir) {
                                 btnImprimir.performClick();
+
                             }
+
                             break;
 
                         case BixolonPrinter.STATE_CONNECTING:
@@ -733,7 +742,6 @@ public class SuccessDestinoActivity extends AppCompatActivity
                                 if (Util.isNetworkStatusAvialable(getApplicationContext())) {
                                     progressDialogSync = ProgressDialog.show(SuccessDestinoActivity.this, "Sincronizando datos", "Por favor espere...", true);
                                     new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
-
                                     Intent login_activity = new Intent(getApplicationContext(), LoginActivity.class);
                                     usuario.destroy();
                                     startActivity(login_activity);

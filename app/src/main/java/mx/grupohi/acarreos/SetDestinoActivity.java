@@ -472,6 +472,7 @@ public class SetDestinoActivity extends AppCompatActivity
         String fechaString = "";
         String idUsuario = null;
         Boolean limpiarorigen = false;
+        Boolean limpiarusuario = false;
         boolean continuar = false;
         String UID ="";
         if (writeMode) {

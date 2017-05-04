@@ -198,7 +198,6 @@ public class ImagenesActivity extends AppCompatActivity implements NavigationVie
                                 if (Util.isNetworkStatusAvialable(getApplicationContext())) {
                                     progressDialogSync = ProgressDialog.show(ImagenesActivity.this, "Sincronizando datos", "Por favor espere...", true);
                                     new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
-
                                     Intent login_activity = new Intent(getApplicationContext(), LoginActivity.class);
                                     usuario.destroy();
                                     startActivity(login_activity);
@@ -210,7 +209,7 @@ public class ImagenesActivity extends AppCompatActivity implements NavigationVie
                         .create()
                         .show();
             }
-            else {
+            else{
                 Intent login_activity = new Intent(getApplicationContext(), LoginActivity.class);
                 usuario.destroy();
                 startActivity(login_activity);
