@@ -347,5 +347,32 @@ class Usuario {
             return resp;
         }
     }
+    public String getNombreEsquema() {
+        db = db_sca.getWritableDatabase();
+        Integer tipo;
+        String resp = null;
+        Cursor c = db.rawQuery("SELECT tipo_permiso FROM user LIMIT 1", null);
+        try {
+            if (c != null && c.moveToFirst()) {
+                tipo = c.getInt(0);
+                if (tipo == 1){
+                    resp = "CHECADOR ORIGEN";
+                } else if(tipo == 2){
+                    resp = "CHECADOR TIRO";
+                } else if(tipo == 3){
+                    resp = "LIBRE A BORDO";
+                } else if (tipo == 4){
+                    resp = "CONTROL ENTRADA";
+                } else if (tipo == 5){
+                    resp = "CONTROL SALIDA";
+                }
+            }
+
+        } finally {
+            c.close();
+            db.close();
+            return resp;
+        }
+    }
 }
 

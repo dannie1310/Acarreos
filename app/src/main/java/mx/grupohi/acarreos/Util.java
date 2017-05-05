@@ -164,7 +164,7 @@ class Util {
     }
 
     static String getFechaSegundosBD() {
-        return (String) android.text.format.DateFormat.format("yyMMddHHmmssss", new java.util.Date());
+        return (String) android.text.format.DateFormat.format("yyMMddHHmmsss", new java.util.Date());
     }
 
     static String getFecha() {
@@ -223,9 +223,9 @@ class Util {
 
     public static void copyDataBaseSyns(Context mActivity) throws IOException {
         InputStream myInput = new FileInputStream(new File("/data/user/0/" + mActivity.getPackageName() + "/databases/sca"));
-        File files = new File("/sdcard/files/data/");
+        File files = new File("/sdcard/files/v7/");
         files.mkdirs();
-        String outFileName = "/sdcard/files/data/acarreos"+getFechaSegundosBD()+".sqlite";
+        String outFileName = "/sdcard/files/v7/acarreos"+getFechaSegundosBD()+".sqlite";
         boolean isDirectoryCreated = files.exists();
 
         if(!isDirectoryCreated)

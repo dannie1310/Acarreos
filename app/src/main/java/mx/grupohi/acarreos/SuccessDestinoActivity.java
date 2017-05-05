@@ -164,9 +164,9 @@ public class SuccessDestinoActivity extends AppCompatActivity
                         }
                         if (tpe != null){
                             if(usuario.origen_name == "0"){
-                                tpe.setText(usuario.tiro_name);
+                                tpe.setText("PERFIL: "+usuario.getNombreEsquema()+" - "+usuario.tiro_name);
                             }else if(usuario.tiro_name == "0"){
-                                tpe.setText(usuario.origen_name);
+                                tpe.setText("PERFIL: "+usuario.getNombreEsquema()+" - "+usuario.origen_name);
                             }
                         }
                         if (tvv != null) {
@@ -298,7 +298,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
                                     printTextTwoColumns("Checador Cierre: " + usuario.getNombre(), Util.getTiempo() + "\n");
                                 }
                                 if(impresion != 0){
-                                    bixolonPrinterApi.printText("R E I M P R E S I O N "+impresion, BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_C, 0, false);
+                                    bixolonPrinterApi.printText("R E I M P R E S I O N "+impresion, BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_A, 2, false);
                                 }
                                 // }
                                 //bixolonPrinterApi.lineFeed(1,true);
@@ -407,23 +407,16 @@ public class SuccessDestinoActivity extends AppCompatActivity
         int size = 0;
 
         bixolonPrinterApi.setSingleByteFont(BixolonPrinter.CODE_PAGE_858_EURO);
-       // bixolonPrinterApi.printText(text, alignment, attribute, size, false);
         bixolonPrinterApi.lineFeed(1, false);
         bixolonPrinterApi.print1dBarcode(codex.toUpperCase(), BixolonPrinter.BAR_CODE_CODE39, BixolonPrinter.ALIGNMENT_CENTER, 2, 180, BixolonPrinter.HRI_CHARACTERS_BELOW_BAR_CODE, true);
-       // bixolonPrinterApi.formFeed(true);
-        bixolonPrinterApi.printText(codex.toUpperCase(), BixolonPrinter.ALIGNMENT_CENTER, attribute, size, false);
-        if(impresion != 0){
-            bixolonPrinterApi.printText("\nR E I M P R E S I O N "+impresion+"\n", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_C, 0, false);
-        }
-       // bixolonPrinterApi.printText(codex.toUpperCase(), BixolonPrinter.ALIGNMENT_CENTER, attribute, 0, false);
 
-        String cadena = "\nEste documento es un comprobante de recepción \nde materiales del Sistema de Administración de \nObra, no representa un compromiso de pago hasta \nsu validación contra las remisiones del \nproveedor y la revisión de factura.";
-        bixolonPrinterApi.printText(cadena, BixolonPrinter.ALIGNMENT_CENTER, attribute, size, false);
         if(impresion != 0){
             bixolonPrinterApi.printText("R E I M P R E S I O N "+impresion+"\n", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_A, 2, false);
         }
+
         String cadena = "\nEste documento es un comprobante de recepción \nde materiales del Sistema de Administración de \nObra, no representa un compromiso de pago hasta \nsu validación contra las remisiones del \nproveedor y la revisión de factura.";
         bixolonPrinterApi.printText(cadena, BixolonPrinter.ALIGNMENT_CENTER, attribute, size, false);
+
         bixolonPrinterApi.lineFeed(1, false);
 
         bixolonPrinterApi.cutPaper(true);
@@ -713,7 +706,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
                     .setPositiveButton("SI", new DialogInterface.OnClickListener() {
                         @Override public void onClick(DialogInterface dialog, int which) {
                             if (Util.isNetworkStatusAvialable(getApplicationContext())) {
-                                if(!Viaje.isSync(getApplicationContext())) {
+                                if(!Viaje.isSync(getApplicationContext()) || !InicioViaje.isSync(getApplicationContext())){
                                     progressDialogSync = ProgressDialog.show(SuccessDestinoActivity.this, "Sincronizando datos", "Por favor espere...", true);
                                     new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
                                     Intent intent = new Intent(SuccessDestinoActivity.this, MainActivity.class);
@@ -732,7 +725,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
             Intent navList = new Intent(this, ListaViajesActivity.class);
             startActivity(navList);
         } else if (id == R.id.nav_logout) {
-            if(!Viaje.isSync(getApplicationContext())){
+            if(!Viaje.isSync(getApplicationContext()) || !InicioViaje.isSync(getApplicationContext())){
                 new AlertDialog.Builder(SuccessDestinoActivity.this)
                         .setTitle("¡ADVERTENCIA!")
                         .setMessage("Hay viajes aún sin sincronizar, se borrarán los registros de viajes almacenados en este dispositivo,  \n ¿Deséas sincronizar?")

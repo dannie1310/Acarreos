@@ -99,7 +99,7 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
             try {
 
                 URL url = new URL("http://sca.grupohi.mx/android20160923.php");
-               // JSONVIAJES = HttpConnection.POST(url, values);
+                JSONVIAJES = HttpConnection.POST(url, values);
                 Log.i("jsonviajes:  ",String.valueOf(values));
                 ContentValues aux = new ContentValues();
                 imagenesTotales= ImagenesViaje.getCount(context);

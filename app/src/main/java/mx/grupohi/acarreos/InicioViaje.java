@@ -32,6 +32,7 @@ public class InicioViaje {
     String IMEI;
     Integer estatus;
     Integer tipoEsquema;
+    Integer idperfil;
     private static SQLiteDatabase db;
     private static DBScaSqlite db_sca;
     private Context context;
@@ -80,6 +81,7 @@ public class InicioViaje {
                 this.IMEI = c.getString(c.getColumnIndex("IMEI"));
                 this.estatus = c.getInt(c.getColumnIndex("estatus"));
                 this.tipoEsquema = c.getInt(c.getColumnIndex("tipoEsquema"));
+                this.idperfil = c.getInt(c.getColumnIndex("idperfil"));
 
                 return this;
             } else {
@@ -135,6 +137,7 @@ public class InicioViaje {
                     json.put("IMEI", c.getString(c.getColumnIndex("IMEI")));
                     json.put("estatus", c.getString(c.getColumnIndex("estatus")));
                     json.put("tipoEsquema", c.getString(c.getColumnIndex("tipoEsquema")));
+                    json.put("idperfil", c.getInt(c.getColumnIndex("idperfil")));
 
 
                     JSON.put(i + "", json);
@@ -160,6 +163,23 @@ public class InicioViaje {
         Cursor c = db.rawQuery("SELECT * FROM inicio_viajes",null);
         try {
             return c.getCount();
+        } finally {
+            c.close();
+            db.close();
+        }
+    }
+
+    static Boolean isSync(Context context) {
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+
+        Boolean result = true;
+        Cursor c = db.rawQuery("SELECT * FROM inicio_viajes", null);
+        try {
+            if(c != null && c.moveToFirst()) {
+                result = false;
+            }
+            return result;
         } finally {
             c.close();
             db.close();

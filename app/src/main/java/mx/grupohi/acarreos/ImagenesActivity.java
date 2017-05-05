@@ -98,9 +98,9 @@ public class ImagenesActivity extends AppCompatActivity implements NavigationVie
                         }
                         if (tpe != null){
                             if(usuario.origen_name == "0"){
-                                tpe.setText(usuario.tiro_name);
+                                tpe.setText("PERFIL: "+usuario.getNombreEsquema()+" - "+usuario.tiro_name);
                             }else if(usuario.tiro_name == "0"){
-                                tpe.setText(usuario.origen_name);
+                                tpe.setText("PERFIL: "+usuario.getNombreEsquema()+" - "+usuario.origen_name);
                             }
                         }
                         if (tvv != null) {
@@ -166,7 +166,7 @@ public class ImagenesActivity extends AppCompatActivity implements NavigationVie
                     .setPositiveButton("SI", new DialogInterface.OnClickListener() {
                         @Override public void onClick(DialogInterface dialog, int which) {
                             if (Util.isNetworkStatusAvialable(getApplicationContext())) {
-                                if(!Viaje.isSync(getApplicationContext())) {
+                                if(!Viaje.isSync(getApplicationContext()) || !InicioViaje.isSync(getApplicationContext())){
                                      progressDialogSync = ProgressDialog.show(ImagenesActivity.this, "Sincronizando datos", "Por favor espere...", true);
                                     new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
                                     Intent intent = new Intent(ImagenesActivity.this, MainActivity.class);
@@ -188,7 +188,7 @@ public class ImagenesActivity extends AppCompatActivity implements NavigationVie
             Intent descarga = new Intent(this, DescargaActivity.class);
             startActivity(descarga);
         }else if (id == R.id.nav_logout) {
-            if(!Viaje.isSync(getApplicationContext())){
+            if(!Viaje.isSync(getApplicationContext()) || !InicioViaje.isSync(getApplicationContext())){
                 new AlertDialog.Builder(ImagenesActivity.this)
                         .setTitle("¡ADVERTENCIA!")
                         .setMessage("Hay viajes aún sin sincronizar, se borrarán los registros de viajes almacenados en este dispositivo,  \n ¿Deséas sincronizar?")
