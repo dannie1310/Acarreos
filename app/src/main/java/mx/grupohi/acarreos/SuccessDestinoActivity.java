@@ -292,11 +292,14 @@ public class SuccessDestinoActivity extends AppCompatActivity
 
                                 if(usuario.tipo_permiso == 3){
                                     printTextTwoColumns("Checador: "+ usuario.getNombre(), Util.getTiempo()  + "\n");
+                                    printTextTwoColumns("Versión: ", String.valueOf(BuildConfig.VERSION_NAME)+"\n");
                                     bixolonPrinterApi.printText("TIRO LIBRE ABORDO\n", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_C, 0, false);
                                 }else {
                                     printTextTwoColumns("Checador Inicio: ", nombreChecador + "\n");
                                     printTextTwoColumns("Checador Cierre: " + usuario.getNombre(), Util.getTiempo() + "\n");
+                                    printTextTwoColumns("Versión: ", String.valueOf(BuildConfig.VERSION_NAME)+"\n");
                                 }
+
                                 if(impresion != 0){
                                     bixolonPrinterApi.printText("R E I M P R E S I O N "+impresion, BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_A, 2, false);
                                 }
@@ -709,8 +712,16 @@ public class SuccessDestinoActivity extends AppCompatActivity
                                 if(!Viaje.isSync(getApplicationContext()) || !InicioViaje.isSync(getApplicationContext())){
                                     progressDialogSync = ProgressDialog.show(SuccessDestinoActivity.this, "Sincronizando datos", "Por favor espere...", true);
                                     new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
-                                    Intent intent = new Intent(SuccessDestinoActivity.this, MainActivity.class);
-                                    startActivity(intent);
+                                    Intent mainActivity;
+                                    Integer tipo = usuario.getTipo_permiso();
+                                    if(tipo == 0){
+                                        mainActivity = new Intent(getApplicationContext(), SetOrigenActivity.class);
+                                        startActivity(mainActivity);
+                                    }else if(tipo == 1){
+                                        mainActivity = new Intent(getApplicationContext(), MainActivity.class);
+                                        startActivity(mainActivity);
+                                    }
+
                                 } else {
                                     Toast.makeText(getApplicationContext(), "No es necesaria la sincronización en este momento", Toast.LENGTH_LONG).show();
                                 }

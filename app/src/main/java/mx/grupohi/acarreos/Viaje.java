@@ -284,6 +284,7 @@ public class Viaje {
         db.execSQL("DELETE FROM viajesnetos");
         db.execSQL("DELETE FROM coordenadas");
         db.execSQL("DELETE FROM imagenes_viaje");
+        db.execSQL("DELETE FROM inicio_viajes");
 
         db.close();
     }

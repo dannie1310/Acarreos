@@ -553,6 +553,9 @@ public class TiroUnicoActivity extends AppCompatActivity
             cv.put("primerToque", usuario.getId());
             c = c.find(idCamion);
             cv.put("cubicacion", String.valueOf(c.capacidad));
+            cv.put("tipoEsquema", usuario.getTipoEsquema());
+            cv.put("numImpresion", 0);
+            cv.put("idperfil", usuario.tipo_permiso);
 
             viaje = new Viaje(this);
             viaje.create(cv);
@@ -615,6 +618,7 @@ public class TiroUnicoActivity extends AppCompatActivity
                                 if(!Viaje.isSync(getApplicationContext()) || !InicioViaje.isSync(getApplicationContext())){
                                     progressDialogSync = ProgressDialog.show(TiroUnicoActivity.this, "Sincronizando datos", "Por favor espere...", true);
                                     new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
+
                                 } else {
                                     Toast.makeText(getApplicationContext(), "No es necesaria la sincronización en este momento", Toast.LENGTH_LONG).show();
                                 }
