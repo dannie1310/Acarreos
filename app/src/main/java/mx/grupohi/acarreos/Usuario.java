@@ -311,8 +311,10 @@ class Usuario {
                 tipo = c.getInt(0);
                 if(tipo == 1 || tipo == 4){
                     return 0; //Origen
-                }else{
+                }else if(tipo == 2 || tipo == 3 || tipo == 5){
                     return 1;
+                }else{
+                    return null;
                 }
             }
             else{

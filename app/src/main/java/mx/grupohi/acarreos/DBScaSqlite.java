@@ -62,6 +62,8 @@ import java.util.GregorianCalendar;
             "CREATE TABLE checadores (idChecador INTEGER PRIMARY KEY, nombre TEXT);",
             "CREATE TABLE inicio_viajes (ID INTEGER PRIMARY KEY AUTOINCREMENT, idcamion INTEGER, idmaterial INTEGER, idorigen INTEGER, fecha_origen VARCHAR(8), idusuario INTEGER, uidTAG TEXT, IMEI TEXT, tipoEsquema INTEGER, estatus INTEGER, idperfil INTEGER, created_at DATETIME DEFAULT CURRENT_TIMESTAMP);",
             "CREATE TABLE entrada_tiros (ID INTEGER PRIMARY KEY AUTOINCREMENT, idcamion INTEGER, idtiro INTEGER, fecha_entrada VARCHAR(8), idusuario INTEGER, uidTAG TEXT, IMEI TEXT,  estatus INTEGER, created_at DATETIME DEFAULT CURRENT_TIMESTAMP );",
+            "CREATE TABLE celulares (ID INTEGER PRIMARY KEY AUTOINCREMENT, IMEI TEXT);",
+            "CREATE TABLE impresoras (ID INTEGER PRIMARY KEY AUTOINCREMENT, MAC TEXT);",
     };
 
     @Override
@@ -90,6 +92,8 @@ import java.util.GregorianCalendar;
         db.execSQL("DROP TABLE IF EXISTS checadores");
         db.execSQL("DROP TABLE IF EXISTS inicio_viajes");
         db.execSQL("DROP TABLE IF EXISTS entrada_tiros");
+        db.execSQL("DROP TABLE IF EXISTS celulares");
+        db.execSQL("DROP TABLE IF EXISTS impresoras");
 
         for (String query: queries){
             db.execSQL(query);
@@ -115,6 +119,8 @@ import java.util.GregorianCalendar;
         db.execSQL("DELETE FROM checadores");
         db.execSQL("DELETE FROM inicio_viajes");
         db.execSQL("DELETE FROM entrada_tiros");
+        db.execSQL("DELETE FROM celulares");
+        db.execSQL("DELETE FROM impresoras");
 
         db.close();
     }
@@ -131,6 +137,8 @@ import java.util.GregorianCalendar;
         db.execSQL("DELETE FROM motivos");
         db.execSQL("DELETE FROM configuraciones");
         db.execSQL("DELETE FROM checadores");
+        db.execSQL("DELETE FROM celulares");
+        db.execSQL("DELETE FROM impresoras");
 
         db.close();
     }
