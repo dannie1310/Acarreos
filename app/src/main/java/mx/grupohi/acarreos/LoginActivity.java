@@ -77,7 +77,6 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this, R.string.error_usuario, Toast.LENGTH_LONG).show();
                 Intent intent = getIntent();
                 usuario.destroy();
-               // finish();
                 startActivity(intent);
             }
             else if(tipo == 0){
@@ -592,6 +591,61 @@ public class LoginActivity extends AppCompatActivity {
                                     return false;
                                 }
                             }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        //Celulares
+
+                        Celular celular = new Celular(getApplicationContext());
+                        try {
+                            //final JSONArray celulares = new JSONArray(JSON.getString("Celulares"));
+                            /*for (int i = 0; i < celulares.length(); i++) {
+                                final int finalI = i + 1;
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        loginProgressDialog.setMessage("Actualizando catálogo de celulares... \n Celular " + finalI + " de " + celulares.length());
+                                    }
+                                });
+                                JSONObject info = celulares.getJSONObject(i);
+*/
+                                data.clear();
+                                data.put("id", "1");
+                                data.put("IMEI", "359667070397776");
+
+                                if (!celular.create(data)) {
+                                    return false;
+                                }
+                           // }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+
+                        //Impresoras
+
+                        Impresora impresora = new Impresora(getApplicationContext());
+                        try {
+                            /*final JSONArray impresoras = new JSONArray(JSON.getString("Impresoras"));
+                            for (int i = 0; i < impresoras.length(); i++) {
+                                final int finalI = i + 1;
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        loginProgressDialog.setMessage("Actualizando catálogo de impresoras... \n Impresora " + finalI + " de " + impresoras.length());
+                                    }
+                                });
+                                JSONObject info = impresoras.getJSONObject(i);
+*/
+                                data.clear();
+                                data.put("id", "1");
+                                data.put("MAC", "74F07DE7AFE5");
+
+                                if (!impresora.create(data)) {
+                                    return false;
+                                }
+                           // }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
