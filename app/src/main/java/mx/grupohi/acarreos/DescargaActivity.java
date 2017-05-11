@@ -60,7 +60,7 @@ public class DescargaActivity extends AppCompatActivity
     private Integer idOrigen;
     private Intent mainActivity;
     private Intent listaViajes;
-
+    private TextView error;
     Usuario usuario;
     Viaje viaje;
     Coordenada coordenada;
@@ -75,6 +75,7 @@ public class DescargaActivity extends AppCompatActivity
         usuario = new Usuario(this);
         usuario = usuario.getUsuario();
         mainActivity = new Intent(this, MainActivity.class);
+        error = (TextView) findViewById(R.id.error_descarga);
         final PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
         this.wakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "etiqueta");
         wakeLock.acquire();
@@ -127,6 +128,7 @@ public class DescargaActivity extends AppCompatActivity
         loginProgressDialog = ProgressDialog.show(DescargaActivity.this, "Descargando", "Por favor espere...", true);
         descargaCatalogos = new DescargaActivity.DescargaCatalogos(getApplicationContext(), progressDialogSync);
         descargaCatalogos.execute((Void) null);
+
 
 
     }
@@ -256,15 +258,12 @@ public class DescargaActivity extends AppCompatActivity
                 JSON = HttpConnection.POST(url, data);
 
                 if (JSON.has("error")) {
-                    Toast.makeText(context, "Error al descargar ", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Error al descargar.", Toast.LENGTH_LONG).show();
                     return false;
                 } else {
-                    if(JSON.getString("IdPerfil") == "null"){
-
-                        Toast.makeText(context, R.string.error_usuario, Toast.LENGTH_LONG).show();
+                    if (JSON.getString("IdPerfil") == "null") {
                         return false;
-                    }
-                    else {
+                    } else {
 
                         db_sca.descargaCatalogos();
                         try {
@@ -586,6 +585,8 @@ public class DescargaActivity extends AppCompatActivity
                     mainActivity = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(mainActivity);
                 }
+            }else{
+                Toast.makeText(context, R.string.error_usuario, Toast.LENGTH_LONG).show();
             }
         }
     }
