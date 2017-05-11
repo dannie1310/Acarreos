@@ -106,7 +106,7 @@ public class DialogManager {
                     }).show();
         }
         else if(MAC.equals("null")){
-            new AlertDialog.Builder(context).setMessage("No cuenta con Impresora Asignada.\n Favor de Solicitarla.")
+            new AlertDialog.Builder(context).setMessage("No cuenta con Impresora Asignada.\nFavor de Solicitarla.")
                     .setTitle("¡Error!")
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {

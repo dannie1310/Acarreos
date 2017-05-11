@@ -158,7 +158,6 @@ public class CamaraActivity extends AppCompatActivity {
 
     }
 
-
     private void openCamera() {
         File file = new File(Environment.getExternalStorageDirectory(), MEDIA_DIRECTORY);
         boolean isDirectoryCreated = file.exists();
@@ -216,8 +215,9 @@ public class CamaraActivity extends AppCompatActivity {
                         base64 = Usuario.encodeToBase64Imagen(bitmap, 30);
                     }catch (Exception e){
                         e.printStackTrace();
-                        Intent intent = new Intent(getApplicationContext(), ListaViajesActivity.class);
+                        Intent intent = new Intent(getApplicationContext(), ImagenesActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent.putExtra("idviaje_neto", idviaje);
                         startActivity(intent);
                     }
                     break;
@@ -225,5 +225,6 @@ public class CamaraActivity extends AppCompatActivity {
 
         }
     }
+
 
 }

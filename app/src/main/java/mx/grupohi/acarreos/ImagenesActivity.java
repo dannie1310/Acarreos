@@ -117,12 +117,14 @@ public class ImagenesActivity extends AppCompatActivity implements NavigationVie
 
     @Override
     public void onBackPressed() {
-        Integer list = getIntent().getIntExtra("list", 0);
+        Integer list = getIntent().getIntExtra("list", 1);
         if(list == 1) {
             super.onBackPressed();
         } else {
-            Intent intent = new Intent(getApplicationContext(), ListaViajesActivity.class);
+            Intent intent = new Intent(getApplicationContext(), SuccessDestinoActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putExtra("idViaje", x);
+            intent.putExtra("list", 1);
             startActivity(intent);
         }
     }

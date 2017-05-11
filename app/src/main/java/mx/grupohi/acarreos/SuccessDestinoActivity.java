@@ -680,7 +680,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
         }
     }
 
-    @Override
+   /* @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
@@ -703,7 +703,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
         }
         return super.onOptionsItemSelected(item);
     }
-
+*/
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
