@@ -2,6 +2,7 @@ package mx.grupohi.acarreos;
 
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -17,6 +18,7 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
+import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -99,6 +101,12 @@ public class SuccessDestinoActivity extends AppCompatActivity
     private String mPath;
     private final int PHOTO_CODE = 200;
     private ImageView mSetImage;
+
+    //GPS
+    private GPSTracker gps;
+    private String IMEI;
+    CelularImpresora cl;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -144,6 +152,11 @@ public class SuccessDestinoActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+        gps = new GPSTracker(SuccessDestinoActivity.this);
+        TelephonyManager phneMgr = (TelephonyManager)getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+        IMEI = phneMgr.getDeviceId();
+        cl = new CelularImpresora(getApplicationContext());
+        cl = cl.find(IMEI);
 
         if(drawer != null)
             drawer.post(new Runnable() {
@@ -226,7 +239,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
                 if(!connectedPrinter) {
                     bixolonPrinterApi.findBluetoothPrinters();
                 }
-
+                checkEnabled();
                 new Handler().postDelayed(new Thread() {
                     @Override
                     public void run() {
@@ -542,17 +555,29 @@ public class SuccessDestinoActivity extends AppCompatActivity
                 case BixolonPrinter.MESSAGE_BLUETOOTH_DEVICE_SET:
                     Log.i("Handler", "BixolonPrinter.MESSAGE_BLUETOOTH_DEVICE_SET");
                     if (msg.obj == null) {
-                        Toast.makeText(getApplicationContext(), "No paired device",
-                                Toast.LENGTH_LONG).show();
+                        new android.app.AlertDialog.Builder(SuccessDestinoActivity.this)
+                                .setTitle("¡Error!")
+                                .setMessage("No Hay Impresoras Emparejadas.")
+                                .setCancelable(true)
+                                .setPositiveButton("Ajustes de Bluetooth",
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                startActivity(new Intent(Settings.ACTION_BLUETOOTH_SETTINGS));
+                                            }
+                                        })
+                                .create()
+                                .show();
+                       // Toast.makeText(getApplicationContext(), "No Hay Impresoras Emparejadas", Toast.LENGTH_LONG).show();
                     } else {
                         Set<BluetoothDevice> pairedDevices = (Set<BluetoothDevice>) msg.obj;
-                        DialogManager.showBluetoothDialog(SuccessDestinoActivity.this, bixolonPrinterApi, (Set<BluetoothDevice>) msg.obj);
+                        DialogManager.showBluetoothDialog(SuccessDestinoActivity.this, bixolonPrinterApi, (Set<BluetoothDevice>) msg.obj, cl.MAC);
                     }
                     break;
 
                 case BixolonPrinter.MESSAGE_PRINT_COMPLETE:
                     Log.i("Handler", "BixolonPrinter.MESSAGE_PRINT_COMPLETE");
-                    Toast.makeText(getApplicationContext(),"Impresión Completa.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),"Impresión Completa!!!.", Toast.LENGTH_SHORT).show();
                     break;
 
                 case BixolonPrinter.MESSAGE_COMPLETE_PROCESS_BITMAP:

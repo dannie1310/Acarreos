@@ -162,7 +162,7 @@ public class PrintViaje implements Runnable {
                                 Toast.LENGTH_SHORT).show();
                     } else {
                         Set<BluetoothDevice> pairedDevices = (Set<BluetoothDevice>) msg.obj;
-                        DialogManager.showBluetoothDialog(context, bixolonPrinterApi, (Set<BluetoothDevice>) msg.obj);
+                        DialogManager.showBluetoothDialog(context, bixolonPrinterApi, (Set<BluetoothDevice>) msg.obj,"122222222");
                     }
                     break;
 

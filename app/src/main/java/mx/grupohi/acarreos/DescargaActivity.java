@@ -259,36 +259,42 @@ public class DescargaActivity extends AppCompatActivity
                     Toast.makeText(context, "Error al descargar ", Toast.LENGTH_LONG).show();
                     return false;
                 } else {
+                    if(JSON.getString("IdPerfil") == "null"){
 
-                    db_sca.descargaCatalogos();
-                    try {
-                        String logo = JSON.getString("logo");
-                        String perfil = JSON.getString("IdPerfil");//idperfil
-                        String origen= JSON.getString("IdOrigen");//idorigen
-                        String tiro = JSON.getString("IdTiro");//idtiro
-
-                        Usuario.updateLogo(logo, perfil,origen,tiro,getApplicationContext());
-                    }catch (Exception e){
-                        e.printStackTrace();
+                        Toast.makeText(context, R.string.error_usuario, Toast.LENGTH_LONG).show();
+                        return false;
                     }
-                    //Camiones
-                    Camion camion = new Camion(context);
-                    try {
-                        final JSONArray camiones = new JSONArray(JSON.getString("Camiones"));
-                        for (int i = 0; i < camiones.length(); i++) {
-                            final int finalI = i + 1;
+                    else {
 
-                            // Toast.makeText(context, "Actualizando catálogo de camiones...", Toast.LENGTH_SHORT).show();
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    loginProgressDialog.setMessage("Actualizando catálogo de camiones... \n Camion " + finalI + " de " + camiones.length());
-                                }
-                            });
-                            JSONObject info = camiones.getJSONObject(i);
+                        db_sca.descargaCatalogos();
+                        try {
+                            String logo = JSON.getString("logo");
+                            String perfil = JSON.getString("IdPerfil");//idperfil
+                            String origen = JSON.getString("IdOrigen");//idorigen
+                            String tiro = JSON.getString("IdTiro");//idtiro
 
-                            data.clear();
-                           // if (!Camion.findId(Integer.valueOf(info.getString("idcamion")), context)) { (Validar si existe el camión)
+                            Usuario.updateLogo(logo, perfil, origen, tiro, getApplicationContext());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        //Camiones
+                        Camion camion = new Camion(context);
+                        try {
+                            final JSONArray camiones = new JSONArray(JSON.getString("Camiones"));
+                            for (int i = 0; i < camiones.length(); i++) {
+                                final int finalI = i + 1;
+
+                                // Toast.makeText(context, "Actualizando catálogo de camiones...", Toast.LENGTH_SHORT).show();
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        loginProgressDialog.setMessage("Actualizando catálogo de camiones... \n Camion " + finalI + " de " + camiones.length());
+                                    }
+                                });
+                                JSONObject info = camiones.getJSONObject(i);
+
+                                data.clear();
+                                // if (!Camion.findId(Integer.valueOf(info.getString("idcamion")), context)) { (Validar si existe el camión)
 
                                 data.put("idcamion", info.getString("idcamion"));
                                 data.put("placas", info.getString("placas"));
@@ -304,190 +310,190 @@ public class DescargaActivity extends AppCompatActivity
                                 if (!camion.create(data)) {
                                     return false;
                                 }
-                           // }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                    //Tiros
-
-                    Tiro tiro = new Tiro(context);
-                    try {
-                        final JSONArray tiros = new JSONArray(JSON.getString("Tiros"));
-                        for (int i = 0; i < tiros.length(); i++) {
-                            final int finalI = i + 1;
-                            // Toast.makeText(context, "Actualizando catálogo de tiros...", Toast.LENGTH_SHORT).show();
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    loginProgressDialog.setMessage("Actualizando catálogo de tiros... \n Tiro " + finalI + " de " + tiros.length());
-                                }
-                            });
-                            JSONObject info = tiros.getJSONObject(i);
-
-                            data.clear();
-                            data.put("idtiro", info.getString("idtiro"));
-                            data.put("descripcion", info.getString("descripcion"));
-
-                            if (!tiro.create(data)) {
-                                return false;
+                                // }
                             }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
 
-                    //Origenes
+                        //Tiros
 
-                    Origen origen = new Origen(context);
-                    try {
-                        final JSONArray origenes = new JSONArray(JSON.getString("Origenes"));
-                        for (int i = 0; i < origenes.length(); i++) {
-                            final int finalI = i + 1;
-                            // Toast.makeText(context, "Actualizando catálogo de Origenes... ", Toast.LENGTH_SHORT).show();
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    loginProgressDialog.setMessage("Actualizando catálogo de Origenes... \n Origen " + finalI + " de " + origenes.length());
+                        Tiro tiro = new Tiro(context);
+                        try {
+                            final JSONArray tiros = new JSONArray(JSON.getString("Tiros"));
+                            for (int i = 0; i < tiros.length(); i++) {
+                                final int finalI = i + 1;
+                                // Toast.makeText(context, "Actualizando catálogo de tiros...", Toast.LENGTH_SHORT).show();
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        loginProgressDialog.setMessage("Actualizando catálogo de tiros... \n Tiro " + finalI + " de " + tiros.length());
+                                    }
+                                });
+                                JSONObject info = tiros.getJSONObject(i);
+
+                                data.clear();
+                                data.put("idtiro", info.getString("idtiro"));
+                                data.put("descripcion", info.getString("descripcion"));
+
+                                if (!tiro.create(data)) {
+                                    return false;
                                 }
-                            });
-                            JSONObject info = origenes.getJSONObject(i);
-
-                            data.clear();
-                            data.put("idorigen", info.getString("idorigen"));
-                            data.put("descripcion", info.getString("descripcion"));
-                            data.put("estado", info.getString("estado"));
-
-
-                            if (!origen.create(data)) {
-                                return false;
                             }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
 
-                    //Rutas
+                        //Origenes
 
-                    Ruta ruta = new Ruta(context);
-                    try {
-                        final JSONArray rutas = new JSONArray(JSON.getString("Rutas"));
-                        for (int i = 0; i < rutas.length(); i++) {
-                            final int finalI = i + 1;
-                            //Toast.makeText(context, "Actualizando catálogo de Rutas... ", Toast.LENGTH_SHORT).show();
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    loginProgressDialog.setMessage("Actualizando catálogo de Rutas... \n Ruta " + finalI + " de " + rutas.length());
+                        Origen origen = new Origen(context);
+                        try {
+                            final JSONArray origenes = new JSONArray(JSON.getString("Origenes"));
+                            for (int i = 0; i < origenes.length(); i++) {
+                                final int finalI = i + 1;
+                                // Toast.makeText(context, "Actualizando catálogo de Origenes... ", Toast.LENGTH_SHORT).show();
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        loginProgressDialog.setMessage("Actualizando catálogo de Origenes... \n Origen " + finalI + " de " + origenes.length());
+                                    }
+                                });
+                                JSONObject info = origenes.getJSONObject(i);
+
+                                data.clear();
+                                data.put("idorigen", info.getString("idorigen"));
+                                data.put("descripcion", info.getString("descripcion"));
+                                data.put("estado", info.getString("estado"));
+
+
+                                if (!origen.create(data)) {
+                                    return false;
                                 }
-                            });
-                            JSONObject info = rutas.getJSONObject(i);
-
-                            data.clear();
-                            data.put("idruta", info.getString("idruta"));
-                            data.put("clave", info.getString("clave"));
-                            data.put("idorigen", info.getString("idorigen"));
-                            data.put("idtiro", info.getString("idtiro"));
-                            data.put("totalkm", info.getString("totalkm"));
-                            if (!ruta.create(data)) {
-                                return false;
                             }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
 
-                    //Materiales
+                        //Rutas
 
-                    Material material = new Material(context);
-                    try {
-                        final JSONArray materiales = new JSONArray(JSON.getString("Materiales"));
-                        for (int i = 0; i < materiales.length(); i++) {
-                            final int finalI = i + 1;
-                            //Toast.makeText(context, "Actualizando catálogo de Materiales...", Toast.LENGTH_SHORT).show();
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    loginProgressDialog.setMessage("Actualizando catálogo de Materiales... \n Material " + finalI + " de " + materiales.length());
+                        Ruta ruta = new Ruta(context);
+                        try {
+                            final JSONArray rutas = new JSONArray(JSON.getString("Rutas"));
+                            for (int i = 0; i < rutas.length(); i++) {
+                                final int finalI = i + 1;
+                                //Toast.makeText(context, "Actualizando catálogo de Rutas... ", Toast.LENGTH_SHORT).show();
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        loginProgressDialog.setMessage("Actualizando catálogo de Rutas... \n Ruta " + finalI + " de " + rutas.length());
+                                    }
+                                });
+                                JSONObject info = rutas.getJSONObject(i);
+
+                                data.clear();
+                                data.put("idruta", info.getString("idruta"));
+                                data.put("clave", info.getString("clave"));
+                                data.put("idorigen", info.getString("idorigen"));
+                                data.put("idtiro", info.getString("idtiro"));
+                                data.put("totalkm", info.getString("totalkm"));
+                                if (!ruta.create(data)) {
+                                    return false;
                                 }
-                            });
-                            JSONObject info = materiales.getJSONObject(i);
-
-                            data.clear();
-                            data.put("idmaterial", info.getString("idmaterial"));
-                            data.put("descripcion", info.getString("descripcion"));
-
-                            if (!material.create(data)) {
-                                return false;
                             }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
 
-                    //Checadores
+                        //Materiales
 
-                    Checador checador = new Checador(getApplicationContext());
-                    try{
-                        final JSONArray ch = new JSONArray(JSON.getString("Checadores"));
-                        for (int i = 0; i < ch.length(); i++) {
-                            final int finalI = i + 1;
-                            // Toast.makeText(context, "Actualizando catálogo de tiros...", Toast.LENGTH_SHORT).show();
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    loginProgressDialog.setMessage("Actualizando catálogo de Checadores... \n Checador " + finalI + " de " + ch.length());
+                        Material material = new Material(context);
+                        try {
+                            final JSONArray materiales = new JSONArray(JSON.getString("Materiales"));
+                            for (int i = 0; i < materiales.length(); i++) {
+                                final int finalI = i + 1;
+                                //Toast.makeText(context, "Actualizando catálogo de Materiales...", Toast.LENGTH_SHORT).show();
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        loginProgressDialog.setMessage("Actualizando catálogo de Materiales... \n Material " + finalI + " de " + materiales.length());
+                                    }
+                                });
+                                JSONObject info = materiales.getJSONObject(i);
+
+                                data.clear();
+                                data.put("idmaterial", info.getString("idmaterial"));
+                                data.put("descripcion", info.getString("descripcion"));
+
+                                if (!material.create(data)) {
+                                    return false;
                                 }
-                            });
-                            JSONObject info = ch.getJSONObject(i);
-
-                            data.clear();
-                            data.put("idChecador", info.getString("id"));
-                            data.put("nombre", info.getString("descripcion"));
-
-                            if (!checador.create(data)) {
-                                return false;
                             }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
 
+                        //Checadores
 
-                    //Motivo Deduccion
+                        Checador checador = new Checador(getApplicationContext());
+                        try {
+                            final JSONArray ch = new JSONArray(JSON.getString("Checadores"));
+                            for (int i = 0; i < ch.length(); i++) {
+                                final int finalI = i + 1;
+                                // Toast.makeText(context, "Actualizando catálogo de tiros...", Toast.LENGTH_SHORT).show();
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        loginProgressDialog.setMessage("Actualizando catálogo de Checadores... \n Checador " + finalI + " de " + ch.length());
+                                    }
+                                });
+                                JSONObject info = ch.getJSONObject(i);
 
-                    Motivo motivo = new Motivo(getApplicationContext());
-                    try {
-                        final JSONArray motivos = new JSONArray(JSON.getString("MotivosDeductiva"));
-                        for (int i = 0; i < motivos.length(); i++) {
-                            final int finalI = i + 1;
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    loginProgressDialog.setMessage("Actualizando catálogo de motivos... \n Motivo " + finalI + " de " + motivos.length());
+                                data.clear();
+                                data.put("idChecador", info.getString("id"));
+                                data.put("nombre", info.getString("descripcion"));
+
+                                if (!checador.create(data)) {
+                                    return false;
                                 }
-                            });
-                            JSONObject info = motivos.getJSONObject(i);
-
-                            data.clear();
-                            data.put("id", info.getString("id"));
-                            data.put("descripcion", info.getString("motivo"));
-
-                            if (!motivo.create(data)) {
-                                return false;
                             }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
 
-                    //Configuraciones
 
-                    Configuraciones co = new Configuraciones(getApplicationContext());
-                    try {
+                        //Motivo Deduccion
 
-                        JSONObject aq = new JSONObject(JSON.getString("Configuracion"));
+                        Motivo motivo = new Motivo(getApplicationContext());
+                        try {
+                            final JSONArray motivos = new JSONArray(JSON.getString("MotivosDeductiva"));
+                            for (int i = 0; i < motivos.length(); i++) {
+                                final int finalI = i + 1;
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        loginProgressDialog.setMessage("Actualizando catálogo de motivos... \n Motivo " + finalI + " de " + motivos.length());
+                                    }
+                                });
+                                JSONObject info = motivos.getJSONObject(i);
+
+                                data.clear();
+                                data.put("id", info.getString("id"));
+                                data.put("descripcion", info.getString("motivo"));
+
+                                if (!motivo.create(data)) {
+                                    return false;
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        //Configuraciones
+
+                        Configuraciones co = new Configuraciones(getApplicationContext());
+                        try {
+
+                            JSONObject aq = new JSONObject(JSON.getString("Configuracion"));
 
                             data.clear();
                             data.put("validacion_placas", aq.getString("ValidacionPlacas"));
@@ -495,40 +501,68 @@ public class DescargaActivity extends AppCompatActivity
                             if (!co.create(data)) {
                                 return false;
                             }
-                       // }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                            // }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 
-                    //Tags
+                        //Tags
 
-                    TagModel tag = new TagModel(context);
-                    try {
-                        final JSONArray tags = new JSONArray(JSON.getString("Tags"));
-                        for (int i = 0; i < tags.length(); i++) {
-                            final int finalI = i + 1;
-                            // Toast.makeText(context, "Actualizando catálogo de Tags...  ", Toast.LENGTH_SHORT).show();
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    loginProgressDialog.setMessage("Actualizando catálogo de Tags... \n Tag " + finalI + " de " + tags.length());
+                        TagModel tag = new TagModel(context);
+                        try {
+                            final JSONArray tags = new JSONArray(JSON.getString("Tags"));
+                            for (int i = 0; i < tags.length(); i++) {
+                                final int finalI = i + 1;
+                                // Toast.makeText(context, "Actualizando catálogo de Tags...  ", Toast.LENGTH_SHORT).show();
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        loginProgressDialog.setMessage("Actualizando catálogo de Tags... \n Tag " + finalI + " de " + tags.length());
+                                    }
+                                });
+                                JSONObject info = tags.getJSONObject(i);
+
+                                data.clear();
+                                data.put("uid", info.getString("uid"));
+                                data.put("idcamion", info.getString("idcamion"));
+                                data.put("idproyecto", info.getString("idproyecto"));
+
+                                if (!tag.create(data)) {
+                                    return false;
                                 }
-                            });
-                            JSONObject info = tags.getJSONObject(i);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        //Celulares
 
+                        CelularImpresora celular = new CelularImpresora(getApplicationContext());
+                        try {
+                            //final JSONArray celulares = new JSONArray(JSON.getString("Celulares"));
+                            /*for (int i = 0; i < celulares.length(); i++) {
+                                final int finalI = i + 1;
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        loginProgressDialog.setMessage("Actualizando catálogo de celulares... \n Celular " + finalI + " de " + celulares.length());
+                                    }
+                                });
+                                JSONObject info = celulares.getJSONObject(i);
+*/
                             data.clear();
-                            data.put("uid", info.getString("uid"));
-                            data.put("idcamion", info.getString("idcamion"));
-                            data.put("idproyecto", info.getString("idproyecto"));
+                            data.put("id", "1");
+                            data.put("IMEI", "359667070397776");
+                            data.put("MAC", "null");
 
-                            if (!tag.create(data)) {
+                            if (!celular.create(data)) {
                                 return false;
                             }
+                            // }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                        return true;
                     }
-                    return true;
                 }
             } catch (Exception e) {
                 e.printStackTrace();

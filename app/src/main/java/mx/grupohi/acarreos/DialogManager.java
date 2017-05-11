@@ -9,11 +9,13 @@ import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.os.Build;
 import android.os.Handler;
+import android.provider.Settings;
 
 import com.bixolon.printer.BixolonPrinter;
 
@@ -84,19 +86,42 @@ public class DialogManager {
             "Red"
     };
 
-    public static void showBluetoothDialog(final Context context, final BixolonPrinter bixolonPrinterApi, final Set<BluetoothDevice> pairedDevices) {
-        final String[] items = new String[pairedDevices.size()];
+    public static void showBluetoothDialog(final Context context, final BixolonPrinter bixolonPrinterApi, final Set<BluetoothDevice> pairedDevices, String MAC) {
+        final String[] items = new String[1];
         int index = 0;
+        String mac = null;
         for (BluetoothDevice device : pairedDevices) {
-            items[index++] = device.getAddress();
+            if(MAC.equals(device.getAddress().toString().replace(":",""))) {
+                mac = device.getAddress();
+                items[index++] = device.getAddress();
+            }
         }
-
-        new AlertDialog.Builder(context).setTitle("Impresoras Bluetooth Emparejadas")
-                .setItems(items, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        bixolonPrinterApi.connect(items[which]);
-                    }
-                }).show();
+        if(index != 0) {
+            new AlertDialog.Builder(context).setTitle("Impresora Bluetooth")
+                    .setMessage(mac)
+                    .setPositiveButton("Imprimir", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            bixolonPrinterApi.connect(items[0]);
+                        }
+                    }).show();
+        }
+        else if(MAC.equals("null")){
+            new AlertDialog.Builder(context).setMessage("No cuenta con Impresora Asignada.\n Favor de Solicitarla.")
+                    .setTitle("¡Error!")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    }).show();
+        }else{
+            new AlertDialog.Builder(context).setMessage("La Impresora no está asociada a esté teléfono.")
+                    .setTitle("¡Error!")
+                    .setPositiveButton("Ajustes Bluetooth", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            context.startActivity(new Intent(Settings.ACTION_BLUETOOTH_SETTINGS));
+                        }
+                    }).show();
+        }
     }
 
     @SuppressLint("NewApi")

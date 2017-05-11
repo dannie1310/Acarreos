@@ -597,7 +597,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         //Celulares
 
-                        Celular celular = new Celular(getApplicationContext());
+                        CelularImpresora celular = new CelularImpresora(getApplicationContext());
                         try {
                             //final JSONArray celulares = new JSONArray(JSON.getString("Celulares"));
                             /*for (int i = 0; i < celulares.length(); i++) {
@@ -613,36 +613,9 @@ public class LoginActivity extends AppCompatActivity {
                                 data.clear();
                                 data.put("id", "1");
                                 data.put("IMEI", "359667070397776");
-
-                                if (!celular.create(data)) {
-                                    return false;
-                                }
-                           // }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-
-                        //Impresoras
-
-                        Impresora impresora = new Impresora(getApplicationContext());
-                        try {
-                            /*final JSONArray impresoras = new JSONArray(JSON.getString("Impresoras"));
-                            for (int i = 0; i < impresoras.length(); i++) {
-                                final int finalI = i + 1;
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        loginProgressDialog.setMessage("Actualizando catálogo de impresoras... \n Impresora " + finalI + " de " + impresoras.length());
-                                    }
-                                });
-                                JSONObject info = impresoras.getJSONObject(i);
-*/
-                                data.clear();
-                                data.put("id", "1");
                                 data.put("MAC", "74F07DE7AFE5");
 
-                                if (!impresora.create(data)) {
+                                if (!celular.create(data)) {
                                     return false;
                                 }
                            // }
