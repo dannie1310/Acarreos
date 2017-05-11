@@ -103,7 +103,12 @@ public class DialogManager {
                         public void onClick(DialogInterface dialog, int which) {
                             bixolonPrinterApi.connect(items[0]);
                         }
-                    }).show();
+                    })
+                    .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                       dialog.cancel();
+                    }
+                }).show();
         }
         else if(MAC.equals("null")){
             new AlertDialog.Builder(context).setMessage("No cuenta con Impresora Asignada.\nFavor de Solicitarla.")
