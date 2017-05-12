@@ -259,6 +259,7 @@ public class LoginActivity extends AppCompatActivity {
             ContentValues data = new ContentValues();
             data.put("usr", user);
             data.put("pass", pass);
+            data.put("IMEI", IMEI);
 
             try {
                 URL url = new URL("http://sca.grupohi.mx/android20160923.php");
@@ -599,8 +600,8 @@ public class LoginActivity extends AppCompatActivity {
 
                         CelularImpresora celular = new CelularImpresora(getApplicationContext());
                         try {
-                            //final JSONArray celulares = new JSONArray(JSON.getString("Celulares"));
-                            /*for (int i = 0; i < celulares.length(); i++) {
+                            final JSONArray celulares = new JSONArray(JSON.getString("Celulares"));
+                            for (int i = 0; i < celulares.length(); i++) {
                                 final int finalI = i + 1;
                                 runOnUiThread(new Runnable() {
                                     @Override
@@ -609,16 +610,16 @@ public class LoginActivity extends AppCompatActivity {
                                     }
                                 });
                                 JSONObject info = celulares.getJSONObject(i);
-*/
+
                                 data.clear();
-                                data.put("id", "1");
-                                data.put("IMEI", "359667070397776");
-                                data.put("MAC", "74F07DE7AFE5");
+                                data.put("id", info.getString("id"));
+                                data.put("IMEI", info.getString("IMEI"));
+                                data.put("MAC",  info.getString("MAC"));
 
                                 if (!celular.create(data)) {
                                     return false;
                                 }
-                           // }
+                         }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

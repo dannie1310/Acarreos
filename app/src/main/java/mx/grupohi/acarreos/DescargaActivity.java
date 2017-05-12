@@ -16,6 +16,7 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.view.menu.MenuAdapter;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -60,10 +61,14 @@ public class DescargaActivity extends AppCompatActivity
     private Integer idOrigen;
     private Intent mainActivity;
     private Intent listaViajes;
-    private TextView error;
     Usuario usuario;
     Viaje viaje;
     Coordenada coordenada;
+
+
+    // GPSTracker class
+    GPSTracker gps;
+    public String IMEI;
 
     private DescargaCatalogos descargaCatalogos = null;
     @Override
@@ -75,7 +80,6 @@ public class DescargaActivity extends AppCompatActivity
         usuario = new Usuario(this);
         usuario = usuario.getUsuario();
         mainActivity = new Intent(this, MainActivity.class);
-        error = (TextView) findViewById(R.id.error_descarga);
         final PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
         this.wakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "etiqueta");
         wakeLock.acquire();
@@ -86,7 +90,8 @@ public class DescargaActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
+        TelephonyManager phneMgr = (TelephonyManager)getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+        IMEI = phneMgr.getDeviceId();
         if(drawer != null)
             drawer.post(new Runnable() {
                 @Override
@@ -252,6 +257,7 @@ public class DescargaActivity extends AppCompatActivity
             ContentValues data = new ContentValues();
             data.put("usr", usuario.usr);
             data.put("pass", usuario.pass);
+            data.put("IMEI", IMEI);
 
             try {
                 URL url = new URL("http://sca.grupohi.mx/android20160923.php");
@@ -537,26 +543,25 @@ public class DescargaActivity extends AppCompatActivity
 
                         CelularImpresora celular = new CelularImpresora(getApplicationContext());
                         try {
-                            //final JSONArray celulares = new JSONArray(JSON.getString("Celulares"));
-                            /*for (int i = 0; i < celulares.length(); i++) {
-                                final int finalI = i + 1;
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        loginProgressDialog.setMessage("Actualizando catálogo de celulares... \n Celular " + finalI + " de " + celulares.length());
-                                    }
-                                });
-                                JSONObject info = celulares.getJSONObject(i);
-*/
-                            data.clear();
-                            data.put("id", "1");
-                            data.put("IMEI", "359667070397776");
-                            data.put("MAC", "null");
+                            final JSONArray celulares = new JSONArray(JSON.getString("Celulares"));
+                                for (int i = 0; i < celulares.length(); i++) {
+                                    final int finalI = i + 1;
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            loginProgressDialog.setMessage("Actualizando catálogo de celulares... \n Celular " + finalI + " de " + celulares.length());
+                                        }
+                                    });
+                                    JSONObject info = celulares.getJSONObject(i);
 
-                            if (!celular.create(data)) {
-                                return false;
+                                    data.put("id", info.getString("id"));
+                                    data.put("IMEI", info.getString("IMEI"));
+                                    data.put("MAC",  info.getString("MAC"));
+
+                                if (!celular.create(data)) {
+                                    return false;
+                                }
                             }
-                            // }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

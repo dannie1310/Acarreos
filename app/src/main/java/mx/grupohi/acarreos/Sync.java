@@ -56,108 +56,102 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        latitude = gps.getLatitude();
+        longitude = gps.getLongitude();
+        TelephonyManager phneMgr = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        IMEI = phneMgr.getDeviceId();
 
-        if(!gps.canGetLocation()) {
-            gps.showSettingsAlert();
-            return false;
-        } else {
-            latitude = gps.getLatitude();
-            longitude = gps.getLongitude();
-            TelephonyManager phneMgr = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-            IMEI = phneMgr.getDeviceId();
+        ContentValues values = new ContentValues();
 
-            ContentValues values = new ContentValues();
+        values.put("IMEI", IMEI);
+        values.put("idevento", 4);
+        values.put("latitud", latitude);
+        values.put("longitud", longitude);
+        values.put("fecha_hora", Util.timeStamp());
+        values.put("code", "");
 
-            values.put("IMEI", IMEI);
-            values.put("idevento", 4);
-            values.put("latitud", latitude);
-            values.put("longitud", longitude);
-            values.put("fecha_hora", Util.timeStamp());
-            values.put("code", "");
+        Coordenada.create(values, context);
 
-            Coordenada.create(values, context);
+        values.clear();
 
-            values.clear();
+        values.put("metodo", "captura");
+        values.put("usr", usuario.usr);
+        values.put("pass", usuario.pass);
+        values.put("bd", usuario.baseDatos);
+        values.put("idusuario", usuario.getId());
+        values.put("Version", String.valueOf(BuildConfig.VERSION_NAME));
 
-            values.put("metodo", "captura");
-            values.put("usr", usuario.usr);
-            values.put("pass", usuario.pass);
-            values.put("bd", usuario.baseDatos);
-            values.put("idusuario", usuario.getId());
-            values.put("Version", String.valueOf(BuildConfig.VERSION_NAME));
+        if (Viaje.getCount(context) != 0) {
+            values.put("carddata", String.valueOf(Viaje.getJSON(context)));
+        }
+        if (Coordenada.getCount(context) != 0) {
+            values.put("coordenadas", String.valueOf(Coordenada.getJSON(context)));
+        }
+        if (InicioViaje.getCount(context) != 0) {
+            values.put("inicioCamion", String.valueOf(InicioViaje.getJSON(context)));
+        }
 
-            if (Viaje.getCount(context) != 0) {
-                values.put("carddata", String.valueOf(Viaje.getJSON(context)));
-            }
-            if (Coordenada.getCount(context) != 0) {
-                values.put("coordenadas", String.valueOf(Coordenada.getJSON(context)));
-            }
-            if (InicioViaje.getCount(context) != 0){
-                values.put("inicioCamion", String.valueOf(InicioViaje.getJSON(context)));
-            }
+        try {
 
-            try {
+            URL url = new URL("http://sca.grupohi.mx/android20160923.php");
+            JSONVIAJES = HttpConnection.POST(url, values);
+            Log.i("jsonviajes:  ", String.valueOf(values));
+            ContentValues aux = new ContentValues();
+            imagenesTotales = ImagenesViaje.getCount(context);
+            int i = 0;
+            //System.out.println("imagenes totales: "+imagenesTotales);
+            while (ImagenesViaje.getCount(context) != 0) {
+                i++;
+                JSON = null;
+                //System.out.println("Existen imagenes para sincronizar: " + ImagenesViaje.getCount(context));
+                aux.put("metodo", "cargaImagenesViajes");
+                aux.put("usr", usuario.usr);
+                aux.put("pass", usuario.pass);
+                aux.put("bd", usuario.baseDatos);
+                aux.put("Imagenes", String.valueOf(ImagenesViaje.getJSONImagenes(context)));
 
-                URL url = new URL("http://sca.grupohi.mx/android20160923.php");
-                JSONVIAJES = HttpConnection.POST(url, values);
-                Log.i("jsonviajes:  ",String.valueOf(values));
-                ContentValues aux = new ContentValues();
-                imagenesTotales= ImagenesViaje.getCount(context);
-                int i = 0;
-                //System.out.println("imagenes totales: "+imagenesTotales);
-                while (ImagenesViaje.getCount(context) != 0) {
-                    i++;
-                    JSON = null;
-                    //System.out.println("Existen imagenes para sincronizar: " + ImagenesViaje.getCount(context));
-                    aux.put("metodo", "cargaImagenesViajes");
-                    aux.put("usr", usuario.usr);
-                    aux.put("pass", usuario.pass);
-                    aux.put("bd", usuario.baseDatos);
-                    aux.put("Imagenes", String.valueOf(ImagenesViaje.getJSONImagenes(context)));
-
+                try {
+                    JSON = HttpConnection.POST(url, aux);
+                    Log.i("json ", String.valueOf(aux));
                     try {
-                        JSON = HttpConnection.POST(url, aux);
-                        Log.i("json ", String.valueOf(aux));
-                        try {
-                            if (JSON.has("imagenes_registradas")) {
-                                final JSONArray imagenes = new JSONArray(JSON.getString("imagenes_registradas"));
-                                for (int r = 0; r < imagenes.length(); r++) {
-                                    ImagenesViaje.syncLimit(context, imagenes.getInt(r));
-                                    imagenesRegistradas++;
-                                }
+                        if (JSON.has("imagenes_registradas")) {
+                            final JSONArray imagenes = new JSONArray(JSON.getString("imagenes_registradas"));
+                            for (int r = 0; r < imagenes.length(); r++) {
+                                ImagenesViaje.syncLimit(context, imagenes.getInt(r));
+                                imagenesRegistradas++;
                             }
+                        }
 
-                            //System.out.println("imagenesRegiustradas: "+imagenesRegistradas);
+                        //System.out.println("imagenesRegiustradas: "+imagenesRegistradas);
 
-                            if (JSON.has("imagenes_no_registradas_sv")) {
-                                final JSONArray errores = new JSONArray(JSON.getString("imagenes_no_registradas_sv"));
-                                //System.out.println("Errores1: " + errores);
-                                for (int r = 0; r < errores.length(); r++) {
-                                    ImagenesViaje.cambioEstatus(context, errores.getInt(r));
-                                }
+                        if (JSON.has("imagenes_no_registradas_sv")) {
+                            final JSONArray errores = new JSONArray(JSON.getString("imagenes_no_registradas_sv"));
+                            //System.out.println("Errores1: " + errores);
+                            for (int r = 0; r < errores.length(); r++) {
+                                ImagenesViaje.cambioEstatus(context, errores.getInt(r));
                             }
-                            if (JSON.has("imagenes_no_registradas")) {
-                                final JSONArray errores = new JSONArray(JSON.getString("imagenes_no_registradas"));
-                               // System.out.println("Errores2: " + errores);
-                                for (int r = 0; r < errores.length(); r++) {
-                                    ImagenesViaje.cambioEstatus(context, errores.getInt(r));
-                                }
+                        }
+                        if (JSON.has("imagenes_no_registradas")) {
+                            final JSONArray errores = new JSONArray(JSON.getString("imagenes_no_registradas"));
+                            // System.out.println("Errores2: " + errores);
+                            for (int r = 0; r < errores.length(); r++) {
+                                ImagenesViaje.cambioEstatus(context, errores.getInt(r));
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-
-            }catch (Exception e) {
-                Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
-                return false;
             }
-            return true;
+
+        } catch (Exception e) {
+            Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     @Override
