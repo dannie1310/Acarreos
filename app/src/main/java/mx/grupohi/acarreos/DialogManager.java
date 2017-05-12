@@ -90,42 +90,44 @@ public class DialogManager {
         final String[] items = new String[1];
         int index = 0;
         String mac = null;
-        for (BluetoothDevice device : pairedDevices) {
-            if(MAC == device.getAddress().toString().replace(":","")) {
-                mac = device.getAddress();
-                items[index++] = device.getAddress();
+        if(MAC != null) {
+            for (BluetoothDevice device : pairedDevices) {
+                if (MAC.toUpperCase().equals(device.getAddress().toString().replace(":", ""))) {
+                    mac = device.getAddress();
+                    items[index++] = device.getAddress();
+                }
             }
-        }
-        if(index != 0) {
-            new AlertDialog.Builder(context).setTitle("Impresora Bluetooth")
-                    .setMessage(mac)
-                    .setPositiveButton("Imprimir", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            bixolonPrinterApi.connect(items[0]);
-                        }
-                    })
-                    .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                       dialog.cancel();
-                    }
-                }).show();
-        }
-        else if(MAC == null){
-            new AlertDialog.Builder(context).setMessage("No cuenta con Impresora Asignada.\nFavor de Solicitarla.")
-                    .setTitle("¡Error!")
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    }).show();
+            if (index != 0) {
+                new AlertDialog.Builder(context).setTitle("Impresora Bluetooth")
+                        .setMessage(mac)
+                        .setPositiveButton("Imprimir", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                bixolonPrinterApi.connect(items[0]);
+                            }
+                        })
+                        .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        }).show();
+            } else {
+                new AlertDialog.Builder(context).setMessage("La Impresora no está asociada a esté teléfono.")
+                        .setTitle("¡Error!")
+                        .setPositiveButton("Ajustes Bluetooth", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                context.startActivity(new Intent(Settings.ACTION_BLUETOOTH_SETTINGS));
+                            }
+                        }).show();
+            }
         }else{
-            new AlertDialog.Builder(context).setMessage("La Impresora no está asociada a esté teléfono.")
-                    .setTitle("¡Error!")
-                    .setPositiveButton("Ajustes Bluetooth", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            context.startActivity(new Intent(Settings.ACTION_BLUETOOTH_SETTINGS));
-                        }
-                    }).show();
+            new AlertDialog.Builder(context).setMessage("No cuenta con Impresora Asignada.\nFavor de Solicitarla.")
+                        .setTitle("¡Error!")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        }).show();
+
         }
     }
 

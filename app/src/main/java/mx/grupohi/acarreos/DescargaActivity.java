@@ -571,7 +571,7 @@ public class DescargaActivity extends AppCompatActivity
                                 data.put("MAC",  info.getString("MAC"));
 
                                 if (!celular.create(data)) {
-                                    return false;
+                                    return true;
                                 }
                             }
                         } catch (Exception e) {
