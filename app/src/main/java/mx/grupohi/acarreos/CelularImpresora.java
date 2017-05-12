@@ -52,4 +52,20 @@ public class CelularImpresora {
         }
     }
 
+    static Integer getId(Context context) {
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+
+        Integer result = 0;
+        Cursor c = db.rawQuery("SELECT * FROM celular_impresora", null);
+        try {
+            if(c != null && c.moveToFirst()) {
+                result = c.getInt(c.getColumnIndex("ID"));
+            }
+            return result;
+        } finally {
+            c.close();
+            db.close();
+        }
+    }
 }

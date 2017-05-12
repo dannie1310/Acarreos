@@ -612,7 +612,7 @@ public class LoginActivity extends AppCompatActivity {
                                 JSONObject info = celulares.getJSONObject(i);
 
                                 data.clear();
-                                data.put("id", info.getString("id"));
+                                data.put("ID", info.getString("id"));
                                 data.put("IMEI", info.getString("IMEI"));
                                 data.put("MAC",  info.getString("MAC"));
 

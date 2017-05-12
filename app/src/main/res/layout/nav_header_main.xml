@@ -47,4 +47,11 @@
         tools:text="Version 1.0"
         android:textSize="12sp" />
 
+    <TextView
+        android:id="@+id/textViewImpresora"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="Sin Impresora Asignada"
+        android:textSize="12sp" />
+
 </LinearLayout>

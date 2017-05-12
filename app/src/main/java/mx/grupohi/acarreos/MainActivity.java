@@ -163,7 +163,16 @@ public class MainActivity extends AppCompatActivity
                         TextView tvu = (TextView) child.findViewById(R.id.textViewUser);
                         TextView tpe = (TextView) child.findViewById(R.id.textViewPerfil);
                         TextView tvv = (TextView) child.findViewById(R.id.textViewVersion);
-
+                        TextView tim = (TextView) child.findViewById(R.id.textViewImpresora);
+                        Integer impresora = CelularImpresora.getId(getApplicationContext());
+                        if (tim != null){
+                            if(impresora == 0){
+                                tim.setTextColor(Color.RED);
+                                tim.setText("Sin Impresora Asignada");
+                            }else{
+                                tim.setText("Impresora "+impresora);
+                            }
+                        }
                         if (tvp != null) {
                             tvp.setText(usuario.descripcionBaseDatos);
                         }

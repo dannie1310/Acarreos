@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
@@ -168,7 +169,17 @@ public class SuccessDestinoActivity extends AppCompatActivity
                         TextView tvu = (TextView) child.findViewById(R.id.textViewUser);
                         TextView tpe = (TextView) child.findViewById(R.id.textViewPerfil);
                         TextView tvv = (TextView) child.findViewById(R.id.textViewVersion);
+                        TextView tim = (TextView) child.findViewById(R.id.textViewImpresora);
 
+                        Integer impresora = CelularImpresora.getId(getApplicationContext());
+                        if (tim != null){
+                            if(impresora == 0){
+                                tim.setTextColor(Color.RED);
+                                tim.setText("Sin Impresora Asignada");
+                            }else{
+                                tim.setText("Impresora "+impresora);
+                            }
+                        }
                         if (tvp != null) {
                             tvp.setText(usuario.descripcionBaseDatos);
                         }

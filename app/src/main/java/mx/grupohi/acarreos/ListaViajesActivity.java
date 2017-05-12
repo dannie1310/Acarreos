@@ -3,6 +3,7 @@ package mx.grupohi.acarreos;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -70,7 +71,17 @@ public class ListaViajesActivity extends AppCompatActivity
                         TextView tvu = (TextView) child.findViewById(R.id.textViewUser);
                         TextView tpe = (TextView) child.findViewById(R.id.textViewPerfil);
                         TextView tvv = (TextView) child.findViewById(R.id.textViewVersion);
+                        TextView tim = (TextView) child.findViewById(R.id.textViewImpresora);
 
+                        Integer impresora = CelularImpresora.getId(getApplicationContext());
+                        if (tim != null){
+                            if(impresora == 0){
+                                tim.setTextColor(Color.RED);
+                                tim.setText("Sin Impresora Asignada");
+                            }else{
+                                tim.setText("Impresora "+impresora);
+                            }
+                        }
                         if (tvp != null) {
                             tvp.setText(usuario.descripcionBaseDatos);
                         }

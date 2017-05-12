@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.nfc.NfcAdapter;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -102,7 +103,17 @@ public class DescargaActivity extends AppCompatActivity
                         TextView tvu = (TextView) child.findViewById(R.id.textViewUser);
                         TextView tpe = (TextView) child.findViewById(R.id.textViewPerfil);
                         TextView tvv = (TextView) child.findViewById(R.id.textViewVersion);
+                        TextView tim = (TextView) child.findViewById(R.id.textViewImpresora);
 
+                        Integer impresora = CelularImpresora.getId(getApplicationContext());
+                        if (tim != null){
+                            if(impresora == 0){
+                                tim.setTextColor(Color.RED);
+                                tim.setText("Sin Impresora Asignada");
+                            }else{
+                                tim.setText("Impresora "+impresora);
+                            }
+                        }
                         if (tvp != null) {
                             tvp.setText(usuario.descripcionBaseDatos);
                         }
@@ -544,19 +555,20 @@ public class DescargaActivity extends AppCompatActivity
                         CelularImpresora celular = new CelularImpresora(getApplicationContext());
                         try {
                             final JSONArray celulares = new JSONArray(JSON.getString("Celulares"));
-                                for (int i = 0; i < celulares.length(); i++) {
-                                    final int finalI = i + 1;
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            loginProgressDialog.setMessage("Actualizando catálogo de celulares... \n Celular " + finalI + " de " + celulares.length());
-                                        }
-                                    });
-                                    JSONObject info = celulares.getJSONObject(i);
+                            for (int i = 0; i < celulares.length(); i++) {
+                                final int finalI = i + 1;
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        loginProgressDialog.setMessage("Actualizando catálogo de celulares... \n Celular " + finalI + " de " + celulares.length());
+                                    }
+                                });
+                                JSONObject info = celulares.getJSONObject(i);
 
-                                    data.put("id", info.getString("id"));
-                                    data.put("IMEI", info.getString("IMEI"));
-                                    data.put("MAC",  info.getString("MAC"));
+                                data.clear();
+                                data.put("ID", info.getString("id"));
+                                data.put("IMEI", info.getString("IMEI"));
+                                data.put("MAC",  info.getString("MAC"));
 
                                 if (!celular.create(data)) {
                                     return false;
@@ -565,6 +577,7 @@ public class DescargaActivity extends AppCompatActivity
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+
                         return true;
                     }
                 }
@@ -590,8 +603,6 @@ public class DescargaActivity extends AppCompatActivity
                     mainActivity = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(mainActivity);
                 }
-            }else{
-                Toast.makeText(context, R.string.error_usuario, Toast.LENGTH_LONG).show();
             }
         }
     }
