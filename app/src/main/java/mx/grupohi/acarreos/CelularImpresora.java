@@ -16,7 +16,7 @@ public class CelularImpresora {
     private DBScaSqlite db_sca;
     Integer id;
     String IMEI;
-    String MAC;
+    String MAC = null;
 
     CelularImpresora (Context context){
         this.context = context;
@@ -44,7 +44,8 @@ public class CelularImpresora {
                 return this;
             }
             else{
-                return null;
+                this.MAC = null;
+                return this;
             }
         } finally {
             c.close();

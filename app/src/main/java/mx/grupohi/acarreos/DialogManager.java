@@ -91,7 +91,7 @@ public class DialogManager {
         int index = 0;
         String mac = null;
         for (BluetoothDevice device : pairedDevices) {
-            if(MAC.equals(device.getAddress().toString().replace(":",""))) {
+            if(MAC == device.getAddress().toString().replace(":","")) {
                 mac = device.getAddress();
                 items[index++] = device.getAddress();
             }
@@ -110,7 +110,7 @@ public class DialogManager {
                     }
                 }).show();
         }
-        else if(MAC.equals("null")){
+        else if(MAC == null){
             new AlertDialog.Builder(context).setMessage("No cuenta con Impresora Asignada.\nFavor de Solicitarla.")
                     .setTitle("¡Error!")
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
