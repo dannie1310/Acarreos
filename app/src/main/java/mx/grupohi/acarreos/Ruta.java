@@ -80,6 +80,8 @@ class Ruta {
                         data.add(c.getString(1) + " - " + c.getString(0) + " " + c.getString(4) + " KM");
                     }
                 }
+            }else{
+                data.add("NO SE ENCONTRO RUTA.");
             }
         } finally {
             c.close();
@@ -104,6 +106,9 @@ class Ruta {
                     }
                 }
             }
+            else{
+                data.add("0");
+            }
         } finally {
             c.close();
             db.close();
@@ -115,4 +120,17 @@ class Ruta {
     public String toString() {
         return clave + " - " + idRuta + ", Distancia " + totalKm + " km";
     }
+
+    static Integer getCount(Context context, Integer idOrigen, Integer idTiro) {
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM rutas WHERE idorigen = '" + idOrigen + "' AND idtiro = '" + idTiro + "' ORDER BY clave ASC",null);
+        try {
+            return c.getCount();
+        } finally {
+            c.close();
+            db.close();
+        }
+    }
+
 }

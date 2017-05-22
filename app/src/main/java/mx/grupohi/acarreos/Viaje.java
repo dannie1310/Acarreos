@@ -26,9 +26,9 @@ public class Viaje {
     Integer idViaje;
     private Integer idMaterial;
     private Integer idTiro;
-    private Integer idOrigen;
+    Integer idOrigen;
     private Integer idCamion;
-    private Integer idRuta;
+    Integer idRuta;
     String fechaSalida;
     String horaSalida;
     String fechaLlegada;
@@ -98,11 +98,15 @@ public class Viaje {
                 this.fechaSalida = c.getString(6);
                 this.horaSalida = c.getString(7);
                 this.observaciones = c.getString(12);
+                if(idOrigen != 0){
+                    this.origen = this.origen.find(idOrigen);
+                }
+                if(idRuta != 0){
+                    this.ruta = this.ruta.find(idRuta);
+                }
                 this.camion= this.camion.find(this.idCamion);
                 this.material=this.material.find(this.idMaterial);
-                this.origen = this.origen.find(idOrigen);
                 this.tiro = this.tiro.find(idTiro);
-                this.ruta = this.ruta.find(idRuta);
                 this.deductiva = c.getString(c.getColumnIndex("deductiva"));
                 this.FolioRandom = c.getString(c.getColumnIndex("FolioRandom"));
                 this.idmotivo = c.getInt(c.getColumnIndex("idMotivo"));

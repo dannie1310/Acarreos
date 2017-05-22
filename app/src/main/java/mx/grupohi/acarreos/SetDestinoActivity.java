@@ -286,7 +286,7 @@ public class SetDestinoActivity extends AppCompatActivity
                     Toast.makeText(getApplicationContext(), "Por favor seleccione el Tiro de la lista", Toast.LENGTH_SHORT).show();
                     tirosSpinner.requestFocus();
                 }
-                else if(idRuta == 0) {
+                else if(idRuta == 0 &&  Ruta.getCount(getApplicationContext(),getIntent().getIntExtra("idOrigen", 1),idTiro) != 0) {
                     Toast.makeText(getApplicationContext(), "Por favor seleccione la Ruta de la lista", Toast.LENGTH_SHORT).show();
                     rutasSpinner.requestFocus();
                 }

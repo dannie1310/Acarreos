@@ -50,7 +50,6 @@ class Origen {
                 return null;
             }
         } finally {
-            assert c != null;
             c.close();
             db.close();
         }
@@ -117,6 +116,8 @@ class Origen {
                         data.add(c.getString(c.getColumnIndex("descripcion")));
                     }
                 }
+            }else {
+                data.add("NO EXISTEN ORIGENES PARA EL TIRO.");
             }
         } finally {
             c.close();
@@ -139,11 +140,25 @@ class Origen {
                         data.add(c.getString(c.getColumnIndex("idorigen")));
                     }
                 }
+            }else{
+                data.add("0");
             }
         } finally {
             c.close();
             db.close();
         }
         return data;
+    }
+
+    static Integer getCount(Context context, Integer idTiro) {
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM origenes WHERE idorigen IN (SELECT idorigen FROM rutas WHERE idtiro = '"+idTiro+"') ORDER BY descripcion ASC",null);
+        try {
+            return c.getCount();
+        } finally {
+            c.close();
+            db.close();
+        }
     }
 }

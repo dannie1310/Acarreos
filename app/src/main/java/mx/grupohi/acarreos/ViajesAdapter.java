@@ -45,10 +45,18 @@ class ViajesAdapter extends ArrayAdapter<Viaje> {
         Viaje viaje = getItem(position);
 
         assert viaje != null;
+
         camion.setText(viaje.camion.economico);
         material.setText(viaje.material.descripcion);
-        origen.setText(viaje.origen.descripcion);
+       // origen.setText(viaje.origen.descripcion);
         destino.setText(viaje.tiro.descripcion);
+
+        if(viaje.idOrigen != 0) {
+            origen.setText(viaje.origen.descripcion);
+        }else{
+            origen.setText("NO SE ENCONTRO ORIGEN PARA ESTE TIRO.");
+        }
+
 
         return convertView;
     }

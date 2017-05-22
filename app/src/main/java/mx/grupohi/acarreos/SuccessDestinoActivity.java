@@ -118,6 +118,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
         usuario = new Usuario(this);
         usuario = usuario.getUsuario();
         viaje = new Viaje(this);
+
         empresa=usuario.getEmpresa();
         logo=usuario.getLogo();
         checador = new Checador(getApplicationContext());
@@ -199,7 +200,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
                     }
                 }
             });
-
+        viaje = viaje.find(idViaje);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -285,7 +286,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
                                 printheadproyecto(empresa);
                             }
                             if(tipo_usuario == false) {
-                                viaje = viaje.find(idViaje);
+
                                 impresion = viaje.numImpresion;
                                 String nombreChecador = "SIN PERFIL";
 
@@ -619,7 +620,6 @@ public class SuccessDestinoActivity extends AppCompatActivity
         inicio = getIntent().getIntExtra("idInicio", 0);
         idViaje = getIntent().getIntExtra("idViaje", 0);
         if(idViaje != 0) {
-            Viaje viaje = new Viaje(getApplicationContext());
             viaje = viaje.find(idViaje);
             Motivo motivoss = new Motivo(getApplicationContext());
             if(viaje.deductiva.equals("0")) {
@@ -632,11 +632,21 @@ public class SuccessDestinoActivity extends AppCompatActivity
             textViewCamion.setText(viaje.camion.economico);
             textViewCubicacion.setText(viaje.camion.capacidad + " m3");
             textViewMaterial.setText(viaje.material.descripcion);
-            textViewOrigen.setText(viaje.origen.descripcion);
+
             textViewFechaHoraSalida.setText(viaje.fechaSalida + " " + viaje.horaSalida);
             textViewDestino.setText(viaje.tiro.descripcion);
             textViewFechaHoraLlegada.setText(viaje.fechaLlegada + " " + viaje.horaLlegada);
-            textViewRuta.setText(viaje.ruta.toString());
+            if(viaje.idOrigen != 0) {
+                textViewOrigen.setText(viaje.origen.descripcion);
+            }else{
+                textViewOrigen.setText("NO SE ENCONTRO ORIGEN PARA ESTE TIRO.");
+            }
+            if (viaje.idRuta != 0) {
+                textViewRuta.setText(viaje.ruta.toString());
+            }else{
+                textViewRuta.setText("NO SE ENCONTRO RUTA");
+            }
+
             textViewObservaciones.setText(viaje.observaciones);
             textViewDeductiva.setText(viaje.deductiva);
 

@@ -301,10 +301,10 @@ public class TiroUnicoActivity extends AppCompatActivity
                 if (idMaterial == 0) {
                     Toast.makeText(getApplicationContext(), "Por favor seleccione un Material de la lista", Toast.LENGTH_LONG).show();
                     materialesSpinner.requestFocus();
-                } else if (idOrigen == 0) {
+                }else if (idOrigen == 0 && Origen.getCount(getApplicationContext(),usuario.idtiro) != 0) {
                     Toast.makeText(getApplicationContext(), "Por favor seleccione un Origen de la lista", Toast.LENGTH_LONG).show();
                     origenesSpinner.requestFocus();
-                }else if (idruta == 0) {
+                }else if (idruta == 0 && Ruta.getCount(getApplicationContext(),idOrigen, usuario.idtiro) != 0) {
                     Toast.makeText(getApplicationContext(), "Por favor seleccione un Tiro de la lista", Toast.LENGTH_LONG).show();
                     rutasSpinner.requestFocus();
                 }else if(camion.capacidad != 0 && camion.capacidad!= null && !textDeductiva.getText().toString().equals("") && Integer.valueOf(textDeductiva.getText().toString()) != 0 && Integer.valueOf(textDeductiva.getText().toString()) >= camion.capacidad) {

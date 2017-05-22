@@ -117,12 +117,6 @@ public class SetOrigenActivity extends AppCompatActivity
         materialesSpinner = (Spinner) findViewById(R.id.spinnerMateriales);
         origenesSpinner = (Spinner) findViewById(R.id.spinnerOrigenes);
 
-        if(usuario.tipo_permiso == 1){
-            origenesSpinner.setVisibility(View.GONE);
-            text_origen.setVisibility(View.GONE);
-            idOrigen = usuario.idorigen;
-            tipo = 0;
-        }else{
             tipo = 1;
             final ArrayList<String> descripcionesOrigenes = origen.getArrayListDescripciones();
             final ArrayList <String> idsOrigenes = origen.getArrayListId();
@@ -152,7 +146,7 @@ public class SetOrigenActivity extends AppCompatActivity
 
                 }
             });
-        }
+
 
         final ArrayList<String> descripcionesMateriales = material.getArrayListDescripciones();
         final ArrayList <String> idsMateriales = material.getArrayListId();
@@ -203,7 +197,7 @@ public class SetOrigenActivity extends AppCompatActivity
                 if(idMaterial == 0) {
                     Toast.makeText(getApplicationContext(), "Por favor seleccione un Material de la lista", Toast.LENGTH_LONG).show();
                     materialesSpinner.requestFocus();
-                } else if(tipo == 1 && idOrigen == 0) {
+                } else if(idOrigen == 0) {
                         Toast.makeText(getApplicationContext(), "Por favor seleccione un Origen de la lista", Toast.LENGTH_LONG).show();
                         origenesSpinner.requestFocus();
                 } else {
