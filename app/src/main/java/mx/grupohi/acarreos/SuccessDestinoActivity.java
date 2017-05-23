@@ -200,7 +200,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
                     }
                 }
             });
-        viaje = viaje.find(idViaje);
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -286,7 +286,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
                                 printheadproyecto(empresa);
                             }
                             if(tipo_usuario == false) {
-
+                                viaje = viaje.find(idViaje);
                                 impresion = viaje.numImpresion;
                                 String nombreChecador = "SIN PERFIL";
 
