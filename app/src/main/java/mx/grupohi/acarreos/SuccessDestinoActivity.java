@@ -39,9 +39,17 @@ import android.widget.Toast;
 import com.bixolon.printer.BixolonPrinter;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLEncoder;
+import java.security.PublicKey;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.util.Random;
 import java.util.Set;
+
+import javax.crypto.Cipher;
 
 public class SuccessDestinoActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -331,9 +339,10 @@ public class SuccessDestinoActivity extends AppCompatActivity
                                 // }
                                 //bixolonPrinterApi.lineFeed(1,true);
                                 printfoot(impresion,"Checador: " + usuario.getNombre(), viaje.getCode(idViaje));
-                                bixolonPrinterApi.printQrCode(viaje.getCode(idViaje), BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.QR_CODE_MODEL2, 5, false);
+                                String urlEncoded = "http://saoweb.grupohi.mx/?controlador=QR&accion=recibeCadena&c=" + URLEncoder.encode(encrypt(viaje.getCode(idViaje).toString()), "utf-8");
+                                bixolonPrinterApi.printQrCode(urlEncoded, BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.QR_CODE_MODEL2, 5, false);
 
-                                bixolonPrinterApi.lineFeed(2, true);
+                                bixolonPrinterApi.lineFeed(5, true);
                                 if(connectedPrinter != false){
                                     Viaje.updateImpresion(viaje.idViaje,impresion, getApplicationContext());
                                 }
@@ -373,6 +382,17 @@ public class SuccessDestinoActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         checkEnabled();
+    }
+
+    private String encrypt(String str) throws Exception {
+        String file = "/sdcard/Android/data/SAO_certificado1024.crt";
+        InputStream is = new FileInputStream(file);
+        CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+        X509Certificate certificate = (X509Certificate)certificateFactory.generateCertificate(is);
+        PublicKey pk = certificate.getPublicKey();
+        Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+        cipher.init(Cipher.ENCRYPT_MODE, pk);
+        return Base64.encodeToString(cipher.doFinal(str.getBytes()), Base64.DEFAULT);
     }
 
     @Override
