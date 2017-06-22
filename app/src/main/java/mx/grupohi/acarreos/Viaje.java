@@ -24,10 +24,10 @@ import org.json.JSONObject;
 public class Viaje {
 
     Integer idViaje;
-    private Integer idMaterial;
-    private Integer idTiro;
+    Integer idMaterial;
+    Integer idTiro;
     Integer idOrigen;
-    private Integer idCamion;
+    Integer idCamion;
     Integer idRuta;
     String fechaSalida;
     String horaSalida;
@@ -47,6 +47,8 @@ public class Viaje {
     Integer tipoEsquema;
     Integer numImpresion;
     Integer idperfil;
+    String creo;
+    String uidTAG;
 
     private static SQLiteDatabase db;
     private static DBScaSqlite db_sca;
@@ -115,6 +117,8 @@ public class Viaje {
                 this.tipoEsquema = c.getInt(c.getColumnIndex("tipoEsquema"));
                 this.numImpresion = c.getInt(c.getColumnIndex("numImpresion"));
                 this.idperfil = c.getInt(c.getColumnIndex("idperfil"));
+                this.creo = c.getString(c.getColumnIndex("Creo"));
+                this.uidTAG = c.getString(c.getColumnIndex("uidTAG"));
 
                 return this;
             } else {

@@ -339,7 +339,20 @@ public class SuccessDestinoActivity extends AppCompatActivity
                                 // }
                                 //bixolonPrinterApi.lineFeed(1,true);
                                 printfoot(impresion,"Checador: " + usuario.getNombre(), viaje.getCode(idViaje));
-                                String urlEncoded = "http://saoweb.grupohi.mx/?controlador=QR&accion=recibeCadena&c=" + URLEncoder.encode(encrypt(viaje.getCode(idViaje).toString()), "utf-8");
+                                String datos = usuario.getDescripcion()+'|'
+                                                +viaje.idCamion+'|'
+                                                +viaje.idOrigen+'|'
+                                                +viaje.fechaSalida.substring(3,10).replace("/","")+viaje.horaSalida.replace(":","")+'|'
+                                                +viaje.idTiro+'|'
+                                                +viaje.fechaLlegada.substring(3,10).replace("/","")+viaje.horaLlegada.replace(":","")+'|'
+                                                +viaje.idMaterial+'|'
+                                                +viaje.creo+'|'
+                                                +viaje.getCode(idViaje).replace(viaje.idCamion.toString(), "")+'|'
+                                                +viaje.uidTAG+'|'
+                                                +viaje.primerToque+'|'
+                                                +viaje.cubicacion+'|'
+                                                +IMEI;
+                                String urlEncoded = "http://saoweb.grupohi.mx/?controlador=QR&accion=recibeCadena&id="+usuario.idProyecto+"&c=" + URLEncoder.encode(encrypt(datos), "utf-8");
                                 bixolonPrinterApi.printQrCode(urlEncoded, BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.QR_CODE_MODEL2, 5, false);
 
                                 bixolonPrinterApi.lineFeed(5, true);

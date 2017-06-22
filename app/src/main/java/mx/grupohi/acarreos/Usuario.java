@@ -19,7 +19,7 @@ import java.io.ByteArrayOutputStream;
 class Usuario {
 
     private Integer idUsuario;
-    private Integer idProyecto;
+    Integer idProyecto;
     String usr;
     String pass;
     String nombre;
