@@ -115,6 +115,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
     private GPSTracker gps;
     private String IMEI;
     CelularImpresora cl;
+    String datos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -338,24 +339,26 @@ public class SuccessDestinoActivity extends AppCompatActivity
                                 }
                                 // }
                                 //bixolonPrinterApi.lineFeed(1,true);
-                                printfoot(impresion,"Checador: " + usuario.getNombre(), viaje.getCode(idViaje));
-                                String datos = usuario.getDescripcion()+'|'
-                                                +viaje.idCamion+'|'
-                                                +viaje.idOrigen+'|'
-                                                +viaje.fechaSalida.substring(3,10).replace("/","")+viaje.horaSalida.replace(":","")+'|'
-                                                +viaje.idTiro+'|'
-                                                +viaje.fechaLlegada.substring(3,10).replace("/","")+viaje.horaLlegada.replace(":","")+'|'
-                                                +viaje.idMaterial+'|'
-                                                +viaje.creo+'|'
-                                                +viaje.getCode(idViaje).replace(viaje.idCamion.toString(), "")+'|'
-                                                +viaje.uidTAG+'|'
-                                                +viaje.primerToque+'|'
-                                                +viaje.cubicacion+'|'
-                                                +IMEI;
-                                String urlEncoded = "http://saoweb.grupohi.mx/?controlador=QR&accion=recibeCadena&id="+usuario.idProyecto+"&c=" + URLEncoder.encode(encrypt(datos), "utf-8");
-                                bixolonPrinterApi.printQrCode(urlEncoded, BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.QR_CODE_MODEL2, 5, false);
 
-                                bixolonPrinterApi.lineFeed(5, true);
+                                 datos = usuario.idProyecto+"|"
+                                        +viaje.idCamion+"|"
+                                        +viaje.idOrigen+"|"
+                                        +viaje.fechaSalida.substring(2,10).replace("/","")+viaje.horaSalida.replace(":","")+"|"
+                                        +viaje.idTiro+"|"
+                                        +viaje.fechaLlegada.substring(2,10).replace("/","")+viaje.horaLlegada.replace(":","")+"|"
+                                        +viaje.idMaterial+"|"
+                                        +viaje.creo+"|"
+                                        +viaje.getCode(idViaje).replace(viaje.idCamion.toString(), "")+"|"
+                                        +viaje.uidTAG+"|"
+                                        +viaje.primerToque+"|"
+                                        +viaje.cubicacion+"|"
+                                        +IMEI;
+
+                                String urlEncoded = "http://control-acarreos.grupohi.mx/tickets/?c=" + URLEncoder.encode(encrypt(datos), "utf-8");
+                                printfoot(impresion,"Checador: " + usuario.getNombre(), viaje.getCode(idViaje),urlEncoded);
+
+
+                                bixolonPrinterApi.lineFeed(3, true);
                                 if(connectedPrinter != false){
                                     Viaje.updateImpresion(viaje.idViaje,impresion, getApplicationContext());
                                 }
@@ -397,16 +400,6 @@ public class SuccessDestinoActivity extends AppCompatActivity
         checkEnabled();
     }
 
-    private String encrypt(String str) throws Exception {
-        String file = "/sdcard/Android/data/SAO_certificado1024.crt";
-        InputStream is = new FileInputStream(file);
-        CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
-        X509Certificate certificate = (X509Certificate)certificateFactory.generateCertificate(is);
-        PublicKey pk = certificate.getPublicKey();
-        Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-        cipher.init(Cipher.ENCRYPT_MODE, pk);
-        return Base64.encodeToString(cipher.doFinal(str.getBytes()), Base64.DEFAULT);
-    }
 
     @Override
     protected void onPause() {
@@ -461,7 +454,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
         }
     }
 
-    public static void printfoot(Integer impresion, String text, String codex) {
+    public static void printfoot(Integer impresion, String text, String codex, String datos) {
         int alignment = BixolonPrinter.ALIGNMENT_LEFT;
         int attribute = 1;
         attribute |= BixolonPrinter.TEXT_ATTRIBUTE_FONT_A;
@@ -474,6 +467,9 @@ public class SuccessDestinoActivity extends AppCompatActivity
         if(impresion != 0){
             bixolonPrinterApi.printText("R E I M P R E S I O N "+impresion+"\n", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_A, 2, false);
         }
+
+
+        bixolonPrinterApi.printQrCode(datos, BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.QR_CODE_MODEL2, 5, false);
 
         String cadena = "\nEste documento es un comprobante de recepción \nde materiales del Sistema de Administración de \nObra, no representa un compromiso de pago hasta \nsu validación contra las remisiones del \nproveedor y la revisión de factura.";
         bixolonPrinterApi.printText(cadena, BixolonPrinter.ALIGNMENT_CENTER, attribute, size, false);
@@ -849,6 +845,17 @@ public class SuccessDestinoActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private String encrypt(String str) throws Exception {
+        String file = "/sdcard/Android/data/SAO_certificado1024.crt";
+        InputStream is = new FileInputStream(file);
+        CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+        X509Certificate certificate = (X509Certificate)certificateFactory.generateCertificate(is);
+        PublicKey pk = certificate.getPublicKey();
+        Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+        cipher.init(Cipher.ENCRYPT_MODE, pk);
+        return Base64.encodeToString(cipher.doFinal(str.getBytes()), Base64.DEFAULT);
     }
 
 }
