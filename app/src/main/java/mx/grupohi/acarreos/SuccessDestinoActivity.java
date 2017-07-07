@@ -354,7 +354,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
                                         +viaje.cubicacion+"|"
                                         +IMEI;
 
-                                String urlEncoded = "http://control-acarreos.grupohi.mx/tickets/?c=" + URLEncoder.encode(encrypt(datos), "utf-8");
+                                String urlEncoded = URLEncoder.encode(encrypt(datos), "utf-8");
                                 printfoot(impresion,"Checador: " + usuario.getNombre(), viaje.getCode(idViaje),urlEncoded);
 
 
