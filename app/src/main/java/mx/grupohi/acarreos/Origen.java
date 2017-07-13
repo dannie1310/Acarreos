@@ -71,12 +71,16 @@ class Origen {
                     }
                 }
             }
+            else{
+                data.add("0");
+            }
         } finally {
             c.close();
             db.close();
         }
         return data;
     }
+
 
     ArrayList<String> getArrayListId() {
         ArrayList<String> data = new ArrayList<>();
@@ -94,29 +98,7 @@ class Origen {
                     }
                 }
             }
-        } finally {
-            c.close();
-            db.close();
-        }
-        return data;
-    }
-
-    ArrayList<String> getArrayListDescripcionesOrigenTiro(Integer idtiro) {
-        ArrayList<String> data = new ArrayList<>();
-        db = db_sca.getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM origenes WHERE idorigen IN (SELECT idorigen FROM rutas WHERE idtiro = '"+idtiro+"') ORDER BY descripcion ASC", null);
-        try {
-            if (c != null && c.moveToFirst()) {
-                if (c.getCount() == 1) {
-                    data.add(c.getString(c.getColumnIndex("descripcion")));
-                } else {
-                    data.add("-- Seleccione --");
-                    data.add(c.getString(c.getColumnIndex("descripcion")));
-                    while (c.moveToNext()) {
-                        data.add(c.getString(c.getColumnIndex("descripcion")));
-                    }
-                }
-            }else {
+            else {
                 data.add("NO EXISTEN ORIGENES PARA EL TIRO.");
             }
         } finally {
@@ -125,35 +107,11 @@ class Origen {
         }
         return data;
     }
-    ArrayList<String> getArrayListId(Integer idtiro) {
-        ArrayList<String> data = new ArrayList<>();
-        db = db_sca.getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM origenes WHERE idorigen IN (SELECT idorigen FROM rutas WHERE idtiro = '"+idtiro+"') ORDER BY descripcion ASC", null);
-        try {
-            if (c != null && c.moveToFirst()) {
-                if (c.getCount() == 1) {
-                    data.add(c.getString(c.getColumnIndex("idorigen")));
-                } else {
-                    data.add("0");
-                    data.add(c.getString(c.getColumnIndex("idorigen")));
-                    while (c.moveToNext()) {
-                        data.add(c.getString(c.getColumnIndex("idorigen")));
-                    }
-                }
-            }else{
-                data.add("0");
-            }
-        } finally {
-            c.close();
-            db.close();
-        }
-        return data;
-    }
 
-    static Integer getCount(Context context, Integer idTiro) {
+    static Integer getCount(Context context) {
         DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
         SQLiteDatabase db = db_sca.getWritableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM origenes WHERE idorigen IN (SELECT idorigen FROM rutas WHERE idtiro = '"+idTiro+"') ORDER BY descripcion ASC",null);
+        Cursor c = db.rawQuery("SELECT * FROM origenes ORDER BY descripcion ASC",null);
         try {
             return c.getCount();
         } finally {

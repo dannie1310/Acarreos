@@ -92,7 +92,7 @@ public class DialogManager {
         String mac = null;
         if(MAC != null) {
             for (BluetoothDevice device : pairedDevices) {
-                if (MAC.toUpperCase().equals(device.getAddress().toString().replace(":", ""))) {
+                if (MAC.toUpperCase().replace(":", "").equals(device.getAddress().toString().replace(":", ""))) {
                     mac = device.getAddress();
                     items[index++] = device.getAddress();
                 }

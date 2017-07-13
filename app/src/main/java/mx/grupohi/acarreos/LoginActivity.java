@@ -16,6 +16,8 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -90,6 +92,7 @@ public class LoginActivity extends AppCompatActivity {
         final PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
         this.wakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "etiqueta");
         wakeLock.acquire();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         setTitle(getString(R.string.app_name));
@@ -262,6 +265,7 @@ public class LoginActivity extends AppCompatActivity {
             data.put("IMEI", IMEI);
 
             try {
+
                 URL url = new URL("http://sca.grupohi.mx/android20160923.php");
                 final JSONObject JSON = HttpConnection.POST(url, data);
                 db_sca.deleteCatalogos();
@@ -640,7 +644,7 @@ public class LoginActivity extends AppCompatActivity {
             } catch (Exception e) {
                 return false;
             }
-
+            wakeLock.release();
             return true;
         }
 
@@ -672,9 +676,14 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        startActivity(intent);
+
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 }
 

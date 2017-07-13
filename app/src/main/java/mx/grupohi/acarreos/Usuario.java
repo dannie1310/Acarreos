@@ -11,6 +11,7 @@ import android.util.Base64DataException;
 import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 /**
  * Creado por JFEsquivel on 05/10/2016.
@@ -102,6 +103,11 @@ class Usuario {
         Cursor c = db.rawQuery("SELECT * FROM user LIMIT 1", null);
         try {
             if(c != null && c.moveToFirst()) {
+                try {
+                    Util.copyDataBase(context);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
                 this.idUsuario = c.getInt(c.getColumnIndex("idusuario"));
                 this.idProyecto = c.getInt(c.getColumnIndex("idproyecto"));
@@ -116,13 +122,24 @@ class Usuario {
 
                 if(idorigen.toString() == "0"){
                     tiro = tiro.find(c.getInt(c.getColumnIndex("idtiro")));
-                    this.tiro_name = tiro.descripcion;
-                    this.origen_name = "0";
+                    if(tiro !=null) {
+                        this.tiro_name = tiro.descripcion;
+                        this.origen_name = "0";
+                    }else {
+                        this.tiro_name =  "NO SE ENCONTRO";
+                        this.origen_name = "0";
+                    }
                 }
                 else if (idtiro.toString() == "0") {
                     origen = origen.find(c.getInt(c.getColumnIndex("idorigen")));
-                    this.origen_name = origen.descripcion;
-                    this.tiro_name = "0";
+                    if(origen!=null) {
+                        this.origen_name = origen.descripcion;
+                        this.tiro_name = "0";
+                    }else{
+                        this.origen_name = "NO SE ENCONTRO";
+                        this.tiro_name = "0";
+                    }
+
                 }
                 return this;
             } else {

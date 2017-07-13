@@ -37,6 +37,7 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.net.URL;
 
 public class DescargaActivity extends AppCompatActivity
@@ -281,7 +282,11 @@ public class DescargaActivity extends AppCompatActivity
                     if (JSON.getString("IdPerfil") == "null") {
                         return false;
                     } else {
-
+                        try {
+                            Util.copyDataBaseSyns(context);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                         db_sca.descargaCatalogos();
                         try {
                             String logo = JSON.getString("logo");

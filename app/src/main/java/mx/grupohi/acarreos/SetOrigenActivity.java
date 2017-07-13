@@ -138,7 +138,12 @@ public class SetOrigenActivity extends AppCompatActivity
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     String descripcion = origenesSpinner.getSelectedItem().toString();
-                    idOrigen = Integer.valueOf(spinnerOrigenesMap.get(descripcion));
+                    if(descripcion == "0") {
+                        descripcion = "NO SE ENCUENTRAN ORIGENES";
+                        idOrigen = 0;
+                    }else{
+                        idOrigen = Integer.valueOf(spinnerOrigenesMap.get(descripcion));
+                    }
                 }
 
                 @Override

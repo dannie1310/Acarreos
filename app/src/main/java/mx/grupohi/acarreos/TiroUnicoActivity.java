@@ -166,8 +166,8 @@ public class TiroUnicoActivity extends AppCompatActivity
         );
 
 
-        final ArrayList<String> descripcionesOrigenes = origen.getArrayListDescripcionesOrigenTiro(usuario.idtiro);
-        final ArrayList<String> idsOrigenes = origen.getArrayListId(usuario.idtiro);
+        final ArrayList<String> descripcionesOrigenes = origen.getArrayListDescripciones();
+        final ArrayList<String> idsOrigenes = origen.getArrayListId();
 
         final String[] spinnerOrigenesArray = new String[idsOrigenes.size()];
         final HashMap<String, String> spinnerOrigenesMap = new HashMap<>();
@@ -301,7 +301,7 @@ public class TiroUnicoActivity extends AppCompatActivity
                 if (idMaterial == 0) {
                     Toast.makeText(getApplicationContext(), "Por favor seleccione un Material de la lista", Toast.LENGTH_LONG).show();
                     materialesSpinner.requestFocus();
-                }else if (idOrigen == 0 && Origen.getCount(getApplicationContext(),usuario.idtiro) != 0) {
+                }else if (idOrigen == 0 && Origen.getCount(getApplicationContext()) != 0) {
                     Toast.makeText(getApplicationContext(), "Por favor seleccione un Origen de la lista", Toast.LENGTH_LONG).show();
                     origenesSpinner.requestFocus();
                 }else if (idruta == 0 && Ruta.getCount(getApplicationContext(),idOrigen, usuario.idtiro) != 0) {
