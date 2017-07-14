@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity
     Viaje viaje;
     Coordenada coordenada;
     Configuraciones c;
+    Certificados certificados;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +100,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle(getString(R.string.title_activity_main));
+        certificados = new Certificados(this);
         usuario = new Usuario(this);
         camion = new Camion(getApplicationContext());
         usuario = usuario.getUsuario();
