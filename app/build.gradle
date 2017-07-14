@@ -7,8 +7,8 @@ android {
         applicationId "mx.grupohi.acarreos"
         minSdkVersion 16
         targetSdkVersion 24
-        versionCode 7
-        versionName "7.2.0"
+        versionCode 8
+        versionName "8.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
