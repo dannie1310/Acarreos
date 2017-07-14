@@ -848,7 +848,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
     }
 
     private String encrypt(String str) throws Exception {
-        String file = "/sdcard/Android/data/SAO_certificado1024.crt";
+        String file = this.getExternalFilesDir("certificados").toString();  // revisa si esta bien direccionado... esta es la ruta --> /storage/emulated/0/Android/data/mx.grupohi.acarreos.copyfiles/files/certificados
         InputStream is = new FileInputStream(file);
         CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
         X509Certificate certificate = (X509Certificate)certificateFactory.generateCertificate(is);
