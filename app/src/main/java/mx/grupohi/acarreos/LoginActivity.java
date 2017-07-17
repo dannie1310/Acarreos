@@ -658,10 +658,12 @@ public class LoginActivity extends AppCompatActivity {
                     tipo = usuario.getTipo_permiso();
                     if(tipo == 0){
                         mainActivity = new Intent(getApplicationContext(), SetOrigenActivity.class);
+                        startActivity(mainActivity);
                     }else if(tipo == 1){
                         mainActivity = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(mainActivity);
                     }
-                    startActivity(mainActivity);
+
                 }
 
             }
@@ -676,14 +678,9 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        startActivity(intent);
     }
 }
 
