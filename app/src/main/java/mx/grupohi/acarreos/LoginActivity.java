@@ -667,10 +667,7 @@ public class LoginActivity extends AppCompatActivity {
                         mainActivity = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(mainActivity);
                     }
-
                 }
-            }else{
-                onPause();
             }
         }
 
