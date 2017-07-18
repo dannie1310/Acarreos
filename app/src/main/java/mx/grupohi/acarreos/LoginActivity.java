@@ -74,21 +74,7 @@ public class LoginActivity extends AppCompatActivity {
         //mainActivity = new Intent(this, MainActivity.class);
         usuario = new Usuario(this);
         tipo = usuario.getTipo_permiso();
-        if (usuario.isAuth()) {
-            if (tipo== null){
-                Toast.makeText(LoginActivity.this, R.string.error_usuario, Toast.LENGTH_LONG).show();
-                Intent intent = getIntent();
-                usuario.destroy();
-                startActivity(intent);
-            }
-            else if(tipo == 0){
-                mainActivity = new Intent(this, SetOrigenActivity.class);
-                startActivity(mainActivity);
-            }else if(tipo == 1){
-                mainActivity = new Intent(this, MainActivity.class);
-                startActivity(mainActivity);
-            }
-        }
+
         final PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
         this.wakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "etiqueta");
         wakeLock.acquire();
@@ -149,6 +135,21 @@ public class LoginActivity extends AppCompatActivity {
                 return false;
             }
         });
+        if (usuario.isAuth()) {
+            if (tipo== null){
+                Toast.makeText(LoginActivity.this, R.string.error_usuario, Toast.LENGTH_LONG).show();
+                Intent intent = getIntent();
+                usuario.destroy();
+                startActivity(intent);
+            }
+            else if(tipo == 0){
+                mainActivity = new Intent(this, SetOrigenActivity.class);
+                startActivity(mainActivity);
+            }else if(tipo == 1){
+                mainActivity = new Intent(this, MainActivity.class);
+                startActivity(mainActivity);
+            }
+        }
     }
     private Boolean checkPermissions() {
         Boolean permission_fine_location = true;
@@ -195,11 +196,11 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if(usuario.isAuth()) {
-            startActivity(mainActivity);
-        }
-    }
 
+    }
+    protected void onResume(){
+        super.onResume();
+    }
     /**
      * Attempts to sign in or register the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
@@ -235,6 +236,7 @@ public class LoginActivity extends AppCompatActivity {
         if (cancel) {
             focusView.requestFocus();
         } else {
+
             loginProgressDialog = ProgressDialog.show(LoginActivity.this, "Autenticando", "Por favor espere...", true);
             mAuthTask = new UserLoginTask(user, pass);
             mAuthTask.execute((Void) null);
@@ -639,21 +641,23 @@ public class LoginActivity extends AppCompatActivity {
                         if (!Coordenada.create(data, LoginActivity.this)) {
                             return false;
                         }
+                        wakeLock.release();
+                        return true;
                     }
                 }
+
             } catch (Exception e) {
                 return false;
             }
-            wakeLock.release();
-            return true;
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
             super.onPostExecute(success);
-            mAuthTask = null;
-            loginProgressDialog.dismiss();
+
             if (success) {
+                mAuthTask = null;
+                loginProgressDialog.dismiss();
                 if (usuario.isAuth()) {
                     tipo = usuario.getTipo_permiso();
                     if(tipo == 0){
@@ -665,7 +669,8 @@ public class LoginActivity extends AppCompatActivity {
                     }
 
                 }
-
+            }else{
+                onPause();
             }
         }
 
