@@ -48,6 +48,7 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Random;
 import java.util.Set;
+import java.util.Timer;
 
 import javax.crypto.Cipher;
 
@@ -94,7 +95,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
     static Bitmap bitmap;
 
     public static BixolonPrinter bixolonPrinterApi;
-
+    public static int milisegundos = 7200;
     private static final long PRINTING_TIME = 2100;
     private static final long PRINTING_SLEEP_TIME = 300;
     static final int MESSAGE_START_WORK = Integer.MAX_VALUE - 2;
@@ -110,12 +111,14 @@ public class SuccessDestinoActivity extends AppCompatActivity
     private String mPath;
     private final int PHOTO_CODE = 200;
     private ImageView mSetImage;
+    boolean estado = false;
 
     //GPS
     private GPSTracker gps;
     private String IMEI;
     CelularImpresora cl;
     String datos;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,7 +134,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
         empresa=usuario.getEmpresa();
         logo=usuario.getLogo();
         checador = new Checador(getApplicationContext());
-
+        bitmap = crearImagen(logo);
         bixolonPrinterApi = new BixolonPrinter(this, mHandler, null);
         view2 = (View) findViewById(R.id.view2);
         textViewCamion = (TextView) findViewById(R.id.textViewCamion);
@@ -256,6 +259,9 @@ public class SuccessDestinoActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 btnImprimir.setEnabled(false);
+                tiempoEspera(milisegundos);
+              //  onPause();
+                //btnImprimir.setEnabled(false);
                 imprimir = true;
                 if(!connectedPrinter) {
                     bixolonPrinterApi.findBluetoothPrinters();
@@ -265,7 +271,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
                     @Override
                     public void run() {
                         super.run();
-                        btnImprimir.setEnabled(true);
+                       // btnImprimir.setEnabled(false);
                     }
                 }, PRINTING_TIME);
 
@@ -273,27 +279,10 @@ public class SuccessDestinoActivity extends AppCompatActivity
                     public void run() {
                         try {
                             bixolonPrinterApi.setSingleByteFont(BixolonPrinter.CODE_PAGE_858_EURO);
-                            Bitmap fewlapsBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.img_success);
+                            //Thread.sleep(PRINTING_SLEEP_TIME);
 
-                           // Thread.sleep(PRINTING_SLEEP_TIME);
 
-                            if (logo == 1) {
-                                BitmapDrawable drawable = (BitmapDrawable) getResources().getDrawable(R.drawable.ghi_logo);
-                                bitmap = drawable.getBitmap();
-                                bixolonPrinterApi.printBitmap(bitmap, BixolonPrinter.ALIGNMENT_CENTER, 220, 50, true);
-                            }
-                            if (logo == 2) {
-                                int x = usuario.getProyecto();
-                                String log = usuario.getImagen();
-                                if(log!=null) {
-                                   bitmap = usuario.decodeBase64(log);
-                                   bixolonPrinterApi.printBitmap(bitmap, BixolonPrinter.ALIGNMENT_CENTER, 220, 50, true);
-                                }
-                            }
 
-                            if(!empresa.equals("null")) {
-                                printheadproyecto(empresa);
-                            }
                             if(tipo_usuario == false) {
                                 viaje = viaje.find(idViaje);
                                 impresion = viaje.numImpresion;
@@ -307,6 +296,11 @@ public class SuccessDestinoActivity extends AppCompatActivity
                                 }
 
 
+                                bixolonPrinterApi.printBitmap(bitmap, BixolonPrinter.ALIGNMENT_CENTER, 220, 50, true);
+                               int x = BixolonPrinter.MESSAGE_COMPLETE_PROCESS_BITMAP;
+                                if(!empresa.equals("null")) {
+                                    printheadproyecto(empresa);
+                                }
                                 bixolonPrinterApi.lineFeed(1, true);
                                 printTextTwoColumns("Proyecto: ", usuario.getDescripcion() + " \n");
                                 printTextTwoColumns("Camión: ", textViewCamion.getText() + " \n");
@@ -390,8 +384,10 @@ public class SuccessDestinoActivity extends AppCompatActivity
                 t.start();
             }
         });
+
         onPause();
         bixolonPrinterApi.kickOutDrawer(BixolonPrinter.DRAWER_CONNECTOR_PIN5);
+
     }
 
     @Override
@@ -400,12 +396,15 @@ public class SuccessDestinoActivity extends AppCompatActivity
         checkEnabled();
     }
 
+    protected void onStart(){
+        super.onStart();
+    }
 
     @Override
     protected void onPause() {
         if (bixolonPrinterApi != null) {
             bixolonPrinterApi.disconnect();
-        }
+       }
         super.onPause();
     }
 
@@ -530,8 +529,11 @@ public class SuccessDestinoActivity extends AppCompatActivity
                         case BixolonPrinter.STATE_CONNECTED:
                             Log.i("Handler", "BixolonPrinter.STATE_CONNECTED");
                             toolbar.setSubtitle("Impresora Contectada " + mConnectedDeviceName);
+                           // btnImprimir.setEnabled(false);
                             connectedPrinter = true;
                             if(imprimir) {
+                                progressDialog = ProgressDialog.show(SuccessDestinoActivity.this, "Imprimiendo", "Por favor espere...", true);
+                                tiempoEspera(milisegundos);
                                 btnImprimir.performClick();
 
                             }
@@ -619,6 +621,8 @@ public class SuccessDestinoActivity extends AppCompatActivity
                 case BixolonPrinter.MESSAGE_PRINT_COMPLETE:
                     Log.i("Handler", "BixolonPrinter.MESSAGE_PRINT_COMPLETE");
                     Toast.makeText(getApplicationContext(),"Impresión Completa!!!.", Toast.LENGTH_SHORT).show();
+
+
                     break;
 
                 case BixolonPrinter.MESSAGE_COMPLETE_PROCESS_BITMAP:
@@ -856,6 +860,35 @@ public class SuccessDestinoActivity extends AppCompatActivity
         Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
         cipher.init(Cipher.ENCRYPT_MODE, pk);
         return Base64.encodeToString(cipher.doFinal(str.getBytes()), Base64.DEFAULT);
+    }
+
+
+    public Bitmap crearImagen(Integer logo) {
+        Bitmap bitmap = null;
+        if (logo == 1) {
+            BitmapDrawable drawable = (BitmapDrawable) getResources().getDrawable(R.drawable.ghi_logo);
+            bitmap = drawable.getBitmap();
+            
+        }
+        if (logo == 2) {
+            int x = usuario.getProyecto();
+            String log = usuario.getImagen();
+            if (log != null) {
+                bitmap = usuario.decodeBase64(log);
+            }
+        }
+        return bitmap;
+    }
+
+    public  void tiempoEspera(int milisegundos){
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                // acciones que se ejecutan tras los milisegundos
+                btnImprimir.setEnabled(true);
+                progressDialog.dismiss();
+            }
+        }, milisegundos);
     }
 
 }
