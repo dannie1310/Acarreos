@@ -124,6 +124,8 @@ public class SuccessDestinoActivity extends AppCompatActivity
     ProgressDialog progressDialog;
     JSONObject datosticket;
 
+    Integer num;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,8 +138,8 @@ public class SuccessDestinoActivity extends AppCompatActivity
         usuario = usuario.getUsuario();
         viaje = new Viaje(this);
 
-        empresa=usuario.getEmpresa();
-        logo=usuario.getLogo();
+        empresa = usuario.getEmpresa();
+        logo = usuario.getLogo();
         checador = new Checador(getApplicationContext());
         bitmap = crearImagen(logo);
         bixolonPrinterApi = new BixolonPrinter(this, mHandler, null);
@@ -172,7 +174,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
         gps = new GPSTracker(SuccessDestinoActivity.this);
-        TelephonyManager phneMgr = (TelephonyManager)getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+        TelephonyManager phneMgr = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
         IMEI = phneMgr.getDeviceId();
         cl = new CelularImpresora(getApplicationContext());
         cl = cl.find(IMEI);
@@ -182,7 +184,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
             e.printStackTrace();
         }
 
-        if(drawer != null)
+        if (drawer != null)
             drawer.post(new Runnable() {
                 @Override
                 public void run() {
@@ -195,12 +197,12 @@ public class SuccessDestinoActivity extends AppCompatActivity
                         TextView tim = (TextView) child.findViewById(R.id.textViewImpresora);
 
                         Integer impresora = CelularImpresora.getId(getApplicationContext());
-                        if (tim != null){
-                            if(impresora == 0){
+                        if (tim != null) {
+                            if (impresora == 0) {
                                 tim.setTextColor(Color.RED);
                                 tim.setText("Sin Impresora Asignada");
-                            }else{
-                                tim.setText("Impresora "+impresora);
+                            } else {
+                                tim.setText("Impresora " + impresora);
                             }
                         }
                         if (tvp != null) {
@@ -209,15 +211,15 @@ public class SuccessDestinoActivity extends AppCompatActivity
                         if (tvu != null) {
                             tvu.setText(usuario.nombre);
                         }
-                        if (tpe != null){
-                            if(usuario.origen_name == "0"){
-                                tpe.setText("PERFIL: "+usuario.getNombreEsquema()+" - "+usuario.tiro_name);
-                            }else if(usuario.tiro_name == "0"){
-                                tpe.setText("PERFIL: "+usuario.getNombreEsquema()+" - "+usuario.origen_name);
+                        if (tpe != null) {
+                            if (usuario.origen_name == "0") {
+                                tpe.setText("PERFIL: " + usuario.getNombreEsquema() + " - " + usuario.tiro_name);
+                            } else if (usuario.tiro_name == "0") {
+                                tpe.setText("PERFIL: " + usuario.getNombreEsquema() + " - " + usuario.origen_name);
                             }
                         }
                         if (tvv != null) {
-                            tvv.setText(getString(R.string.app_name)+"     "+"Versión " + String.valueOf(BuildConfig.VERSION_NAME));
+                            tvv.setText(getString(R.string.app_name) + "     " + "Versión " + String.valueOf(BuildConfig.VERSION_NAME));
                         }
                     }
                 }
@@ -231,11 +233,11 @@ public class SuccessDestinoActivity extends AppCompatActivity
             public void onClick(View v) {
                 Intent mainActivity;
                 Integer tipo = usuario.getTipo_permiso();
-                if(tipo == 0){
+                if (tipo == 0) {
                     mainActivity = new Intent(getApplicationContext(), SetOrigenActivity.class);
                     mainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(mainActivity);
-                }else if(tipo == 1){
+                } else if (tipo == 1) {
                     mainActivity = new Intent(getApplicationContext(), MainActivity.class);
                     mainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(mainActivity);
@@ -249,13 +251,13 @@ public class SuccessDestinoActivity extends AppCompatActivity
                 Integer numImagenes = im.getCount(idViaje);
                 //im.getAll();
                 //System.out.println("open:  "+numImagenes+ " "+idViaje.toString());
-                if(numImagenes == 0){
+                if (numImagenes == 0) {
                     Intent intent = new Intent(getApplicationContext(), CamaraActivity.class);
                     intent.putExtra("idviaje_neto", idViaje.toString());
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
 
-                }else{
+                } else {
                     Intent intent = new Intent(getApplicationContext(), ImagenesActivity.class);
                     intent.putExtra("idviaje_neto", idViaje.toString());
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -265,38 +267,41 @@ public class SuccessDestinoActivity extends AppCompatActivity
             }
         });
 
+
+
         btnImprimir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                btnImprimir.setEnabled(false);
-
-                //  onPause();
-
-                imprimir = true;
-                if (!connectedPrinter) {
-                    bixolonPrinterApi.findBluetoothPrinters();
-                }
-                tiempoEspera();
-                checkEnabled();
-                new Handler().postDelayed(new Thread() {
-                    @Override
-                    public void run() {
-                        super.run();
-                        // btnImprimir.setEnabled(false);
-                        if(connectedPrinter) {
-
-                            progressDialog = ProgressDialog.show(SuccessDestinoActivity.this, "Imprimiendo", "Por favor espere...", true);
-                            new ImprimirTicket(getApplicationContext(), progressDialog, bixolonPrinterApi, datosticket, bitmap).execute((Void) null);
-                        }
+                num = Viaje.numImpresion(viaje.idViaje, getApplicationContext());
+                if (num > 5) {
+                    Toast.makeText(getApplicationContext(), R.string.error_ticket, Toast.LENGTH_SHORT).show();
+                }else {
+                    btnImprimir.setEnabled(false);
+                    //  onPause();
+                    imprimir = true;
+                    if (!connectedPrinter) {
+                        bixolonPrinterApi.findBluetoothPrinters();
                     }
-                }, PRINTING_TIME);
+                    tiempoEspera();
+                    checkEnabled();
+                    new Handler().postDelayed(new Thread() {
+                        @Override
+                        public void run() {
+                            super.run();
+                            // btnImprimir.setEnabled(false);
+                            if (connectedPrinter) {
 
+                                progressDialog = ProgressDialog.show(SuccessDestinoActivity.this, "Imprimiendo", "Por favor espere...", true);
+                                new ImprimirTicket(getApplicationContext(), progressDialog, bixolonPrinterApi, datosticket, bitmap).execute((Void) null);
+                            }
+                        }
+                    }, PRINTING_TIME);
+                }
             }
         });
 
         onPause();
         bixolonPrinterApi.kickOutDrawer(BixolonPrinter.DRAWER_CONNECTOR_PIN5);
-
     }
     public JSONObject TicketDatos() throws JSONException {
         String nombreChecador = "SIN PERFIL";
@@ -372,14 +377,13 @@ public class SuccessDestinoActivity extends AppCompatActivity
     }
 
     protected void onStart(){
+
         super.onStart();
     }
 
     @Override
     protected void onPause() {
-       /* if (bixolonPrinterApi != null) {
-            bixolonPrinterApi.disconnect();
-       }*/
+
         super.onPause();
     }
 
@@ -655,8 +659,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
                             connectedPrinter = true;
                            /*if(imprimir) {
                                 btnImprimir.performClick();
-
-                            }*/
+                           }*/
 
                             break;
 

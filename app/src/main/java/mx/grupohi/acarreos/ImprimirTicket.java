@@ -2,6 +2,7 @@ package mx.grupohi.acarreos;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -85,9 +86,16 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
                     printTextTwoColumns("Versión: ", String.valueOf(dato.getString("16")) + "\n");
                 }
                 num = Viaje.numImpresion(dato.getInt("0"), context);
-                if (num != 0) {
-                    bixolonPrinterApi.printText("R E I M P R E S I O N " + num, BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_A, 2, false);
+                if(num == 0){
+                    bixolonPrinterApi.printText("C H O F E R", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_A, 2, false);
                 }
+                else if (num == 1){
+                    bixolonPrinterApi.printText("C H E C A D O R", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_A, 2, false);
+                }
+               else if(num < 5) {
+                    Integer numero = num - 1;
+                    bixolonPrinterApi.printText("R E I M P R E S I O N " + numero, BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_A, 2, false);
+               }
                 printfoot(num, "Checador: " + dato.getString("14"), dato.getString("22"), dato.getString("19"));
                 bixolonPrinterApi.lineFeed(3, true);
             } else {
@@ -110,12 +118,8 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
         if(aBoolean) {
             try {
                 if(idViaje != null) {
-
                     boolean c= Viaje.updateImpresion(idViaje, num, context);
-
                 }
-                Toast.makeText(context, "FIN", Toast.LENGTH_SHORT).show();
-
             } catch (Exception e) {
                 Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
@@ -151,8 +155,15 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
         bixolonPrinterApi.lineFeed(1, false);
         bixolonPrinterApi.print1dBarcode(codex.toUpperCase(), BixolonPrinter.BAR_CODE_CODE39, BixolonPrinter.ALIGNMENT_CENTER, 2, 180, BixolonPrinter.HRI_CHARACTERS_BELOW_BAR_CODE, true);
 
-        if(impresion != 0){
-            bixolonPrinterApi.printText("R E I M P R E S I O N "+impresion+"\n", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_A, 2, false);
+        if(impresion == 0){
+            bixolonPrinterApi.printText("C H O F E R", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_A, 2, false);
+        }
+        else if (impresion == 1){
+            bixolonPrinterApi.printText("C H E C A D O R", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_A, 2, false);
+        }
+        else {
+            Integer numero = impresion - 1;
+            bixolonPrinterApi.printText("R E I M P R E S I O N " + numero, BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_A, 2, false);
         }
 
         bixolonPrinterApi.lineFeed(2, false);

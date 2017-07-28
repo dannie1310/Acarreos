@@ -492,10 +492,7 @@ public class TiroUnicoActivity extends AppCompatActivity
                         }
 
                     } else {
-                        snackbar = Snackbar.make(findViewById(R.id.content_set_destino), "Por favor utiliza el TAG correcto", Snackbar.LENGTH_LONG);
-                        View snackBarView = snackbar.getView();
-                        snackBarView.setBackgroundColor(Color.RED);
-                        snackbar.show();
+                        Toast.makeText(getApplicationContext(), "Por favor utiliza el TAG correcto", Toast.LENGTH_SHORT).show();
                     }
                 } else if(error_eliminar == 1){
                     if(tipo == 1) {
@@ -590,11 +587,7 @@ public class TiroUnicoActivity extends AppCompatActivity
         if(error_eliminar == 2){
             startActivity(destinoSuccess);
         }else{
-            //getString(R.string.error_tag_comunicacion)
-            snackbar = Snackbar.make(findViewById(R.id.content_set_destino), getString(R.string.error_tag_comunicacion), Snackbar.LENGTH_SHORT);
-            View snackBarView = snackbar.getView();
-            snackBarView.setBackgroundColor(Color.RED);
-            snackbar.show();
+            Toast.makeText(getApplicationContext(), getString(R.string.error_tag_comunicacion), Toast.LENGTH_SHORT).show();
         }
     }
 
