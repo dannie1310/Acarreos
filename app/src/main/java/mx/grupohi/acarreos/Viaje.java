@@ -333,4 +333,27 @@ public class Viaje {
         }
         return resp;
     }
+
+    static Integer numImpresion(Integer idViaje, Context context) {
+        boolean resp=false;
+        ContentValues data = new ContentValues();
+
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+
+
+        db = db_sca.getWritableDatabase();
+        Cursor c= db.rawQuery("SELECT numImpresion FROM viajesnetos WHERE id = '" + idViaje + "'", null);
+        try {
+            if(c!=null && c.moveToFirst()){
+                return c.getInt(0);
+            }
+            else {
+                return null;
+            }
+        } finally {
+            c.close();
+            db.close();
+        }
+    }
 }
