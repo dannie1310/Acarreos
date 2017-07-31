@@ -12,6 +12,8 @@ import com.bixolon.printer.BixolonPrinter;
 
 import org.json.JSONObject;
 
+import java.io.IOException;
+
 /**
  * Created by DBENITEZ on 27/07/2017.
  */
@@ -52,8 +54,12 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
             //Thread.sleep(PRINTING_SLEEP_TIME);
 
             bixolonPrinterApi.lineFeed(1, true);
-
-            bixolonPrinterApi.printBitmap(bitmap, BixolonPrinter.ALIGNMENT_CENTER, 220, 50, true);
+            Thread.sleep(400);
+            try {
+                bixolonPrinterApi.printBitmap(bitmap, BixolonPrinter.ALIGNMENT_CENTER, 220, 50, true);
+            }catch (Exception e){
+                Toast.makeText(context, "Error Impresión de logo", Toast.LENGTH_LONG).show();
+            }
             if (!dato.getString("21").equals("null")) {
                 printheadproyecto(dato.getString("21"));
             }
@@ -124,8 +130,6 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
                 Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
-        }else{
-            progressDialog.dismiss();
         }
     }
 
@@ -175,7 +179,7 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
         bixolonPrinterApi.lineFeed(1, false);
 
         bixolonPrinterApi.cutPaper(true);
-        bixolonPrinterApi.kickOutDrawer(BixolonPrinter.DRAWER_CONNECTOR_PIN5);
+      //  bixolonPrinterApi.kickOutDrawer(BixolonPrinter.DRAWER_CONNECTOR_PIN5);
 
     }
 
@@ -221,7 +225,8 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
         // bixolonPrinterApi.lineFeed(1, false);
 
         bixolonPrinterApi.cutPaper(true);
-        bixolonPrinterApi.kickOutDrawer(BixolonPrinter.DRAWER_CONNECTOR_PIN5);
+
+
     }
 
 
