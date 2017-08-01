@@ -57,9 +57,11 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
             Thread.sleep(400);
             try {
                 bixolonPrinterApi.printBitmap(bitmap, BixolonPrinter.ALIGNMENT_CENTER, 220, 50, true);
+                bixolonPrinterApi.lineFeed(1, true);
             }catch (Exception e){
                 Toast.makeText(context, "Error Impresión de logo", Toast.LENGTH_LONG).show();
             }
+
             if (!dato.getString("21").equals("null")) {
                 printheadproyecto(dato.getString("21"));
             }
@@ -71,8 +73,8 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
             printTextTwoColumns("Material: ", dato.getString("4") + "\n");
             printTextTwoColumns("Origen: ", dato.getString("5") + "\n");
             printTextTwoColumns("Fecha de Salida: ", dato.getString("6") + "\n");
-
-            if (dato.getString("20") == "NULL") {
+            String x = dato.getString("20");
+            if (dato.getString("20").equals("NULL")) {
                 idViaje = dato.getInt("0");
                 printTextTwoColumns("Destino: ", dato.getString("7") + "\n");
                 printTextTwoColumns("Fecha Llegada: ", dato.getString("8") + "\n");

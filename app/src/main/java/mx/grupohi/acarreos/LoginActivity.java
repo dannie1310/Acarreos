@@ -352,6 +352,7 @@ public class LoginActivity extends AppCompatActivity {
                                 data.put("economico", info.getString("economico"));
                                 data.put("capacidad", info.getString("capacidad"));
                                 data.put("placasCaja", info.getString("placas_caja"));
+                                data.put("estatus", info.getString("estatus"));
 
                                 if (!camion.create(data)) {
                                     return false;

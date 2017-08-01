@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -157,10 +158,10 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected void onPostExecute(Boolean aBoolean) {
         super.onPostExecute(aBoolean);
-        progressDialog.dismiss();
         Integer errores = ImagenesViaje.getCountErrores(context);
         if(aBoolean) {
             try {
+                progressDialog.dismiss();
                 if (JSONVIAJES.has("error")) {
                     System.out.println("error");
                     Toast.makeText(context, (String) JSONVIAJES.get("error"), Toast.LENGTH_SHORT).show();

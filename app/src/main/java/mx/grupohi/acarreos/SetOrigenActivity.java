@@ -13,6 +13,7 @@ import android.nfc.Tag;
 import android.nfc.tech.MifareClassic;
 import android.nfc.tech.MifareUltralight;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -313,59 +314,66 @@ public class SetOrigenActivity extends AppCompatActivity
                         datos = nfcUltra.writePagina(myTag, 7, data);
                         dia = nfcUltra.writePagina(myTag, 9, dataTime);
                         uss = nfcUltra.writePagina(myTag, 13, user);
-                        camion_proyecto = nfcUltra.readConfirmar(myTag,4)+nfcUltra.readConfirmar(myTag,5);
-                        idcamion =  Util.getIdCamion(camion_proyecto);
+                        camion_proyecto = nfcUltra.readConfirmar(myTag, 4) + nfcUltra.readConfirmar(myTag, 5);
+                        idcamion = Util.getIdCamion(camion_proyecto);
                         idproyecto = Util.getIdProyecto(camion_proyecto);
                         camion = nfcUltra.readConfirmar(myTag, 7) + nfcUltra.readConfirmar(myTag, 8);
                         fecha = nfcUltra.readConfirmar(myTag, 9) + nfcUltra.readConfirmar(myTag, 10) + nfcUltra.readConfirmar(myTag, 11) + nfcUltra.readConfirmar(myTag, 12).substring(0, 2);
                         idusuario = nfcUltra.readConfirmar(myTag, 13) + nfcUltra.readConfirmar(myTag, 14);
 
                     }
-                    if (idproyecto == usuario.getProyecto()) {
-                        if (data.equals(camion.replace(" ", "")) && dataTime.equals(fecha.replace(" ", "")) && user.equals(idusuario.replace(" ", ""))) {
+                    Camion datosCamion = new Camion(getApplicationContext());
+                    datosCamion = datosCamion.find(idcamion);
+                    if (datosCamion.estatus == 1) {
+                        if (idproyecto == usuario.getProyecto()) {
+                            if (data.equals(camion.replace(" ", "")) && dataTime.equals(fecha.replace(" ", "")) && user.equals(idusuario.replace(" ", ""))) {
 
-                            ContentValues cv = new ContentValues();
-                            cv.put("IMEI", IMEI);
-                            cv.put("idevento", 2);
-                            cv.put("latitud", latitude);
-                            cv.put("longitud", longitude);
-                            cv.put("fecha_hora", Util.timeStamp());
-                            cv.put("code", "");
+                                ContentValues cv = new ContentValues();
+                                cv.put("IMEI", IMEI);
+                                cv.put("idevento", 2);
+                                cv.put("latitud", latitude);
+                                cv.put("longitud", longitude);
+                                cv.put("fecha_hora", Util.timeStamp());
+                                cv.put("code", "");
 
 
-                            Coordenada coordenada = new Coordenada(getApplicationContext());
-                            coordenada.create(cv, getApplicationContext());
+                                Coordenada coordenada = new Coordenada(getApplicationContext());
+                                coordenada.create(cv, getApplicationContext());
 
-                            cv.clear();
-                            cv.put("idcamion", idcamion);
-                            cv.put("idmaterial", idMaterial);
-                            cv.put("idorigen", idOrigen);
-                            cv.put("fecha_origen", Util.getFormatDate(dataTime));
-                            cv.put("idusuario", user);
-                            cv.put("uidTAG", UID);
-                            cv.put("IMEI", IMEI);
-                            cv.put("estatus", 1);
-                            cv.put("tipoEsquema", usuario.getTipoEsquema());
-                            cv.put("idperfil", usuario.tipo_permiso);
+                                cv.clear();
+                                cv.put("idcamion", idcamion);
+                                cv.put("idmaterial", idMaterial);
+                                cv.put("idorigen", idOrigen);
+                                cv.put("fecha_origen", Util.getFormatDate(dataTime));
+                                cv.put("idusuario", user);
+                                cv.put("uidTAG", UID);
+                                cv.put("IMEI", IMEI);
+                                cv.put("estatus", 1);
+                                cv.put("tipoEsquema", usuario.getTipoEsquema());
+                                cv.put("idperfil", usuario.tipo_permiso);
 
-                            InicioViaje in = new InicioViaje(getApplicationContext());
-                            Boolean guardar = in.create(cv);
+                                InicioViaje in = new InicioViaje(getApplicationContext());
+                                Boolean guardar = in.create(cv);
 
-                            if (guardar) {
-                                Intent success = new Intent(getApplicationContext(), SuccessDestinoActivity.class);
-                                success.putExtra("idInicio", in.id);
-                                startActivity(success);
+                                if (guardar) {
+                                    Intent success = new Intent(getApplicationContext(), SuccessDestinoActivity.class);
+                                    success.putExtra("idInicio", in.id);
+                                    startActivity(success);
+                                }
+
+                            } else {
+                                Toast.makeText(SetOrigenActivity.this, getString(R.string.error_tag_comunicacion), Toast.LENGTH_LONG).show();
                             }
-
                         } else {
-                            Toast.makeText(SetOrigenActivity.this, getString(R.string.error_tag_comunicacion), Toast.LENGTH_LONG).show();
+                            Toast.makeText(SetOrigenActivity.this, getString(R.string.error_proyecto), Toast.LENGTH_LONG).show();
                         }
                     } else {
-                        Toast.makeText(SetOrigenActivity.this, getString(R.string.error_proyecto), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),"El camión "+datosCamion.economico+" se encuentra inactivo. Por favor contacta al encargado.", Toast.LENGTH_LONG).show();
                     }
                 }else {
                     Toast.makeText(SetOrigenActivity.this, getString(R.string.error_tag_inexistente), Toast.LENGTH_LONG).show();
                 }
+
             }
         }
     }
@@ -450,17 +458,7 @@ public class SetOrigenActivity extends AppCompatActivity
                                 if(!Viaje.isSync(getApplicationContext()) || !InicioViaje.isSync(getApplicationContext())){
                                     progressDialogSync = ProgressDialog.show(SetOrigenActivity.this, "Sincronizando datos", "Por favor espere...", true);
                                     new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
-                                    Intent mainActivity;
-                                    Integer tipo = usuario.getTipo_permiso();
-                                    if(tipo == 0){
-                                        mainActivity = new Intent(getApplicationContext(), SetOrigenActivity.class);
-                                        mainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                        startActivity(mainActivity);
-                                    }else if(tipo == 1){
-                                        mainActivity = new Intent(getApplicationContext(), MainActivity.class);
-                                        mainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                        startActivity(mainActivity);
-                                    }
+                                    tiempoEsperaSincronizacion();
                                 } else {
                                     Toast.makeText(getApplicationContext(), "No es necesaria la sincronización en este momento", Toast.LENGTH_LONG).show();
                                 }
@@ -515,6 +513,26 @@ public class SetOrigenActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public  void tiempoEsperaSincronizacion(){
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                // acciones que se ejecutan tras los milisegundos
+                Intent mainActivity;
+                Integer tipo = usuario.getTipo_permiso();
+                if(tipo == 0){
+                    mainActivity = new Intent(getApplicationContext(), SetOrigenActivity.class);
+                    mainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(mainActivity);
+                }else if(tipo == 1){
+                    mainActivity = new Intent(getApplicationContext(), MainActivity.class);
+                    mainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(mainActivity);
+                }
+            }
+        }, 8000);
     }
 
     private void checkNfcEnabled() {

@@ -124,7 +124,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
     ProgressDialog progressDialog;
     JSONObject datosticket;
 
-    Integer num;
+    Integer num = null;
 
 
     @Override
@@ -266,7 +266,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
                                            @Override
                                            public void onClick(View v) {
                                                num = Viaje.numImpresion(viaje.idViaje, getApplicationContext());
-                                               if (num > 4) {
+                                               if (num!=null && num > 4) {
                                                    Toast.makeText(getApplicationContext(), R.string.error_ticket, Toast.LENGTH_SHORT).show();
                                                } else {
                                                    btnImprimir.setEnabled(false);
@@ -304,6 +304,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
     public JSONObject TicketDatos() throws JSONException {
         String nombreChecador = "SIN PERFIL";
         String urlEncoded = null;
+        inicio = getIntent().getIntExtra("idInicio", 0);
         if (tipo_usuario == false) {
             datos = usuario.idProyecto + "|"
                     + viaje.idCamion + "|"
@@ -360,8 +361,8 @@ public class SuccessDestinoActivity extends AppCompatActivity
         json.put("17", nombreChecador);
         json.put("21", empresa);
 
-        if(inicioViaje != null) {
-            json.put("20", inicioViaje.id);
+        if(inicio != 0) {
+            json.put("20", inicio);
         }else{
             json.put("20", "NULL");
         }
@@ -551,16 +552,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
                                 if(!Viaje.isSync(getApplicationContext()) || !InicioViaje.isSync(getApplicationContext())){
                                     progressDialogSync = ProgressDialog.show(SuccessDestinoActivity.this, "Sincronizando datos", "Por favor espere...", true);
                                     new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
-                                    Intent mainActivity;
-                                    Integer tipo = usuario.getTipo_permiso();
-                                    if(tipo == 0){
-                                        mainActivity = new Intent(getApplicationContext(), SetOrigenActivity.class);
-                                        startActivity(mainActivity);
-                                    }else if(tipo == 1){
-                                        mainActivity = new Intent(getApplicationContext(), MainActivity.class);
-                                        startActivity(mainActivity);
-                                    }
-
+                                    tiempoEsperaSincronizacion();
                                 } else {
                                     Toast.makeText(getApplicationContext(), "No es necesaria la sincronización en este momento", Toast.LENGTH_LONG).show();
                                 }
@@ -656,10 +648,9 @@ public class SuccessDestinoActivity extends AppCompatActivity
                             toolbar.setSubtitle("Impresora Contectada " + mConnectedDeviceName);
                             // btnImprimir.setEnabled(false);
                             connectedPrinter = true;
-                           if(imprimir) {
+                           /*if(imprimir) {
                                 btnImprimir.performClick();
-
-                            }
+                           }*/
 
                             break;
 
@@ -748,7 +739,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
 
                 case BixolonPrinter.MESSAGE_PRINT_COMPLETE:
                     Log.i("Handler", "BixolonPrinter.MESSAGE_PRINT_COMPLETE");
-                    Toast.makeText(getApplicationContext(),"Impresión Completa!!!.", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(),"Impresión Completa!!!.", Toast.LENGTH_SHORT).show();
 
 
                     break;
@@ -787,4 +778,24 @@ public class SuccessDestinoActivity extends AppCompatActivity
             }
         }, 6000);
     }
+
+    public  void tiempoEsperaSincronizacion(){
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                // acciones que se ejecutan tras los milisegundos
+                Intent mainActivity;
+                Integer tipo = usuario.getTipo_permiso();
+                if(tipo == 0){
+                    mainActivity = new Intent(getApplicationContext(), SetOrigenActivity.class);
+                    startActivity(mainActivity);
+                }else if(tipo == 1){
+                    mainActivity = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(mainActivity);
+                }
+
+            }
+        }, 8000);
+    }
+
 }

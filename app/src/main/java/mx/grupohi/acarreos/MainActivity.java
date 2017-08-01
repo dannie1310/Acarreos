@@ -295,12 +295,13 @@ public class MainActivity extends AppCompatActivity
                 try {
                     camion = camion.find(tagModel.idCamion);
                     CamionID = camion.idCamion;
-                        if(usuario.tipo_permiso == 3){
+                    if(camion.estatus == 1) {
+                        if (usuario.tipo_permiso == 3) {
                             Intent r = new Intent(getApplicationContext(), TiroUnicoActivity.class);
                             r.putExtra("UID", UID);
                             r.putExtra("camion", String.valueOf(CamionID));
                             startActivity(r);
-                        }else if(usuario.tipo_permiso == 2 || usuario.tipo_permiso == 5) {
+                        } else if (usuario.tipo_permiso == 2 || usuario.tipo_permiso == 5) {
                             if (origen != null && material != null) {
                                 setCamionInfo(camion);
                                 setTitle("INFORMACIÓN DEL TAG");
@@ -325,13 +326,16 @@ public class MainActivity extends AppCompatActivity
                                         startActivity(setDestinoActivity);
                                     }
                                 });
-                            }else {
+                            } else {
                                 snackbar = Snackbar.make(findViewById(R.id.content_main), R.string.error_sin_origen, Snackbar.LENGTH_LONG);
                                 View snackBarView = snackbar.getView();
                                 snackBarView.setBackgroundColor(Color.RED);
                                 snackbar.show();
                             }
                         }
+                    }else{
+                        Toast.makeText(getApplicationContext(),"El camión "+camion.economico+" se encuentra inactivo. Por favor contacta al encargado.", Toast.LENGTH_LONG).show();
+                    }
                 }catch (Exception e){
                     snackbar = Snackbar.make(findViewById(R.id.content_main),R.string.error_tag, Snackbar.LENGTH_LONG);
                     View snackBarView = snackbar.getView();

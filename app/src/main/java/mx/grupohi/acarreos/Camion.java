@@ -27,6 +27,7 @@ class Camion {
     public String economico;
     public Integer capacidad;
     public Integer numero_viajes;
+    Integer estatus;
 
     private Context context;
 
@@ -63,7 +64,7 @@ class Camion {
                 this.economico  = c.getString(8);
                 this.capacidad  = c.getInt(9);
                 this.numero_viajes = c.getInt(10);
-
+                this.estatus = c.getInt(c.getColumnIndex("estatus"));
                 return this;
             } else {
                 return null;
