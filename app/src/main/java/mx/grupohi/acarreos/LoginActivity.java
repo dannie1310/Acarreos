@@ -61,6 +61,7 @@ public class LoginActivity extends AppCompatActivity {
     Intent mainActivity;
     Usuario usuario;
     Integer tipo;
+    Button loginButton;
 
     // GPSTracker class
     GPSTracker gps;
@@ -91,12 +92,13 @@ public class LoginActivity extends AppCompatActivity {
 
         db_sca = new DBScaSqlite(getApplicationContext(), "sca", null, 1);
 
-        final Button loginButton = (Button) findViewById(R.id.loginButton);
+        loginButton = (Button) findViewById(R.id.loginButton);
         assert loginButton != null;
-        loginButton.setOnClickListener(new OnClickListener() {
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(checkPermissions()) {
+                    mAuthTask = null;
                     latitude = gps.getLatitude();
                     longitude = gps.getLongitude();
                     TelephonyManager phneMgr = (TelephonyManager)getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
@@ -655,10 +657,9 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(final Boolean success) {
             super.onPostExecute(success);
-
+            loginProgressDialog.dismiss();
             if (success) {
                 mAuthTask = null;
-                loginProgressDialog.dismiss();
                 if (usuario.isAuth()) {
                     tipo = usuario.getTipo_permiso();
                     if(tipo == 0){

@@ -76,6 +76,7 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
         values.clear();
 
         values.put("metodo", "captura");
+        values.put("imei", IMEI);
         values.put("usr", usuario.usr);
         values.put("pass", usuario.pass);
         values.put("bd", usuario.baseDatos);
@@ -158,10 +159,10 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected void onPostExecute(Boolean aBoolean) {
         super.onPostExecute(aBoolean);
+        progressDialog.dismiss();
         Integer errores = ImagenesViaje.getCountErrores(context);
         if(aBoolean) {
             try {
-                progressDialog.dismiss();
                 if (JSONVIAJES.has("error")) {
                     System.out.println("error");
                     Toast.makeText(context, (String) JSONVIAJES.get("error"), Toast.LENGTH_SHORT).show();
