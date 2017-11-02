@@ -33,15 +33,9 @@
         <Spinner
             android:layout_width="match_parent"
             android:id="@+id/spinnerMateriales"
-            android:dropDownWidth="match_parent"
-            android:layout_height="60dp" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@android:color/darker_gray"
-            android:layout_marginBottom="15dp"
-            android:layout_marginTop="5dp" />
+            android:layout_marginTop="10dp"
+            android:layout_height="30dp"
+            android:layout_marginBottom="20dp" />
 
         <TextView
             android:text="SELECCIONE EL ORIGEN:"
@@ -53,8 +47,79 @@
         <Spinner
             android:layout_width="match_parent"
             android:id="@+id/spinnerOrigenes"
-            android:layout_height="60dp"
-            android:layout_marginBottom="20dp" />
+            android:layout_height="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="10dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="2dp" />
+
+        <CheckBox
+            android:id="@+id/pagoCheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_margin="8dp"
+            android:button="@drawable/boton_checkbox"
+            android:text="Suministro Cobrable" />
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:id="@+id/textomina"
+            android:layout_height="wrap_content">
+
+            <AutoCompleteTextView
+                android:id="@+id/vale_mina"
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Folio de Vale de Mina"
+                android:inputType="text"
+                android:digits="0123456789qwertzuiopasdfghjklyxcvbnm-QAZWSXEDCRFVTGBYHNUJMIKOLP"
+                android:maxLength="8"
+                android:singleLine="true"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/seg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <AutoCompleteTextView
+                android:id="@+id/seguimiento"
+                android:layout_width="match_parent"
+                android:layout_marginTop="5dp"
+                android:layout_height="wrap_content"
+                android:hint="Folio de Seguimiento de Material"
+                android:inputType="text"
+                android:digits="0123456789qwertzuiopasdfghjklyxcvbnm-QAZWSXEDCRFVTGBYHNUJMIKOLP"
+                android:maxLength="8"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/vol"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <AutoCompleteTextView
+                android:id="@+id/volumen"
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Volumen m3"
+                android:inputType="number"
+                android:maxLength="6"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
 
         <Button
             android:text="ESCRIBIR ORIGEN"
@@ -62,7 +127,7 @@
             android:id="@+id/buttonEscribirOrigen"
             style="@style/Widget.AppCompat.Button.Colored"
             android:textSize="24sp"
-            android:layout_height="75dp" />
+            android:layout_height="70dp" />
 
     </LinearLayout>
 

@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
 import android.view.View;
@@ -30,6 +31,8 @@ import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -60,7 +63,13 @@ public class SetOrigenActivity extends AppCompatActivity
     private TextView tagAlertTextView;
     private TextView text_origen;
     private ProgressDialog progressDialogSync;
-
+    private CheckBox pago;
+    private TextView vale_mina;
+    private TextView seguimiento;
+    private TextView volumen;
+    private TextInputLayout mina;
+    private TextInputLayout seg;
+    private TextInputLayout vol;
     private Snackbar snackbar;
 
     //GPS
@@ -117,6 +126,17 @@ public class SetOrigenActivity extends AppCompatActivity
         text_origen = (TextView) findViewById(R.id.textView5);
         materialesSpinner = (Spinner) findViewById(R.id.spinnerMateriales);
         origenesSpinner = (Spinner) findViewById(R.id.spinnerOrigenes);
+
+        pago = (CheckBox) findViewById(R.id.pagoCheck);
+        mina = (TextInputLayout) findViewById(R.id.textomina);
+        vol = (TextInputLayout) findViewById(R.id.vol);
+        seg = (TextInputLayout) findViewById(R.id.seg);
+        vale_mina = (TextView)findViewById(R.id.vale_mina);
+        seguimiento = (TextView) findViewById(R.id.seguimiento);
+        volumen = (TextView) findViewById(R.id.volumen);
+        mina.setVisibility(View.GONE);
+        seg.setVisibility(View.GONE);
+        vol.setVisibility(View.GONE);
 
             tipo = 1;
             final ArrayList<String> descripcionesOrigenes = origen.getArrayListDescripciones();
@@ -196,6 +216,22 @@ public class SetOrigenActivity extends AppCompatActivity
             }
         });
 
+        pago.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+            public void onCheckedChanged(CompoundButton button, boolean isChecked){
+                if(isChecked){
+                    mina.setVisibility(View.VISIBLE);
+                    seg.setVisibility(View.VISIBLE);
+                    vol.setVisibility(View.VISIBLE);
+                }else{
+                    vale_mina.setText(null);
+                    seguimiento.setText(null);
+                    volumen.setText(null);
+                    mina.setVisibility(View.GONE);
+                    seg.setVisibility(View.GONE);
+                    vol.setVisibility(View.GONE);
+                }
+            }
+        });
 
         escribirOrigenButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -206,7 +242,16 @@ public class SetOrigenActivity extends AppCompatActivity
                 } else if(idOrigen == 0) {
                         Toast.makeText(getApplicationContext(), "Por favor seleccione un Origen de la lista", Toast.LENGTH_LONG).show();
                         origenesSpinner.requestFocus();
-                } else {
+                }else if(pago.isChecked() && vale_mina.getText().toString().isEmpty()){
+                        Toast.makeText(getApplicationContext(), "Por favor escribir el folio del vale de mina", Toast.LENGTH_SHORT).show();
+                }
+                else if(pago.isChecked() && seguimiento.getText().toString().isEmpty()){
+                        Toast.makeText(getApplicationContext(), "Por favor escribir el folio de seguimiento de material", Toast.LENGTH_SHORT).show();
+                }
+                else if(pago.isChecked() && volumen.getText().toString().isEmpty()){
+                        Toast.makeText(getApplicationContext(), "Por favor escribir el volumen del material", Toast.LENGTH_SHORT).show();
+                }
+                else {
                     checkNfcEnabled();
                     WriteModeOn();
                 }
@@ -291,6 +336,7 @@ public class SetOrigenActivity extends AppCompatActivity
                     boolean datos = false;
                     boolean dia = false;
                     boolean uss = false;
+                    boolean tipo_suministro = false;
                     String camion = null;
                     String fecha = null;
                     String idusuario = null;
@@ -309,6 +355,12 @@ public class SetOrigenActivity extends AppCompatActivity
                         camion = nfcTag.readSector(myTag, 1, 4);
                         fecha = nfcTag.readSector(myTag, 1, 5);
                         idusuario = nfcTag.readSector(myTag, 1, 6);
+                        /*
+                        if(pago.isChecked()){
+                            tipo_suministro = nfcTag.writeSector(myTag,2,9,"1");
+                        }
+
+                         */
                     }
                     if (tipo == 2) {
                         datos = nfcUltra.writePagina(myTag, 7, data);
@@ -351,6 +403,10 @@ public class SetOrigenActivity extends AppCompatActivity
                                 cv.put("estatus", 1);
                                 cv.put("tipoEsquema", usuario.getTipoEsquema());
                                 cv.put("idperfil", usuario.tipo_permiso);
+                                cv.put("folio_mina", vale_mina.getText().toString());
+                                cv.put("folio_seguimiento", seguimiento.getText().toString());
+                                cv.put("volumen", volumen.getText().toString());
+                                cv.put("tipo_suministro", "1"); // cambiarlo
 
                                 InicioViaje in = new InicioViaje(getApplicationContext());
                                 Boolean guardar = in.create(cv);

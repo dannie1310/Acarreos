@@ -76,18 +76,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/spinnerMotivo" />
 
-        <TextView
-            android:text="OBSERVACIONES:"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@android:style/TextAppearance.Material.Menu" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@android:style/TextAppearance.Material.Menu"
-            android:id="@+id/textObservaciones"
-            android:maxLength="50"/>
+       o
 
 
 
