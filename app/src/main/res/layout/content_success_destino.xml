@@ -133,6 +133,69 @@
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
         </LinearLayout>
 
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="FOLIO DE VALE DE MINA"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault"
+                android:textStyle="normal|bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewFolioMina"
+                android:layout_weight="1"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="FOLIO DE SEGUIMIENTO"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault"
+                android:textStyle="normal|bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewFolioSeg"
+                android:layout_weight="1"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="VOLUMEN"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault"
+                android:textStyle="normal|bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewVol"
+                android:layout_weight="1"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
+        </LinearLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"

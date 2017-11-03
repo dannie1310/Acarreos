@@ -345,6 +345,7 @@ public class SetOrigenActivity extends AppCompatActivity
                     Integer idproyecto = 0;
                     String camion_proyecto;
                     String dataTime = Util.getFechaHora();
+                    Integer tipo_s = 0;
                     if (tipo == 1) {
                         datos = nfcTag.writeSector(myTag, 1, 4, data);
                         dia = nfcTag.writeSector(myTag, 1, 5, dataTime);
@@ -355,12 +356,10 @@ public class SetOrigenActivity extends AppCompatActivity
                         camion = nfcTag.readSector(myTag, 1, 4);
                         fecha = nfcTag.readSector(myTag, 1, 5);
                         idusuario = nfcTag.readSector(myTag, 1, 6);
-                        /*
                         if(pago.isChecked()){
+                            tipo_s = 1;
                             tipo_suministro = nfcTag.writeSector(myTag,2,9,"1");
                         }
-
-                         */
                     }
                     if (tipo == 2) {
                         datos = nfcUltra.writePagina(myTag, 7, data);
@@ -403,11 +402,12 @@ public class SetOrigenActivity extends AppCompatActivity
                                 cv.put("estatus", 1);
                                 cv.put("tipoEsquema", usuario.getTipoEsquema());
                                 cv.put("idperfil", usuario.tipo_permiso);
+
                                 cv.put("folio_mina", vale_mina.getText().toString());
                                 cv.put("folio_seguimiento", seguimiento.getText().toString());
                                 cv.put("volumen", volumen.getText().toString());
-                                cv.put("tipo_suministro", "1"); // cambiarlo
-
+                                cv.put("tipo_suministro", tipo_s);
+                                cv.put("Code", Util.folio(Util.dateFolios()) + String.valueOf(idcamion));
                                 InicioViaje in = new InicioViaje(getApplicationContext());
                                 Boolean guardar = in.create(cv);
 

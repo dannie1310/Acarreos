@@ -78,8 +78,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Folio de Vale de Mina"
-                android:inputType="text"
-                android:digits="0123456789qwertzuiopasdfghjklyxcvbnm-QAZWSXEDCRFVTGBYHNUJMIKOLP"
+                android:inputType="textCapWords"
+                android:digits="0123456789-QAZWSXEDCRFVTGBYHNUJMIKOLP"
                 android:maxLength="8"
                 android:singleLine="true"
                 android:maxLines="1" />
@@ -97,8 +97,8 @@
                 android:layout_marginTop="5dp"
                 android:layout_height="wrap_content"
                 android:hint="Folio de Seguimiento de Material"
-                android:inputType="text"
-                android:digits="0123456789qwertzuiopasdfghjklyxcvbnm-QAZWSXEDCRFVTGBYHNUJMIKOLP"
+                android:inputType="textCapWords"
+                android:digits="0123456789-QAZWSXEDCRFVTGBYHNUJMIKOLP"
                 android:maxLength="8"
                 android:maxLines="1" />
 
@@ -115,8 +115,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Volumen m3"
+                android:digits="0123456789"
                 android:inputType="number"
-                android:maxLength="6"
+                android:maxLength="2"
                 android:maxLines="1" />
 
         </android.support.design.widget.TextInputLayout>

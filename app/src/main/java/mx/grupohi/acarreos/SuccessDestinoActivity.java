@@ -74,7 +74,10 @@ public class SuccessDestinoActivity extends AppCompatActivity
             textRuta,
             textDeductiva,
             textMotivo,
-            textObservacion;
+            textObservacion,
+            textMina,
+            textSeg,
+            textVol;
 
     private View view2;
 
@@ -161,6 +164,9 @@ public class SuccessDestinoActivity extends AppCompatActivity
         textDeductiva = (TextView) findViewById(R.id.textDeductiva);
         textMotivo = (TextView) findViewById(R.id.textMotivo);
         textObservacion = (TextView) findViewById(R.id.textObservaciones);
+        textMina = (TextView) findViewById(R.id.textViewFolioMina);
+        textSeg = (TextView) findViewById(R.id.textViewFolioSeg);
+        textVol = (TextView) findViewById(R.id.textViewVol);
 
         btnImprimir = (Button) findViewById(R.id.buttonImprimir);
         btnImagenes = (Button) findViewById(R.id.buttonImagenes);
@@ -304,6 +310,8 @@ public class SuccessDestinoActivity extends AppCompatActivity
     public JSONObject TicketDatos() throws JSONException {
         String nombreChecador = "SIN PERFIL";
         String urlEncoded = null;
+        String urlCode = null;
+        String datos_inicio;
         inicio = getIntent().getIntExtra("idInicio", 0);
         if (tipo_usuario == false) {
             datos = usuario.idProyecto + "|"
@@ -362,7 +370,37 @@ public class SuccessDestinoActivity extends AppCompatActivity
         json.put("21", empresa);
 
         if(inicio != 0) {
+            InicioViaje inicios = new InicioViaje(getApplicationContext());
+            inicios = inicios.find(inicio);
             json.put("20", inicio);
+            json.put("23", textMina.getText());
+            json.put("24", textSeg.getText());
+            json.put("25", textVol.getText());
+            datos_inicio = usuario.idProyecto + "|"
+                    + inicios.idcamion + "|"
+                    + inicios.idorigen + "|"
+                    + inicios.fecha_origen.replace("-", "").replace(":", "").replace(" ", "") + "|"
+                    +"0|"
+                    +"0|"
+                    + inicios.idmaterial + "|"
+                    + "0|"
+                    + inicios.getCode(inicio)+inicios.idcamion.toString()+ "|"
+                    + inicios.uidTAG + "|"
+                    + inicios.idusuario + "|"
+                    + inicios.volumen + "|"
+                    + IMEI + "|"
+                    + inicios.estatus +'|'
+                    + inicios.folio_mina;
+            /*+'|'
+                    + inicios.folio_seg + "|"
+                    + inicios.volumen;*/
+            try {
+                urlCode = URLEncoder.encode(encrypt(datos_inicio), "utf-8");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            json.put("19", urlCode);
+            json.put("22",  inicios.getCode(inicio));
         }else{
             json.put("20", "NULL");
         }
@@ -454,6 +492,9 @@ public class SuccessDestinoActivity extends AppCompatActivity
             textViewMaterial.setText(in.material.descripcion);
             textViewOrigen.setText(in.origen.descripcion);
             textViewFechaHoraSalida.setText(in.fecha_origen);
+            textMina.setText(in.folio_mina);
+            textSeg.setText(in.folio_seg);
+            textVol.setText(String.valueOf(in.volumen)+ " m3");
             textViewDestino.setVisibility(View.GONE);
             textViewFechaHoraLlegada.setVisibility(View.GONE);
             textViewRuta.setVisibility(View.GONE);
@@ -604,7 +645,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
     }
 
     private String encrypt(String str) throws Exception {
-        String file = this.getExternalFilesDir("certificados/SAO_certificado1024.crt").toString();  // revisa si esta bien direccionado... esta es la ruta --> /storage/emulated/0/Android/data/mx.grupohi.acarreos.copyfiles/files/certificados
+        String file = this.getExternalFilesDir("certificados/SAO_certificado1024.crt").toString();
         InputStream is = new FileInputStream(file);
         CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
         X509Certificate certificate = (X509Certificate)certificateFactory.generateCertificate(is);
@@ -613,7 +654,6 @@ public class SuccessDestinoActivity extends AppCompatActivity
         cipher.init(Cipher.ENCRYPT_MODE, pk);
         return Base64.encodeToString(cipher.doFinal(str.getBytes()), Base64.DEFAULT);
     }
-
 
     public Bitmap crearImagen(Integer logo) {
         Bitmap bitmap = null;

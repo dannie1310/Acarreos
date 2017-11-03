@@ -2,6 +2,7 @@ package mx.grupohi.acarreos;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -27,9 +28,13 @@ public class InicioViaje {
     Integer idmaterial;
     Integer idorigen;
     String fecha_origen;
+    String folio_mina;
+    String folio_seg;
+    Integer volumen;
     Integer idusuario;
     String uidTAG;
     String IMEI;
+    String Code;
     Integer estatus;
     Integer tipoEsquema;
     Integer idperfil;
@@ -82,7 +87,10 @@ public class InicioViaje {
                 this.estatus = c.getInt(c.getColumnIndex("estatus"));
                 this.tipoEsquema = c.getInt(c.getColumnIndex("tipoEsquema"));
                 this.idperfil = c.getInt(c.getColumnIndex("idperfil"));
-
+                this.folio_mina = c.getString(c.getColumnIndex("folio_mina"));
+                this.folio_seg = c.getString(c.getColumnIndex("folio_seguimiento"));
+                this.volumen = c.getInt(c.getColumnIndex("volumen"));
+                this.Code = c.getString(c.getColumnIndex("Code"));
                 return this;
             } else {
                 return null;
@@ -185,5 +193,19 @@ public class InicioViaje {
             db.close();
         }
     }
-
+    public static String getCode(int ini){
+        db = db_sca.getWritableDatabase();
+        Cursor c= db.rawQuery("SELECT Code FROM inicio_viajes WHERE id = '" + ini + "'", null);
+        try {
+            if(c!=null && c.moveToFirst()){
+                return c.getString(0);
+            }
+            else {
+                return null;
+            }
+        } finally {
+            c.close();
+            db.close();
+        }
+    }
 }
