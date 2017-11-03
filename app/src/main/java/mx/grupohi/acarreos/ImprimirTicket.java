@@ -36,6 +36,7 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
     Integer idViaje;
     Integer num;
     Bitmap bitmap;
+    Usuario uss;
 
     ImprimirTicket(Context context, ProgressDialog progressDialog, BixolonPrinter bixolonPrinterApi, JSONObject datos, Bitmap b) {
         this.context = context;
@@ -47,7 +48,8 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
 
     @Override
     protected Boolean doInBackground(Void... params) {
-
+        Usuario uss = new Usuario(context);
+        uss= uss.getUsuario();
         try {
 
             bixolonPrinterApi.setSingleByteFont(BixolonPrinter.CODE_PAGE_858_EURO);
@@ -65,6 +67,7 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
             if (!dato.getString("21").equals("null")) {
                 printheadproyecto(dato.getString("21"));
             }
+
             bixolonPrinterApi.lineFeed(1, true);
             printTextTwoColumns("Proyecto: ", dato.getString("1") + " \n");
             printTextTwoColumns("Camión: ", dato.getString("2") + " \n");
@@ -73,9 +76,6 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
             printTextTwoColumns("Material: ", dato.getString("4") + "\n");
             printTextTwoColumns("Origen: ", dato.getString("5") + "\n");
             printTextTwoColumns("Fecha de Salida: ", dato.getString("6") + "\n");
-            printTextTwoColumns("Folio de Vale de Mina: ", dato.getString("23")+ "\n");
-            printTextTwoColumns("Folio de Seguimiento: ",dato.getString("24")+"\n");
-            printTextTwoColumns("Volumen", dato.getString("25")+"\n");
 
             String x = dato.getString("20");
             if (dato.getString("20").equals("NULL")) {
@@ -112,9 +112,43 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
                 printfoot(num, "Checador: " + dato.getString("14"), dato.getString("22"), dato.getString("19"));
                 bixolonPrinterApi.lineFeed(3, true);
             } else {
-                printTextTwoColumns("Checador: " + dato.getString("14"), dato.getString("15") + "\n");
-                printTextTwoColumns("Versión: ", String.valueOf(dato.getString("16")) + "\n");
-                printfootorigen(dato.getString("19"), dato.getString("22"));
+                if(uss.tipo_permiso == 1) {
+                    if (!dato.getString("23").isEmpty()) {
+                        printTextTwoColumns("Folio de Vale de Mina: ", dato.getString("23") + "\n");
+                    }else {
+                        printTextTwoColumns("Folio de Vale de Mina: ", "------\n");
+                    }
+                    if(!dato.getString("24").isEmpty()) {
+                        printTextTwoColumns("Folio de Seguimiento: ", dato.getString("24") + "\n");
+                    }else {
+                        printTextTwoColumns("Folio de Seguimiento: ", "------\n");
+                    }
+                    if(!dato.getString("25").isEmpty()){
+                        printTextTwoColumns("Volumen", dato.getString("25") + "\n");
+                    }else {
+                        printTextTwoColumns("Volumen", "------\n");
+                    }
+                    printTextTwoColumns("Checador: " + dato.getString("14"), dato.getString("15") + "\n");
+                    printTextTwoColumns("Versión: ", String.valueOf(dato.getString("16")) + "\n");
+                    if(dato.getInt("26") == 1) {
+                        num = InicioViaje.numImpresion(Integer.valueOf(dato.getString("20")), context);
+                        if (num == 0) {
+                            bixolonPrinterApi.printText("M I N A", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_A, 2, false);
+                        } else if (num == 1) {
+                            bixolonPrinterApi.printText("C H E C A D O R", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_A, 2, false);
+                        } else if (num < 5) {
+                            Integer numero = num - 1;
+                            bixolonPrinterApi.printText("R E I M P R E S I O N " + numero, BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_A, 2, false);
+                        }
+                        bixolonPrinterApi.lineFeed(3, true);
+                    }
+
+                }else {
+                    printTextTwoColumns("Checador: " + dato.getString("14"), dato.getString("15") + "\n");
+                    printTextTwoColumns("Versión: ", String.valueOf(dato.getString("16")) + "\n");
+                }
+                printTextTwoColumns( dato.getString("19"), dato.getString("22")+ "\n");
+                printfootorigen(uss.tipo_permiso, Integer.valueOf(dato.getString("26")), num, dato.getString("19"), dato.getString("22"));
             }
             bixolonPrinterApi.kickOutDrawer(BixolonPrinter.DRAWER_CONNECTOR_PIN5);
             return true;
@@ -141,19 +175,31 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
         }
     }
 
-    public static void printfootorigen(String datos, String codex) {
+    public static void printfootorigen(Integer tipo_esquema, Integer tipo_suministro, Integer impresion, String datos, String codex) {
         int alignment = BixolonPrinter.ALIGNMENT_LEFT;
         int attribute = 1;
         attribute |= BixolonPrinter.TEXT_ATTRIBUTE_FONT_A;
         int size = 0;
 
         bixolonPrinterApi.setSingleByteFont(BixolonPrinter.CODE_PAGE_858_EURO);
-        bixolonPrinterApi.lineFeed(1, false);
-        bixolonPrinterApi.print1dBarcode(codex.toUpperCase(), BixolonPrinter.BAR_CODE_CODE39, BixolonPrinter.ALIGNMENT_CENTER, 2, 180, BixolonPrinter.HRI_CHARACTERS_BELOW_BAR_CODE, true);
 
-        bixolonPrinterApi.setSingleByteFont(BixolonPrinter.CODE_PAGE_858_EURO);
-        bixolonPrinterApi.lineFeed(2, false);
-        bixolonPrinterApi.printQrCode(datos, BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.QR_CODE_MODEL2, 5, false);
+        if(tipo_esquema == 1 && tipo_suministro  == 1) {
+            bixolonPrinterApi.lineFeed(1, false);
+            bixolonPrinterApi.print1dBarcode(codex.toUpperCase(), BixolonPrinter.BAR_CODE_CODE39, BixolonPrinter.ALIGNMENT_CENTER, 2, 180, BixolonPrinter.HRI_CHARACTERS_BELOW_BAR_CODE, true);
+            if(impresion == 0){
+                bixolonPrinterApi.printText("M I N A", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_A, 2, false);
+            }
+            else if (impresion == 1){
+                bixolonPrinterApi.printText("C H E C A D O R", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_A, 2, false);
+            }
+            else {
+                Integer numero = impresion - 1;
+                bixolonPrinterApi.printText("R E I M P R E S I O N " + numero, BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_A, 2, false);
+            }
+            bixolonPrinterApi.setSingleByteFont(BixolonPrinter.CODE_PAGE_858_EURO);
+            bixolonPrinterApi.lineFeed(2, false);
+            bixolonPrinterApi.printQrCode(datos, BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.QR_CODE_MODEL2, 5, false);
+        }
         String cadena = "\n\nEste documento es un comprobante unicamente \ninformativo para el Sistema de Administración de \nObra, no representa un compromiso de pago.";
         bixolonPrinterApi.printText(cadena, BixolonPrinter.ALIGNMENT_CENTER, attribute, size, false);
         bixolonPrinterApi.lineFeed(4, false);

@@ -134,6 +134,8 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/folioMina"
+            android:visibility="gone"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -155,6 +157,8 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/folioSeg"
+            android:visibility="gone"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -176,6 +180,8 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/vol"
+            android:visibility="gone"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">

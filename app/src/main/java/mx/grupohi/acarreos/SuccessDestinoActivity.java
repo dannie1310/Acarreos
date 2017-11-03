@@ -20,6 +20,7 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
+import android.text.Layout;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -33,6 +34,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -80,6 +82,9 @@ public class SuccessDestinoActivity extends AppCompatActivity
             textVol;
 
     private View view2;
+    private LinearLayout folioMina,
+            folioSeg,
+            vol;
 
     private Toolbar toolbar;
     private Integer impresion;
@@ -171,6 +176,10 @@ public class SuccessDestinoActivity extends AppCompatActivity
         btnImprimir = (Button) findViewById(R.id.buttonImprimir);
         btnImagenes = (Button) findViewById(R.id.buttonImagenes);
         btnSalir = (Button) findViewById(R.id.buttonSalir);
+
+        folioMina = (LinearLayout) findViewById(R.id.folioMina);
+        folioSeg = (LinearLayout) findViewById(R.id.folioSeg);
+        vol = (LinearLayout) findViewById(R.id.vol);
 
         fillInfo();
 
@@ -376,31 +385,36 @@ public class SuccessDestinoActivity extends AppCompatActivity
             json.put("23", textMina.getText());
             json.put("24", textSeg.getText());
             json.put("25", textVol.getText());
-            datos_inicio = usuario.idProyecto + "|"
-                    + inicios.idcamion + "|"
-                    + inicios.idorigen + "|"
-                    + inicios.fecha_origen.replace("-", "").replace(":", "").replace(" ", "") + "|"
-                    +"0|"
-                    +"0|"
-                    + inicios.idmaterial + "|"
-                    + "0|"
-                    + inicios.getCode(inicio)+inicios.idcamion.toString()+ "|"
-                    + inicios.uidTAG + "|"
-                    + inicios.idusuario + "|"
-                    + inicios.volumen + "|"
-                    + IMEI + "|"
-                    + inicios.estatus +'|'
-                    + inicios.folio_mina;
-            /*+'|'
-                    + inicios.folio_seg + "|"
-                    + inicios.volumen;*/
-            try {
-                urlCode = URLEncoder.encode(encrypt(datos_inicio), "utf-8");
-            } catch (Exception e) {
-                e.printStackTrace();
+            json.put("26", inicios.tipo_suministro);
+            if(inicios.tipo_suministro == 1) {
+                datos_inicio = usuario.idProyecto + "|"
+                        + inicios.idcamion + "|"
+                        + inicios.idorigen + "|"
+                        + inicios.fecha_origen.replace("-", "").replace(":", "").replace(" ", "") + "|"
+                        + "0|"
+                        + "0|"
+                        + inicios.idmaterial + "|"
+                        + "0|"
+                        + inicios.getCode(inicio) + inicios.idcamion.toString() + "|"
+                        + inicios.uidTAG + "|"
+                        + inicios.idusuario + "|"
+                        + inicios.volumen + "|"
+                        + IMEI + "|"
+                        + inicios.estatus + '|'
+                        + inicios.folio_mina + '|'
+                        + inicios.folio_seg + "|"
+                        + inicios.volumen;
+                try {
+                    urlCode = URLEncoder.encode(encrypt(datos_inicio), "utf-8");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                json.put("19", urlCode);
+                json.put("22", inicios.getCode(inicio));
+            }else{
+                json.put("19", "");
+                json.put("22", "");
             }
-            json.put("19", urlCode);
-            json.put("22",  inicios.getCode(inicio));
         }else{
             json.put("20", "NULL");
         }
@@ -492,9 +506,14 @@ public class SuccessDestinoActivity extends AppCompatActivity
             textViewMaterial.setText(in.material.descripcion);
             textViewOrigen.setText(in.origen.descripcion);
             textViewFechaHoraSalida.setText(in.fecha_origen);
-            textMina.setText(in.folio_mina);
-            textSeg.setText(in.folio_seg);
-            textVol.setText(String.valueOf(in.volumen)+ " m3");
+            if(usuario.tipo_permiso == 1 && in.tipo_suministro == 1) {
+                folioMina.setVisibility(View.VISIBLE);
+                folioSeg.setVisibility(View.VISIBLE);
+                vol.setVisibility(View.VISIBLE);
+                textMina.setText(in.folio_mina);
+                textSeg.setText(in.folio_seg);
+                textVol.setText(String.valueOf(in.volumen) + " m3");
+            }
             textViewDestino.setVisibility(View.GONE);
             textViewFechaHoraLlegada.setVisibility(View.GONE);
             textViewRuta.setVisibility(View.GONE);

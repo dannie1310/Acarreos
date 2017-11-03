@@ -38,6 +38,8 @@ public class InicioViaje {
     Integer estatus;
     Integer tipoEsquema;
     Integer idperfil;
+    Integer numImpresion;
+    Integer tipo_suministro;
     private static SQLiteDatabase db;
     private static DBScaSqlite db_sca;
     private Context context;
@@ -91,6 +93,8 @@ public class InicioViaje {
                 this.folio_seg = c.getString(c.getColumnIndex("folio_seguimiento"));
                 this.volumen = c.getInt(c.getColumnIndex("volumen"));
                 this.Code = c.getString(c.getColumnIndex("Code"));
+                this.numImpresion = c.getInt(c.getColumnIndex("numImpresion"));
+                this.tipo_suministro = c.getInt(c.getColumnIndex("tipo_suministro"));
                 return this;
             } else {
                 return null;
@@ -199,6 +203,48 @@ public class InicioViaje {
         try {
             if(c!=null && c.moveToFirst()){
                 return c.getString(0);
+            }
+            else {
+                return null;
+            }
+        } finally {
+            c.close();
+            db.close();
+        }
+    }
+
+    static boolean updateImpresion(Integer id,Integer numImpresion, Context context) {
+        boolean resp=false;
+        ContentValues data = new ContentValues();
+
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+
+        try{
+
+            data.put("numImpresion", numImpresion+1);
+
+            db.update("inicio_viajes", data, "ID = "+id, null);
+            resp = true;
+        } finally {
+            db.close();
+        }
+        return resp;
+    }
+
+    static Integer numImpresion(Integer id, Context context) {
+        boolean resp=false;
+        ContentValues data = new ContentValues();
+
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+
+
+        db = db_sca.getWritableDatabase();
+        Cursor c= db.rawQuery("SELECT numImpresion FROM inicio_viajes WHERE id = '" + id + "'", null);
+        try {
+            if(c!=null && c.moveToFirst()){
+                return c.getInt(0);
             }
             else {
                 return null;

@@ -215,23 +215,26 @@ public class SetOrigenActivity extends AppCompatActivity
 
             }
         });
-
-        pago.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
-            public void onCheckedChanged(CompoundButton button, boolean isChecked){
-                if(isChecked){
-                    mina.setVisibility(View.VISIBLE);
-                    seg.setVisibility(View.VISIBLE);
-                    vol.setVisibility(View.VISIBLE);
-                }else{
-                    vale_mina.setText(null);
-                    seguimiento.setText(null);
-                    volumen.setText(null);
-                    mina.setVisibility(View.GONE);
-                    seg.setVisibility(View.GONE);
-                    vol.setVisibility(View.GONE);
+        if(usuario.tipo_permiso == 1) {
+            pago.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                public void onCheckedChanged(CompoundButton button, boolean isChecked) {
+                    if (isChecked) {
+                        mina.setVisibility(View.VISIBLE);
+                        seg.setVisibility(View.VISIBLE);
+                        vol.setVisibility(View.VISIBLE);
+                    } else {
+                        vale_mina.setText(null);
+                        seguimiento.setText(null);
+                        volumen.setText(null);
+                        mina.setVisibility(View.GONE);
+                        seg.setVisibility(View.GONE);
+                        vol.setVisibility(View.GONE);
+                    }
                 }
-            }
-        });
+            });
+        }else{
+            pago.setVisibility(View.GONE);
+        }
 
         escribirOrigenButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -407,7 +410,9 @@ public class SetOrigenActivity extends AppCompatActivity
                                 cv.put("folio_seguimiento", seguimiento.getText().toString());
                                 cv.put("volumen", volumen.getText().toString());
                                 cv.put("tipo_suministro", tipo_s);
-                                cv.put("Code", Util.folio(Util.dateFolios()) + String.valueOf(idcamion));
+                                if(tipo_s == 1) {
+                                    cv.put("Code", Util.folio(Util.dateFolios()) + String.valueOf(idcamion));
+                                }
                                 InicioViaje in = new InicioViaje(getApplicationContext());
                                 Boolean guardar = in.create(cv);
 
