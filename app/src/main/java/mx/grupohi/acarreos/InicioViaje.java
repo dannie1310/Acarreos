@@ -150,7 +150,12 @@ public class InicioViaje {
                     json.put("estatus", c.getString(c.getColumnIndex("estatus")));
                     json.put("tipoEsquema", c.getString(c.getColumnIndex("tipoEsquema")));
                     json.put("idperfil", c.getInt(c.getColumnIndex("idperfil")));
-
+                    json.put("foliomina",c.getString(c.getColumnIndex("folio_mina")));
+                    json.put("folioseguimiento",c.getString(c.getColumnIndex("folio_seguimiento")));
+                    json.put("volumen", c.getInt(c.getColumnIndex("volumen")));
+                    json.put("Code",c.getString(c.getColumnIndex("Code")));
+                    json.put("numImpresion", c.getInt(c.getColumnIndex("numImpresion")));
+                    json.put("tipo_suministro",c.getInt(c.getColumnIndex("tipo_suministro")));
 
                     JSON.put(i + "", json);
                     i++;

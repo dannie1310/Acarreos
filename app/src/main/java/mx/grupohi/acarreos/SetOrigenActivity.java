@@ -86,10 +86,12 @@ public class SetOrigenActivity extends AppCompatActivity
     private IntentFilter writeTagFilters[];
     private Boolean writeMode;
     private Integer tipo;
+    Certificados certificados;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        certificados = new Certificados(getApplicationContext());
         setContentView(R.layout.activity_set_origen);
         escribirOrigenButton = (Button) findViewById(R.id.buttonEscribirOrigen);
 

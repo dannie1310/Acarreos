@@ -34,6 +34,7 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
     ProgressDialog progressDialog;
     JSONObject dato;
     Integer idViaje;
+    Integer idInicio=null;
     Integer num;
     Bitmap bitmap;
     Usuario uss;
@@ -77,7 +78,6 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
             printTextTwoColumns("Origen: ", dato.getString("5") + "\n");
             printTextTwoColumns("Fecha de Salida: ", dato.getString("6") + "\n");
 
-            String x = dato.getString("20");
             if (dato.getString("20").equals("NULL")) {
                 idViaje = dato.getInt("0");
                 printTextTwoColumns("Destino: ", dato.getString("7") + "\n");
@@ -112,6 +112,7 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
                 printfoot(num, "Checador: " + dato.getString("14"), dato.getString("22"), dato.getString("19"));
                 bixolonPrinterApi.lineFeed(3, true);
             } else {
+                idInicio = dato.getInt("20");
                 if(uss.tipo_permiso == 1) {
                     if (!dato.getString("23").isEmpty()) {
                         printTextTwoColumns("Folio de Vale de Mina: ", dato.getString("23") + "\n");
@@ -140,14 +141,12 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
                             Integer numero = num - 1;
                             bixolonPrinterApi.printText("R E I M P R E S I O N " + numero, BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_A, 2, false);
                         }
-                        bixolonPrinterApi.lineFeed(3, true);
                     }
 
                 }else {
                     printTextTwoColumns("Checador: " + dato.getString("14"), dato.getString("15") + "\n");
                     printTextTwoColumns("Versión: ", String.valueOf(dato.getString("16")) + "\n");
                 }
-                printTextTwoColumns( dato.getString("19"), dato.getString("22")+ "\n");
                 printfootorigen(uss.tipo_permiso, Integer.valueOf(dato.getString("26")), num, dato.getString("19"), dato.getString("22"));
             }
             bixolonPrinterApi.kickOutDrawer(BixolonPrinter.DRAWER_CONNECTOR_PIN5);
@@ -167,6 +166,9 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
             try {
                 if(idViaje != null) {
                     boolean c= Viaje.updateImpresion(idViaje, num, context);
+                }
+                if(idInicio != null){
+                    boolean c= InicioViaje.updateImpresion(idInicio,num, context);
                 }
             } catch (Exception e) {
                 Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
