@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity
     //Referencias UI
     private LinearLayout infoLayout;
     private LinearLayout origenLayout;
+    private LinearLayout estad;
     private Button actionButton;
     private ImageView nfcImage;
     private TextView infoTag;
@@ -126,6 +127,7 @@ public class MainActivity extends AppCompatActivity
         tMaterial = (TextView) findViewById(R.id.textViewMaterial);
         tFecha = (TextView) findViewById(R.id.textViewFecha);
         tHora = (TextView) findViewById(R.id.textViewHora);
+        estad= (LinearLayout) findViewById(R.id.estatus);
 
         infoLayout.setVisibility(View.GONE);
         origenLayout.setVisibility(View.GONE);
@@ -233,6 +235,7 @@ public class MainActivity extends AppCompatActivity
         Integer tagProyecto =0;
         Integer tagOrigen =0;
         Integer tagMaterial = 0;
+        String tipo_sum="";
         String fechaString = "";
         if (nfc_adapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
             clearCamionInfo();
@@ -259,6 +262,8 @@ public class MainActivity extends AppCompatActivity
                         tagMaterial = Util.getIdMaterial(origenString);
                         origen = origen.find(tagOrigen);
                         material = material.find(tagMaterial);
+                        tipo_sum = nfc.readSector(myTag,2,9);
+                        tipo_sum = tipo_sum.replace(" ", "");
 
                     }catch (Exception e){
                         tagModel=null;
@@ -303,6 +308,9 @@ public class MainActivity extends AppCompatActivity
                             startActivity(r);
                         } else if (usuario.tipo_permiso == 2 || usuario.tipo_permiso == 5) {
                             if (origen != null && material != null) {
+                                if(tipo_sum.equals("1")){
+                                    estad.setVisibility(View.VISIBLE);
+                                }
                                 setCamionInfo(camion);
                                 setTitle("INFORMACIÓN DEL TAG");
                                 if (validacion == null && c.validacion == 1) {
@@ -314,15 +322,16 @@ public class MainActivity extends AppCompatActivity
 
                                     startActivityForResult(validar, 0);
                                 }
-
                                 setOrigenInfo(origen, material, fechaString);
                                 idOrigen = origen.idOrigen;
+                                final Integer tipoS = Integer.valueOf(tipo_sum);
                                 actionButton.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
                                         setDestinoActivity.putExtra("UID", UID);
                                         setDestinoActivity.putExtra("idOrigen", idOrigen);
                                         setDestinoActivity.putExtra("camion", String.valueOf(CamionID));
+                                        setDestinoActivity.putExtra("tipo_suministro", tipoS);
                                         startActivity(setDestinoActivity);
                                     }
                                 });
@@ -397,6 +406,7 @@ public class MainActivity extends AppCompatActivity
         nfcImage.setVisibility(View.GONE);
         infoLayout.setVisibility(View.VISIBLE);
         actionButton.setVisibility(View.VISIBLE);
+
 
     }
 

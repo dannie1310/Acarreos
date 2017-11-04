@@ -15,6 +15,7 @@ import android.nfc.tech.MifareUltralight;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.view.menu.ActionMenuItemView;
 import android.telephony.TelephonyManager;
@@ -81,13 +82,18 @@ public class SetDestinoActivity extends AppCompatActivity
     private TextView mensajeTextView;
     private TextView textmotivo;
     private EditText observacionesTextView;
-    private  EditText deductiva;
+    private EditText deductiva;
     private Snackbar snackbar;
     private ProgressDialog progressDialogSync;
+    private TextInputLayout mina,
+                            seg;
+    private TextView textmina,
+                    textseg;
 
     private Integer idTiro;
     private Integer idRuta;
     private Integer idMotivo;
+    private Integer tipo_suministro;
     private HashMap<String, String> spinnerTirosMap;
     private HashMap<String, String> spinnerRutasMap;
     private  HashMap<String, String> spinnerMotivosMap;
@@ -112,6 +118,7 @@ public class SetDestinoActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         camionId = getIntent().getStringExtra("camion");
+        tipo_suministro = getIntent().getIntExtra("tipo_suministro",0);
 
         c = new Camion(getApplicationContext());
         c = c.find(Integer.valueOf(camionId));
@@ -138,11 +145,21 @@ public class SetDestinoActivity extends AppCompatActivity
         deductiva = (EditText) findViewById(R.id.textDeductiva);
         textmotivo = (TextView) findViewById(R.id.textViewMotivo);
         motivos = (Spinner) findViewById(R.id.spinnerMotivo);
-        textmotivo.setVisibility(View.GONE);
-        motivos.setVisibility(View.GONE);
+        mina = (TextInputLayout) findViewById(R.id.textomina);
+        seg = (TextInputLayout) findViewById(R.id.seg);
+        textmina = (TextView) findViewById(R.id.vale_mina);
+        textseg = (TextView) findViewById(R.id.seguimiento);
+        if(tipo_suministro == 1){
+            textmotivo.setVisibility(View.VISIBLE);
+            motivos.setVisibility(View.VISIBLE);
+        }else {
+            textmotivo.setVisibility(View.GONE);
+            motivos.setVisibility(View.GONE);
+        }
         mensajeTextView.setVisibility(View.INVISIBLE);
         nfcImage.setVisibility(View.INVISIBLE);
         fabCancel.setVisibility(View.INVISIBLE);
+
 
         deductiva.setOnClickListener(new View.OnClickListener() {
                                          @Override
@@ -296,6 +313,12 @@ public class SetDestinoActivity extends AppCompatActivity
                 }
                 else if (( deductiva.getText().toString().equals("")==false ) && idMotivo == 0){
                     Toast.makeText(getApplicationContext(), "Por favor seleccione un motivo", Toast.LENGTH_SHORT).show();
+                }
+                else if(tipo_suministro == 1 && textmina.getText().toString().isEmpty()){
+                    Toast.makeText(getApplicationContext(), "Por favor ingrese el folio de mina", Toast.LENGTH_SHORT).show();
+                }
+                else if(tipo_suministro ==1 && textseg.getText().toString().isEmpty()){
+                    Toast.makeText(getApplicationContext(), "Por favor ingrese el folio de seguimiento", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     if(deductiva.getText().toString().equals("") || deductiva.getText().toString().equals("0")){

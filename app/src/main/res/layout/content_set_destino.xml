@@ -52,18 +52,23 @@
             android:layout_height="wrap_content"
             android:id="@+id/spinnerRutas" />
 
-        <TextView
-            android:text="DEDUCTIVA:"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@android:style/TextAppearance.Material.Menu" />
+            android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/textDeductiva"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            android:textAppearance="@android:style/TextAppearance.Material.Menu" />
+            <AutoCompleteTextView
+                android:id="@+id/textDeductiva"
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="DEDUCTIVA:"
+                android:inputType="number"
+                android:maxLength="2"
+                android:singleLine="true"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
         <TextView
             android:text="SELECCIONE EL MOTIVO:"
             android:layout_width="match_parent"
@@ -76,19 +81,59 @@
             android:layout_height="wrap_content"
             android:id="@+id/spinnerMotivo" />
 
-        <TextView
-            android:text="OBSERVACIONES:"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@android:style/TextAppearance.Material.Menu" />
+            android:id="@+id/textomina"
+            android:layout_height="wrap_content">
 
-        <EditText
+            <AutoCompleteTextView
+                android:id="@+id/vale_mina"
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="FOLIO DE VALE DE MINA"
+                android:inputType="textCapWords"
+                android:digits="0123456789-QAZWSXEDCRFVTGBYHNUJMIKOLP"
+                android:maxLength="8"
+                android:singleLine="true"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/seg"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@android:style/TextAppearance.Material.Menu"
-            android:id="@+id/textObservaciones"
-            android:maxLength="50"/>
+            android:layout_height="wrap_content">
 
+            <AutoCompleteTextView
+                android:id="@+id/seguimiento"
+                android:layout_width="match_parent"
+                android:layout_marginTop="5dp"
+                android:layout_height="wrap_content"
+                android:hint="FOLIO DE SEGUIMIENTO DE MATERIAL"
+                android:inputType="textCapWords"
+                android:digits="0123456789-QAZWSXEDCRFVTGBYHNUJMIKOLP"
+                android:maxLength="8"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <AutoCompleteTextView
+                android:id="@+id/textObservaciones"
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="OBSERVACIONES:"
+                android:inputType="text"
+                android:maxLength="50"
+                android:singleLine="true"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
 
 
         <Button

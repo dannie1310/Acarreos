@@ -369,9 +369,27 @@
                     android:textAlignment="center" />
             </LinearLayout>
 
+
+
         </LinearLayout>
 
 
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/estatus"
+            android:visibility="gone"
+            android:layout_weight="1">
+
+            <TextView
+                android:text="SUMINISTRO COBRABLE"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault"
+                android:textStyle="normal|bold"
+                android:textAlignment="center" />
+        </LinearLayout>
 
     </LinearLayout>
 
