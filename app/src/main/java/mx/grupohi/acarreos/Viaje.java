@@ -49,6 +49,8 @@ public class Viaje {
     Integer idperfil;
     String creo;
     String uidTAG;
+    String folio_mina;
+    String folio_seguimiento;
 
     private static SQLiteDatabase db;
     private static DBScaSqlite db_sca;
@@ -119,6 +121,8 @@ public class Viaje {
                 this.idperfil = c.getInt(c.getColumnIndex("idperfil"));
                 this.creo = c.getString(c.getColumnIndex("Creo"));
                 this.uidTAG = c.getString(c.getColumnIndex("uidTAG"));
+                this.folio_seguimiento = c.getString(c.getColumnIndex("folio_seguimiento"));
+                this.folio_mina = c.getString(c.getColumnIndex("folio_mina"));
 
                 return this;
             } else {

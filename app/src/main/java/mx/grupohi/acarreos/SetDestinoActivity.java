@@ -670,6 +670,8 @@ public class SetDestinoActivity extends AppCompatActivity
                 cv.put("tipoEsquema", usuario.getTipoEsquema());
                 cv.put("numImpresion", 0);
                 cv.put("idperfil", usuario.tipo_permiso);
+                cv.put("folio_seguimiento",textseg.getText().toString());
+                cv.put("folio_mina", textmina.getText().toString());
 
                 viaje = new Viaje(this);
                 viaje.create(cv);

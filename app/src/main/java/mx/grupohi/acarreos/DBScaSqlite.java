@@ -52,7 +52,9 @@ import java.util.GregorianCalendar;
                     "cubicacion TEXT," +
                     "tipoEsquema INTEGER," +
                     "numImpresion INTEGER," +
-                    "idperfil INTEGER);",
+                    "idperfil INTEGER,"+
+                    "folio_mina TEXT," +
+                    "folio_seguimiento TEXT);",
             "CREATE TABLE coordenadas (IMEI TEXT, idevento INT, latitud TEXT, longitud TEXT, fecha_hora TEXT, code TEXT)",
             "CREATE TABLE camion_tag (ID INTEGER PRIMARY KEY AUTOINCREMENT, IMEI TEXT, id_camion INT, id_tags TEXT, created_at DATETIME DEFAULT CURRENT_TIMESTAMP);",
             "CREATE TABLE tipos_imagenes (id INTEGER, descripcion TEXT);",

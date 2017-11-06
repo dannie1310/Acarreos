@@ -33,13 +33,6 @@
             android:layout_height="wrap_content"
             android:id="@+id/spinnerTiros" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@android:color/darker_gray"
-            android:layout_marginBottom="15dp"
-            android:layout_marginTop="5dp" />
-
         <TextView
             android:text="SELECCIONE LA RUTA:"
             android:layout_width="match_parent"
@@ -58,7 +51,7 @@
 
             <AutoCompleteTextView
                 android:id="@+id/textDeductiva"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="2dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="DEDUCTIVA:"
@@ -88,7 +81,7 @@
 
             <AutoCompleteTextView
                 android:id="@+id/vale_mina"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="2dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="FOLIO DE VALE DE MINA"
@@ -108,7 +101,7 @@
             <AutoCompleteTextView
                 android:id="@+id/seguimiento"
                 android:layout_width="match_parent"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="2dp"
                 android:layout_height="wrap_content"
                 android:hint="FOLIO DE SEGUIMIENTO DE MATERIAL"
                 android:inputType="textCapWords"
@@ -124,12 +117,12 @@
 
             <AutoCompleteTextView
                 android:id="@+id/textObservaciones"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="2dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="OBSERVACIONES:"
                 android:inputType="text"
-                android:maxLength="50"
+                android:maxLength="30"
                 android:singleLine="true"
                 android:maxLines="1" />
 
