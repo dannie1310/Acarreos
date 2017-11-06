@@ -198,6 +198,9 @@ public class Viaje {
                         json.put("CreoPrimerToque", c.getString(c.getColumnIndex("primerToque")));
                         json.put("CubicacionCamion", c.getString(c.getColumnIndex("cubicacion")));
                         json.put("IdPerfil", c.getInt(c.getColumnIndex("idperfil")));
+                        json.put("folioMina", c.getString(c.getColumnIndex("folio_mina")));
+                        json.put("folioSeguimiento", c.getString(c.getColumnIndex("folio_seguimiento")));
+                        json.put("numImpresion", c.getString(c.getColumnIndex("numImpresion")));
                         JSON.put(i + "", json);
                         i++;
 
