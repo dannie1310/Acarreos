@@ -277,7 +277,8 @@ public class MainActivity extends AppCompatActivity
                         String origen1 = nfcUltra.readPage(myTag, 8);
                         String material1 = nfcUltra.readPage(myTag, 7);
                         tagModel = tagModel.find(UID, tagCamion, tagProyecto);
-
+                        tipo_sum = nfcUltra.readPage(myTag, 15);
+                        tipo_sum = tipo_sum.substring(0,1);
                         if (origen1 != null && material1 != null) {
                             tagOrigen = Integer.valueOf(origen1);
                             tagMaterial = Integer.valueOf(material1);
@@ -349,7 +350,7 @@ public class MainActivity extends AppCompatActivity
                     snackbar = Snackbar.make(findViewById(R.id.content_main),R.string.error_tag, Snackbar.LENGTH_LONG);
                     View snackBarView = snackbar.getView();
                     snackBarView.setBackgroundColor(Color.RED);
-                    snackbar.show();
+                                                                                                                                 snackbar.show();
                 }
             } else {
                 snackbar = Snackbar.make(findViewById(R.id.content_main), "El TAG que intentas utilizar no es valido para el control de viajes", Snackbar.LENGTH_LONG);

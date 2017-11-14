@@ -80,6 +80,16 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
 
             if (dato.getString("20").equals("NULL")) {
                 idViaje = dato.getInt("0");
+                if (!dato.getString("23").isEmpty()) {
+                    printTextTwoColumns("Folio de Vale de Mina: ", dato.getString("23") + "\n");
+                }else {
+                    printTextTwoColumns("Folio de Vale de Mina: ", "------\n");
+                }
+                if(!dato.getString("24").isEmpty()) {
+                    printTextTwoColumns("Folio de Seguimiento: ", dato.getString("24") + "\n");
+                }else {
+                    printTextTwoColumns("Folio de Seguimiento: ", "------\n");
+                }
                 printTextTwoColumns("Destino: ", dato.getString("7") + "\n");
                 printTextTwoColumns("Fecha Llegada: ", dato.getString("8") + "\n");
                 printTextTwoColumns("Ruta: ", dato.getString("9") + "\n");

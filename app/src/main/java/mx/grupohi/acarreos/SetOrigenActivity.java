@@ -363,8 +363,10 @@ public class SetOrigenActivity extends AppCompatActivity
                         idusuario = nfcTag.readSector(myTag, 1, 6);
                         if(pago.isChecked()){
                             tipo_s = 1;
-                            tipo_suministro = nfcTag.writeSector(myTag,2,9,"1");
+                        }else {
+                            tipo_s = 0;
                         }
+                        tipo_suministro = nfcTag.writeSector(myTag,2,9,String.valueOf(tipo_s));
                     }
                     if (tipo == 2) {
                         datos = nfcUltra.writePagina(myTag, 7, data);
@@ -376,7 +378,12 @@ public class SetOrigenActivity extends AppCompatActivity
                         camion = nfcUltra.readConfirmar(myTag, 7) + nfcUltra.readConfirmar(myTag, 8);
                         fecha = nfcUltra.readConfirmar(myTag, 9) + nfcUltra.readConfirmar(myTag, 10) + nfcUltra.readConfirmar(myTag, 11) + nfcUltra.readConfirmar(myTag, 12).substring(0, 2);
                         idusuario = nfcUltra.readConfirmar(myTag, 13) + nfcUltra.readConfirmar(myTag, 14);
-
+                        if(pago.isChecked()){
+                            tipo_s = 1;
+                        }else {
+                            tipo_s = 0;
+                        }
+                        tipo_suministro = nfcUltra.writePagina(myTag, 15, String.valueOf(tipo_s));
                     }
                     Camion datosCamion = new Camion(getApplicationContext());
                     datosCamion = datosCamion.find(idcamion);

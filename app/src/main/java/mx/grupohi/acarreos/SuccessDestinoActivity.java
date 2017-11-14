@@ -335,7 +335,10 @@ public class SuccessDestinoActivity extends AppCompatActivity
                     + viaje.uidTAG + "|"
                     + viaje.primerToque + "|"
                     + viaje.cubicacion + "|"
-                    + IMEI;
+                    + IMEI +"|"
+                    + "0|"
+                    + viaje.folio_mina + "|"
+                    + viaje.folio_seguimiento +"|0";
 
 
             try {
@@ -357,6 +360,8 @@ public class SuccessDestinoActivity extends AppCompatActivity
             json.put("0", viaje.idViaje);
             json.put("19", urlEncoded);
             json.put("22",  viaje.getCode(idViaje));
+            json.put("23", textMina.getText());
+            json.put("24", textSeg.getText());
         }
 
         json.put("1", usuario.getDescripcion());
@@ -378,6 +383,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
         json.put("17", nombreChecador);
         json.put("21", empresa);
 
+
         if(inicio != 0) {
             InicioViaje inicios = new InicioViaje(getApplicationContext());
             inicios = inicios.find(inicio);
@@ -398,7 +404,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
                         + inicios.getCode(inicio) + inicios.idcamion.toString() + "|"
                         + inicios.uidTAG + "|"
                         + inicios.idusuario + "|"
-                        + inicios.volumen + "|"
+                        + inicios.camion.capacidad + "|"
                         + IMEI + "|"
                         + inicios.estatus + '|'
                         + inicios.folio_mina + '|'
@@ -495,6 +501,12 @@ public class SuccessDestinoActivity extends AppCompatActivity
 
             textViewObservaciones.setText(viaje.observaciones);
             textViewDeductiva.setText(viaje.deductiva);
+            if(viaje.folio_mina != "" && viaje.folio_seguimiento!=""){
+                folioMina.setVisibility(View.VISIBLE);
+                folioSeg.setVisibility(View.VISIBLE);
+                textMina.setText(viaje.folio_mina);
+                textSeg.setText(viaje.folio_seguimiento);
+            }
 
         }
         else if(inicio != 0){
