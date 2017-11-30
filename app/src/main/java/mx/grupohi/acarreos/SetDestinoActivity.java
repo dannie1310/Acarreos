@@ -150,11 +150,11 @@ public class SetDestinoActivity extends AppCompatActivity
         textmina = (TextView) findViewById(R.id.vale_mina);
         textseg = (TextView) findViewById(R.id.seguimiento);
         if(tipo_suministro == 1){
-            textmotivo.setVisibility(View.VISIBLE);
-            motivos.setVisibility(View.VISIBLE);
+            mina.setVisibility(View.VISIBLE);
+            seg.setVisibility(View.VISIBLE);
         }else {
-            textmotivo.setVisibility(View.GONE);
-            motivos.setVisibility(View.GONE);
+            mina.setVisibility(View.GONE);
+            seg.setVisibility(View.GONE);
         }
         mensajeTextView.setVisibility(View.INVISIBLE);
         nfcImage.setVisibility(View.INVISIBLE);
