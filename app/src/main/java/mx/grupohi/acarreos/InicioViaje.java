@@ -35,6 +35,8 @@ public class InicioViaje {
     String uidTAG;
     String IMEI;
     String Code;
+    String deductiva;
+    Integer idMotivo;
     Integer estatus;
     Integer tipoEsquema;
     Integer idperfil;
@@ -95,6 +97,8 @@ public class InicioViaje {
                 this.Code = c.getString(c.getColumnIndex("Code"));
                 this.numImpresion = c.getInt(c.getColumnIndex("numImpresion"));
                 this.tipo_suministro = c.getInt(c.getColumnIndex("tipo_suministro"));
+                this.deductiva = c.getString(c.getColumnIndex("deductiva"));
+                this.idMotivo = c.getInt(c.getColumnIndex("idMotivo"));
                 return this;
             } else {
                 return null;
@@ -156,6 +160,8 @@ public class InicioViaje {
                     json.put("Code",c.getString(c.getColumnIndex("Code")));
                     json.put("numImpresion", c.getInt(c.getColumnIndex("numImpresion")));
                     json.put("tipo_suministro",c.getInt(c.getColumnIndex("tipo_suministro")));
+                    json.put("deductiva", c.getString(c.getColumnIndex("deductiva")));
+                    json.put("idMotivo", c.getInt(c.getColumnIndex("idMotivo")));
 
                     JSON.put(i + "", json);
                     i++;

@@ -319,4 +319,21 @@ class Util {
         }
     }
 
+    static String getFechaOrigen(String fecha) {
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            Date date = format.parse(fecha);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.add(Calendar.MINUTE, -30);
+            Date fechaS = calendar.getTime();
+            SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String c = timeFormat.format(fechaS);
+            return c;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

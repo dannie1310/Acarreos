@@ -58,6 +58,37 @@
             android:layout_marginBottom="5dp"
             android:layout_marginTop="2dp" />
 
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:id="@+id/textodeductiva"
+            android:layout_height="wrap_content">
+
+            <AutoCompleteTextView
+                android:id="@+id/deductiva"
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="DEDUCTIVA:"
+                android:inputType="number"
+                android:maxLength="2"
+                android:singleLine="true"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <TextView
+            android:text="SELECCIONE EL MOTIVO:"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewMotivo"
+            android:textAppearance="@android:style/TextAppearance.Material.Menu" />
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinnerMotivo" />
+
+
         <CheckBox
             android:id="@+id/pagoCheck"
             android:layout_width="wrap_content"
@@ -78,7 +109,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Folio de Vale de Mina"
-                android:inputType="textCapWords"
+                android:inputType="textCapCharacters"
                 android:digits="0123456789-QAZWSXEDCRFVTGBYHNUJMIKOLP"
                 android:maxLength="8"
                 android:singleLine="true"

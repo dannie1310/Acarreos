@@ -48,6 +48,7 @@ public class SetOrigenActivity extends AppCompatActivity
     private Usuario usuario;
     private Material material;
     private Origen origen;
+    private  Camion c;
 
     //Variables
     private Integer idMaterial;
@@ -67,10 +68,16 @@ public class SetOrigenActivity extends AppCompatActivity
     private TextView vale_mina;
     private TextView seguimiento;
     private TextView volumen;
+    private TextView deductiva;
     private TextInputLayout mina;
     private TextInputLayout seg;
     private TextInputLayout vol;
+    private TextInputLayout ded;
     private Snackbar snackbar;
+    private TextView textmotivo;
+    private Integer idMotivo;
+    private  HashMap<String, String> spinnerMotivosMap;
+    private Spinner motivos;
 
     //GPS
     private GPSTracker gps;
@@ -133,14 +140,29 @@ public class SetOrigenActivity extends AppCompatActivity
         mina = (TextInputLayout) findViewById(R.id.textomina);
         vol = (TextInputLayout) findViewById(R.id.vol);
         seg = (TextInputLayout) findViewById(R.id.seg);
+        ded = (TextInputLayout) findViewById(R.id.textodeductiva);
         vale_mina = (TextView)findViewById(R.id.vale_mina);
         seguimiento = (TextView) findViewById(R.id.seguimiento);
         volumen = (TextView) findViewById(R.id.volumen);
+        deductiva = (TextView) findViewById(R.id.deductiva);
+        textmotivo = (TextView) findViewById(R.id.textViewMotivo);
+        motivos = (Spinner) findViewById(R.id.spinnerMotivo);
         mina.setVisibility(View.GONE);
         seg.setVisibility(View.GONE);
         vol.setVisibility(View.GONE);
 
-            tipo = 1;
+        deductiva.setOnClickListener(new View.OnClickListener() {
+                                         @Override
+                                         public void onClick(View v) {
+                                             textmotivo.setVisibility(View.VISIBLE);
+                                             motivos.setVisibility(View.VISIBLE);
+                                         }
+                                     }
+
+        );
+
+
+        tipo = 1;
             final ArrayList<String> descripcionesOrigenes = origen.getArrayListDescripciones();
             final ArrayList <String> idsOrigenes = origen.getArrayListId();
 
@@ -174,6 +196,34 @@ public class SetOrigenActivity extends AppCompatActivity
 
                 }
             });
+        Motivo motivo = new Motivo(getApplicationContext());
+        final ArrayList<String> descripcionesMotivos = motivo.getArrayListDescripciones();
+        final ArrayList <String> idsMotivos = motivo.getArrayListId();
+
+        final String[] spinnerMotivosA = new String[idsMotivos.size()];
+        spinnerMotivosMap = new HashMap<>();
+
+        for (int i = 0; i < idsMotivos.size(); i++) {
+            spinnerMotivosMap.put(descripcionesMotivos.get(i), idsMotivos.get(i));
+            spinnerMotivosA[i] = descripcionesMotivos.get(i);
+        }
+        final ArrayAdapter<String> arrayAdapterMotivos = new ArrayAdapter<>(this,R.layout.support_simple_spinner_dropdown_item, spinnerMotivosA);
+        arrayAdapterMotivos.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        motivos.setAdapter(arrayAdapterMotivos);
+
+        motivos.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String Mo = String.valueOf(parent.getItemAtPosition(position));
+                idMotivo = Integer.valueOf(spinnerMotivosMap.get(Mo));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
 
 
         final ArrayList<String> descripcionesMateriales = material.getArrayListDescripciones();
@@ -232,9 +282,16 @@ public class SetOrigenActivity extends AppCompatActivity
                         seg.setVisibility(View.GONE);
                         vol.setVisibility(View.GONE);
                     }
+                    ded.setVisibility(View.GONE);
+                    deductiva.setText(null);
                 }
             });
-        }else{
+        }
+        else if(usuario.tipo_permiso == 4) {
+            ded.setVisibility(View.VISIBLE);
+            pago.setVisibility(View.GONE);
+        }
+        else{
             pago.setVisibility(View.GONE);
         }
 
@@ -247,7 +304,11 @@ public class SetOrigenActivity extends AppCompatActivity
                 } else if(idOrigen == 0) {
                         Toast.makeText(getApplicationContext(), "Por favor seleccione un Origen de la lista", Toast.LENGTH_LONG).show();
                         origenesSpinner.requestFocus();
-                }else if(pago.isChecked() && vale_mina.getText().toString().isEmpty()){
+                }
+                else if (( deductiva.getText().toString().equals("")==false ) && idMotivo == 0){
+                    Toast.makeText(getApplicationContext(), "Por favor seleccione un motivo", Toast.LENGTH_SHORT).show();
+                }
+                else if(pago.isChecked() && vale_mina.getText().toString().isEmpty()){
                         Toast.makeText(getApplicationContext(), "Por favor escribir el folio del vale de mina", Toast.LENGTH_SHORT).show();
                 }
                 else if(pago.isChecked() && seguimiento.getText().toString().isEmpty()){
@@ -257,6 +318,11 @@ public class SetOrigenActivity extends AppCompatActivity
                         Toast.makeText(getApplicationContext(), "Por favor escribir el volumen del material", Toast.LENGTH_SHORT).show();
                 }
                 else {
+                    if(deductiva.getText().toString().equals("") || deductiva.getText().toString().equals("0")){
+                        motivos.setSelection(0);
+                        textmotivo.setVisibility(View.GONE);
+                        motivos.setVisibility(View.GONE);
+                    }
                     checkNfcEnabled();
                     WriteModeOn();
                 }
@@ -421,6 +487,13 @@ public class SetOrigenActivity extends AppCompatActivity
                                 cv.put("tipo_suministro", tipo_s);
                                 if(tipo_s == 1) {
                                     cv.put("Code", Util.folio(Util.dateFolios()) + String.valueOf(idcamion));
+                                }
+                                if (deductiva.getText().toString().equals("")) {
+                                    cv.put("deductiva", 0);
+                                    cv.put("idMotivo", 0);
+                                } else {
+                                    cv.put("deductiva", deductiva.getText().toString());
+                                    cv.put("idMotivo", idMotivo);
                                 }
                                 InicioViaje in = new InicioViaje(getApplicationContext());
                                 Boolean guardar = in.create(cv);
