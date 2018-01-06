@@ -92,7 +92,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
     private ProgressDialog progressDialogSync;
     private Usuario usuario;
     private Viaje viaje;
-    private InicioViaje inicioViaje;
+    private InicioViaje in;
     private Checador checador;
     private Integer idViaje;
     private Integer inicio;
@@ -281,6 +281,9 @@ public class SuccessDestinoActivity extends AppCompatActivity
                                            @Override
                                            public void onClick(View v) {
                                                num = Viaje.numImpresion(viaje.idViaje, getApplicationContext());
+                                              if(num == null) {
+                                                  num = InicioViaje.numImpresion(in.id, getApplicationContext());
+                                              }
                                                if (num!=null && num > 4) {
                                                    Toast.makeText(getApplicationContext(), R.string.error_ticket, Toast.LENGTH_SHORT).show();
                                                } else {
@@ -323,6 +326,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
         String datos_inicio;
         inicio = getIntent().getIntExtra("idInicio", 0);
         if (tipo_usuario == false) {
+           // datos = "000|000000|000|000000000000|000|000000000000|000|00000|000000000000|000000000000000|00000|00|000000000000000000|0|00000000|00000000|00|0";
             datos = usuario.idProyecto + "|"
                     + viaje.idCamion + "|"
                     + viaje.idOrigen + "|"
@@ -338,7 +342,8 @@ public class SuccessDestinoActivity extends AppCompatActivity
                     + IMEI +"|"
                     + "0|"
                     + viaje.folio_mina + "|"
-                    + viaje.folio_seguimiento +"|0";
+                    + viaje.folio_seguimiento +"|0|"
+                    + usuario.tipo_permiso;
 
 
             try {
@@ -393,6 +398,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
             json.put("25", textVol.getText());
             json.put("26", inicios.tipo_suministro);
             if(inicios.tipo_suministro == 1) {
+               // datos_inicio = "000|000000|000|000000000000|000|000000000000|000|00000|000000000000|000000000000000|00000|00|000000000000000000|0|00000000|00000000|00|0";
                 datos_inicio = usuario.idProyecto + "|"
                         + inicios.idcamion + "|"
                         + inicios.idorigen + "|"
@@ -409,7 +415,8 @@ public class SuccessDestinoActivity extends AppCompatActivity
                         + inicios.estatus + '|'
                         + inicios.folio_mina + '|'
                         + inicios.folio_seg + "|"
-                        + inicios.volumen;
+                        + inicios.volumen + "|"
+                        + usuario.tipo_permiso;
                 try {
                     urlCode = URLEncoder.encode(encrypt(datos_inicio), "utf-8");
                 } catch (Exception e) {
@@ -474,7 +481,8 @@ public class SuccessDestinoActivity extends AppCompatActivity
         if(idViaje != 0) {
             viaje = viaje.find(idViaje);
             Motivo motivoss = new Motivo(getApplicationContext());
-            if(viaje.deductiva.equals("0")) {
+            if(viaje.deductiva.equals("0")
+                    ) {
                 motivo.setText("NA");
             }else{
                 motivoss.find(Integer.valueOf(viaje.idmotivo));
@@ -510,9 +518,16 @@ public class SuccessDestinoActivity extends AppCompatActivity
 
         }
         else if(inicio != 0){
-            InicioViaje in = new InicioViaje(getApplicationContext());
+            in = new InicioViaje(getApplicationContext());
             in = in.find(inicio);
-
+            Motivo motivoss = new Motivo(getApplicationContext());
+            if(in.deductiva.equals("0")) {
+                motivo.setText("NA");
+            }else{
+                motivoss.find(Integer.valueOf(in.idMotivo));
+                motivo.setText(motivoss.descripcion);
+            }
+            textViewDeductiva.setText(in.deductiva);
             textViewCamion.setText(in.camion.economico);
             textViewCubicacion.setText(in.camion.capacidad + " m3");
             textViewMaterial.setText(in.material.descripcion);
@@ -530,14 +545,11 @@ public class SuccessDestinoActivity extends AppCompatActivity
             textViewFechaHoraLlegada.setVisibility(View.GONE);
             textViewRuta.setVisibility(View.GONE);
             textViewObservaciones.setVisibility(View.GONE);
-            textViewDeductiva.setVisibility(View.GONE);
             btnImagenes.setVisibility(View.GONE);
             tipo_usuario = true;
             textDestino.setVisibility(View.GONE);
             textFechaDestino.setVisibility(View.GONE);
             textRuta.setVisibility(View.GONE);
-            textDeductiva.setVisibility(View.GONE);
-            textMotivo.setVisibility(View.GONE);
             textObservacion.setVisibility(View.GONE);
             view2.setVisibility(View.GONE);
             btnImprimir.setText("IMPRIMIR COMPROBANTE");
@@ -676,7 +688,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
     }
 
     private String encrypt(String str) throws Exception {
-        String file = this.getExternalFilesDir("certificados/SAO_certificado1024.crt").toString();
+        String file = this.getExternalFilesDir("certificados/SAO_certificado2048.crt").toString();
         InputStream is = new FileInputStream(file);
         CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
         X509Certificate certificate = (X509Certificate)certificateFactory.generateCertificate(is);

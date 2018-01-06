@@ -128,7 +128,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_height="wrap_content"
                 android:hint="Folio de Seguimiento de Material"
-                android:inputType="textCapWords"
+                android:inputType="textCapCharacters"
                 android:digits="0123456789-QAZWSXEDCRFVTGBYHNUJMIKOLP"
                 android:maxLength="8"
                 android:maxLines="1" />

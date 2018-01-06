@@ -73,10 +73,13 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
             printTextTwoColumns("Proyecto: ", dato.getString("1") + " \n");
             printTextTwoColumns("Camión: ", dato.getString("2") + " \n");
             printTextTwoColumns("Cubicación: ", dato.getString("3") + " \n");
+            printTextTwoColumns("Deductiva: ", dato.getString("10") + " m3\n");
+            printTextTwoColumns("Motivo Deductiva: ", dato.getString("11") + "\n");
 
             printTextTwoColumns("Material: ", dato.getString("4") + "\n");
             printTextTwoColumns("Origen: ", dato.getString("5") + "\n");
             printTextTwoColumns("Fecha de Salida: ", dato.getString("6") + "\n");
+
 
             if (dato.getString("20").equals("NULL")) {
                 idViaje = dato.getInt("0");
@@ -94,8 +97,8 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
                 printTextTwoColumns("Fecha Llegada: ", dato.getString("8") + "\n");
                 printTextTwoColumns("Ruta: ", dato.getString("9") + "\n");
                 // if(textViewObservaciones.getText().length()!=0) {
-                printTextTwoColumns("Deductiva: ", dato.getString("10") + "\n");
-                printTextTwoColumns("Motivo Deductiva: ", dato.getString("11") + "\n");
+                //printTextTwoColumns("Deductiva: ", dato.getString("10") + "\n");
+                //printTextTwoColumns("Motivo Deductiva: ", dato.getString("11") + "\n");
                 printTextTwoColumns("Observaciones: ", dato.getString("12") + "\n");
 
                 if (dato.getInt("13") == 3) {
@@ -123,6 +126,7 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
                 bixolonPrinterApi.lineFeed(3, true);
             } else {
                 idInicio = dato.getInt("20");
+                num = InicioViaje.numImpresion(dato.getInt("20"), context);
                 if(uss.tipo_permiso == 1) {
                     if (!dato.getString("23").isEmpty()) {
                         printTextTwoColumns("Folio de Vale de Mina: ", dato.getString("23") + "\n");
@@ -174,11 +178,11 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
         tiempoEspera();
         if(aBoolean) {
             try {
-                if(idViaje != null) {
-                    boolean c= Viaje.updateImpresion(idViaje, num, context);
-                }
-                if(idInicio != null){
+                if(idViaje == null) {
                     boolean c= InicioViaje.updateImpresion(idInicio,num, context);
+                }
+                if(idInicio == null){
+                    boolean c= Viaje.updateImpresion(idViaje, num, context);
                 }
             } catch (Exception e) {
                 Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();

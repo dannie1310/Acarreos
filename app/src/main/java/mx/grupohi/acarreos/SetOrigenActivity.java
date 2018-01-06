@@ -150,6 +150,10 @@ public class SetOrigenActivity extends AppCompatActivity
         mina.setVisibility(View.GONE);
         seg.setVisibility(View.GONE);
         vol.setVisibility(View.GONE);
+        ded.setVisibility(View.GONE);
+        deductiva.setVisibility(View.GONE);
+        textmotivo.setVisibility(View.GONE);
+        motivos.setVisibility(View.GONE);
 
         deductiva.setOnClickListener(new View.OnClickListener() {
                                          @Override
@@ -282,13 +286,14 @@ public class SetOrigenActivity extends AppCompatActivity
                         seg.setVisibility(View.GONE);
                         vol.setVisibility(View.GONE);
                     }
-                    ded.setVisibility(View.GONE);
-                    deductiva.setText(null);
                 }
             });
         }
         else if(usuario.tipo_permiso == 4) {
             ded.setVisibility(View.VISIBLE);
+            deductiva.setVisibility(View.VISIBLE);
+            textmotivo.setVisibility(View.VISIBLE);
+            motivos.setVisibility(View.VISIBLE);
             pago.setVisibility(View.GONE);
         }
         else{
@@ -480,9 +485,16 @@ public class SetOrigenActivity extends AppCompatActivity
                                 cv.put("estatus", 1);
                                 cv.put("tipoEsquema", usuario.getTipoEsquema());
                                 cv.put("idperfil", usuario.tipo_permiso);
-
-                                cv.put("folio_mina", vale_mina.getText().toString());
-                                cv.put("folio_seguimiento", seguimiento.getText().toString());
+                                if(seguimiento.getText().toString().equals("")) {
+                                    cv.put("folio_seguimiento", 0);
+                                }else {
+                                    cv.put("folio_seguimiento", seguimiento.getText().toString());
+                                }
+                                if(vale_mina.getText().toString().equals("")) {
+                                    cv.put("folio_mina", 0);
+                                }else{
+                                    cv.put("folio_mina", vale_mina.getText().toString());
+                                }
                                 cv.put("volumen", volumen.getText().toString());
                                 cv.put("tipo_suministro", tipo_s);
                                 if(tipo_s == 1) {
@@ -495,6 +507,7 @@ public class SetOrigenActivity extends AppCompatActivity
                                     cv.put("deductiva", deductiva.getText().toString());
                                     cv.put("idMotivo", idMotivo);
                                 }
+                                cv.put("numImpresion", 0);
                                 InicioViaje in = new InicioViaje(getApplicationContext());
                                 Boolean guardar = in.create(cv);
 

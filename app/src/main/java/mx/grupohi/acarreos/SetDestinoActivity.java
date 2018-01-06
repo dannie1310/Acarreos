@@ -149,6 +149,10 @@ public class SetDestinoActivity extends AppCompatActivity
         seg = (TextInputLayout) findViewById(R.id.seg);
         textmina = (TextView) findViewById(R.id.vale_mina);
         textseg = (TextView) findViewById(R.id.seguimiento);
+        deductiva.setVisibility(View.GONE);
+        textmotivo.setVisibility(View.GONE);
+        motivos.setVisibility(View.GONE);
+
         if(tipo_suministro == 1){
             mina.setVisibility(View.VISIBLE);
             seg.setVisibility(View.VISIBLE);
@@ -670,8 +674,17 @@ public class SetDestinoActivity extends AppCompatActivity
                 cv.put("tipoEsquema", usuario.getTipoEsquema());
                 cv.put("numImpresion", 0);
                 cv.put("idperfil", usuario.tipo_permiso);
-                cv.put("folio_seguimiento",textseg.getText().toString());
-                cv.put("folio_mina", textmina.getText().toString());
+                if(textseg.getText().toString().equals("")) {
+                    cv.put("folio_seguimiento", 0);
+                }else {
+                    cv.put("folio_seguimiento", textseg.getText().toString());
+                }
+                if(textmina.getText().toString().equals("")) {
+                    cv.put("folio_mina", 0);
+                }else{
+                    cv.put("folio_mina", textmina.getText().toString());
+                }
+
 
                 viaje = new Viaje(this);
                 viaje.create(cv);
