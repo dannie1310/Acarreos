@@ -609,6 +609,8 @@ public class DescargaActivity extends AppCompatActivity
                     mainActivity = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(mainActivity);
                 }
+            }else{
+            Toast.makeText(getApplicationContext(), "Error al iniciar sesion",Toast.LENGTH_SHORT).show();
             }
         }
     }

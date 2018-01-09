@@ -670,6 +670,8 @@ public class LoginActivity extends AppCompatActivity {
                         startActivity(mainActivity);
                     }
                 }
+            }else{
+                Toast.makeText(getApplicationContext(), "Error al iniciar sesion",Toast.LENGTH_SHORT).show();
             }
         }
 
