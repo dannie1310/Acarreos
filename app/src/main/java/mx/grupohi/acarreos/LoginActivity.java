@@ -420,6 +420,34 @@ public class LoginActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
 
+                        //Tags
+
+                        TagModel tag = new TagModel(getApplicationContext());
+                        try {
+                            final JSONArray tags = new JSONArray(JSON.getString("Tags"));
+                            for (int i = 0; i < tags.length(); i++) {
+                                final int finalI = i + 1;
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        loginProgressDialog.setMessage("Actualizando catálogo de Tags... \n Tag " + finalI + " de " + tags.length());
+                                    }
+                                });
+                                JSONObject info = tags.getJSONObject(i);
+
+                                data.clear();
+                                data.put("uid", info.getString("uid"));
+                                data.put("idcamion", info.getString("idcamion"));
+                                data.put("idproyecto", info.getString("idproyecto"));
+
+                                if (!tag.create(data)) {
+                                    return false;
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
                         //Rutas
 
                         Ruta ruta = new Ruta(getApplicationContext());
@@ -570,34 +598,6 @@ public class LoginActivity extends AppCompatActivity {
                                 data.put("nombre", info.getString("descripcion"));
 
                                 if (!checador.create(data)) {
-                                    return false;
-                                }
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                        //Tags
-
-                        TagModel tag = new TagModel(getApplicationContext());
-                        try {
-                            final JSONArray tags = new JSONArray(JSON.getString("Tags"));
-                            for (int i = 0; i < tags.length(); i++) {
-                                final int finalI = i + 1;
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        loginProgressDialog.setMessage("Actualizando catálogo de Tags... \n Tag " + finalI + " de " + tags.length());
-                                    }
-                                });
-                                JSONObject info = tags.getJSONObject(i);
-
-                                data.clear();
-                                data.put("uid", info.getString("uid"));
-                                data.put("idcamion", info.getString("idcamion"));
-                                data.put("idproyecto", info.getString("idproyecto"));
-
-                                if (!tag.create(data)) {
                                     return false;
                                 }
                             }
