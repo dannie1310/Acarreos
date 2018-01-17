@@ -607,8 +607,8 @@ public class SetDestinoActivity extends AppCompatActivity
 
                    // Toast.makeText(getApplicationContext(),"numero de viaje: " + contador, Toast.LENGTH_SHORT).show();
             if(continuar) {
-                Integer idCamion = Util.getIdCamion(tagInfo);
-                Integer idProyecto = Util.getIdProyecto(tagInfo);
+                Integer idCamion = Util.getIdCamion(tagInfo,4);
+                Integer idProyecto = Util.getIdProyecto(tagInfo,4);
                 Integer idOrigen = Util.getIdOrigen(tagOrigen);
                 Integer idMaterial = Util.getIdMaterial(tagOrigen);
                 Viaje viaje = null;

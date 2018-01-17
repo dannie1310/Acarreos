@@ -252,8 +252,8 @@ public class MainActivity extends AppCompatActivity
                         String tagString = nfc.readSector(myTag, 0, 1);
                         String origenString = nfc.readSector(myTag, 1, 4);
                         fechaString = nfc.readSector(myTag, 1, 5);
-                        tagCamion = Util.getIdCamion(tagString);
-                        tagProyecto = Util.getIdProyecto(tagString);
+                        tagCamion = Util.getIdCamion(tagString,4);
+                        tagProyecto = Util.getIdProyecto(tagString,4);
                         tagModel = tagModel.find(UID, tagCamion, tagProyecto);
                         tagOrigen = Util.getIdOrigen(origenString);
                         tagMaterial = Util.getIdMaterial(origenString);

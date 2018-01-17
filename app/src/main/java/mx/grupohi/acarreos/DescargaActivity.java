@@ -599,7 +599,6 @@ public class DescargaActivity extends AppCompatActivity
             descargaCatalogos = null;
             loginProgressDialog.dismiss();
             if (success) {
-               // startActivity(mainActivity);
                 Intent mainActivity;
                 Integer tipo = usuario.getTipo_permiso();
                 if(tipo == 0){

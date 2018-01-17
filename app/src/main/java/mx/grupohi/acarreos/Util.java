@@ -95,10 +95,10 @@ class Util {
         return (String) android.text.format.DateFormat.format("yyyy-MM-dd HH:mm:ss", new java.util.Date());
     }
 
-    static Integer getIdCamion(String string) {
+    static Integer getIdCamion(String string, int value) {
 
         try {
-            Integer result = Integer.valueOf(string.substring(0,4));
+            Integer result = Integer.valueOf(string.substring(0,value));
             if (result != null) {
                 return result;
             } else {
@@ -109,9 +109,9 @@ class Util {
         }
     }
 
-    static Integer getIdProyecto(String string) {
+    static Integer getIdProyecto(String string, int value) {
         try {
-            Integer result = Integer.valueOf(string.substring(4,8));
+            Integer result = Integer.valueOf(string.substring(value,string.length()));
             if(result != null) {
                 return result;
             } else {
