@@ -436,6 +436,7 @@ public class TiroUnicoActivity extends AppCompatActivity
         Boolean limpiarorigen = false;
         boolean continuar = false;
         String uidtag ="";
+        String tipoPerfil = "";
         if (writeMode) {
             if(NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
                 Tag myTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
@@ -460,16 +461,29 @@ public class TiroUnicoActivity extends AppCompatActivity
                         longitude = gps.getLongitude();
                         if (tipo == 1) {
                             tagInfo = nfcTag.readSector(myTag, 0, 1);
-                            if (tagInfo != null) {
-                                limpiarorigen = nfcTag.cleanSector(myTag, 1);
-                                if (!limpiarorigen){
-                                    error_eliminar = 1;
-                                }else{
-                                    error_eliminar = 2;
+                            tipoPerfil = nfcTag.readSector(myTag, 3, 14);
+                            tipoPerfil = tipoPerfil.replace(" ","");
+                            if(tipoPerfil == ""){
+                                tipoPerfil = "0";
+                            }
+                            if(Integer.valueOf(tipoPerfil) != 1) {
+                                if (tagInfo != null) {
+                                    limpiarorigen = nfcTag.cleanSector(myTag, 1);
+                                    nfcTag.cleanSector(myTag, 3);
+                                    if (!limpiarorigen) {
+                                        error_eliminar = 1;
+                                    } else {
+                                        error_eliminar = 2;
+                                    }
+                                    continuar = true;
+                                } else {
+                                    snackbar = Snackbar.make(findViewById(R.id.content_set_destino), getString(R.string.error_tag_comunicacion), Snackbar.LENGTH_SHORT);
+                                    View snackBarView = snackbar.getView();
+                                    snackBarView.setBackgroundColor(Color.RED);
+                                    snackbar.show();
                                 }
-                                continuar = true;
-                            } else {
-                                snackbar = Snackbar.make(findViewById(R.id.content_set_destino),getString(R.string.error_tag_comunicacion) , Snackbar.LENGTH_SHORT);
+                            }else{
+                                snackbar = Snackbar.make(findViewById(R.id.content_set_destino), "El TAG cuenta con datos de Origen Mina, Favor de pasar a un filtro de salida", Snackbar.LENGTH_SHORT);
                                 View snackBarView = snackbar.getView();
                                 snackBarView.setBackgroundColor(Color.RED);
                                 snackbar.show();
@@ -478,13 +492,28 @@ public class TiroUnicoActivity extends AppCompatActivity
                         if (tipo == 2) {
                             try{
                                 tagInfo = nfcUltra.readPage(myTag, 4) + nfcUltra.readPage(myTag, 5);
-                                Boolean  limpiar = nfcUltra.cleanTag(myTag);
-                                if (!limpiar){
-                                    error_eliminar = 1;
-                                }else{
-                                    error_eliminar = 2;
+                                String aux = nfcUltra.readPage(myTag,6);
+                                if(aux != null){
+                                    tagInfo =tagInfo+aux;
                                 }
-                                continuar = true;
+                                tipoPerfil = nfcUltra.readPage(myTag, 18).substring(0,1);
+                                if(tipoPerfil == " "){
+                                    tipoPerfil ="0";
+                                }
+                                if(Integer.valueOf(tipoPerfil) != 1) {
+                                    Boolean limpiar = nfcUltra.cleanTag(myTag);
+                                    if (!limpiar) {
+                                        error_eliminar = 1;
+                                    } else {
+                                        error_eliminar = 2;
+                                    }
+                                    continuar = true;
+                                }else{
+                                    snackbar = Snackbar.make(findViewById(R.id.content_set_destino), "El TAG cuenta con datos de Origen Mina, Favor de pasar a un filtro de salida", Snackbar.LENGTH_SHORT);
+                                    View snackBarView = snackbar.getView();
+                                    snackBarView.setBackgroundColor(Color.RED);
+                                    snackbar.show();
+                                }
                             }
                             catch (Exception e){
                                 e.printStackTrace();
@@ -496,15 +525,30 @@ public class TiroUnicoActivity extends AppCompatActivity
                     }
                 } else if(error_eliminar == 1){
                     if(tipo == 1) {
-                        limpiarorigen = nfcTag.cleanSector(myTag, 1);
+                        tipoPerfil = nfcTag.readSector(myTag, 3, 14);
+                        if(Integer.valueOf(tipoPerfil) != 1) {
+                            limpiarorigen = nfcTag.cleanSector(myTag, 1);
+                            nfcTag.cleanSector(myTag, 3);
 
-                        if (limpiarorigen){
-                            error_eliminar = 2;
+                            if (limpiarorigen) {
+                                error_eliminar = 2;
+                            }
                         }
                     } else if( tipo == 2){
-                        Boolean  limpiar = nfcUltra.cleanTag(myTag);
-                        if (limpiar){
-                            error_eliminar = 2;
+                        tipoPerfil = nfcUltra.readPage(myTag, 18).substring(0,1);
+                        if(tipoPerfil == " "){
+                            tipoPerfil ="0";
+                        }
+                        if(Integer.valueOf(tipoPerfil) != 1) {
+                            Boolean limpiar = nfcUltra.cleanTag(myTag);
+                            if (limpiar) {
+                                error_eliminar = 2;
+                            }
+                        }else{
+                            snackbar = Snackbar.make(findViewById(R.id.content_set_destino), "El TAG cuenta con datos de Origen Mina, Favor de pasar a un filtro de salida", Snackbar.LENGTH_SHORT);
+                            View snackBarView = snackbar.getView();
+                            snackBarView.setBackgroundColor(Color.RED);
+                            snackbar.show();
                         }
                     }
 
@@ -515,8 +559,19 @@ public class TiroUnicoActivity extends AppCompatActivity
 
         // Toast.makeText(getApplicationContext(),"numero de viaje: " + contador, Toast.LENGTH_SHORT).show();
         if(continuar) {
-            Integer idCamion = Util.getIdCamion(tagInfo,4);
-            Integer idProyecto = Util.getIdProyecto(tagInfo,4);
+            Integer idCamion = null;
+            Integer idProyecto=null;
+            tagInfo = tagInfo.replace(" ","");
+            if(tagInfo.length() == 8) {
+                idCamion = Util.getIdCamion(tagInfo, 4);
+                idProyecto = Util.getIdProyecto(tagInfo, 4);
+            }else if(tagInfo.length() == 9){
+                idCamion = Util.getIdCamion(tagInfo, 5);
+                idProyecto = Util.getIdProyecto(tagInfo, 5);
+            }else if(tagInfo.length() == 12){
+                idCamion = Util.getIdCamion(tagInfo, 8);
+                idProyecto = Util.getIdProyecto(tagInfo, 8);
+            }
             Viaje viaje = null;
             Camion c = new Camion(getApplicationContext());
 

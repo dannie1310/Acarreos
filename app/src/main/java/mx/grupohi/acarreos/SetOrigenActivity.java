@@ -422,12 +422,15 @@ public class SetOrigenActivity extends AppCompatActivity
                         Integer idcamion = 0;
                         Integer idproyecto = 0;
                         String camion_proyecto;
-                        Integer tipoperfil;
+                        Integer tipoperfil=0;
                         Integer banderaPermisos=0;
                         String dataTime = Util.getFechaHora();
                         Integer tipo_s = 0;
                         if (tipo == 1) {
-                            tipoperfil = Integer.valueOf(nfcTag.readSector(myTag, 3, 14).replace(" ",""));
+                            String aux =nfcTag.readSector(myTag, 3, 14).replace(" ","");
+                            if(aux != "") {
+                                tipoperfil = Integer.valueOf(nfcTag.readSector(myTag, 3, 14).replace(" ", ""));
+                            }
                             if(usuario.tipo_permiso == 1 && tipoperfil == 1 || usuario.tipo_permiso == 4 && tipoperfil == 0 || usuario.tipo_permiso == 1 && tipoperfil == 0 ) {
                                 datos = nfcTag.writeSector(myTag, 1, 4, data);
                                 dia = nfcTag.writeSector(myTag, 1, 5, dataTime);
@@ -466,12 +469,15 @@ public class SetOrigenActivity extends AppCompatActivity
                             }
                         }
                         if (tipo == 2) {
-                            tipoperfil = Integer.valueOf(nfcUltra.readConfirmar(myTag, 18).substring(0,1));
+                            tipoperfil =0;
+                            if(nfcUltra.readConfirmar(myTag, 18).substring(0,1) != " "){
+                                tipoperfil = Integer.valueOf(nfcUltra.readConfirmar(myTag, 18).substring(0,1));
+                            }
                             if(usuario.tipo_permiso == 1 && tipoperfil == 1 || usuario.tipo_permiso == 4 && tipoperfil == 0 || usuario.tipo_permiso == 1 && tipoperfil == 0 ) {
                                 datos = nfcUltra.writePagina(myTag, 7, data);
                                 dia = nfcUltra.writePagina(myTag, 9, dataTime);
                                 uss = nfcUltra.writePagina(myTag, 13, user);
-                                camion_proyecto = (nfcUltra.readConfirmar(myTag, 4) + nfcUltra.readConfirmar(myTag, 5) + nfcUltra.readConfirmar(myTag, 6)).replace(" ", "");
+                                camion_proyecto = (nfcUltra.readConfirmar(myTag, 4) + nfcUltra.readConfirmar(myTag, 5) + nfcUltra.readConfirmar(myTag, 6)).replace(" ", "").replace("null","");
                                 if (camion_proyecto.length() == 8) {
                                     idcamion = Util.getIdCamion(camion_proyecto, 4);
                                     idproyecto = Util.getIdProyecto(camion_proyecto, 4);

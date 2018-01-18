@@ -513,6 +513,8 @@ public class SetDestinoActivity extends AppCompatActivity
         Boolean limpiarusuario = false;
         boolean continuar = false;
         String UID ="";
+        String deduct = "";
+        String idmot = "";
         if (writeMode) {
             if(NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
                 Tag myTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
@@ -542,9 +544,12 @@ public class SetDestinoActivity extends AppCompatActivity
                             tagOrigen = nfcTag.readSector(myTag, 1, 4);
                             fechaString = nfcTag.readSector(myTag, 1, 5);
                             idUsuario = nfcTag.readSector(myTag, 1, 6);
+                            deduct = nfcTag.readSector(myTag, 3, 12);
+                            idmot = nfcTag.readSector(myTag, 3, 13);
 
                             if (tagInfo != null && tagOrigen != null && fechaString != null && idUsuario != null) {
                                 limpiarorigen = nfcTag.cleanSector(myTag, 1);
+                                nfcTag.cleanSector(myTag, 3);
 
                                 if (!limpiarorigen){
                                     error_eliminar = 1;
@@ -561,10 +566,13 @@ public class SetDestinoActivity extends AppCompatActivity
                         }
                         if (tipo == 2) {
                             try{
-                                tagInfo = nfcUltra.readPage(myTag, 4) + nfcUltra.readPage(myTag, 5);
+                                tagInfo = nfcUltra.readPage(myTag, 4) + nfcUltra.readPage(myTag, 5)+ nfcUltra.readPage(myTag, 6);
+                                tagInfo = tagInfo.replace(" ","").replace("null","");
                                 tagOrigen = nfcUltra.readPage(myTag, 7) + nfcUltra.readPage(myTag, 8);
                                 fechaString = nfcUltra.readPage(myTag, 9) + nfcUltra.readPage(myTag, 10) + nfcUltra.readPage(myTag, 11) + nfcUltra.readPage(myTag, 12).substring(0, 2);
                                 idUsuario = nfcUltra.readUsuario(myTag, 13) + nfcUltra.readUsuario(myTag, 14);
+                                deduct = nfcUltra.readPage(myTag, 16).substring(0,1);
+                                idmot = nfcUltra.readPage(myTag, 17).substring(0,1);
                                 Boolean  limpiar = nfcUltra.cleanTag(myTag);
                                 if (!limpiar){
                                     error_eliminar = 1;
@@ -589,6 +597,7 @@ public class SetDestinoActivity extends AppCompatActivity
                 } else if(error_eliminar == 1){
                     if(tipo == 1) {
                         limpiarorigen = nfcTag.cleanSector(myTag, 1);
+                        nfcTag.cleanSector(myTag, 3);
 
                         if (limpiarorigen){
                             error_eliminar = 2;
@@ -607,8 +616,19 @@ public class SetDestinoActivity extends AppCompatActivity
 
                    // Toast.makeText(getApplicationContext(),"numero de viaje: " + contador, Toast.LENGTH_SHORT).show();
             if(continuar) {
-                Integer idCamion = Util.getIdCamion(tagInfo,4);
-                Integer idProyecto = Util.getIdProyecto(tagInfo,4);
+                tagInfo = tagInfo.replace(" ","");
+                Integer idCamion = null;
+                Integer idProyecto=null;
+                if(tagInfo.length() == 8) {
+                    idCamion = Util.getIdCamion(tagInfo, 4);
+                    idProyecto = Util.getIdProyecto(tagInfo, 4);
+                }else if(tagInfo.length() == 9){
+                    idCamion = Util.getIdCamion(tagInfo, 5);
+                    idProyecto = Util.getIdProyecto(tagInfo, 5);
+                }else if(tagInfo.length() == 12){
+                    idCamion = Util.getIdCamion(tagInfo, 8);
+                    idProyecto = Util.getIdProyecto(tagInfo, 8);
+                }
                 Integer idOrigen = Util.getIdOrigen(tagOrigen);
                 Integer idMaterial = Util.getIdMaterial(tagOrigen);
                 Viaje viaje = null;
@@ -659,12 +679,12 @@ public class SetDestinoActivity extends AppCompatActivity
                 cv.put("IMEI", IMEI);
                 cv.put("CodeImagen", Util.getCodeFecha(idCamion, aux));
 
-                if (deductiva.getText().toString().equals("")) {
+                if (deduct.equals("") || deduct=="") {
                     cv.put("deductiva", 0);
                     cv.put("idMotivo", 0);
                 } else {
-                    cv.put("deductiva", deductiva.getText().toString());
-                    cv.put("idMotivo", idMotivo);
+                    cv.put("deductiva", deduct.replace(" ",""));
+                    cv.put("idMotivo", idmot.replace(" ",""));
                 }
                 RandomString r = new RandomString(10);
                 cv.put("FolioRandom", r.nextString().toUpperCase());

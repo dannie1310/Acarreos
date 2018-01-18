@@ -234,6 +234,9 @@ public class MainActivity extends AppCompatActivity
         Integer tagMaterial = 0;
         String tipo_sum="";
         String fechaString = "";
+        String deduct = "";
+        String idmot = "";
+        String tipoPerfil = "0";
         if (nfc_adapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
             clearCamionInfo();
             clearOrigenInfo();
@@ -252,8 +255,15 @@ public class MainActivity extends AppCompatActivity
                         String tagString = nfc.readSector(myTag, 0, 1);
                         String origenString = nfc.readSector(myTag, 1, 4);
                         fechaString = nfc.readSector(myTag, 1, 5);
-                        tagCamion = Util.getIdCamion(tagString,4);
-                        tagProyecto = Util.getIdProyecto(tagString,4);
+                        tagString = tagString.replace(" ","");
+                        tipoPerfil = nfc.readSector(myTag, 3, 14);
+                        if(tagString.length() <= 8){
+                            tagCamion = Util.getIdCamion(tagString,4);
+                            tagProyecto = Util.getIdProyecto(tagString,4);
+                        }else {
+                            tagCamion = Util.getIdCamion(tagString, 5);
+                            tagProyecto = Util.getIdProyecto(tagString, 5);
+                        }
                         tagModel = tagModel.find(UID, tagCamion, tagProyecto);
                         tagOrigen = Util.getIdOrigen(origenString);
                         tagMaterial = Util.getIdMaterial(origenString);
@@ -269,13 +279,30 @@ public class MainActivity extends AppCompatActivity
                     nfcUltra = new NFCUltralight(myTag, this);
                     UID = nfcUltra.byteArrayToHexString(myTag.getId());
                     try {
-                        tagCamion = Integer.valueOf(nfcUltra.readPage(myTag, 4));
-                        tagProyecto = Integer.valueOf(nfcUltra.readPage(myTag, 5));
+                        String tagS = nfcUltra.readPage(myTag, 4) + nfcUltra.readPage(myTag, 5);
+                        String aux = nfcUltra.readPage(myTag, 6);
+                        tipoPerfil = nfcUltra.readPage(myTag, 18);
+                        if(tipoPerfil != null){
+                            tipoPerfil = tipoPerfil.substring(0,1);
+                        }
+                        if(aux != null){
+                            tagS = tagS+aux;
+                        }
+                        if(tagS.length() <= 8){
+                            tagCamion = Util.getIdCamion(tagS,4);
+                            tagProyecto = Util.getIdProyecto(tagS,4);
+                        }else {
+                            tagCamion = Util.getIdCamion(tagS, 8);
+                            tagProyecto = Util.getIdProyecto(tagS, 8);
+                        }
+
                         String origen1 = nfcUltra.readPage(myTag, 8);
                         String material1 = nfcUltra.readPage(myTag, 7);
                         tagModel = tagModel.find(UID, tagCamion, tagProyecto);
                         tipo_sum = nfcUltra.readPage(myTag, 15);
-                        tipo_sum = tipo_sum.substring(0,1);
+                        if (tipo_sum != null) {
+                            tipo_sum = tipo_sum.substring(0, 1);
+                        }
                         if (origen1 != null && material1 != null) {
                             tagOrigen = Integer.valueOf(origen1);
                             tagMaterial = Integer.valueOf(material1);
@@ -300,10 +327,20 @@ public class MainActivity extends AppCompatActivity
                     CamionID = camion.idCamion;
                     if(camion.estatus == 1) {
                         if (usuario.tipo_permiso == 3) {
-                            Intent r = new Intent(getApplicationContext(), TiroUnicoActivity.class);
-                            r.putExtra("UID", UID);
-                            r.putExtra("camion", String.valueOf(CamionID));
-                            startActivity(r);
+                           // tipoPerfil = tipoPerfil.replace(" ","");
+                            if(tipoPerfil == null){
+                                tipoPerfil="0";
+                            }else{
+                                tipoPerfil= tipoPerfil.replace(" ", "");
+                            }
+                            if(tipoPerfil == "" || !tipoPerfil.equals("1")) {
+                                Intent r = new Intent(getApplicationContext(), TiroUnicoActivity.class);
+                                r.putExtra("UID", UID);
+                                r.putExtra("camion", String.valueOf(CamionID));
+                                startActivity(r);
+                            }else{
+                                Toast.makeText(MainActivity.this, "El TAG cuenta con datos de Origen Mina, Favor de pasar a un filtro de salida", Toast.LENGTH_LONG).show();
+                            }
                         } else if (usuario.tipo_permiso == 2 || usuario.tipo_permiso == 5) {
                             if (origen != null && material != null) {
                                 if(tipo_sum.equals("1")){
@@ -333,7 +370,7 @@ public class MainActivity extends AppCompatActivity
                                         startActivity(setDestinoActivity);
                                     }
                                 });
-                            } else {
+                            }else {
                                 snackbar = Snackbar.make(findViewById(R.id.content_main), R.string.error_sin_origen, Snackbar.LENGTH_LONG);
                                 View snackBarView = snackbar.getView();
                                 snackBarView.setBackgroundColor(Color.RED);
@@ -349,7 +386,7 @@ public class MainActivity extends AppCompatActivity
                     snackBarView.setBackgroundColor(Color.RED);
                                                                                                                                  snackbar.show();
                 }
-            } else {
+            }else {
                 snackbar = Snackbar.make(findViewById(R.id.content_main), "El TAG que intentas utilizar no es valido para el control de viajes", Snackbar.LENGTH_LONG);
                 View snackBarView = snackbar.getView();
                 snackBarView.setBackgroundColor(Color.RED);

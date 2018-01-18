@@ -229,7 +229,7 @@ public class NFCUltralight {
             for (int x = 0; x < 4; x++) {
                 value[x] = 0;
             }
-            for (int x=8; x<=39;x++) {
+            for (int x=7; x<=39;x++) {
                 mf.writePage(x,value);
             }
 
