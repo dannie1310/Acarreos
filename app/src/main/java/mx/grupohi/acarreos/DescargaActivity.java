@@ -287,7 +287,7 @@ public class DescargaActivity extends AppCompatActivity
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        db_sca.descargaCatalogos();
+                       // db_sca.descargaCatalogos();
                         try {
                             String logo = JSON.getString("logo");
                             String perfil = JSON.getString("IdPerfil");//idperfil
@@ -299,7 +299,7 @@ public class DescargaActivity extends AppCompatActivity
                             e.printStackTrace();
                         }
                         //Camiones
-                        Camion camion = new Camion(context);
+                       /* Camion camion = new Camion(context);
                         try {
                             final JSONArray camiones = new JSONArray(JSON.getString("Camiones"));
                             for (int i = 0; i < camiones.length(); i++) {
@@ -548,6 +548,8 @@ public class DescargaActivity extends AppCompatActivity
                                 data.put("uid", info.getString("uid"));
                                 data.put("idcamion", info.getString("idcamion"));
                                 data.put("idproyecto", info.getString("idproyecto"));
+                                data.put("economico", info.getString("Economico"));
+                                data.put("estatus", info.getString("Estatus"));
 
                                 if (!tag.create(data)) {
                                     return false;
@@ -583,7 +585,7 @@ public class DescargaActivity extends AppCompatActivity
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-
+*/
                         return true;
                     }
                 }

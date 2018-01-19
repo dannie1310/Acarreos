@@ -439,6 +439,8 @@ public class LoginActivity extends AppCompatActivity {
                                 data.put("uid", info.getString("uid"));
                                 data.put("idcamion", info.getString("idcamion"));
                                 data.put("idproyecto", info.getString("idproyecto"));
+                                data.put("economico", info.getString("Economico"));
+                                data.put("estatus", info.getString("Estatus"));
 
                                 if (!tag.create(data)) {
                                     return false;

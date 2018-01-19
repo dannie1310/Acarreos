@@ -24,7 +24,7 @@ import java.util.GregorianCalendar;
             "CREATE TABLE origenes (idorigen INTEGER, descripcion TEXT, estado INTEGER)",
             "CREATE TABLE rutas (idruta INTEGER, clave TEXT, idorigen INTEGER, idtiro INTEGER, totalkm TEXT)",
             "CREATE TABLE materiales (idmaterial INTEGER, descripcion TEXT)",
-            "CREATE TABLE tags (uid TEXT, idcamion INTEGER, idproyecto INTEGER)",
+            "CREATE TABLE tags (uid TEXT, idcamion INTEGER, idproyecto INTEGER,economico TEXT, estatus INTEGER)",
             "CREATE TABLE viajesnetos (ID INTEGER PRIMARY KEY AUTOINCREMENT,"+
                     "FechaCarga VARCHAR(8),"+
                     "HoraCarga VARCHAR(8),"+

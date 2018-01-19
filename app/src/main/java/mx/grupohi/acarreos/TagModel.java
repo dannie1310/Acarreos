@@ -16,6 +16,8 @@ class TagModel {
     public String UID;
     public Integer idCamion;
     public Integer idProyecto;
+    public String economico;
+    public Integer estatus;
 
     private Context context;
 
@@ -34,6 +36,8 @@ class TagModel {
             this.UID = data.getAsString("uid");
             this.idCamion = data.getAsInteger("idcamion");
             this.idProyecto = data.getAsInteger("idproyecto");
+            this.economico = data.getAsString("economico");
+            this.estatus = data.getAsInteger("estatus");
         }
         db.close();
         return result;
@@ -47,6 +51,8 @@ class TagModel {
                 this.idProyecto = c.getInt(c.getColumnIndex("idproyecto"));
                 this.idCamion = c.getInt(c.getColumnIndex("idcamion"));
                 this.UID = c.getString(c.getColumnIndex("uid"));
+                this.economico = c.getString(c.getColumnIndex("economico"));
+                this.estatus = c.getInt(c.getColumnIndex("estatus"));
                 return this;
             } else {
                 return null;
