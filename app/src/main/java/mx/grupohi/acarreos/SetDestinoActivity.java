@@ -571,8 +571,8 @@ public class SetDestinoActivity extends AppCompatActivity
                                 tagOrigen = nfcUltra.readPage(myTag, 7) + nfcUltra.readPage(myTag, 8);
                                 fechaString = nfcUltra.readPage(myTag, 9) + nfcUltra.readPage(myTag, 10) + nfcUltra.readPage(myTag, 11) + nfcUltra.readPage(myTag, 12).substring(0, 2);
                                 idUsuario = nfcUltra.readUsuario(myTag, 13) + nfcUltra.readUsuario(myTag, 14);
-                                deduct = nfcUltra.readPage(myTag, 16).substring(0,1);
-                                idmot = nfcUltra.readPage(myTag, 17).substring(0,1);
+                                deduct = nfcUltra.readPage(myTag, 16);
+                                idmot = nfcUltra.readPage(myTag, 17);
                                 Boolean  limpiar = nfcUltra.cleanTag(myTag);
                                 if (!limpiar){
                                     error_eliminar = 1;
@@ -679,7 +679,7 @@ public class SetDestinoActivity extends AppCompatActivity
                 cv.put("IMEI", IMEI);
                 cv.put("CodeImagen", Util.getCodeFecha(idCamion, aux));
 
-                if (deduct.equals("") || deduct=="") {
+                if (deduct.equals("") || deduct=="" || deduct == null) {
                     cv.put("deductiva", 0);
                     cv.put("idMotivo", 0);
                 } else {
