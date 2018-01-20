@@ -517,8 +517,12 @@ public class SetDestinoActivity extends AppCompatActivity
         Boolean limpiarusuario = false;
         boolean continuar = false;
         String UID ="";
-        String deduct = "";
-        String idmot = "";
+
+        String deductiva_origen = "";
+        String idmotivo_origen = "";
+        String deductiva_entrada = "";
+        String idmotivo_entrada = "";
+
         if (writeMode) {
             if(NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
                 Tag myTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
@@ -548,9 +552,10 @@ public class SetDestinoActivity extends AppCompatActivity
                             tagOrigen = nfcTag.readSector(myTag, 1, 4);
                             fechaString = nfcTag.readSector(myTag, 1, 5);
                             idUsuario = nfcTag.readSector(myTag, 1, 6);
-                            deduct = nfcTag.readSector(myTag, 3, 12);
-                            idmot = nfcTag.readSector(myTag, 3, 13);
-
+                            deductiva_origen = nfcTag.readSector(myTag, 3, 12);
+                            idmotivo_origen = nfcTag.readSector(myTag, 3, 13);
+                            deductiva_entrada = nfcTag.readSector(myTag, 4, 16); //validar
+                            idmotivo_entrada = nfcTag.readSector(myTag,4, 17);
 
                             tagInfo = tagInfo.replace(" ","");
                             idCamion = null;
@@ -601,8 +606,10 @@ public class SetDestinoActivity extends AppCompatActivity
                                 tagOrigen = nfcUltra.readPage(myTag, 7) + nfcUltra.readPage(myTag, 8);
                                 fechaString = nfcUltra.readPage(myTag, 9) + nfcUltra.readPage(myTag, 10) + nfcUltra.readPage(myTag, 11) + nfcUltra.readPage(myTag, 12).substring(0, 2);
                                 idUsuario = nfcUltra.readUsuario(myTag, 13) + nfcUltra.readUsuario(myTag, 14);
-                                deduct = nfcUltra.readPage(myTag, 16);
-                                idmot = nfcUltra.readPage(myTag, 17);
+                                deductiva_origen = nfcUltra.readPage(myTag, 16);
+                                idmotivo_origen = nfcUltra.readPage(myTag, 17);
+                                deductiva_entrada = nfcUltra.readPage(myTag, 19);
+                                idmotivo_entrada = nfcUltra.readPage(myTag, 20);
 
 
                                 tagInfo = tagInfo.replace(" ","");
@@ -722,6 +729,8 @@ public class SetDestinoActivity extends AppCompatActivity
             cv.put("uidTAG", UID);
             cv.put("IMEI", IMEI);
             cv.put("CodeImagen", Util.getCodeFecha(idCamion, aux));
+            //validar todas las deductivas diferentes
+
 
             if (deduct.equals("") || deduct=="" || deduct == null) {
                 cv.put("deductiva", 0);

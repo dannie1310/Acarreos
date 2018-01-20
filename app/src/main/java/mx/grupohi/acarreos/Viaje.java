@@ -40,6 +40,10 @@ public class Viaje {
     Tiro tiro;
     Ruta ruta;
     String deductiva;
+    String deductiva_origen;
+    String deductiva_entrada;
+    Integer idmotivo_origen;
+    Integer idmotivo_entrada;
     String FolioRandom;
     Integer idmotivo;
     String primerToque;
@@ -123,6 +127,11 @@ public class Viaje {
                 this.uidTAG = c.getString(c.getColumnIndex("uidTAG"));
                 this.folio_seguimiento = c.getString(c.getColumnIndex("folio_seguimiento"));
                 this.folio_mina = c.getString(c.getColumnIndex("folio_mina"));
+                this.deductiva_origen = c.getString(c.getColumnIndex("deductiva_origen"));
+                this.deductiva_entrada = c.getString(c.getColumnIndex("deductiva_entrada"));
+                this.idmotivo_origen = c.getInt(c.getColumnIndex("idmotivo_origen"));
+                this.idmotivo_entrada = c.getInt(c.getColumnIndex("idmotivo_entrada"));
+
 
                 return this;
             } else {
