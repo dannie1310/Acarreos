@@ -14,11 +14,13 @@ import android.nfc.tech.MifareClassic;
 import android.nfc.tech.MifareUltralight;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.DialogPreference;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -33,8 +35,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,6 +58,7 @@ public class SetOrigenActivity extends AppCompatActivity
     //Variables
     private Integer idMaterial;
     private Integer idOrigen;
+    String[] spinnerMotivosA = null;
 
     //Referencias UI
     Spinner materialesSpinner;
@@ -76,7 +81,10 @@ public class SetOrigenActivity extends AppCompatActivity
     private TextInputLayout ded;
     private Snackbar snackbar;
     private TextView textmotivo;
-    private Integer idMotivo;
+    private Integer idMotivo = 0;
+    private Integer id_motivo = 0;
+    private String txtDeductiva = "";
+    private Boolean mensaje = false;
     private  HashMap<String, String> spinnerMotivosMap;
     private Spinner motivos;
 
@@ -205,7 +213,7 @@ public class SetOrigenActivity extends AppCompatActivity
         final ArrayList<String> descripcionesMotivos = motivo.getArrayListDescripciones();
         final ArrayList <String> idsMotivos = motivo.getArrayListId();
 
-        final String[] spinnerMotivosA = new String[idsMotivos.size()];
+        spinnerMotivosA = new String[idsMotivos.size()];
         spinnerMotivosMap = new HashMap<>();
 
         for (int i = 0; i < idsMotivos.size(); i++) {
@@ -386,6 +394,11 @@ public class SetOrigenActivity extends AppCompatActivity
 
     @Override
     protected void onNewIntent(Intent intent) {
+        if(mensaje){
+            Intent success = new Intent(getApplicationContext(), SuccessDestinoActivity.class);
+            success.putExtra("idInicio", in.id);
+            startActivity(success);
+        }
         String UID="";
         Usuario u = new Usuario(getApplicationContext());
         u = u.getUsuario();
@@ -427,89 +440,101 @@ public class SetOrigenActivity extends AppCompatActivity
                         String dataTime = Util.getFechaHora();
                         Integer tipo_s = 0;
                         if (tipo == 1) {
-                            String aux =nfcTag.readSector(myTag, 3, 14).replace(" ","");
-                            if(aux != "") {
-                                tipoperfil = Integer.valueOf(nfcTag.readSector(myTag, 3, 14).replace(" ", ""));
-                            }
-                            if(usuario.tipo_permiso == 1 && tipoperfil == 1 || usuario.tipo_permiso == 4 && tipoperfil == 0 || usuario.tipo_permiso == 1 && tipoperfil == 0 ) {
-                                datos = nfcTag.writeSector(myTag, 1, 4, data);
-                                dia = nfcTag.writeSector(myTag, 1, 5, dataTime);
-                                uss = nfcTag.writeSector(myTag, 1, 6, user);
-                                camion_proyecto = nfcTag.readSector(myTag, 0, 1).replace(" ", "");
-                                if (camion_proyecto.length() == 8) {
-                                    idcamion = Util.getIdCamion(camion_proyecto, 4);
-                                    idproyecto = Util.getIdProyecto(camion_proyecto, 4);
-                                } else {
-                                    idcamion = Util.getIdCamion(camion_proyecto, 5);
-                                    idproyecto = Util.getIdProyecto(camion_proyecto, 5);
+                            if(txtDeductiva.equals("") && id_motivo > 0){
+                                nfcTag.writeSector(myTag, 4, 16, txtDeductiva);
+                                nfcTag.writeSector(myTag, 4, 17, idMotivo.toString());
+                            }else {
+                                String aux = nfcTag.readSector(myTag, 3, 14).replace(" ", "");
+                                if (aux != "") {
+                                    tipoperfil = Integer.valueOf(nfcTag.readSector(myTag, 3, 14).replace(" ", ""));
                                 }
-                                camion = nfcTag.readSector(myTag, 1, 4);
-                                fecha = nfcTag.readSector(myTag, 1, 5);
-                                idusuario = nfcTag.readSector(myTag, 1, 6);
-                                if (pago.isChecked()) {
-                                    tipo_s = 1;
+                                if (usuario.tipo_permiso == 1 && tipoperfil == 1 || usuario.tipo_permiso == 4 && tipoperfil == 0 || usuario.tipo_permiso == 1 && tipoperfil == 0) {
+                                    datos = nfcTag.writeSector(myTag, 1, 4, data);
+                                    dia = nfcTag.writeSector(myTag, 1, 5, dataTime);
+                                    uss = nfcTag.writeSector(myTag, 1, 6, user);
+                                    camion_proyecto = nfcTag.readSector(myTag, 0, 1).replace(" ", "");
+                                    if (camion_proyecto.length() == 8) {
+                                        idcamion = Util.getIdCamion(camion_proyecto, 4);
+                                        idproyecto = Util.getIdProyecto(camion_proyecto, 4);
+                                    } else {
+                                        idcamion = Util.getIdCamion(camion_proyecto, 5);
+                                        idproyecto = Util.getIdProyecto(camion_proyecto, 5);
+                                    }
+                                    camion = nfcTag.readSector(myTag, 1, 4);
+                                    fecha = nfcTag.readSector(myTag, 1, 5);
+                                    idusuario = nfcTag.readSector(myTag, 1, 6);
+                                    if (pago.isChecked()) {
+                                        tipo_s = 1;
+                                    } else {
+                                        tipo_s = 0;
+                                    }
+                                    tipo_suministro = nfcTag.writeSector(myTag, 2, 9, String.valueOf(tipo_s));
+                                    if (deductiva.getText().toString().equals("")) {
+                                        nfcTag.writeSector(myTag, 3, 12, "0");
+                                        nfcTag.writeSector(myTag, 3, 13, "0");
+                                    } else {
+                                        nfcTag.writeSector(myTag, 3, 12, String.valueOf(deductiva.getText()));
+                                        nfcTag.writeSector(myTag, 3, 13, String.valueOf(idMotivo));
+                                    }
+                                    if (usuario.tipo_permiso == 1) {
+                                        nfcTag.writeSector(myTag, 3, 14, "1");
+                                    } else {
+                                        nfcTag.writeSector(myTag, 3, 14, "0");
+                                    }
                                 } else {
-                                    tipo_s = 0;
+                                    banderaPermisos = 1;
                                 }
-                                tipo_suministro = nfcTag.writeSector(myTag, 2, 9, String.valueOf(tipo_s));
-                                if (deductiva.getText().toString().equals("")) {
-                                    nfcTag.writeSector(myTag, 3, 12, "0");
-                                    nfcTag.writeSector(myTag, 3, 13, "0");
-                                } else {
-                                    nfcTag.writeSector(myTag, 3, 12, String.valueOf(deductiva.getText()));
-                                    nfcTag.writeSector(myTag, 3, 13, String.valueOf(idMotivo));
-                                }
-                                if (usuario.tipo_permiso == 1) {
-                                    nfcTag.writeSector(myTag, 3, 14, "1");
-                                } else {
-                                    nfcTag.writeSector(myTag, 3, 14, "0");
-                                }
-                            }else{
-                                banderaPermisos = 1;
                             }
                         }
                         if (tipo == 2) {
                             tipoperfil =0;
-                            if(nfcUltra.readConfirmar(myTag, 18).substring(0,1) != " "){
-                                tipoperfil = Integer.valueOf(nfcUltra.readConfirmar(myTag, 18).substring(0,1));
-                            }
-                            if(usuario.tipo_permiso == 1 && tipoperfil == 1 || usuario.tipo_permiso == 4 && tipoperfil == 0 || usuario.tipo_permiso == 1 && tipoperfil == 0 ) {
-                                datos = nfcUltra.writePagina(myTag, 7, data);
-                                dia = nfcUltra.writePagina(myTag, 9, dataTime);
-                                uss = nfcUltra.writePagina(myTag, 13, user);
-                                camion_proyecto = (nfcUltra.readConfirmar(myTag, 4) + nfcUltra.readConfirmar(myTag, 5) + nfcUltra.readConfirmar(myTag, 6)).replace(" ", "").replace("null","");
-                                if (camion_proyecto.length() == 8) {
-                                    idcamion = Util.getIdCamion(camion_proyecto, 4);
-                                    idproyecto = Util.getIdProyecto(camion_proyecto, 4);
-                                } else {
-                                    idcamion = Util.getIdCamion(camion_proyecto, 8);
-                                    idproyecto = Util.getIdProyecto(camion_proyecto, 8);
+
+                            if(!txtDeductiva.equals("") && id_motivo > 0){
+                                nfcUltra.writePagina(myTag,  19, txtDeductiva);
+                                nfcUltra.writePagina(myTag,  20, idMotivo.toString());
+                            }else {
+                                if (nfcUltra.readConfirmar(myTag, 18).substring(0, 1) != " ") {
+                                    tipoperfil = Integer.valueOf(nfcUltra.readConfirmar(myTag, 18).substring(0, 1));
                                 }
-                                camion = nfcUltra.readConfirmar(myTag, 7) + nfcUltra.readConfirmar(myTag, 8);
-                                fecha = nfcUltra.readConfirmar(myTag, 9) + nfcUltra.readConfirmar(myTag, 10) + nfcUltra.readConfirmar(myTag, 11) + nfcUltra.readConfirmar(myTag, 12).substring(0, 2);
-                                idusuario = nfcUltra.readConfirmar(myTag, 13) + nfcUltra.readConfirmar(myTag, 14);
-                                if (pago.isChecked()) {
-                                    tipo_s = 1;
+                                if (usuario.tipo_permiso == 1 && tipoperfil == 1 || usuario.tipo_permiso == 4 && tipoperfil == 0 || usuario.tipo_permiso == 1 && tipoperfil == 0) {
+                                    datos = nfcUltra.writePagina(myTag, 7, data);
+                                    dia = nfcUltra.writePagina(myTag, 9, dataTime);
+                                    uss = nfcUltra.writePagina(myTag, 13, user);
+                                    camion_proyecto = (nfcUltra.readConfirmar(myTag, 4) + nfcUltra.readConfirmar(myTag, 5) + nfcUltra.readConfirmar(myTag, 6)).replace(" ", "").replace("null", "");
+                                    if (camion_proyecto.length() == 8) {
+                                        idcamion = Util.getIdCamion(camion_proyecto, 4);
+                                        idproyecto = Util.getIdProyecto(camion_proyecto, 4);
+                                    } else {
+                                        idcamion = Util.getIdCamion(camion_proyecto, 8);
+                                        idproyecto = Util.getIdProyecto(camion_proyecto, 8);
+                                    }
+                                    camion = nfcUltra.readConfirmar(myTag, 7) + nfcUltra.readConfirmar(myTag, 8);
+                                    fecha = nfcUltra.readConfirmar(myTag, 9) + nfcUltra.readConfirmar(myTag, 10) + nfcUltra.readConfirmar(myTag, 11) + nfcUltra.readConfirmar(myTag, 12).substring(0, 2);
+                                    idusuario = nfcUltra.readConfirmar(myTag, 13) + nfcUltra.readConfirmar(myTag, 14);
+                                    if (pago.isChecked()) {
+                                        tipo_s = 1;
+                                    } else {
+                                        tipo_s = 0;
+                                    }
+                                    tipo_suministro = nfcUltra.writePagina(myTag, 15, String.valueOf(tipo_s));
+                                    if (deductiva.getText().toString().equals("")) {
+                                        nfcUltra.writePagina(myTag, 16, "0");
+                                        nfcUltra.writePagina(myTag, 17, "0");
+                                    } else {
+                                        nfcUltra.writePagina(myTag, 16, String.valueOf(deductiva.getText()));
+                                        nfcUltra.writePagina(myTag, 17, String.valueOf(idMotivo));
+                                    }
+                                    if (usuario.tipo_permiso == 1) {
+                                        nfcUltra.writePagina(myTag, 18, "1");
+                                    } else {
+                                        nfcUltra.writePagina(myTag, 18, "0");
+                                    }
                                 } else {
-                                    tipo_s = 0;
+                                    banderaPermisos = 1;
                                 }
-                                tipo_suministro = nfcUltra.writePagina(myTag, 15, String.valueOf(tipo_s));
-                                if (deductiva.getText().toString().equals("")) {
-                                    nfcUltra.writePagina(myTag, 16, "0");
-                                    nfcUltra.writePagina(myTag, 17, "0");
-                                } else {
-                                    nfcUltra.writePagina(myTag, 16, String.valueOf(deductiva.getText()));
-                                    nfcUltra.writePagina(myTag, 17, String.valueOf(idMotivo));
-                                }
-                                if (usuario.tipo_permiso == 1) {
-                                    nfcUltra.writePagina(myTag, 18, "1");
-                                } else {
-                                    nfcUltra.writePagina(myTag, 18, "0");
-                                }
-                            }else{
-                                banderaPermisos = 1;
                             }
                         }
+
                         TagModel datosTagCamion = new TagModel(getApplicationContext());
                         datosTagCamion = datosTagCamion.find(UID, idcamion, idproyecto);
                         if(banderaPermisos == 0) {
@@ -581,6 +606,7 @@ public class SetOrigenActivity extends AppCompatActivity
                                 Toast.makeText(getApplicationContext(), "El camión " + datosTagCamion.economico + " se encuentra inactivo. Por favor contacta al encargado.", Toast.LENGTH_LONG).show();
                             }
                         }else {
+                            mensajeDeductiva();
                             Toast.makeText(SetOrigenActivity.this, "El TAG cuenta con datos de Origen Mina, Favor de pasar a un filtro de salida", Toast.LENGTH_LONG).show();
                         }
                     } else {
@@ -605,6 +631,46 @@ public class SetOrigenActivity extends AppCompatActivity
     public void onPause() {
         super.onPause();
         nfcAdapter.disableForegroundDispatch(this);
+    }
+
+    public void mensajeDeductiva(){
+        final Boolean[] ok = {false};
+        android.app.AlertDialog.Builder alerta = new android.app.AlertDialog.Builder(SetOrigenActivity.this);
+        View vista = getLayoutInflater().inflate(R.layout.popup,  null);
+        alerta.setTitle("Ingresar Deductiva y Motivo");
+        Spinner spMotivos = (Spinner) vista.findViewById(R.id.popupspinner);
+        final EditText motivo = (EditText) vista.findViewById(R.id.etPopAgregar);
+        ArrayAdapter<String> adaptador = new ArrayAdapter<>(this,R.layout.support_simple_spinner_dropdown_item, spinnerMotivosA);
+        adaptador.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        spMotivos.setAdapter(adaptador);
+
+        alerta.setView(vista);
+
+        spMotivos.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String Mo = String.valueOf(parent.getItemAtPosition(position));
+                id_motivo = Integer.valueOf(spinnerMotivosMap.get(Mo));
+                mensaje = true;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        alerta.setPositiveButton("Agregar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String dat = motivo.getText().toString();
+                if(mensaje == true && motivo.getText().toString().trim().length() > 0){
+                    txtDeductiva = motivo.getText().toString();
+
+                    WriteModeOn();
+                }
+            }
+        }).show();
     }
 
     private void WriteModeOn() {

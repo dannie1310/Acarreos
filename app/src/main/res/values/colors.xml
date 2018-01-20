@@ -10,6 +10,8 @@
 
     <color name="backgroundColor">#212121</color>
     <color name="error">#a43739</color>
+
+    <color name="popup">#FFD2E7C8</color>
 </resources>
 
 
