@@ -60,15 +60,14 @@ public class SetOrigenActivity extends AppCompatActivity
     private Spinner origenesSpinner;
     private Button escribirOrigenButton;
     private LinearLayout mainLayout;
+    private LinearLayout lecturaTag;
     private ImageView nfcImage;
     private FloatingActionButton fabCancel;
     private TextView tagAlertTextView;
     private TextView text_origen;
     private ProgressDialog progressDialogSync;
-    private CheckBox pago;
     private TextView vale_mina;
     private TextView seguimiento;
-    private TextView volumen;
     private TextView deductiva;
     private TextInputLayout mina;
     private TextInputLayout seg;
@@ -128,33 +127,22 @@ public class SetOrigenActivity extends AppCompatActivity
         nfcImage = (ImageView) findViewById(R.id.imageViewNFC);
         fabCancel = (FloatingActionButton) findViewById(R.id.fabCancel);
         mainLayout = (LinearLayout) findViewById(R.id.MainLayout);
+        lecturaTag = (LinearLayout) findViewById(R.id.leerTag);
         tagAlertTextView =(TextView) findViewById(R.id.textViewMensaje);
 
-        tagAlertTextView.setVisibility(View.INVISIBLE);
-        nfcImage.setVisibility(View.INVISIBLE);
-        fabCancel.setVisibility(View.INVISIBLE);
         text_origen = (TextView) findViewById(R.id.textView5);
         materialesSpinner = (Spinner) findViewById(R.id.spinnerMateriales);
         origenesSpinner = (Spinner) findViewById(R.id.spinnerOrigenes);
 
-        pago = (CheckBox) findViewById(R.id.pagoCheck);
         mina = (TextInputLayout) findViewById(R.id.textomina);
         vol = (TextInputLayout) findViewById(R.id.vol);
         seg = (TextInputLayout) findViewById(R.id.seg);
         ded = (TextInputLayout) findViewById(R.id.textodeductiva);
         vale_mina = (TextView)findViewById(R.id.vale_mina);
         seguimiento = (TextView) findViewById(R.id.seguimiento);
-        volumen = (TextView) findViewById(R.id.volumen);
         deductiva = (TextView) findViewById(R.id.deductiva);
         textmotivo = (TextView) findViewById(R.id.textViewMotivo);
         motivos = (Spinner) findViewById(R.id.spinnerMotivo);
-        mina.setVisibility(View.GONE);
-        seg.setVisibility(View.GONE);
-        vol.setVisibility(View.GONE);
-        ded.setVisibility(View.GONE);
-        deductiva.setVisibility(View.GONE);
-        textmotivo.setVisibility(View.GONE);
-        motivos.setVisibility(View.GONE);
 
         deductiva.setOnClickListener(new View.OnClickListener() {
                                          @Override
@@ -272,56 +260,26 @@ public class SetOrigenActivity extends AppCompatActivity
 
             }
         });
-        if(usuario.tipo_permiso == 1) {
-            pago.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                public void onCheckedChanged(CompoundButton button, boolean isChecked) {
-                    if (isChecked) {
-                        mina.setVisibility(View.VISIBLE);
-                        seg.setVisibility(View.VISIBLE);
-                        vol.setVisibility(View.VISIBLE);
-                    } else {
-                        vale_mina.setText(null);
-                        seguimiento.setText(null);
-                        volumen.setText(null);
-                        mina.setVisibility(View.GONE);
-                        seg.setVisibility(View.GONE);
-                        vol.setVisibility(View.GONE);
-                    }
-                }
-            });
-        }
-        else if(usuario.tipo_permiso == 4) {
-            ded.setVisibility(View.VISIBLE);
-            deductiva.setVisibility(View.VISIBLE);
-            textmotivo.setVisibility(View.VISIBLE);
-            motivos.setVisibility(View.VISIBLE);
-            pago.setVisibility(View.GONE);
-        }
-        else{
-            pago.setVisibility(View.GONE);
-        }
+
 
         escribirOrigenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(idMaterial == 0) {
-                    Toast.makeText(getApplicationContext(), "Por favor seleccione un Material de la lista", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Por favor seleccione un Material de la lista", Toast.LENGTH_SHORT).show();
                     materialesSpinner.requestFocus();
                 } else if(idOrigen == 0) {
-                        Toast.makeText(getApplicationContext(), "Por favor seleccione un Origen de la lista", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Por favor seleccione un Origen de la lista", Toast.LENGTH_SHORT).show();
                         origenesSpinner.requestFocus();
                 }
-                else if (( deductiva.getText().toString().equals("")==false ) && idMotivo == 0){
+                else if ((deductiva.getText().toString().equals("")==false ) && idMotivo == 0){
                     Toast.makeText(getApplicationContext(), "Por favor seleccione un motivo", Toast.LENGTH_SHORT).show();
                 }
-                else if(pago.isChecked() && vale_mina.getText().toString().isEmpty()){
-                        Toast.makeText(getApplicationContext(), "Por favor escribir el folio del vale de mina", Toast.LENGTH_SHORT).show();
-                }
-                else if(pago.isChecked() && seguimiento.getText().toString().isEmpty()){
+                else if(seguimiento.getText().toString().isEmpty()){
                         Toast.makeText(getApplicationContext(), "Por favor escribir el folio de seguimiento de material", Toast.LENGTH_SHORT).show();
                 }
-                else if(pago.isChecked() && volumen.getText().toString().isEmpty()){
-                        Toast.makeText(getApplicationContext(), "Por favor escribir el volumen del material", Toast.LENGTH_SHORT).show();
+                else if(vale_mina.getText().toString().isEmpty()){
+                    Toast.makeText(getApplicationContext(), "Por favor escribir el folio de mina", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     if(deductiva.getText().toString().equals("") || deductiva.getText().toString().equals("0")){
@@ -446,7 +404,7 @@ public class SetOrigenActivity extends AppCompatActivity
                                 camion = nfcTag.readSector(myTag, 1, 4);
                                 fecha = nfcTag.readSector(myTag, 1, 5);
                                 idusuario = nfcTag.readSector(myTag, 1, 6);
-                                if (pago.isChecked()) {
+                                if(usuario.tipo_permiso == 1) {
                                     tipo_s = 1;
                                 } else {
                                     tipo_s = 0;
@@ -488,9 +446,9 @@ public class SetOrigenActivity extends AppCompatActivity
                                 camion = nfcUltra.readConfirmar(myTag, 7) + nfcUltra.readConfirmar(myTag, 8);
                                 fecha = nfcUltra.readConfirmar(myTag, 9) + nfcUltra.readConfirmar(myTag, 10) + nfcUltra.readConfirmar(myTag, 11) + nfcUltra.readConfirmar(myTag, 12).substring(0, 2);
                                 idusuario = nfcUltra.readConfirmar(myTag, 13) + nfcUltra.readConfirmar(myTag, 14);
-                                if (pago.isChecked()) {
+                                if(usuario.tipo_permiso == 1) { // validar si el viaje es por suministro
                                     tipo_s = 1;
-                                } else {
+                                } else { // viaje suministro + flete a sindicato
                                     tipo_s = 0;
                                 }
                                 tipo_suministro = nfcUltra.writePagina(myTag, 15, String.valueOf(tipo_s));
@@ -550,7 +508,7 @@ public class SetOrigenActivity extends AppCompatActivity
                                         } else {
                                             cv.put("folio_mina", vale_mina.getText().toString());
                                         }
-                                        cv.put("volumen", volumen.getText().toString());
+
                                         cv.put("tipo_suministro", tipo_s);
                                         if (tipo_s == 1) {
                                             cv.put("Code", Util.folio(Util.dateFolios()) + String.valueOf(idcamion));
@@ -611,24 +569,20 @@ public class SetOrigenActivity extends AppCompatActivity
         writeMode = true;
         nfcAdapter.enableForegroundDispatch(this, pendingIntent, writeTagFilters, null);
 
-        escribirOrigenButton.setVisibility(View.INVISIBLE);
-        mainLayout.setVisibility(View.INVISIBLE);
 
-        fabCancel.setVisibility(View.VISIBLE);
-        nfcImage.setVisibility(View.VISIBLE);
-        tagAlertTextView.setVisibility(View.VISIBLE);
+        mainLayout.setVisibility(View.GONE);
+
+        lecturaTag.setVisibility(View.VISIBLE);
+
     }
 
     private void WriteModeOff() {
         writeMode = false;
         nfcAdapter.disableForegroundDispatch(this);
 
-        escribirOrigenButton.setVisibility(View.VISIBLE);
-        mainLayout.setVisibility(View.VISIBLE);
 
-        fabCancel.setVisibility(View.GONE);
-        nfcImage.setVisibility(View.GONE);
-        tagAlertTextView.setVisibility(View.GONE);
+        mainLayout.setVisibility(View.VISIBLE);
+        lecturaTag.setVisibility(View.GONE);
     }
 
     @Override

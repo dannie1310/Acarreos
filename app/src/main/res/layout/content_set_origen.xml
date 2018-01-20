@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/content_set_origen"
@@ -12,6 +12,15 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="mx.grupohi.acarreos.SetOrigenActivity"
     tools:showIn="@layout/app_bar_set_origen">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="1"
+        android:layout_weight="0.90">
 
     <LinearLayout
         android:orientation="vertical"
@@ -50,6 +59,49 @@
             android:layout_height="20dp"
             android:layout_marginBottom="20dp"
             android:layout_marginTop="10dp"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="2dp" />
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:id="@+id/textomina"
+            android:layout_height="wrap_content">
+
+            <AutoCompleteTextView
+                android:id="@+id/vale_mina"
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="FOLIO DE VALE DE MINA"
+                android:inputType="textCapCharacters"
+                android:digits="0123456789-QAZWSXEDCRFVTGBYHNUJMIKOLP"
+                android:maxLength="8"
+                android:singleLine="true"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/seg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <AutoCompleteTextView
+                android:id="@+id/seguimiento"
+                android:layout_width="match_parent"
+                android:layout_marginTop="5dp"
+                android:layout_height="wrap_content"
+                android:hint="FOLIO DE SEGUIMIENTO DE MATERIAL"
+                android:inputType="textCapCharacters"
+                android:digits="0123456789-QAZWSXEDCRFVTGBYHNUJMIKOLP"
+                android:maxLength="8"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
 
         <View
             android:layout_width="match_parent"
@@ -84,117 +136,67 @@
             android:textAppearance="@android:style/TextAppearance.Material.Menu" />
 
         <Spinner
+            android:id="@+id/spinnerMotivo"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/spinnerMotivo" />
-
-
-        <CheckBox
-            android:id="@+id/pagoCheck"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:layout_margin="8dp"
-            android:button="@drawable/boton_checkbox"
-            android:text="Suministro Cobrable" />
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:id="@+id/textomina"
-            android:layout_height="wrap_content">
-
-            <AutoCompleteTextView
-                android:id="@+id/vale_mina"
-                android:layout_marginTop="5dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Folio de Vale de Mina"
-                android:inputType="textCapCharacters"
-                android:digits="0123456789-QAZWSXEDCRFVTGBYHNUJMIKOLP"
-                android:maxLength="8"
-                android:singleLine="true"
-                android:maxLines="1" />
-
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/seg"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <AutoCompleteTextView
-                android:id="@+id/seguimiento"
-                android:layout_width="match_parent"
-                android:layout_marginTop="5dp"
-                android:layout_height="wrap_content"
-                android:hint="Folio de Seguimiento de Material"
-                android:inputType="textCapCharacters"
-                android:digits="0123456789-QAZWSXEDCRFVTGBYHNUJMIKOLP"
-                android:maxLength="8"
-                android:maxLines="1" />
-
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/vol"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <AutoCompleteTextView
-                android:id="@+id/volumen"
-                android:layout_marginTop="5dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Volumen m3"
-                android:digits="0123456789"
-                android:inputType="number"
-                android:maxLength="2"
-                android:maxLines="1" />
-
-        </android.support.design.widget.TextInputLayout>
+            android:layout_height="wrap_content" />
 
         <Button
-            android:text="ESCRIBIR ORIGEN"
-            android:layout_width="match_parent"
             android:id="@+id/buttonEscribirOrigen"
             style="@style/Widget.AppCompat.Button.Colored"
-            android:textSize="24sp"
-            android:layout_height="70dp" />
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:text="ESCRIBIR ORIGEN"
+            android:textSize="24sp" />
 
     </LinearLayout>
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/nfc_back"
-        android:id="@+id/imageViewNFC"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_above="@+id/textViewMensaje" />
+        <LinearLayout
+            android:id="@+id/leerTag"
+            android:layout_width="match_parent"
+            android:layout_height="546dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:orientation="vertical"
+            android:weightSum="1">
 
-    <TextView
-        android:text="ACERQUE EL TAG PARA ESCRIBIR EL ORIGEN"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/textViewMensaje"
-        android:textAppearance="@android:style/TextAppearance.DeviceDefault"
-        android:layout_marginBottom="133dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:textSize="20sp"
-        android:textStyle="normal|bold"
-        android:textAlignment="center"
-        android:layout_alignParentLeft="true" />
+            <ImageView
+                android:id="@+id/imageViewNFC"
+                android:layout_width="wrap_content"
+                android:layout_height="337dp"
+                android:layout_above="@+id/textViewMensaje"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                app:srcCompat="@drawable/nfc_back" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        app:srcCompat="@android:drawable/ic_menu_close_clear_cancel"
-        android:layout_below="@+id/MainLayout"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="28dp"
-        android:id="@+id/fabCancel"
-        app:backgroundTint="@android:color/holo_red_light" />
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fabCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/MainLayout"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="28dp"
+                android:clickable="true"
+                app:backgroundTint="@android:color/holo_red_light"
+                app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
 
-</RelativeLayout>
+            <TextView
+                android:id="@+id/textViewMensaje"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginBottom="100dp"
+                android:layout_weight="0.13"
+                android:text="ACERQUE EL TAG PARA ESCRIBIR"
+                android:textAlignment="center"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault"
+                android:textSize="20sp"
+                android:textStyle="normal|bold" />
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

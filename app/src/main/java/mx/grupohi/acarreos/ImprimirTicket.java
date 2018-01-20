@@ -127,7 +127,7 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
             } else {
                 idInicio = dato.getInt("20");
                 num = InicioViaje.numImpresion(dato.getInt("20"), context);
-                if(uss.tipo_permiso == 1) {
+
                     if (!dato.getString("23").isEmpty()) {
                         printTextTwoColumns("Folio de Vale de Mina: ", dato.getString("23") + "\n");
                     }else {
@@ -138,11 +138,8 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
                     }else {
                         printTextTwoColumns("Folio de Seguimiento: ", "------\n");
                     }
-                    if(!dato.getString("25").isEmpty()){
-                        printTextTwoColumns("Volumen", dato.getString("25") + "\n");
-                    }else {
-                        printTextTwoColumns("Volumen", "------\n");
-                    }
+
+                if(uss.tipo_permiso == 1) {
                     printTextTwoColumns("Checador: " + dato.getString("14"), dato.getString("15") + "\n");
                     printTextTwoColumns("Versión: ", String.valueOf(dato.getString("16")) + "\n");
                     if(dato.getInt("26") == 1) {

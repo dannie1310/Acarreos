@@ -78,13 +78,11 @@ public class SuccessDestinoActivity extends AppCompatActivity
             textMotivo,
             textObservacion,
             textMina,
-            textSeg,
-            textVol;
+            textSeg;
 
     private View view2;
     private LinearLayout folioMina,
-            folioSeg,
-            vol;
+            folioSeg;
 
     private Toolbar toolbar;
     private Integer impresion;
@@ -171,7 +169,6 @@ public class SuccessDestinoActivity extends AppCompatActivity
         textObservacion = (TextView) findViewById(R.id.textObservaciones);
         textMina = (TextView) findViewById(R.id.textViewFolioMina);
         textSeg = (TextView) findViewById(R.id.textViewFolioSeg);
-        textVol = (TextView) findViewById(R.id.textViewVol);
 
         btnImprimir = (Button) findViewById(R.id.buttonImprimir);
         btnImagenes = (Button) findViewById(R.id.buttonImagenes);
@@ -179,7 +176,6 @@ public class SuccessDestinoActivity extends AppCompatActivity
 
         folioMina = (LinearLayout) findViewById(R.id.folioMina);
         folioSeg = (LinearLayout) findViewById(R.id.folioSeg);
-        vol = (LinearLayout) findViewById(R.id.vol);
 
         fillInfo();
 
@@ -395,7 +391,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
             json.put("20", inicio);
             json.put("23", textMina.getText());
             json.put("24", textSeg.getText());
-            json.put("25", textVol.getText());
+            json.put("25", 0);
             json.put("26", inicios.tipo_suministro);
             if(inicios.tipo_suministro == 1) {
                // datos_inicio = "000|000000|000|000000000000|000|000000000000|000|00000|000000000000|000000000000000|00000|00|000000000000000000|0|00000000|00000000|00|0";
@@ -415,7 +411,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
                         + inicios.estatus + '|'
                         + inicios.folio_mina + '|'
                         + inicios.folio_seg + "|"
-                        + inicios.volumen + "|"
+                        + inicios.deductiva + "|"
                         + usuario.tipo_permiso;
                 try {
                     urlCode = URLEncoder.encode(encrypt(datos_inicio), "utf-8");
@@ -533,13 +529,11 @@ public class SuccessDestinoActivity extends AppCompatActivity
             textViewMaterial.setText(in.material.descripcion);
             textViewOrigen.setText(in.origen.descripcion);
             textViewFechaHoraSalida.setText(in.fecha_origen);
-            if(usuario.tipo_permiso == 1 && in.tipo_suministro == 1) {
+            if(in.folio_seg != null || in.folio_mina != null) {
                 folioMina.setVisibility(View.VISIBLE);
                 folioSeg.setVisibility(View.VISIBLE);
-                vol.setVisibility(View.VISIBLE);
                 textMina.setText(in.folio_mina);
                 textSeg.setText(in.folio_seg);
-                textVol.setText(String.valueOf(in.volumen) + " m3");
             }
             textViewDestino.setVisibility(View.GONE);
             textViewFechaHoraLlegada.setVisibility(View.GONE);
