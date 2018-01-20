@@ -298,6 +298,7 @@ public class TiroUnicoActivity extends AppCompatActivity
         escribirButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //validar Tag estatus = 1
                 if (idMaterial == 0) {
                     Toast.makeText(getApplicationContext(), "Por favor seleccione un Material de la lista", Toast.LENGTH_LONG).show();
                     materialesSpinner.requestFocus();
@@ -463,7 +464,7 @@ public class TiroUnicoActivity extends AppCompatActivity
                             tagInfo = nfcTag.readSector(myTag, 0, 1);
                             tipoPerfil = nfcTag.readSector(myTag, 3, 14);
                             tipoPerfil = tipoPerfil.replace(" ","");
-                            if(tipoPerfil == ""){
+                            if(tipoPerfil == "" || tipoPerfil == null){  // test valor nulo
                                 tipoPerfil = "0";
                             }
                             if(Integer.valueOf(tipoPerfil) != 1) {
@@ -497,7 +498,7 @@ public class TiroUnicoActivity extends AppCompatActivity
                                     tagInfo =tagInfo+aux;
                                 }
                                 tipoPerfil = nfcUltra.readPage(myTag, 18).substring(0,1);
-                                if(tipoPerfil == " "){
+                                if(tipoPerfil == " " || tipoPerfil == null){
                                     tipoPerfil ="0";
                                 }
                                 if(Integer.valueOf(tipoPerfil) != 1) {

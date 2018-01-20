@@ -323,9 +323,11 @@ public class MainActivity extends AppCompatActivity
 
             if (tagModel != null) {
                 try {
+                    //valida tag status
+
                     camion = camion.find(tagModel.idCamion);
                     CamionID = camion.idCamion;
-                    if(camion.estatus == 1) {
+                    if(tagModel.estatus == 1) {
                         if (usuario.tipo_permiso == 3) {
                            // tipoPerfil = tipoPerfil.replace(" ","");
                             if(tipoPerfil == null){

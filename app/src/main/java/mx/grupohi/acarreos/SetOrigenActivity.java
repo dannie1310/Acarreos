@@ -468,10 +468,10 @@ public class SetOrigenActivity extends AppCompatActivity
                                 banderaPermisos = 1;
                             }
                         }
-                        Camion datosCamion = new Camion(getApplicationContext());
-                        datosCamion = datosCamion.find(idcamion);
+                        TagModel datosTagCamion = new TagModel(getApplicationContext());
+                        datosTagCamion = datosTagCamion.find(UID, idcamion, idproyecto);
                         if(banderaPermisos == 0) {
-                            if (datosCamion.estatus == 1) {
+                            if (datosTagCamion.estatus == 1) {
                                 if (idproyecto == usuario.getProyecto()) {
                                     if (data.equals(camion.replace(" ", "")) && dataTime.equals(fecha.replace(" ", "")) && user.equals(idusuario.replace(" ", ""))) {
 
@@ -536,7 +536,7 @@ public class SetOrigenActivity extends AppCompatActivity
                                     Toast.makeText(SetOrigenActivity.this, getString(R.string.error_proyecto), Toast.LENGTH_LONG).show();
                                 }
                             } else {
-                                Toast.makeText(getApplicationContext(), "El camión " + datosCamion.economico + " se encuentra inactivo. Por favor contacta al encargado.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), "El camión " + datosTagCamion.economico + " se encuentra inactivo. Por favor contacta al encargado.", Toast.LENGTH_LONG).show();
                             }
                         }else {
                             Toast.makeText(SetOrigenActivity.this, "El TAG cuenta con datos de Origen Mina, Favor de pasar a un filtro de salida", Toast.LENGTH_LONG).show();
