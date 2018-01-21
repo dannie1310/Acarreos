@@ -275,6 +275,103 @@
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="DEDUCTIVA ORIGEN"
+                android:id="@+id/textDeductivaOrigen"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault"
+                android:textStyle="normal|bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewDeductivaOrigen"
+                android:layout_weight="1"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="MOTIVO DEDUCTIVA ORIGEN"
+                android:id="@+id/textMotivoOrigen"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault"
+                android:textStyle="normal|bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewMotivoDeductivaOrigen"
+                android:layout_weight="1"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="DEDUCTIVA ENTRADA"
+                android:id="@+id/textDeductivaEntrada"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault"
+                android:textStyle="normal|bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewDeductivaEntrada"
+                android:layout_weight="1"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="MOTIVO DEDUCTIVA ENTRADA"
+                android:id="@+id/textMotivoEntrada"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault"
+                android:textStyle="normal|bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewMotivoDeductivaEntrada"
+                android:layout_weight="1"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
+
+        </LinearLayout>
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -316,6 +413,36 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/textViewMotivoDeductiva"
+                android:layout_weight="1"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="TIPO VIAJE"
+                android:id="@+id/textTipoViaje"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault"
+                android:textStyle="normal|bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewTipoViaje"
                 android:layout_weight="1"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
 

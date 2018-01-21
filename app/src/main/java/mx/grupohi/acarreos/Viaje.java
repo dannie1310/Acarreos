@@ -55,6 +55,7 @@ public class Viaje {
     String uidTAG;
     String folio_mina;
     String folio_seguimiento;
+    Integer tipoViaje;
 
     private static SQLiteDatabase db;
     private static DBScaSqlite db_sca;
@@ -131,7 +132,7 @@ public class Viaje {
                 this.deductiva_entrada = c.getString(c.getColumnIndex("deductiva_entrada"));
                 this.idmotivo_origen = c.getInt(c.getColumnIndex("idmotivo_origen"));
                 this.idmotivo_entrada = c.getInt(c.getColumnIndex("idmotivo_entrada"));
-
+                this.tipoViaje = c.getInt(c.getColumnIndex("tipoViaje"));
 
                 return this;
             } else {

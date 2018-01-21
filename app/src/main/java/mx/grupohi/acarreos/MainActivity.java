@@ -354,8 +354,10 @@ public class MainActivity extends AppCompatActivity
                             }
                         } else if (usuario.tipo_permiso == 2 || usuario.tipo_permiso == 5) {
                             if (origen != null && material != null) {
-                                if(tipo_sum.equals("1")){
+                                if(tipoPerfil.equals("1")){
                                     estad.setVisibility(View.VISIBLE);
+                                }else{
+                                    estad.setVisibility(View.GONE);
                                 }
                                 setCamionInfo(camion);
                                 setTitle("INFORMACIÓN DEL TAG");

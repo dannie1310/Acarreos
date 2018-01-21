@@ -58,7 +58,8 @@ import java.util.GregorianCalendar;
                     "deductiva_origen TEXT," +
                     "idmotivo_origen INT" +
                     "deductiva_entrada TEXT" +
-                    "idmotivo_entrada INT);",
+                    "idmotivo_entrada INT," +
+                    "tipoViaje INT);",
             "CREATE TABLE coordenadas (IMEI TEXT, idevento INT, latitud TEXT, longitud TEXT, fecha_hora TEXT, code TEXT)",
             "CREATE TABLE camion_tag (ID INTEGER PRIMARY KEY AUTOINCREMENT, IMEI TEXT, id_camion INT, id_tags TEXT, created_at DATETIME DEFAULT CURRENT_TIMESTAMP);",
             "CREATE TABLE tipos_imagenes (id INTEGER, descripcion TEXT);",
