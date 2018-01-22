@@ -56,8 +56,8 @@ import java.util.GregorianCalendar;
                     "folio_mina TEXT," +
                     "folio_seguimiento TEXT," +
                     "deductiva_origen TEXT," +
-                    "idmotivo_origen INT" +
-                    "deductiva_entrada TEXT" +
+                    "idmotivo_origen INT," +
+                    "deductiva_entrada TEXT," +
                     "idmotivo_entrada INT," +
                     "tipoViaje INT);",
             "CREATE TABLE coordenadas (IMEI TEXT, idevento INT, latitud TEXT, longitud TEXT, fecha_hora TEXT, code TEXT)",

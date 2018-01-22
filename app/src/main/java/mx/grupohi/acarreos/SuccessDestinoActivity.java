@@ -86,7 +86,9 @@ public class SuccessDestinoActivity extends AppCompatActivity
             textViewDeductivaEntrada,
             motivoEntrada,
             textDeductivaEntrada,
-            textMotivoEntrada;
+            textMotivoEntrada,
+            textTipoViaje,
+            textViewTipoViaje;
 
     private View view2;
     private LinearLayout folioMina,
@@ -186,6 +188,9 @@ public class SuccessDestinoActivity extends AppCompatActivity
         motivoEntrada = (TextView) findViewById(R.id.textViewMotivoDeductivaEntrada);
         textDeductivaEntrada = (TextView) findViewById(R.id.textDeductivaEntrada);
         textMotivoEntrada = (TextView) findViewById(R.id.textMotivoEntrada);
+
+        textTipoViaje = (TextView) findViewById(R.id.textTipoViaje);
+        textViewTipoViaje = (TextView) findViewById(R.id.textViewTipoViaje);
 
         btnImprimir = (Button) findViewById(R.id.buttonImprimir);
         btnImagenes = (Button) findViewById(R.id.buttonImagenes);
@@ -380,11 +385,16 @@ public class SuccessDestinoActivity extends AppCompatActivity
             json.put("22",  viaje.getCode(idViaje));
             json.put("23", textMina.getText());
             json.put("24", textSeg.getText());
+            json.put("31", textViewDeductivaOrigen.getText().toString().replace(" m3",""));
+            json.put("32", textViewDeductivaEntrada.getText().toString().replace(" m3",""));
+            json.put("33", motivoOrigen.getText());
+            json.put("34", motivoEntrada.getText());
+
         }
 
         json.put("1", usuario.getDescripcion());
         json.put("2", textViewCamion.getText());
-        json.put("3", textViewCubicacion.getText());
+        json.put("3", textViewCubicacion.getText().toString().replace(" m3",""));
         json.put("4", textViewMaterial.getText());
         json.put("5", textViewOrigen.getText());
         json.put("6", textViewFechaHoraSalida.getText());
@@ -400,14 +410,14 @@ public class SuccessDestinoActivity extends AppCompatActivity
         json.put("16", String.valueOf(BuildConfig.VERSION_NAME));
         json.put("17", nombreChecador);
         json.put("21", empresa);
-
+        json.put("30", textViewTipoViaje.getText());
+        json.put("23", textMina.getText());
+        json.put("24", textSeg.getText());
 
         if(inicio != 0) {
             InicioViaje inicios = new InicioViaje(getApplicationContext());
             inicios = inicios.find(inicio);
             json.put("20", inicio);
-            json.put("23", textMina.getText());
-            json.put("24", textSeg.getText());
             json.put("25", 0);
             json.put("26", inicios.tipo_suministro);
             if(inicios.tipo_suministro == 1) {
@@ -494,12 +504,24 @@ public class SuccessDestinoActivity extends AppCompatActivity
         if(idViaje != 0) {
             viaje = viaje.find(idViaje);
             Motivo motivoss = new Motivo(getApplicationContext());
-            if(viaje.deductiva.equals("0")
-                    ) {
+            if(viaje.deductiva.equals("0")) {
                 motivo.setText("NA");
             }else{
                 motivoss.find(Integer.valueOf(viaje.idmotivo));
                 motivo.setText(motivoss.descripcion);
+            }
+
+            if(viaje.deductiva_origen.equals("0")) {
+                motivoOrigen.setText("NA");
+            }else{
+                motivoss.find(Integer.valueOf(viaje.idmotivo_origen));
+                motivoOrigen.setText(motivoss.descripcion);
+            }
+            if(viaje.deductiva_entrada.equals("0")) {
+                motivoEntrada.setText("NA");
+            }else{
+                motivoss.find(Integer.valueOf(viaje.deductiva_entrada));
+                motivoEntrada.setText(motivoss.descripcion);
             }
 
             textViewCamion.setText(viaje.camion.economico);
@@ -528,10 +550,15 @@ public class SuccessDestinoActivity extends AppCompatActivity
                 textMina.setText(viaje.folio_mina);
                 textSeg.setText(viaje.folio_seguimiento);
             }
-            textDeductivaOrigen.setText(viaje.deductiva_origen);
-            textDeductivaEntrada.setText(viaje.deductiva_entrada);
-            textMotivoOrigen.setText(viaje.idmotivo_origen);
-            textMotivoEntrada.setText(viaje.deductiva_entrada);
+            textViewDeductivaOrigen.setText(viaje.deductiva_origen+" m3");
+            textViewDeductivaEntrada.setText(viaje.deductiva_entrada+" m3");
+
+            if(viaje.tipoViaje == 1){
+                textTipoViaje.setVisibility(View.VISIBLE);
+                textViewTipoViaje.setText("Origen(Suministro).");
+            }else{
+                textTipoViaje.setVisibility(View.GONE);
+            }
 
         }
         else if(inicio != 0){
@@ -568,7 +595,11 @@ public class SuccessDestinoActivity extends AppCompatActivity
             textObservacion.setVisibility(View.GONE);
             view2.setVisibility(View.GONE);
             btnImprimir.setText("IMPRIMIR");
-
+            if(in.tipo_suministro == 1){
+                textViewTipoViaje.setText("Origen (Suministro).");
+            }else{
+                textTipoViaje.setVisibility(View.GONE);
+            }
         }
 
 

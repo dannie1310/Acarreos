@@ -295,4 +295,36 @@ public class NFCUltralight {
         }
         return aux;
     }
+
+    public String readDeductiva(Tag nfc, int page){
+        MifareUltralight mf=MifareUltralight.get(nfc);
+        byte[] toRead = null;
+        byte[] auxRead =  new byte[4];
+        String aux="";
+        try{
+            mf.connect();
+            toRead = mf.readPages(page);
+            for(int i=0; i<4; i++) {
+                if (toRead[i] != 0) {
+                    auxRead[i] = toRead[i];
+                }else{
+                    auxRead[i] = ' ';
+                }
+            }
+            String x = byteArrayToHexString(auxRead);
+            if(x.equalsIgnoreCase("00000000")){
+                aux=null;
+            }
+            else {
+                String s = new String(auxRead);
+                aux += s;
+                toRead = null;
+            }
+            mf.close();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        String respuesta = aux.replace(" ","");
+        return respuesta;
+    }
 }

@@ -38,6 +38,7 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
     Integer num;
     Bitmap bitmap;
     Usuario uss;
+    Integer sumaDeductiva=0;
 
     ImprimirTicket(Context context, ProgressDialog progressDialog, BixolonPrinter bixolonPrinterApi, JSONObject datos, Bitmap b) {
         this.context = context;
@@ -72,27 +73,50 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
             bixolonPrinterApi.lineFeed(1, true);
             printTextTwoColumns("Proyecto: ", dato.getString("1") + " \n");
             printTextTwoColumns("Camión: ", dato.getString("2") + " \n");
-            printTextTwoColumns("Cubicación: ", dato.getString("3") + " \n");
-            printTextTwoColumns("Deductiva: ", dato.getString("10") + " m3\n");
-            printTextTwoColumns("Motivo Deductiva: ", dato.getString("11") + "\n");
+            printTextTwoColumns("Cubicación: ", dato.getString("3") + " m3\n");
+            printTextTwoColumns("              -----  Detalles deductiva  ----", "\n");
+            if(dato.getInt("31") != 0) {
+                sumaDeductiva = sumaDeductiva + dato.getInt("31");
+                printTextTwoColumns("D. Origen: ", dato.getString("31") + " m3\n");
+                printTextTwoColumns("Motivo Origen: ", dato.getString("33") + "\n");
+            }
+            if(dato.getInt("32")!= 0) {
+                sumaDeductiva = sumaDeductiva + dato.getInt("32");
+                printTextTwoColumns("D. Entrada: ", dato.getString("32") + " m3\n");
+                printTextTwoColumns("Motivo Entrada: ", dato.getString("34") + "\n");
+            }
+            if(dato.getInt("10")!=0){
+                sumaDeductiva = sumaDeductiva + dato.getInt("10");
+            }
+            printTextTwoColumns("D. Salida: ", dato.getString("10") + " m3\n");
+            printTextTwoColumns("Motivo Salida: ", dato.getString("11") + "\n");
+            printTextTwoColumns("D. Total: ", sumaDeductiva + " m3\n");
+
+            if(dato.getInt("3")== 0){
+                printTextTwoColumns("Cubicacion Real: ", "Datos del camión no actualizados.\n");
+            }else if (dato.getInt("3")!= 0 && sumaDeductiva<dato.getInt("3")) {
+                printTextTwoColumns("Cubicacion Real: ", dato.getInt("3")-sumaDeductiva + "\n");
+            }else{
+                printTextTwoColumns("Cubicacion Real: ", " Deductivas mayores al cubicaje del camión.\n");
+            }
 
             printTextTwoColumns("Material: ", dato.getString("4") + "\n");
             printTextTwoColumns("Origen: ", dato.getString("5") + "\n");
             printTextTwoColumns("Fecha de Salida: ", dato.getString("6") + "\n");
 
+            if (!dato.getString("23").isEmpty()) {
+                printTextTwoColumns("Folio de Vale de Mina: ", dato.getString("23") + "\n");
+            }else {
+                printTextTwoColumns("Folio de Vale de Mina: ", "------\n");
+            }
+            if(!dato.getString("24").isEmpty()) {
+                printTextTwoColumns("Folio de Seguimiento: ", dato.getString("24") + "\n");
+            }else {
+                printTextTwoColumns("Folio de Seguimiento: ", "------\n");
+            }
 
             if (dato.getString("20").equals("NULL")) {
                 idViaje = dato.getInt("0");
-                if (!dato.getString("23").isEmpty()) {
-                    printTextTwoColumns("Folio de Vale de Mina: ", dato.getString("23") + "\n");
-                }else {
-                    printTextTwoColumns("Folio de Vale de Mina: ", "------\n");
-                }
-                if(!dato.getString("24").isEmpty()) {
-                    printTextTwoColumns("Folio de Seguimiento: ", dato.getString("24") + "\n");
-                }else {
-                    printTextTwoColumns("Folio de Seguimiento: ", "------\n");
-                }
                 printTextTwoColumns("Destino: ", dato.getString("7") + "\n");
                 printTextTwoColumns("Fecha Llegada: ", dato.getString("8") + "\n");
                 printTextTwoColumns("Ruta: ", dato.getString("9") + "\n");

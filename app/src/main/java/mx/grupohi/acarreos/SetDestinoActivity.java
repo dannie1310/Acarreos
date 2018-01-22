@@ -520,7 +520,7 @@ public class SetDestinoActivity extends AppCompatActivity
         String deductiva_entrada = "";
         String idmotivo_entrada = "";
         String tipoviaje="";
-
+String au;
         if (writeMode) {
             if(NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
                 Tag myTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
@@ -552,10 +552,9 @@ public class SetDestinoActivity extends AppCompatActivity
                             idUsuario = nfcTag.readSector(myTag, 1, 6);
                             deductiva_origen = nfcTag.readSector(myTag, 3, 12);
                             idmotivo_origen = nfcTag.readSector(myTag, 3, 13);
+                            tipoviaje = nfcTag.readSector(myTag, 2, 9);
                             deductiva_entrada = nfcTag.readSector(myTag, 4, 16); //validar
                             idmotivo_entrada = nfcTag.readSector(myTag,4, 17);
-                            tipoviaje = nfcTag.readSector(myTag, 2, 9);
-
                             tagInfo = tagInfo.replace(" ","");
                             idCamion = null;
                             idProyecto=null;
@@ -574,7 +573,6 @@ public class SetDestinoActivity extends AppCompatActivity
                             datosTagCamion = datosTagCamion.find(UID, idCamion, idProyecto);
 
                             if(datosTagCamion.estatus == 1) {
-
                                 if (tagInfo != null && tagOrigen != null && fechaString != null && idUsuario != null) {
                                     limpiarorigen = nfcTag.cleanSector(myTag, 1);
                                     nfcTag.cleanSector(myTag,2);
@@ -605,11 +603,11 @@ public class SetDestinoActivity extends AppCompatActivity
                                 tagOrigen = nfcUltra.readPage(myTag, 7) + nfcUltra.readPage(myTag, 8);
                                 fechaString = nfcUltra.readPage(myTag, 9) + nfcUltra.readPage(myTag, 10) + nfcUltra.readPage(myTag, 11) + nfcUltra.readPage(myTag, 12).substring(0, 2);
                                 idUsuario = nfcUltra.readUsuario(myTag, 13) + nfcUltra.readUsuario(myTag, 14);
-                                deductiva_origen = nfcUltra.readPage(myTag, 16);
-                                idmotivo_origen = nfcUltra.readPage(myTag, 17);
-                                deductiva_entrada = nfcUltra.readPage(myTag, 19);
-                                idmotivo_entrada = nfcUltra.readPage(myTag, 20);
-                                tipoviaje = nfcUltra.readPage(myTag,15);
+                                deductiva_origen = nfcUltra.readDeductiva(myTag, 16);
+                                idmotivo_origen = nfcUltra.readDeductiva(myTag, 17);
+                                deductiva_entrada = nfcUltra.readDeductiva(myTag, 19);
+                                idmotivo_entrada = nfcUltra.readDeductiva(myTag, 20);
+                                tipoviaje = nfcUltra.readDeductiva(myTag,15);
 
 
                                 tagInfo = tagInfo.replace(" ","");
@@ -625,8 +623,6 @@ public class SetDestinoActivity extends AppCompatActivity
                                     idCamion = Util.getIdCamion(tagInfo, 8);
                                     idProyecto = Util.getIdProyecto(tagInfo, 8);
                                 }
-
-                                // validacion Tag Activo = 1
 
                                 TagModel datosTagCamion = new TagModel(getApplicationContext());
                                 datosTagCamion = datosTagCamion.find(UID, idCamion, idProyecto);
@@ -737,15 +733,15 @@ public class SetDestinoActivity extends AppCompatActivity
                 cv.put("idmotivo_origen", 0);
             }else{
                 cv.put("deductiva_origen", deductiva_origen.replace(" ",""));
-                cv.put("idmotivo_origen", idmotivo_origen.replace(" ",""));
+                cv.put("idmotivo_origen", idmotivo_origen.replace(" ","").substring(0,1));
             }
-
+            Integer datoViaje= Integer.valueOf(tipoviaje.substring(0,1));
             if(deductiva_entrada == "" || deductiva_entrada == null){ //deductiva checador de entrada
                 cv.put("deductiva_entrada", 0);
                 cv.put("idmotivo_entrada", 0);
-            }else{
-                cv.put("deductiva_entrada", deductiva_origen.replace(" ",""));
-                cv.put("idmotivo_entrada", idmotivo_origen.replace(" ",""));
+            } else if(datoViaje == 1) {
+                cv.put("deductiva_entrada", deductiva_entrada.replace(" ",""));
+                cv.put("idmotivo_entrada", idmotivo_entrada.substring(0,1));
             }
 
             if(deductiva.getText().toString() == "" || deductiva.getText().toString() == null){ // deductiva checador de salida, fin del viaje.
@@ -773,7 +769,7 @@ public class SetDestinoActivity extends AppCompatActivity
             }else{
                 cv.put("folio_mina", textmina.getText().toString());
             }
-            cv.put("tipoViaje", tipoviaje);
+            cv.put("tipoViaje", tipoviaje.substring(0,1));
 
             viaje = new Viaje(this);
             viaje.create(cv);
