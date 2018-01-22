@@ -78,7 +78,15 @@ public class SuccessDestinoActivity extends AppCompatActivity
             textMotivo,
             textObservacion,
             textMina,
-            textSeg;
+            textSeg,
+            textViewDeductivaOrigen,
+            motivoOrigen,
+            textDeductivaOrigen,
+            textMotivoOrigen,
+            textViewDeductivaEntrada,
+            motivoEntrada,
+            textDeductivaEntrada,
+            textMotivoEntrada;
 
     private View view2;
     private LinearLayout folioMina,
@@ -169,6 +177,15 @@ public class SuccessDestinoActivity extends AppCompatActivity
         textObservacion = (TextView) findViewById(R.id.textObservaciones);
         textMina = (TextView) findViewById(R.id.textViewFolioMina);
         textSeg = (TextView) findViewById(R.id.textViewFolioSeg);
+
+        textViewDeductivaOrigen = (TextView) findViewById(R.id.textViewDeductivaOrigen);
+        motivoOrigen = (TextView) findViewById(R.id.textViewMotivoDeductivaOrigen);
+        textDeductivaOrigen = (TextView) findViewById(R.id.textDeductivaOrigen);
+        textMotivoOrigen = (TextView) findViewById(R.id.textMotivoOrigen);
+        textViewDeductivaEntrada = (TextView) findViewById(R.id.textViewDeductivaEntrada);
+        motivoEntrada = (TextView) findViewById(R.id.textViewMotivoDeductivaEntrada);
+        textDeductivaEntrada = (TextView) findViewById(R.id.textDeductivaEntrada);
+        textMotivoEntrada = (TextView) findViewById(R.id.textMotivoEntrada);
 
         btnImprimir = (Button) findViewById(R.id.buttonImprimir);
         btnImagenes = (Button) findViewById(R.id.buttonImagenes);
@@ -511,6 +528,10 @@ public class SuccessDestinoActivity extends AppCompatActivity
                 textMina.setText(viaje.folio_mina);
                 textSeg.setText(viaje.folio_seguimiento);
             }
+            textDeductivaOrigen.setText(viaje.deductiva_origen);
+            textDeductivaEntrada.setText(viaje.deductiva_entrada);
+            textMotivoOrigen.setText(viaje.idmotivo_origen);
+            textMotivoEntrada.setText(viaje.deductiva_entrada);
 
         }
         else if(inicio != 0){

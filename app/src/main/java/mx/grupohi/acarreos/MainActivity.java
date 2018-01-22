@@ -270,7 +270,12 @@ public class MainActivity extends AppCompatActivity
                         origen = origen.find(tagOrigen);
                         material = material.find(tagMaterial);
                         tipo_sum = nfc.readSector(myTag,2,9);
-                        tipo_sum = tipo_sum.replace(" ", "");
+                        if(tipo_sum != null){
+                            tipo_sum = tipo_sum.replace(" ", "");
+                        }else{
+                            tipo_sum = "0";
+                        }
+
 
                     }catch (Exception e){
                         tagModel=null;
@@ -284,6 +289,8 @@ public class MainActivity extends AppCompatActivity
                         tipoPerfil = nfcUltra.readPage(myTag, 18);
                         if(tipoPerfil != null){
                             tipoPerfil = tipoPerfil.substring(0,1);
+                        }else{
+                            tipoPerfil = "0";
                         }
                         if(aux != null){
                             tagS = tagS+aux;
@@ -302,6 +309,8 @@ public class MainActivity extends AppCompatActivity
                         tipo_sum = nfcUltra.readPage(myTag, 15);
                         if (tipo_sum != null) {
                             tipo_sum = tipo_sum.substring(0, 1);
+                        }else{
+                            tipo_sum ="0";
                         }
                         if (origen1 != null && material1 != null) {
                             tagOrigen = Integer.valueOf(origen1);
@@ -345,8 +354,10 @@ public class MainActivity extends AppCompatActivity
                             }
                         } else if (usuario.tipo_permiso == 2 || usuario.tipo_permiso == 5) {
                             if (origen != null && material != null) {
-                                if(tipo_sum.equals("1")){
+                                if(tipoPerfil.equals("1")){
                                     estad.setVisibility(View.VISIBLE);
+                                }else{
+                                    estad.setVisibility(View.GONE);
                                 }
                                 setCamionInfo(camion);
                                 setTitle("INFORMACIÓN DEL TAG");

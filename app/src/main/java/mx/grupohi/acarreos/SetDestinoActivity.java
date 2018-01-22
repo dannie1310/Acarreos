@@ -153,9 +153,6 @@ public class SetDestinoActivity extends AppCompatActivity
         seg = (TextInputLayout) findViewById(R.id.seg);
         textmina = (TextView) findViewById(R.id.vale_mina);
         textseg = (TextView) findViewById(R.id.seguimiento);
-        deductiva.setVisibility(View.GONE);
-        textmotivo.setVisibility(View.GONE);
-        motivos.setVisibility(View.GONE);
 
         if(tipo_suministro == 1){
             mina.setVisibility(View.VISIBLE);
@@ -517,8 +514,13 @@ public class SetDestinoActivity extends AppCompatActivity
         Boolean limpiarusuario = false;
         boolean continuar = false;
         String UID ="";
-        String deduct = "";
-        String idmot = "";
+
+        String deductiva_origen = "";
+        String idmotivo_origen = "";
+        String deductiva_entrada = "";
+        String idmotivo_entrada = "";
+        String tipoviaje="";
+
         if (writeMode) {
             if(NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
                 Tag myTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
@@ -548,9 +550,11 @@ public class SetDestinoActivity extends AppCompatActivity
                             tagOrigen = nfcTag.readSector(myTag, 1, 4);
                             fechaString = nfcTag.readSector(myTag, 1, 5);
                             idUsuario = nfcTag.readSector(myTag, 1, 6);
-                            deduct = nfcTag.readSector(myTag, 3, 12);
-                            idmot = nfcTag.readSector(myTag, 3, 13);
-
+                            deductiva_origen = nfcTag.readSector(myTag, 3, 12);
+                            idmotivo_origen = nfcTag.readSector(myTag, 3, 13);
+                            deductiva_entrada = nfcTag.readSector(myTag, 4, 16); //validar
+                            idmotivo_entrada = nfcTag.readSector(myTag,4, 17);
+                            tipoviaje = nfcTag.readSector(myTag, 2, 9);
 
                             tagInfo = tagInfo.replace(" ","");
                             idCamion = null;
@@ -566,8 +570,6 @@ public class SetDestinoActivity extends AppCompatActivity
                                 idProyecto = Util.getIdProyecto(tagInfo, 8);
                             }
 
-                            // validacion Tag Activo = 1
-
                             TagModel datosTagCamion = new TagModel(getApplicationContext());
                             datosTagCamion = datosTagCamion.find(UID, idCamion, idProyecto);
 
@@ -575,7 +577,9 @@ public class SetDestinoActivity extends AppCompatActivity
 
                                 if (tagInfo != null && tagOrigen != null && fechaString != null && idUsuario != null) {
                                     limpiarorigen = nfcTag.cleanSector(myTag, 1);
+                                    nfcTag.cleanSector(myTag,2);
                                     nfcTag.cleanSector(myTag, 3);
+                                    nfcTag.cleanSector(myTag, 4);
 
                                     if (!limpiarorigen) {
                                         error_eliminar = 1;
@@ -601,8 +605,11 @@ public class SetDestinoActivity extends AppCompatActivity
                                 tagOrigen = nfcUltra.readPage(myTag, 7) + nfcUltra.readPage(myTag, 8);
                                 fechaString = nfcUltra.readPage(myTag, 9) + nfcUltra.readPage(myTag, 10) + nfcUltra.readPage(myTag, 11) + nfcUltra.readPage(myTag, 12).substring(0, 2);
                                 idUsuario = nfcUltra.readUsuario(myTag, 13) + nfcUltra.readUsuario(myTag, 14);
-                                deduct = nfcUltra.readPage(myTag, 16);
-                                idmot = nfcUltra.readPage(myTag, 17);
+                                deductiva_origen = nfcUltra.readPage(myTag, 16);
+                                idmotivo_origen = nfcUltra.readPage(myTag, 17);
+                                deductiva_entrada = nfcUltra.readPage(myTag, 19);
+                                idmotivo_entrada = nfcUltra.readPage(myTag, 20);
+                                tipoviaje = nfcUltra.readPage(myTag,15);
 
 
                                 tagInfo = tagInfo.replace(" ","");
@@ -654,7 +661,9 @@ public class SetDestinoActivity extends AppCompatActivity
                 } else if(error_eliminar == 1){
                     if(tipo == 1) {
                         limpiarorigen = nfcTag.cleanSector(myTag, 1);
+                        nfcTag.cleanSector(myTag,2);
                         nfcTag.cleanSector(myTag, 3);
+                        nfcTag.cleanSector(myTag, 4);
 
                         if (limpiarorigen){
                             error_eliminar = 2;
@@ -723,12 +732,28 @@ public class SetDestinoActivity extends AppCompatActivity
             cv.put("IMEI", IMEI);
             cv.put("CodeImagen", Util.getCodeFecha(idCamion, aux));
 
-            if (deduct.equals("") || deduct=="" || deduct == null) {
+            if(deductiva_origen == "" || deductiva_origen == null){ //deductiva checador de origen
+                cv.put("deductiva_origen", 0);
+                cv.put("idmotivo_origen", 0);
+            }else{
+                cv.put("deductiva_origen", deductiva_origen.replace(" ",""));
+                cv.put("idmotivo_origen", idmotivo_origen.replace(" ",""));
+            }
+
+            if(deductiva_entrada == "" || deductiva_entrada == null){ //deductiva checador de entrada
+                cv.put("deductiva_entrada", 0);
+                cv.put("idmotivo_entrada", 0);
+            }else{
+                cv.put("deductiva_entrada", deductiva_origen.replace(" ",""));
+                cv.put("idmotivo_entrada", idmotivo_origen.replace(" ",""));
+            }
+
+            if(deductiva.getText().toString() == "" || deductiva.getText().toString() == null){ // deductiva checador de salida, fin del viaje.
                 cv.put("deductiva", 0);
-                cv.put("idMotivo", 0);
-            } else {
-                cv.put("deductiva", deduct.replace(" ",""));
-                cv.put("idMotivo", idmot.replace(" ",""));
+                cv.put("idmotivo", 0);
+            }else{
+                cv.put("deductiva", deductiva.getText().toString());
+                cv.put("idmotivo", idMotivo);
             }
             RandomString r = new RandomString(10);
             cv.put("FolioRandom", r.nextString().toUpperCase());
@@ -748,7 +773,7 @@ public class SetDestinoActivity extends AppCompatActivity
             }else{
                 cv.put("folio_mina", textmina.getText().toString());
             }
-
+            cv.put("tipoViaje", tipoviaje);
 
             viaje = new Viaje(this);
             viaje.create(cv);
