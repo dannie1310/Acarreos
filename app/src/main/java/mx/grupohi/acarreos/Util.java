@@ -11,6 +11,7 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.os.Environment;
 import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
@@ -336,4 +337,6 @@ class Util {
             return null;
         }
     }
+
+
 }
