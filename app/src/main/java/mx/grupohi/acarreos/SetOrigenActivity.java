@@ -622,7 +622,14 @@ public class SetOrigenActivity extends AppCompatActivity
                     WriteModeOn();
                 }
             }
-        }).show();
+        });
+        alerta.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+       alerta.show();
     }
 
     private void WriteModeOn() {
