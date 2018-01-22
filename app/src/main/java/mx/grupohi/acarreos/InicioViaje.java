@@ -42,6 +42,7 @@ public class InicioViaje {
     Integer idperfil;
     Integer numImpresion;
     Integer tipo_suministro;
+    Integer deductiva_entrada;
     private static SQLiteDatabase db;
     private static DBScaSqlite db_sca;
     private Context context;
@@ -99,6 +100,7 @@ public class InicioViaje {
                 this.tipo_suministro = c.getInt(c.getColumnIndex("tipo_suministro"));
                 this.deductiva = c.getString(c.getColumnIndex("deductiva"));
                 this.idMotivo = c.getInt(c.getColumnIndex("idMotivo"));
+                this.deductiva_entrada = c.getInt(c.getColumnIndex("deductiva_entrada"));
                 return this;
             } else {
                 return null;
@@ -162,7 +164,7 @@ public class InicioViaje {
                     json.put("tipo_suministro",c.getInt(c.getColumnIndex("tipo_suministro")));
                     json.put("deductiva", c.getString(c.getColumnIndex("deductiva")));
                     json.put("idMotivo", c.getInt(c.getColumnIndex("idMotivo")));
-
+                    json.put("deductiva_entrada", c.getInt(c.getColumnIndex("deductiva_entrada")));
                     JSON.put(i + "", json);
                     i++;
 
