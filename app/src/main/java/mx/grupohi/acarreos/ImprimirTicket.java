@@ -96,7 +96,7 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
             if(dato.getInt("3")== 0){
                 printTextTwoColumns("Cubicacion Real: ", "Datos del camión no actualizados.\n");
             }else if (dato.getInt("3")!= 0 && sumaDeductiva<dato.getInt("3")) {
-                printTextTwoColumns("Cubicacion Real: ", dato.getInt("3")-sumaDeductiva + "\n");
+                printTextTwoColumns("Cubicacion Real: ", dato.getInt("3")-sumaDeductiva + " m3\n");
             }else{
                 printTextTwoColumns("Cubicacion Real: ", " Deductivas mayores al cubicaje del camión.\n");
             }

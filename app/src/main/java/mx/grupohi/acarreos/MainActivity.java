@@ -275,8 +275,6 @@ public class MainActivity extends AppCompatActivity
                         }else{
                             tipo_sum = "0";
                         }
-
-
                     }catch (Exception e){
                         tagModel=null;
                     }
@@ -372,14 +370,18 @@ public class MainActivity extends AppCompatActivity
                                 }
                                 setOrigenInfo(origen, material, fechaString);
                                 idOrigen = origen.idOrigen;
-                                final Integer tipoS = Integer.valueOf(tipo_sum);
+                                Integer tipoS = 0;
+                                if(!tipo_sum.equals("")) {
+                                   tipoS = Integer.valueOf(tipo_sum);
+                                }
+                                final Integer finalTipoS = tipoS;
                                 actionButton.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
                                         setDestinoActivity.putExtra("UID", UID);
                                         setDestinoActivity.putExtra("idOrigen", idOrigen);
                                         setDestinoActivity.putExtra("camion", String.valueOf(CamionID));
-                                        setDestinoActivity.putExtra("tipo_suministro", tipoS);
+                                        setDestinoActivity.putExtra("tipo_suministro", finalTipoS);
                                         startActivity(setDestinoActivity);
                                     }
                                 });

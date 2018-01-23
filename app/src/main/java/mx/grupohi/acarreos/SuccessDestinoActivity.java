@@ -394,11 +394,20 @@ public class SuccessDestinoActivity extends AppCompatActivity
             json.put("22",  viaje.getCode(idViaje));
             json.put("23", textMina.getText());
             json.put("24", textSeg.getText());
-            json.put("31", textViewDeductivaOrigen.getText().toString().replace(" m3",""));
-            json.put("32", textViewDeductivaEntrada.getText().toString().replace(" m3",""));
-            json.put("33", motivoOrigen.getText());
-            json.put("34", motivoEntrada.getText());
-
+            if(textViewDeductivaOrigen.getText().toString().replace(" m3","") != "") {
+                json.put("31", textViewDeductivaOrigen.getText().toString().replace(" m3", ""));
+                json.put("33", motivoOrigen.getText());
+            }else{
+                json.put("31", "0");
+                json.put("33", "0");
+            }
+            if(textViewDeductivaEntrada.getText().toString().replace(" m3","")!=""){
+                json.put("32", textViewDeductivaEntrada.getText().toString().replace(" m3",""));
+                json.put("34", motivoEntrada.getText());
+            }else{
+                json.put("32", "0");
+                json.put("34","0");
+            }
         }
 
         json.put("1", usuario.getDescripcion());

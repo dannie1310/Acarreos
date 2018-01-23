@@ -728,15 +728,18 @@ public class SetDestinoActivity extends AppCompatActivity
             cv.put("IMEI", IMEI);
             cv.put("CodeImagen", Util.getCodeFecha(idCamion, aux));
 
-            if(deductiva_origen == "" || deductiva_origen == null){ //deductiva checador de origen
+            if(deductiva_origen.toString().trim().equals("") || deductiva_origen == null){ //deductiva checador de origen
                 cv.put("deductiva_origen", 0);
                 cv.put("idmotivo_origen", 0);
             }else{
                 cv.put("deductiva_origen", deductiva_origen.replace(" ",""));
                 cv.put("idmotivo_origen", idmotivo_origen.replace(" ","").substring(0,1));
             }
-            Integer datoViaje= Integer.valueOf(tipoviaje.substring(0,1));
-            if(deductiva_entrada == "" || deductiva_entrada == null){ //deductiva checador de entrada
+            Integer datoViaje = 0;
+            if(!tipoviaje.toString().trim().equals("")){
+                 datoViaje= Integer.valueOf(tipoviaje.substring(0,1));
+            }
+            if(deductiva_entrada.toString().trim().equals("")  || deductiva_entrada == null){ //deductiva checador de entrada
                 cv.put("deductiva_entrada", 0);
                 cv.put("idmotivo_entrada", 0);
             } else if(datoViaje == 1) {
@@ -744,7 +747,7 @@ public class SetDestinoActivity extends AppCompatActivity
                 cv.put("idmotivo_entrada", idmotivo_entrada.substring(0,1));
             }
 
-            if(deductiva.getText().toString() == "" || deductiva.getText().toString() == null){ // deductiva checador de salida, fin del viaje.
+            if(deductiva.getText().toString().equals("") || deductiva.getText().toString() == null){ // deductiva checador de salida, fin del viaje.
                 cv.put("deductiva", 0);
                 cv.put("idmotivo", 0);
             }else{
@@ -769,7 +772,11 @@ public class SetDestinoActivity extends AppCompatActivity
             }else{
                 cv.put("folio_mina", textmina.getText().toString());
             }
-            cv.put("tipoViaje", tipoviaje.substring(0,1));
+            if(!tipoviaje.toString().trim().equals("")) {
+                cv.put("tipoViaje", tipoviaje.substring(0, 1));
+            }else{
+                cv.put("tipoViaje", "0");
+            }
 
             viaje = new Viaje(this);
             viaje.create(cv);

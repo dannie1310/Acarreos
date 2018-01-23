@@ -86,7 +86,7 @@
     <string name="title_activity_cambio_clave">Cambiar Clave de Acceso</string>
     <string name="title_activity_cerrar_sesion">Cerrar Sesión</string>
     <string name="error_proyecto">El TAG no pertenece al proyecto del usuario.</string>
-    <string name="error_sin_origen">El TAG que intentas utilizar no cuenta con un origen definido.</string>
+    <string name="error_sin_origen">El TAG que intentas utilizar no cuenta con un origen definido o se encuentra inhabilitado.</string>
     <string name="title_activity_tiro_unico">Tiro Unico</string>
     <string name="error_usuario">¡Error! No cuenta con un perfil asignado. Por favor solicitalo con el encargado.</string>
     <string name="error_ticket">No puede imprimir más de 5 tickets</string>
