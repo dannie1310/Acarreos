@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/content_tiro_unico"
@@ -13,7 +13,8 @@
     tools:context="mx.grupohi.acarreos.TiroUnicoActivity"
     tools:showIn="@layout/app_bar_tiro_unico">
 
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -81,6 +82,50 @@
                 android:layout_marginBottom="1dp"
                 android:layout_marginTop="1dp" />
 
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:id="@+id/textomina"
+                android:layout_height="wrap_content">
+
+                <AutoCompleteTextView
+                    android:id="@+id/vale_mina"
+                    android:layout_marginTop="2dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="FOLIO DE VALE DE MINA"
+                    android:inputType="textCapCharacters"
+                    android:digits="0123456789-QAZWSXEDCRFVTGBYHNUJMIKOLP"
+                    android:maxLength="8"
+                    android:singleLine="true"
+                    android:maxLines="1" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/seg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <AutoCompleteTextView
+                    android:id="@+id/seguimiento"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="2dp"
+                    android:layout_height="wrap_content"
+                    android:hint="FOLIO DE SEGUIMIENTO DE MATERIAL"
+                    android:inputType="textCapCharacters"
+                    android:digits="0123456789-QAZWSXEDCRFVTGBYHNUJMIKOLP"
+                    android:maxLength="8"
+                    android:maxLines="1" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"
+                android:layout_marginBottom="1dp"
+                android:layout_marginTop="1dp" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -128,45 +173,51 @@
                 android:textSize="18sp" />
 
         </LinearLayout>
-
-        <ImageView
-            android:id="@+id/imageViewNFC"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/nfc_back"
-            android:layout_above="@+id/textViewMensaje"
-            android:layout_toStartOf="@+id/fabCancel"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fabCancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            app:backgroundTint="@android:color/holo_red_light"
-            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel"
-            android:layout_marginBottom="17dp"
-            android:layout_above="@+id/textViewMensaje"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginRight="13dp"
-            android:layout_marginEnd="13dp" />
-
-        <TextView
-            android:id="@+id/textViewMensaje"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="ACERQUE EL TAG PARA ESCRIBIR EL ORIGEN"
-            android:textAlignment="center"
-            android:textAppearance="@android:style/TextAppearance.DeviceDefault"
-            android:textSize="20sp"
-            android:textStyle="normal|bold"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-    </RelativeLayout>
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/leerTag">
+
+            <ImageView
+                android:id="@+id/imageViewNFC"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/nfc_back"
+                android:layout_above="@+id/textViewMensaje"
+                android:layout_toStartOf="@+id/fabCancel"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fabCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                app:backgroundTint="@android:color/holo_red_light"
+                app:srcCompat="@android:drawable/ic_menu_close_clear_cancel"
+                android:layout_marginBottom="17dp"
+                android:layout_above="@+id/textViewMensaje"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="13dp"
+                android:layout_marginEnd="13dp" />
+
+            <TextView
+                android:id="@+id/textViewMensaje"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ACERQUE EL TAG PARA ESCRIBIR EL ORIGEN"
+                android:textAlignment="center"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault"
+                android:textSize="20sp"
+                android:textStyle="normal|bold"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+            </LinearLayout>
+    </LinearLayout>
 
 
-</RelativeLayout>
+</ScrollView>

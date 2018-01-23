@@ -630,7 +630,7 @@ public class SetOrigenActivity extends AppCompatActivity
         final Boolean[] ok = {false};
         android.app.AlertDialog.Builder alerta = new android.app.AlertDialog.Builder(SetOrigenActivity.this);
         View vista = getLayoutInflater().inflate(R.layout.popup,  null);
-        alerta.setTitle("Ingresar Deductiva y Motivo");
+        alerta.setTitle("¿Desea Ingresar una Nueva Deductiva?");
         Spinner spMotivos = (Spinner) vista.findViewById(R.id.popupspinner);
         final EditText motivo = (EditText) vista.findViewById(R.id.etPopAgregar);
         ArrayAdapter<String> adaptador = new ArrayAdapter<>(this,R.layout.support_simple_spinner_dropdown_item, spinnerMotivosA);

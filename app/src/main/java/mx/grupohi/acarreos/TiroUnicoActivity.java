@@ -15,6 +15,7 @@ import android.nfc.tech.MifareUltralight;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
 import android.view.View;
@@ -84,6 +85,11 @@ public class TiroUnicoActivity extends AppCompatActivity
     private Double latitude;
     private Double longitude;
 
+
+    private TextInputLayout mina,
+            seg;
+    private TextView textmina,
+            textseg;
     //NFC
     private NFCTag nfcTag;
     private NFCUltralight nfcUltra;
@@ -96,6 +102,7 @@ public class TiroUnicoActivity extends AppCompatActivity
     private Integer idcamion;
     private Integer idruta;
     private Integer error_eliminar = 0;// error de borrado de Tag (si es 0 no se ha realizado ninguna lectura, si es 1 no elimino correctamente)
+    private LinearLayout tiro;
 
 
     @Override
@@ -121,7 +128,12 @@ public class TiroUnicoActivity extends AppCompatActivity
         destinoSuccess = new Intent(this, SuccessDestinoActivity.class);
         TelephonyManager phneMgr = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
         IMEI = phneMgr.getDeviceId();
-
+        mina = (TextInputLayout) findViewById(R.id.textomina);
+        seg = (TextInputLayout) findViewById(R.id.seg);
+        textmina = (TextView) findViewById(R.id.vale_mina);
+        textseg = (TextView) findViewById(R.id.seguimiento);
+        tiro = (LinearLayout) findViewById(R.id.leerTag);
+        tiro.setVisibility(View.GONE);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -139,9 +151,6 @@ public class TiroUnicoActivity extends AppCompatActivity
         mainLayout = (LinearLayout) findViewById(R.id.MainLayout);
         tagAlertTextView = (TextView) findViewById(R.id.textViewMensaje);
 
-        tagAlertTextView.setVisibility(View.INVISIBLE);
-        nfcImage.setVisibility(View.INVISIBLE);
-        fabCancel.setVisibility(View.INVISIBLE);
         text_origen = (TextView) findViewById(R.id.textView5);
         materialesSpinner = (Spinner) findViewById(R.id.spinnerMateriales);
         origenesSpinner = (Spinner) findViewById(R.id.spinnerOrigenes);
@@ -151,9 +160,7 @@ public class TiroUnicoActivity extends AppCompatActivity
         textViewMotivo = (TextView) findViewById(R.id.textViewMotivo);
         spinnerMotivo = (Spinner) findViewById(R.id.spinnerMotivo);
         observaciones = (EditText) findViewById(R.id.textObservaciones);
-        mensajeTextView.setVisibility(View.INVISIBLE);
-        textViewMotivo.setVisibility(View.GONE);
-        spinnerMotivo.setVisibility(View.GONE);
+
 
         textDeductiva.setOnClickListener(new View.OnClickListener() {
                                          @Override
@@ -311,6 +318,12 @@ public class TiroUnicoActivity extends AppCompatActivity
                 }else if(camion.capacidad != 0 && camion.capacidad!= null && !textDeductiva.getText().toString().equals("") && Integer.valueOf(textDeductiva.getText().toString()) != 0 && Integer.valueOf(textDeductiva.getText().toString()) >= camion.capacidad) {
                     Toast.makeText(getApplicationContext(), R.string.error_deductiva, Toast.LENGTH_LONG).show();
                 }
+                else if(textmina.getText().toString().isEmpty()){
+                    Toast.makeText(getApplicationContext(), "Por favor ingrese el folio de mina", Toast.LENGTH_SHORT).show();
+                }
+                else if(textseg.getText().toString().isEmpty()){
+                    Toast.makeText(getApplicationContext(), "Por favor ingrese el folio de seguimiento", Toast.LENGTH_SHORT).show();
+                }
                 else if (( textDeductiva.getText().toString().equals("")==false ) && idMotivo == 0){
                     Toast.makeText(getApplicationContext(), "Por favor seleccione un motivo", Toast.LENGTH_SHORT).show();
                 }
@@ -380,24 +393,15 @@ public class TiroUnicoActivity extends AppCompatActivity
         writeMode = true;
         nfcAdapter.enableForegroundDispatch(this, pendingIntent, writeTagFilters, null);
 
-        escribirButton.setVisibility(View.INVISIBLE);
-        mainLayout.setVisibility(View.INVISIBLE);
-
-        fabCancel.setVisibility(View.VISIBLE);
-        nfcImage.setVisibility(View.VISIBLE);
-        mensajeTextView.setVisibility(View.VISIBLE);
+        mainLayout.setVisibility(View.GONE);
+        tiro.setVisibility(View.VISIBLE);
     }
 
     private void WriteModeOff() {
         writeMode = false;
         nfcAdapter.disableForegroundDispatch(this);
-
-        escribirButton.setVisibility(View.VISIBLE);
         mainLayout.setVisibility(View.VISIBLE);
-
-        fabCancel.setVisibility(View.GONE);
-        nfcImage.setVisibility(View.GONE);
-        mensajeTextView.setVisibility(View.GONE);
+        tiro.setVisibility(View.GONE);
     }
 
     private void checkNfcEnabled() {
@@ -613,6 +617,17 @@ public class TiroUnicoActivity extends AppCompatActivity
                 cv.put("deductiva", textDeductiva.getText().toString());
                 cv.put("idMotivo", idMotivo);
             }
+            if(textseg.getText().toString().equals("")) {
+                cv.put("folio_seguimiento", 0);
+            }else {
+                cv.put("folio_seguimiento", textseg.getText().toString());
+            }
+            if(textmina.getText().toString().equals("")) {
+                cv.put("folio_mina", 0);
+            }else{
+                cv.put("folio_mina", textmina.getText().toString());
+            }
+
             RandomString r = new RandomString(10);
             cv.put("FolioRandom", r.nextString().toUpperCase());
             cv.put("primerToque", usuario.getId());

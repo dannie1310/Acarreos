@@ -153,14 +153,6 @@ public class SetDestinoActivity extends AppCompatActivity
         seg = (TextInputLayout) findViewById(R.id.seg);
         textmina = (TextView) findViewById(R.id.vale_mina);
         textseg = (TextView) findViewById(R.id.seguimiento);
-
-        if(tipo_suministro == 1){
-            mina.setVisibility(View.VISIBLE);
-            seg.setVisibility(View.VISIBLE);
-        }else {
-            mina.setVisibility(View.GONE);
-            seg.setVisibility(View.GONE);
-        }
         mensajeTextView.setVisibility(View.INVISIBLE);
         nfcImage.setVisibility(View.INVISIBLE);
         fabCancel.setVisibility(View.INVISIBLE);
@@ -319,10 +311,10 @@ public class SetDestinoActivity extends AppCompatActivity
                 else if (( deductiva.getText().toString().equals("")==false ) && idMotivo == 0){
                     Toast.makeText(getApplicationContext(), "Por favor seleccione un motivo", Toast.LENGTH_SHORT).show();
                 }
-                else if(tipo_suministro == 1 && textmina.getText().toString().isEmpty()){
+                else if(textmina.getText().toString().isEmpty()){
                     Toast.makeText(getApplicationContext(), "Por favor ingrese el folio de mina", Toast.LENGTH_SHORT).show();
                 }
-                else if(tipo_suministro ==1 && textseg.getText().toString().isEmpty()){
+                else if(textseg.getText().toString().isEmpty()){
                     Toast.makeText(getApplicationContext(), "Por favor ingrese el folio de seguimiento", Toast.LENGTH_SHORT).show();
                 }
                 else {
