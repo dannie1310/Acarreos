@@ -449,26 +449,27 @@
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="38dp">
+            android:layout_height="38dp"
+            android:orientation="horizontal">
 
             <TextView
-                android:text="OBSERVACIONES"
                 android:id="@+id/textObservaciones"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:text="OBSERVACIONES"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault"
                 android:textStyle="normal|bold" />
 
             <TextView
+                android:id="@+id/textViewObservaciones"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/textViewObservaciones"
                 android:layout_weight="1"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
         </LinearLayout>
+
         <View
             android:id="@+id/view2"
             android:layout_width="match_parent"
@@ -476,6 +477,7 @@
             android:background="@android:color/darker_gray"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp" />
+
         <Button
             android:text="IMPRIMIR VIAJE"
             android:layout_width="match_parent"

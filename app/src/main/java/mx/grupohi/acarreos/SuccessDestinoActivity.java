@@ -192,6 +192,15 @@ public class SuccessDestinoActivity extends AppCompatActivity
         textTipoViaje = (TextView) findViewById(R.id.textTipoViaje);
         textViewTipoViaje = (TextView) findViewById(R.id.textViewTipoViaje);
 
+        textViewDeductivaOrigen.setVisibility(View.GONE);
+        textViewDeductivaEntrada.setVisibility(View.GONE);
+        textDeductivaEntrada.setVisibility(View.GONE);
+        textMotivoEntrada.setVisibility(View.GONE);
+        textDeductivaOrigen.setVisibility(View.GONE);
+        textMotivoOrigen.setVisibility(View.GONE);
+        motivoEntrada.setVisibility(View.GONE);
+        motivoOrigen.setVisibility(View.GONE);
+
         btnImprimir = (Button) findViewById(R.id.buttonImprimir);
         btnImagenes = (Button) findViewById(R.id.buttonImagenes);
         btnSalir = (Button) findViewById(R.id.buttonSalir);
@@ -420,6 +429,10 @@ public class SuccessDestinoActivity extends AppCompatActivity
             json.put("20", inicio);
             json.put("25", 0);
             json.put("26", inicios.tipo_suministro);
+            json.put("31", "NULL");
+            json.put("32", "NULL");
+            json.put("33", "NULL");
+            json.put("34", "NULL");
             if(inicios.tipo_suministro == 1) {
                // datos_inicio = "000|000000|000|000000000000|000|000000000000|000|00000|000000000000|000000000000000|00000|00|000000000000000000|0|00000000|00000000|00|0";
                 datos_inicio = usuario.idProyecto + "|"
@@ -550,8 +563,31 @@ public class SuccessDestinoActivity extends AppCompatActivity
                 textMina.setText(viaje.folio_mina);
                 textSeg.setText(viaje.folio_seguimiento);
             }
-            textViewDeductivaOrigen.setText(viaje.deductiva_origen+" m3");
-            textViewDeductivaEntrada.setText(viaje.deductiva_entrada+" m3");
+            if(viaje.deductiva_entrada.isEmpty()){
+                textDeductivaEntrada.setVisibility(View.GONE);
+                textMotivoEntrada.setVisibility(View.GONE);
+                textViewDeductivaEntrada.setVisibility(View.GONE);
+                motivoEntrada.setVisibility(View.GONE);
+
+            }else{
+                textDeductivaEntrada.setVisibility(View.VISIBLE);
+                textMotivoEntrada.setVisibility(View.VISIBLE);
+                textViewDeductivaEntrada.setVisibility(View.VISIBLE);
+                motivoEntrada.setVisibility(View.VISIBLE);
+                textViewDeductivaEntrada.setText(viaje.deductiva_entrada+" m3");
+            }
+            if(viaje.deductiva_origen.isEmpty()){
+                textDeductivaOrigen.setVisibility(View.GONE);
+                textMotivoOrigen.setVisibility(View.GONE);
+                textViewDeductivaOrigen.setVisibility(View.GONE);
+                motivoOrigen.setVisibility(View.GONE);
+            }else {
+                textDeductivaOrigen.setVisibility(View.VISIBLE);
+                textMotivoOrigen.setVisibility(View.VISIBLE);
+                textViewDeductivaOrigen.setVisibility(View.VISIBLE);
+                motivoOrigen.setVisibility(View.VISIBLE);
+                textViewDeductivaOrigen.setText(viaje.deductiva_origen + " m3");
+            }
 
             if(viaje.tipoViaje == 1){
                 textTipoViaje.setVisibility(View.VISIBLE);
@@ -593,9 +629,16 @@ public class SuccessDestinoActivity extends AppCompatActivity
             textFechaDestino.setVisibility(View.GONE);
             textRuta.setVisibility(View.GONE);
             textObservacion.setVisibility(View.GONE);
+            textDeductivaEntrada.setVisibility(View.GONE);
+            textMotivoEntrada.setVisibility(View.GONE);
+            textDeductivaOrigen.setVisibility(View.GONE);
+            textMotivoOrigen.setVisibility(View.GONE);
             view2.setVisibility(View.GONE);
             btnImprimir.setText("IMPRIMIR");
-            if(in.tipo_suministro == 1){
+            if(in.deductiva_entrada == 1 && in.tipo_suministro==1){
+                textTipoViaje.setVisibility(View.VISIBLE);
+                textViewTipoViaje.setText("Origen (Suministro)- Deductiva Entrada.");
+            } else if (in.tipo_suministro == 1){
                 textViewTipoViaje.setText("Origen (Suministro).");
             }else{
                 textTipoViaje.setVisibility(View.GONE);
