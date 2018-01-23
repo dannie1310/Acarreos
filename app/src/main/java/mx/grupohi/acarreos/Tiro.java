@@ -107,7 +107,7 @@ class Tiro {
         Usuario usuario = new Usuario(context);
         usuario = usuario.getUsuario();
         if(usuario.idtiro != null) {
-            Cursor c = db.rawQuery("SELECT * FROM tiros WHERE idtiro = '" + usuario.idtiro + "'", null);
+            Cursor c = db.rawQuery("SELECT * FROM tiros", null);
             if (c != null && c.moveToFirst())
                 try {
                     if (c.getCount() == 1) {
@@ -133,7 +133,7 @@ class Tiro {
         Usuario usuario = new Usuario(context);
         usuario = usuario.getUsuario();
         if(usuario.idtiro != null) {
-            Cursor c = db.rawQuery("SELECT * FROM tiros WHERE idtiro = '" + usuario.idtiro + "'", null);
+            Cursor c = db.rawQuery("SELECT * FROM tiros", null);
             if (c != null && c.moveToFirst())
                 try {
                     if (c.getCount() == 1) {

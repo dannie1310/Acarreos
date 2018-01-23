@@ -520,7 +520,7 @@ public class SetDestinoActivity extends AppCompatActivity
         String deductiva_entrada = "";
         String idmotivo_entrada = "";
         String tipoviaje="";
-String au;
+
         if (writeMode) {
             if(NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
                 Tag myTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);

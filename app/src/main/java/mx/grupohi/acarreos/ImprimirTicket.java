@@ -75,18 +75,18 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
             printTextTwoColumns("Camión: ", dato.getString("2") + " \n");
             printTextTwoColumns("Cubicación: ", dato.getString("3") + " m3\n");
 
-            if(dato.getString("31") != "0" && dato.getString("31")!="NULL") {
+            if(!dato.getString("31").equals("0") && !dato.getString("31").equals("NULL")) {
                 printTextTwoColumns("              -----  Detalles deductiva  ----", "\n");
                 sumaDeductiva = sumaDeductiva + dato.getInt("31");
                 printTextTwoColumns("D. Origen: ", dato.getString("31") + " m3\n");
                 printTextTwoColumns("Motivo Origen: ", dato.getString("33") + "\n");
             }
-            if(dato.getString("32")!= "0" && !dato.getString("32").equals("NULL")) {
+            if(!dato.getString("32").equals("0") && !dato.getString("32").equals("NULL")) {
                 sumaDeductiva = sumaDeductiva + dato.getInt("32");
                 printTextTwoColumns("D. Entrada: ", dato.getString("32") + " m3\n");
                 printTextTwoColumns("Motivo Entrada: ", dato.getString("34") + "\n");
             }
-            if(dato.getString("10")!="0" && !dato.getString("10").equals("NULL")){
+            if(!dato.getString("10").equals("0") && !dato.getString("10").equals("NULL")){
                 sumaDeductiva = sumaDeductiva + dato.getInt("10");
             }
             printTextTwoColumns("D. Salida: ", dato.getString("10") + " m3\n");
@@ -135,6 +135,9 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
                     printTextTwoColumns("Checador Cierre: " + dato.getString("14"), dato.getString("15") + "\n");
                     printTextTwoColumns("Versión: ", String.valueOf(dato.getString("16")) + "\n");
                 }
+                if(dato.getString("30")!= "NULL"){
+                    printTextTwoColumns("Tipo Viaje: ", dato.getString("30") + "\n");
+                }
                 num = Viaje.numImpresion(dato.getInt("0"), context);
                 if(num == 0){
                     bixolonPrinterApi.printText("C H O F E R", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_A, 2, false);
@@ -148,9 +151,7 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
                }
 
                 printfoot(num, "Checador: " + dato.getString("14"), dato.getString("22"), dato.getString("19"));
-                if(dato.getString("30")!= "NULL"){
-                    printTextTwoColumns("Tipo Viaje: ", dato.getString("30") + "\n");
-                }
+
                 bixolonPrinterApi.lineFeed(3, true);
             } else {
                 idInicio = dato.getInt("20");

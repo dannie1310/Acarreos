@@ -497,9 +497,11 @@ public class TiroUnicoActivity extends AppCompatActivity
                                 if(aux != null){
                                     tagInfo =tagInfo+aux;
                                 }
-                                tipoPerfil = nfcUltra.readPage(myTag, 18).substring(0,1);
+                                tipoPerfil = nfcUltra.readPage(myTag, 18);
                                 if(tipoPerfil == " " || tipoPerfil == null){
                                     tipoPerfil ="0";
+                                }else{
+                                    tipoPerfil = tipoPerfil.substring(0,1);
                                 }
                                 if(Integer.valueOf(tipoPerfil) != 1) {
                                     Boolean limpiar = nfcUltra.cleanTag(myTag);
@@ -619,6 +621,11 @@ public class TiroUnicoActivity extends AppCompatActivity
             cv.put("tipoEsquema", usuario.getTipoEsquema());
             cv.put("numImpresion", 0);
             cv.put("idperfil", usuario.tipo_permiso);
+            cv.put("deductiva_origen", 0);
+            cv.put("idmotivo_origen", 0);
+
+            cv.put("deductiva_entrada", 0);
+            cv.put("idmotivo_entrada", 0);
 
             viaje = new Viaje(this);
             viaje.create(cv);

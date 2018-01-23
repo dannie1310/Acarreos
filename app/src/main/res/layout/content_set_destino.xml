@@ -47,35 +47,6 @@
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <AutoCompleteTextView
-                android:id="@+id/textDeductiva"
-                android:layout_marginTop="2dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="DEDUCTIVA:"
-                android:inputType="number"
-                android:maxLength="2"
-                android:singleLine="true"
-                android:maxLines="1" />
-
-        </android.support.design.widget.TextInputLayout>
-
-        <TextView
-            android:text="SELECCIONE EL MOTIVO:"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textViewMotivo"
-            android:textAppearance="@android:style/TextAppearance.Material.Menu" />
-
-        <Spinner
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/spinnerMotivo" />
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
             android:id="@+id/textomina"
             android:layout_height="wrap_content">
 
@@ -110,6 +81,35 @@
                 android:maxLines="1" />
 
         </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <AutoCompleteTextView
+                android:id="@+id/textDeductiva"
+                android:layout_marginTop="2dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="DEDUCTIVA:"
+                android:inputType="number"
+                android:maxLength="2"
+                android:singleLine="true"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <TextView
+            android:text="SELECCIONE EL MOTIVO:"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewMotivo"
+            android:textAppearance="@android:style/TextAppearance.Material.Menu" />
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinnerMotivo" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"

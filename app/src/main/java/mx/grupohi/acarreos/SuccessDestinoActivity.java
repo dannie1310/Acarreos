@@ -524,13 +524,13 @@ public class SuccessDestinoActivity extends AppCompatActivity
                 motivo.setText(motivoss.descripcion);
             }
 
-            if(viaje.deductiva_origen.equals("0")) {
+            if(viaje.deductiva_origen.equals("0") || viaje.deductiva_origen == "NULL") {
                 motivoOrigen.setText("NA");
             }else{
                 motivoss.find(Integer.valueOf(viaje.idmotivo_origen));
                 motivoOrigen.setText(motivoss.descripcion);
             }
-            if(viaje.deductiva_entrada.equals("0")) {
+            if(viaje.deductiva_entrada.equals("0") || viaje.deductiva_entrada =="NULL") {
                 motivoEntrada.setText("NA");
             }else{
                 motivoss.find(Integer.valueOf(viaje.deductiva_entrada));
@@ -563,7 +563,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
                 textMina.setText(viaje.folio_mina);
                 textSeg.setText(viaje.folio_seguimiento);
             }
-            if(viaje.deductiva_entrada.isEmpty()){
+            if(viaje.deductiva_entrada.isEmpty() || viaje.deductiva_entrada=="NULL"||viaje.deductiva_entrada.equals("0")){
                 textDeductivaEntrada.setVisibility(View.GONE);
                 textMotivoEntrada.setVisibility(View.GONE);
                 textViewDeductivaEntrada.setVisibility(View.GONE);
@@ -576,7 +576,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
                 motivoEntrada.setVisibility(View.VISIBLE);
                 textViewDeductivaEntrada.setText(viaje.deductiva_entrada+" m3");
             }
-            if(viaje.deductiva_origen.isEmpty()){
+            if(viaje.deductiva_origen.isEmpty()||viaje.deductiva_origen == null||viaje.deductiva_origen.equals("0")){
                 textDeductivaOrigen.setVisibility(View.GONE);
                 textMotivoOrigen.setVisibility(View.GONE);
                 textViewDeductivaOrigen.setVisibility(View.GONE);
