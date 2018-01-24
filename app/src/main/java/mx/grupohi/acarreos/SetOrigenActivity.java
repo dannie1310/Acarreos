@@ -628,7 +628,7 @@ public class SetOrigenActivity extends AppCompatActivity
 
     public void mensajeDeductiva(){
         final Boolean[] ok = {false};
-        android.app.AlertDialog.Builder alerta = new android.app.AlertDialog.Builder(SetOrigenActivity.this);
+        final android.app.AlertDialog.Builder alerta = new android.app.AlertDialog.Builder(SetOrigenActivity.this);
         View vista = getLayoutInflater().inflate(R.layout.popup,  null);
         alerta.setTitle("¿Desea Ingresar una Nueva Deductiva?");
         Spinner spMotivos = (Spinner) vista.findViewById(R.id.popupspinner);
@@ -659,7 +659,6 @@ public class SetOrigenActivity extends AppCompatActivity
                 String dat = motivo.getText().toString();
                 if(mensaje == true && motivo.getText().toString().trim().length() > 0){
                     txtDeductiva = motivo.getText().toString();
-
                     WriteModeOn();
                 }
             }
@@ -667,7 +666,8 @@ public class SetOrigenActivity extends AppCompatActivity
         alerta.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                finish();
+                Toast.makeText(getApplicationContext(), "Favor de Pasar a la Salida para Finalizar el Viaje.", Toast.LENGTH_LONG).show();
+                dialog.cancel();
             }
         });
        alerta.show();
