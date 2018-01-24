@@ -211,7 +211,13 @@ public class Viaje {
                         json.put("folioMina", c.getString(c.getColumnIndex("folio_mina")));
                         json.put("folioSeguimiento", c.getString(c.getColumnIndex("folio_seguimiento")));
                         json.put("numImpresion", c.getString(c.getColumnIndex("numImpresion")));
-                        JSON.put(i + "", json);
+                        json.put("deductiva_origen", c.getString(c.getColumnIndex("deductiva_origen")));
+                        json.put("deductiva_entrada", c.getString(c.getColumnIndex("deductiva_entrada")));
+                        json.put("idmotivo_origen", c.getString(c.getColumnIndex("idmotivo_origen")));
+                        json.put("idmotivo_entrada", c.getString(c.getColumnIndex("idmotivo_entrada")));
+                        json.put("tipoViaje", c.getString(c.getColumnIndex("tipoViaje")));
+
+                    JSON.put(i + "", json);
                         i++;
 
                 } while (c.moveToNext());
