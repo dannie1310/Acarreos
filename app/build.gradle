@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion '24.0.2'
+    compileSdkVersion 25
+    buildToolsVersion '26.0.1'
     defaultConfig {
         applicationId "mx.grupohi.acarreos"
         minSdkVersion 16
-        targetSdkVersion 24
+        targetSdkVersion 25
         versionCode 11
         versionName "11.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -25,9 +25,9 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile files('lib/BixolonPrinterV229.jar')
-    compile 'com.android.support:appcompat-v7:24.2.1'
-    compile 'com.android.support:design:24.2.1'
-    compile 'com.android.support:support-v4:24.2.1'
+    compile 'com.android.support:design:25.4.0'
+    compile 'com.android.support:appcompat-v7:25.4.0'
+    compile 'com.android.support:support-v4:25.4.0'
     compile 'com.github.bumptech.glide:glide:3.6.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
