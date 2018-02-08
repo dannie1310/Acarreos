@@ -585,6 +585,7 @@ public class SetOrigenActivity extends AppCompatActivity
         final Boolean[] ok = {false};
         final android.app.AlertDialog.Builder alerta = new android.app.AlertDialog.Builder(SetOrigenActivity.this);
         View vista = getLayoutInflater().inflate(R.layout.popup,  null);
+        final EditText deduc = (EditText) vista.findViewById(R.id.etPopAgregar);
         alerta.setTitle("¿Desea Agregar un Nuevo Volumen?");
 
         alerta.setView(vista);
@@ -593,7 +594,9 @@ public class SetOrigenActivity extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                if(mensaje == true){
+                if(deduc.getText().toString().isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "Por favor escribir el volumen", Toast.LENGTH_SHORT).show();
+                }else{
                     WriteModeOn();
                 }
             }

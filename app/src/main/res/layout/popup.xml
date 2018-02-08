@@ -10,7 +10,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="1dp"
         android:orientation="vertical" >
-        >
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -18,28 +17,12 @@
             android:layout_margin="20dp"
             android:orientation="vertical" >
 
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="Seleccione una Deductiva y un Motivo" />
-
             <EditText
                 android:id="@+id/etPopAgregar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="number"
                 android:maxLength="2"/>
-
-            <Spinner
-                android:id="@+id/popupspinner"
-                android:spinnerMode="dialog"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="45px"/>
-
-
-
-
         </LinearLayout>
     </LinearLayout>
 
