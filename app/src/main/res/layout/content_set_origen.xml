@@ -81,7 +81,8 @@
                 android:digits="0123456789-QAZWSXEDCRFVTGBYHNUJMIKOLP"
                 android:maxLength="8"
                 android:singleLine="true"
-                android:maxLines="1" />
+                android:maxLines="1"
+                />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -120,25 +121,13 @@
                 android:layout_marginTop="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="DEDUCTIVA:"
-                android:inputType="number"
-                android:maxLength="2"
+                android:hint="VOLUMEN:"
+                android:inputType="numberDecimal"
+                android:maxLength="4"
                 android:singleLine="true"
                 android:maxLines="1" />
 
         </android.support.design.widget.TextInputLayout>
-
-        <TextView
-            android:text="SELECCIONE EL MOTIVO:"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textViewMotivo"
-            android:textAppearance="@android:style/TextAppearance.Material.Menu" />
-
-        <Spinner
-            android:id="@+id/spinnerMotivo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
 
         <Button
             android:id="@+id/buttonEscribirOrigen"

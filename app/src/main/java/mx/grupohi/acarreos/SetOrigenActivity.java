@@ -149,19 +149,6 @@ public class SetOrigenActivity extends AppCompatActivity
         vale_mina = (TextView)findViewById(R.id.vale_mina);
         seguimiento = (TextView) findViewById(R.id.seguimiento);
         deductiva = (TextView) findViewById(R.id.deductiva);
-        textmotivo = (TextView) findViewById(R.id.textViewMotivo);
-        motivos = (Spinner) findViewById(R.id.spinnerMotivo);
-
-        deductiva.setOnClickListener(new View.OnClickListener() {
-                                         @Override
-                                         public void onClick(View v) {
-                                             textmotivo.setVisibility(View.VISIBLE);
-                                             motivos.setVisibility(View.VISIBLE);
-                                         }
-                                     }
-
-        );
-
 
         tipo = 1;
             final ArrayList<String> descripcionesOrigenes = origen.getArrayListDescripciones();
@@ -197,34 +184,6 @@ public class SetOrigenActivity extends AppCompatActivity
 
                 }
             });
-        Motivo motivo = new Motivo(getApplicationContext());
-        final ArrayList<String> descripcionesMotivos = motivo.getArrayListDescripciones();
-        final ArrayList <String> idsMotivos = motivo.getArrayListId();
-
-        spinnerMotivosA = new String[idsMotivos.size()];
-        spinnerMotivosMap = new HashMap<>();
-
-        for (int i = 0; i < idsMotivos.size(); i++) {
-            spinnerMotivosMap.put(descripcionesMotivos.get(i), idsMotivos.get(i));
-            spinnerMotivosA[i] = descripcionesMotivos.get(i);
-        }
-        final ArrayAdapter<String> arrayAdapterMotivos = new ArrayAdapter<>(this,R.layout.support_simple_spinner_dropdown_item, spinnerMotivosA);
-        arrayAdapterMotivos.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-        motivos.setAdapter(arrayAdapterMotivos);
-
-        motivos.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String Mo = String.valueOf(parent.getItemAtPosition(position));
-                idMotivo = Integer.valueOf(spinnerMotivosMap.get(Mo));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
 
 
         final ArrayList<String> descripcionesMateriales = material.getArrayListDescripciones();
@@ -280,8 +239,8 @@ public class SetOrigenActivity extends AppCompatActivity
                         Toast.makeText(getApplicationContext(), "Por favor seleccione un Origen de la lista", Toast.LENGTH_SHORT).show();
                         origenesSpinner.requestFocus();
                 }
-                else if ((deductiva.getText().toString().equals("")==false ) && idMotivo == 0){
-                    Toast.makeText(getApplicationContext(), "Por favor seleccione un motivo", Toast.LENGTH_SHORT).show();
+                else if (deductiva.getText().toString().isEmpty()){
+                    Toast.makeText(getApplicationContext(), "Por favor escribir el volumen", Toast.LENGTH_SHORT).show();
                 }
                 else if(seguimiento.getText().toString().isEmpty()){
                         Toast.makeText(getApplicationContext(), "Por favor escribir el folio de seguimiento de material", Toast.LENGTH_SHORT).show();
@@ -290,11 +249,6 @@ public class SetOrigenActivity extends AppCompatActivity
                     Toast.makeText(getApplicationContext(), "Por favor escribir el folio de mina", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    if(deductiva.getText().toString().equals("") || deductiva.getText().toString().equals("0")){
-                        motivos.setSelection(0);
-                        textmotivo.setVisibility(View.GONE);
-                        motivos.setVisibility(View.GONE);
-                    }
                     checkNfcEnabled();
                     WriteModeOn();
                 }
@@ -392,6 +346,7 @@ public class SetOrigenActivity extends AppCompatActivity
                         Integer tipoperfil=0;
                         Integer banderaPermisos=0;
                         String dataTime = Util.getFechaHora();
+                        Integer id_motivo = 0;
                         Integer tipo_s = 0;
                         if (tipo == 1) {
                             camion_proyecto = nfcTag.readSector(myTag, 0, 1).replace(" ", "");
@@ -409,7 +364,7 @@ public class SetOrigenActivity extends AppCompatActivity
                             }
 
 
-                            if(!txtDeductiva.equals("") && id_motivo > 0){
+                            if(!txtDeductiva.equals("")){
                                 nfcTag.writeSector(myTag, 4, 16, txtDeductiva);
                                 nfcTag.writeSector(myTag, 4, 17, id_motivo.toString());
                                 camion = nfcTag.readSector(myTag, 1, 4);
@@ -468,7 +423,7 @@ public class SetOrigenActivity extends AppCompatActivity
                                 tipoperfil = Integer.valueOf(nfcUltra.readConfirmar(myTag, 18).substring(0,1));
                             }
 
-                            if(!txtDeductiva.equals("") && id_motivo > 0){
+                            if(!txtDeductiva.equals("")){
                                 nfcUltra.writePagina(myTag,  19, txtDeductiva);
                                 nfcUltra.writePagina(myTag,  20, id_motivo.toString());
                                 tipo_s = 1;
@@ -630,35 +585,15 @@ public class SetOrigenActivity extends AppCompatActivity
         final Boolean[] ok = {false};
         final android.app.AlertDialog.Builder alerta = new android.app.AlertDialog.Builder(SetOrigenActivity.this);
         View vista = getLayoutInflater().inflate(R.layout.popup,  null);
-        alerta.setTitle("¿Desea Ingresar una Nueva Deductiva?");
-        Spinner spMotivos = (Spinner) vista.findViewById(R.id.popupspinner);
-        final EditText motivo = (EditText) vista.findViewById(R.id.etPopAgregar);
-        ArrayAdapter<String> adaptador = new ArrayAdapter<>(this,R.layout.support_simple_spinner_dropdown_item, spinnerMotivosA);
-        adaptador.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-        spMotivos.setAdapter(adaptador);
+        alerta.setTitle("¿Desea Agregar un Nuevo Volumen?");
 
         alerta.setView(vista);
-
-        spMotivos.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String Mo = String.valueOf(parent.getItemAtPosition(position));
-                id_motivo = Integer.valueOf(spinnerMotivosMap.get(Mo));
-                mensaje = true;
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
 
         alerta.setPositiveButton("Agregar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String dat = motivo.getText().toString();
-                if(mensaje == true && motivo.getText().toString().trim().length() > 0){
-                    txtDeductiva = motivo.getText().toString();
+
+                if(mensaje == true){
                     WriteModeOn();
                 }
             }
