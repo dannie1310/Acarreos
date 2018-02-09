@@ -370,6 +370,9 @@ public class SetOrigenActivity extends AppCompatActivity
                                 camion = nfcTag.readSector(myTag, 1, 4);
                                 fecha = nfcTag.readSector(myTag, 1, 5);
                                 idusuario = nfcTag.readSector(myTag, 1, 6);
+                                idMaterial = Util.getIdMaterial(camion);
+                                idOrigen = Util.getIdOrigen(camion);
+                                dataTime =fecha.replace(" ", "");
                                 tipo_s = 1;
                                 banderaPermisos = 0;
                                 if(!nfcTag.readSector(myTag, 4, 16).equals("") && !nfcTag.readSector(myTag, 4, 17).equals("")){
@@ -418,9 +421,9 @@ public class SetOrigenActivity extends AppCompatActivity
                                 idproyecto = Util.getIdProyecto(camion_proyecto, 8);
                             }
                             tipoperfil =0;
-
-                            if(nfcUltra.readConfirmar(myTag, 18).substring(0,1) != " "){
-                                tipoperfil = Integer.valueOf(nfcUltra.readConfirmar(myTag, 18).substring(0,1));
+                            String aux =nfcUltra.readDeductiva(myTag, 18);
+                            if(aux != "") {
+                                tipoperfil = Integer.valueOf(nfcUltra.readDeductiva(myTag, 18));
                             }
 
                             if(!txtDeductiva.equals("")){
@@ -431,6 +434,9 @@ public class SetOrigenActivity extends AppCompatActivity
                                 camion = nfcUltra.readConfirmar(myTag, 7) + nfcUltra.readConfirmar(myTag, 8);
                                 fecha = nfcUltra.readConfirmar(myTag, 9) + nfcUltra.readConfirmar(myTag, 10) + nfcUltra.readConfirmar(myTag, 11) + nfcUltra.readConfirmar(myTag, 12).substring(0, 2);
                                 idusuario = nfcUltra.readConfirmar(myTag, 13) + nfcUltra.readConfirmar(myTag, 14);
+                                idMaterial = Util.getIdMaterial(camion);
+                                idOrigen = Util.getIdOrigen(camion);
+                                dataTime =fecha.replace(" ", "");
                                 if(!nfcUltra.readConfirmar(myTag, 19).equals("") && !nfcUltra.readConfirmar(myTag, 20).equals("")){
                                     deductiva_check = true;
                                 }
@@ -597,6 +603,7 @@ public class SetOrigenActivity extends AppCompatActivity
                 if(deduc.getText().toString().isEmpty()) {
                     Toast.makeText(getApplicationContext(), "Por favor escribir el volumen", Toast.LENGTH_SHORT).show();
                 }else{
+                    txtDeductiva = deduc.getText().toString();
                     WriteModeOn();
                 }
             }

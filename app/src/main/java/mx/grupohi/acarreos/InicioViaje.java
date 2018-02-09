@@ -114,7 +114,7 @@ public class InicioViaje {
     public static List<InicioViaje> getViajes(Context context){
         DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
         SQLiteDatabase db = db_sca.getWritableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM inicio_viajes ORDER BY 'ID' ASC",null);
+        Cursor c = db.rawQuery("SELECT * FROM inicio_viajes ORDER BY ID DESC",null);
         ArrayList viajes = new ArrayList<InicioViaje>();
         try {
             if (c != null){
