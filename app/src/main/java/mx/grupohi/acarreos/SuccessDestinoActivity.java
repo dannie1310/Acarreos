@@ -411,17 +411,17 @@ public class SuccessDestinoActivity extends AppCompatActivity
                 datos_inicio = usuario.idProyecto + "|"
                         + inicios.idcamion + "|"
                         + inicios.idorigen + "|"
-                        + inicios.fecha_origen.replace("-", "").replace(":", "").replace(" ", "") + "|"
+                        + inicios.fecha_origen.substring(2,inicios.fecha_origen.length()).replace("/", "").replace("-", "").replace(":", "").replace(" ", "") + "|"
                         + "0|"
                         + "0|"
                         + inicios.idmaterial + "|"
                         + "0|"
-                        + inicios.getCode(inicio) + inicios.idcamion.toString() + "|"
+                        + inicios.getCode(inicio).replace(inicios.idcamion.toString(), "") + "|"
                         + inicios.uidTAG + "|"
                         + inicios.idusuario + "|"
                         + inicios.camion.capacidad + "|"
                         + IMEI + "|"
-                        + inicios.estatus + '|'
+                        + inicios.tipo_suministro + '|'
                         + inicios.folio_mina + '|'
                         + inicios.folio_seg + "|"
                         + inicios.deductiva + "|"

@@ -363,7 +363,6 @@ public class SetOrigenActivity extends AppCompatActivity
                                 tipoperfil = Integer.valueOf(nfcTag.readSector(myTag, 3, 14).replace(" ", ""));
                             }
 
-
                             if(!txtDeductiva.equals("")){
                                 nfcTag.writeSector(myTag, 4, 16, txtDeductiva);
                                 nfcTag.writeSector(myTag, 4, 17, id_motivo.toString());
@@ -380,30 +379,38 @@ public class SetOrigenActivity extends AppCompatActivity
                                 }
                             }else {
                                 if (usuario.tipo_permiso == 1 && tipoperfil == 1 || usuario.tipo_permiso == 4 && tipoperfil == 0 || usuario.tipo_permiso == 1 && tipoperfil == 0) {
-                                    if (usuario.tipo_permiso == 1) {
-                                        tipo_s = 1;
-                                    } else {
-                                        tipo_s = 0;
-                                    }
-
-                                    datos = nfcTag.writeSector(myTag, 1, 4, data);
-                                    dia = nfcTag.writeSector(myTag, 1, 5, dataTime);
-                                    uss = nfcTag.writeSector(myTag, 1, 6, user);
-                                    tipo_suministro = nfcTag.writeSector(myTag, 2, 9, String.valueOf(tipo_s));
                                     camion = nfcTag.readSector(myTag, 1, 4);
                                     fecha = nfcTag.readSector(myTag, 1, 5);
-                                    idusuario = nfcTag.readSector(myTag, 1, 6);
-                                    if (deductiva.getText().toString().equals("")) {
-                                        nfcTag.writeSector(myTag, 3, 12, "0");
-                                        nfcTag.writeSector(myTag, 3, 13, "0");
-                                    } else {
-                                        nfcTag.writeSector(myTag, 3, 12, String.valueOf(deductiva.getText()));
-                                        nfcTag.writeSector(myTag, 3, 13, String.valueOf(idMotivo));
-                                    }
-                                    if (usuario.tipo_permiso == 1) {
-                                        nfcTag.writeSector(myTag, 3, 14, "1");
-                                    } else {
-                                        nfcTag.writeSector(myTag, 3, 14, "0");
+                                    camion = camion.replace(" ", "");
+                                    fecha = fecha.replace(" ", "");
+                                    if((camion == null && fecha == null) || (camion == "" && fecha== "")) {
+                                        if (usuario.tipo_permiso == 1) {
+                                            tipo_s = 1;
+                                        } else {
+                                            tipo_s = 0;
+                                        }
+
+                                        datos = nfcTag.writeSector(myTag, 1, 4, data);
+                                        dia = nfcTag.writeSector(myTag, 1, 5, dataTime);
+                                        uss = nfcTag.writeSector(myTag, 1, 6, user);
+                                        tipo_suministro = nfcTag.writeSector(myTag, 2, 9, String.valueOf(tipo_s));
+                                        camion = nfcTag.readSector(myTag, 1, 4);
+                                        fecha = nfcTag.readSector(myTag, 1, 5);
+                                        idusuario = nfcTag.readSector(myTag, 1, 6);
+                                        if (deductiva.getText().toString().equals("")) {
+                                            nfcTag.writeSector(myTag, 3, 12, "0");
+                                            nfcTag.writeSector(myTag, 3, 13, "0");
+                                        } else {
+                                            nfcTag.writeSector(myTag, 3, 12, String.valueOf(deductiva.getText()));
+                                            nfcTag.writeSector(myTag, 3, 13, String.valueOf(idMotivo));
+                                        }
+                                        if (usuario.tipo_permiso == 1) {
+                                            nfcTag.writeSector(myTag, 3, 14, "1");
+                                        } else {
+                                            nfcTag.writeSector(myTag, 3, 14, "0");
+                                        }
+                                    }else{
+                                        banderaPermisos = 2;
                                     }
 
                                 } else {
@@ -443,33 +450,36 @@ public class SetOrigenActivity extends AppCompatActivity
                             }else {
 
                                 if (usuario.tipo_permiso == 1 && tipoperfil == 1 || usuario.tipo_permiso == 4 && tipoperfil == 0 || usuario.tipo_permiso == 1 && tipoperfil == 0) {
-
-
-                                    if (usuario.tipo_permiso == 1) { // validar si el viaje es por suministro
-                                        tipo_s = 1;
-                                    } else { // viaje suministro + flete a sindicato
-                                        tipo_s = 0;
-                                    }
-
-
-                                    datos = nfcUltra.writePagina(myTag, 7, data);
-                                    dia = nfcUltra.writePagina(myTag, 9, dataTime);
-                                    uss = nfcUltra.writePagina(myTag, 13, user);
-                                    tipo_suministro = nfcUltra.writePagina(myTag, 15, String.valueOf(tipo_s));
                                     camion = nfcUltra.readConfirmar(myTag, 7) + nfcUltra.readConfirmar(myTag, 8);
                                     fecha = nfcUltra.readConfirmar(myTag, 9) + nfcUltra.readConfirmar(myTag, 10) + nfcUltra.readConfirmar(myTag, 11) + nfcUltra.readConfirmar(myTag, 12).substring(0, 2);
-                                    idusuario = nfcUltra.readConfirmar(myTag, 13) + nfcUltra.readConfirmar(myTag, 14);
-                                    if (deductiva.getText().toString().equals("")) {
-                                        nfcUltra.writePagina(myTag, 16, "0");
-                                        nfcUltra.writePagina(myTag, 17, "0");
-                                    } else {
-                                        nfcUltra.writePagina(myTag, 16, String.valueOf(deductiva.getText()));
-                                        nfcUltra.writePagina(myTag, 17, String.valueOf(idMotivo));
-                                    }
-                                    if (usuario.tipo_permiso == 1) {
-                                        nfcUltra.writePagina(myTag, 18, "1");
-                                    } else {
-                                        nfcUltra.writePagina(myTag, 18, "0");
+
+                                    if(camion == null && fecha == null) {
+                                        if (usuario.tipo_permiso == 1) { // validar si el viaje es por suministro
+                                            tipo_s = 1;
+                                        } else { // viaje suministro + flete a sindicato
+                                            tipo_s = 0;
+                                        }
+                                        datos = nfcUltra.writePagina(myTag, 7, data);
+                                        dia = nfcUltra.writePagina(myTag, 9, dataTime);
+                                        uss = nfcUltra.writePagina(myTag, 13, user);
+                                        tipo_suministro = nfcUltra.writePagina(myTag, 15, String.valueOf(tipo_s));
+                                        camion = nfcUltra.readConfirmar(myTag, 7) + nfcUltra.readConfirmar(myTag, 8);
+                                        fecha = nfcUltra.readConfirmar(myTag, 9) + nfcUltra.readConfirmar(myTag, 10) + nfcUltra.readConfirmar(myTag, 11) + nfcUltra.readConfirmar(myTag, 12).substring(0, 2);
+                                        idusuario = nfcUltra.readConfirmar(myTag, 13) + nfcUltra.readConfirmar(myTag, 14);
+                                        if (deductiva.getText().toString().equals("")) {
+                                            nfcUltra.writePagina(myTag, 16, "0");
+                                            nfcUltra.writePagina(myTag, 17, "0");
+                                        } else {
+                                            nfcUltra.writePagina(myTag, 16, String.valueOf(deductiva.getText()));
+                                            nfcUltra.writePagina(myTag, 17, String.valueOf(idMotivo));
+                                        }
+                                        if (usuario.tipo_permiso == 1) {
+                                            nfcUltra.writePagina(myTag, 18, "1");
+                                        } else {
+                                            nfcUltra.writePagina(myTag, 18, "0");
+                                        }
+                                    }else{
+                                        banderaPermisos = 2;
                                     }
 
                                 } else {
@@ -559,6 +569,9 @@ public class SetOrigenActivity extends AppCompatActivity
                             } else {
                                 Toast.makeText(getApplicationContext(), "El camión " + datosTagCamion.economico + " se encuentra inactivo. Por favor contacta al encargado.", Toast.LENGTH_LONG).show();
                             }
+                        } else if(banderaPermisos == 2){
+                            Toast.makeText(SetOrigenActivity.this, "El TAG cuenta con un viaje activo, Favor de pasar a un filtro de salida para finalizar el viaje.", Toast.LENGTH_LONG).show();
+
                         }else {
                             mensajeDeductiva();
                             Toast.makeText(SetOrigenActivity.this, "El TAG cuenta con datos de Origen Mina, Favor de pasar a un filtro de salida", Toast.LENGTH_LONG).show();
