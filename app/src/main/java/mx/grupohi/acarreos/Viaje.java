@@ -379,4 +379,20 @@ public class Viaje {
             db.close();
         }
     }
+
+    public static Integer findCode(String Code){
+        db = db_sca.getWritableDatabase();
+        Cursor c= db.rawQuery("SELECT ID FROM viajesnetos WHERE Code = '" + Code + "'", null);
+        try {
+            if(c!=null && c.moveToFirst()){
+                return c.getInt(0);
+            }
+            else {
+                return null;
+            }
+        } finally {
+            c.close();
+            db.close();
+        }
+    }
 }

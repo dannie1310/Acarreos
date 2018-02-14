@@ -71,7 +71,7 @@
     <string name="contentImagen">Imagen Tomada</string>
     <string name="title_activity_imagenes">IMAGENES DEL VIAJE</string>
     <string name="title_activity_validacion">VALIDACIÓN DE CAMIÓN</string>
-    <string name="error_deductiva">La deductiva es mayor a la capacidad del camión.</string>
+    <string name="error_deductiva">El volumen es mayor a la capacidad del camión.</string>
     <string name="error_uss">Error usuario NO coincide con la sesión.</string>
     <string name="error_anter">Error contraseña NO coincide con la sesión.</string>
 
@@ -92,6 +92,7 @@
     <string name="error_ticket">No puede imprimir más de 5 tickets</string>
     <string name="error_tickets">No se puede imprimir más de 5 Tickets</string>
     <string name="title_battery_low">Bateria Baja</string>
+    <string name="error_guardado">¡Error! No se guardo el viaje correctamente. Favor de leer el tag nuevamente.</string>
 
 
 </resources>
