@@ -196,7 +196,6 @@ public class SetOrigenActivity extends AppCompatActivity
             spinnerMaterialesMap.put(descripcionesMateriales.get(i), idsMateriales.get(i));
             spinnerMaterialesArray[i] = descripcionesMateriales.get(i);
         }
-
         final ArrayAdapter<String> arrayAdapterMateriales = new ArrayAdapter<>(this,R.layout.support_simple_spinner_dropdown_item, spinnerMaterialesArray);
         arrayAdapterMateriales.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         materialesSpinner.setAdapter(arrayAdapterMateriales);
@@ -451,9 +450,9 @@ public class SetOrigenActivity extends AppCompatActivity
 
                                 if (usuario.tipo_permiso == 1 && tipoperfil == 1 || usuario.tipo_permiso == 4 && tipoperfil == 0 || usuario.tipo_permiso == 1 && tipoperfil == 0) {
                                     camion = nfcUltra.readConfirmar(myTag, 7) + nfcUltra.readConfirmar(myTag, 8);
-                                    fecha = nfcUltra.readConfirmar(myTag, 9) + nfcUltra.readConfirmar(myTag, 10) + nfcUltra.readConfirmar(myTag, 11) + nfcUltra.readConfirmar(myTag, 12).substring(0, 2);
+                                    fecha = nfcUltra.readConfirmar(myTag, 9) + nfcUltra.readConfirmar(myTag, 10) + nfcUltra.readConfirmar(myTag, 11) + nfcUltra.readConfirmar(myTag, 12);
 
-                                    if(camion == null && fecha == null) {
+                                    if(camion == null && fecha == null || camion.replace(" ","").equals("") && fecha.replace(" ","").equals("")) {
                                         if (usuario.tipo_permiso == 1) { // validar si el viaje es por suministro
                                             tipo_s = 1;
                                         } else { // viaje suministro + flete a sindicato

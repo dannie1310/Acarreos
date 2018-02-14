@@ -509,7 +509,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
             }
 
             textViewObservaciones.setText(viaje.observaciones);
-            textViewDeductiva.setText(viaje.deductiva);
+            textViewDeductiva.setText(viaje.cubicacion);
             if(viaje.folio_mina != "" && viaje.folio_seguimiento!=""){
                 folioMina.setVisibility(View.VISIBLE);
                 folioSeg.setVisibility(View.VISIBLE);
@@ -554,9 +554,9 @@ public class SuccessDestinoActivity extends AppCompatActivity
             btnImprimir.setText("IMPRIMIR");
             if(in.deductiva_entrada == 1 && in.tipo_suministro==1){
                 textTipoViaje.setVisibility(View.VISIBLE);
-                textViewTipoViaje.setText("Origen (Suministro)- Deductiva Entrada.");
+                textViewTipoViaje.setText("Origen (Mina) - Volumen Entrada.");
             } else if (in.tipo_suministro == 1){
-                textViewTipoViaje.setText("Origen (Suministro).");
+                textViewTipoViaje.setText("Origen (Mina).");
             }else{
                 textTipoViaje.setVisibility(View.GONE);
             }

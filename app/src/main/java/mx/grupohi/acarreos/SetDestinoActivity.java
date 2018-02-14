@@ -658,15 +658,28 @@ public class SetDestinoActivity extends AppCompatActivity
                     cv.put("deductiva", 0);
                     cv.put("idmotivo", 0);
                 } else {
-                    Integer volumen = volumenMenor(Integer.valueOf(deductiva_origen.replace(" ", "")),Integer.valueOf(deductiva_entrada.replace(" ", "")),Integer.valueOf(deductiva.getText().toString()));
-                    cv.put("deductiva", volumen);
+                    cv.put("deductiva", deductiva.getText().toString());
                     cv.put("idmotivo", 0);
                 }
                 RandomString r = new RandomString(10);
                 cv.put("FolioRandom", r.nextString().toUpperCase());
                 cv.put("primerToque", idUsuario.replace(" ", ""));
-                c = c.find(idCamion);
-                cv.put("cubicacion", String.valueOf(c.capacidad));
+               // c = c.find(idCamion);
+                cv.put("idmotivo", 0);
+                Integer origen = 0;
+                Integer entrada = 0;
+                Integer salida = 0;
+                if(!deductiva_origen.replace(" ", "").equals("")){
+                    origen = Integer.valueOf(deductiva_origen.replace(" ", ""));
+                }
+                if(!deductiva_entrada.replace(" ", "").equals("")){
+                    entrada = Integer.valueOf(deductiva_entrada.replace(" ", ""));
+                }
+                if(!deductiva.getText().toString().equals("")){
+                    salida = Integer.valueOf(deductiva.getText().toString());
+                }
+                Integer volumen = volumenMenor(origen,entrada,salida);
+                cv.put("cubicacion", String.valueOf(volumen));
                 cv.put("tipoEsquema", usuario.getTipoEsquema());
                 cv.put("numImpresion", 0);
                 cv.put("idperfil", usuario.tipo_permiso);

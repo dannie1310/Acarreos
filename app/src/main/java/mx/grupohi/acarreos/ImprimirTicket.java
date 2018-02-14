@@ -73,9 +73,9 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
             bixolonPrinterApi.lineFeed(1, true);
             printTextTwoColumns("Proyecto: ", dato.getString("1") + " \n");
             printTextTwoColumns("Camión: ", dato.getString("2") + " \n");
-            printTextTwoColumns("Cubicación: ", dato.getString("3") + " m3\n");
-
-            if(!dato.getString("31").equals("0") && !dato.getString("31").equals("NULL")) {
+            printTextTwoColumns("Cubicación Camión: ", dato.getString("3") + " m3\n");
+            printTextTwoColumns("Volumen Real: ", dato.getString("10") + " m3\n");
+            /*if(!dato.getString("31").equals("0") && !dato.getString("31").equals("NULL")) {
                 printTextTwoColumns("              -----  Detalles deductiva  ----", "\n");
                 sumaDeductiva = sumaDeductiva + dato.getInt("31");
                 printTextTwoColumns("D. Origen: ", dato.getString("31") + " m3\n");
@@ -100,7 +100,7 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
             }else{
                 printTextTwoColumns("Cubicacion Real: ", " Deductivas mayores al cubicaje del camión.\n");
             }
-
+            */
             printTextTwoColumns("Material: ", dato.getString("4") + "\n");
             printTextTwoColumns("Origen: ", dato.getString("5") + "\n");
             printTextTwoColumns("Fecha de Salida: ", dato.getString("6") + "\n");
