@@ -67,8 +67,6 @@ public class TiroUnicoActivity extends AppCompatActivity
     private TextView tagAlertTextView;
     private TextView text_origen;
     private EditText textDeductiva;
-    private TextView textViewMotivo;
-    private Spinner  spinnerMotivo;
     private  Spinner rutasSpinner;
     private  EditText observaciones;
     private  HashMap<String, String> spinnerMotivosMap;
@@ -157,21 +155,7 @@ public class TiroUnicoActivity extends AppCompatActivity
         mensajeTextView = (TextView) findViewById(R.id.textViewMensaje);
         rutasSpinner = (Spinner) findViewById(R.id.spinnerRutass);
         textDeductiva = (EditText) findViewById(R.id.textDeductiva);
-        textViewMotivo = (TextView) findViewById(R.id.textViewMotivo);
-        spinnerMotivo = (Spinner) findViewById(R.id.spinnerMotivo);
         observaciones = (EditText) findViewById(R.id.textObservaciones);
-
-
-        textDeductiva.setOnClickListener(new View.OnClickListener() {
-                                         @Override
-                                         public void onClick(View v) {
-                                             textViewMotivo.setVisibility(View.VISIBLE);
-                                             spinnerMotivo.setVisibility(View.VISIBLE);
-                                         }
-                                     }
-
-        );
-
 
         final ArrayList<String> descripcionesOrigenes = origen.getArrayListDescripciones();
         final ArrayList<String> idsOrigenes = origen.getArrayListId();
@@ -245,35 +229,6 @@ public class TiroUnicoActivity extends AppCompatActivity
         arrayAdapterMateriales.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         materialesSpinner.setAdapter(arrayAdapterMateriales);
 
-        Motivo motivo = new Motivo(getApplicationContext());
-        final ArrayList<String> descripcionesMotivos = motivo.getArrayListDescripciones();
-        final ArrayList <String> idsMotivos = motivo.getArrayListId();
-
-        final String[] spinnerMotivosA = new String[idsMotivos.size()];
-        spinnerMotivosMap = new HashMap<>();
-
-        for (int i = 0; i < idsMotivos.size(); i++) {
-            spinnerMotivosMap.put(descripcionesMotivos.get(i), idsMotivos.get(i));
-            spinnerMotivosA[i] = descripcionesMotivos.get(i);
-        }
-        final ArrayAdapter<String> arrayAdapterMotivos = new ArrayAdapter<>(this,R.layout.support_simple_spinner_dropdown_item, spinnerMotivosA);
-        arrayAdapterMotivos.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-        spinnerMotivo.setAdapter(arrayAdapterMotivos);
-
-        spinnerMotivo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String Mo = String.valueOf(parent.getItemAtPosition(position));
-                idMotivo = Integer.valueOf(spinnerMotivosMap.get(Mo));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if (nfcAdapter == null) {
             Toast.makeText(this, getString(R.string.error_no_nfc), Toast.LENGTH_LONG).show();
@@ -324,15 +279,10 @@ public class TiroUnicoActivity extends AppCompatActivity
                 else if(textseg.getText().toString().isEmpty()){
                     Toast.makeText(getApplicationContext(), "Por favor ingrese el folio de seguimiento", Toast.LENGTH_SHORT).show();
                 }
-                else if (( textDeductiva.getText().toString().equals("")==false ) && idMotivo == 0){
-                    Toast.makeText(getApplicationContext(), "Por favor seleccione un motivo", Toast.LENGTH_SHORT).show();
+                else if (textDeductiva.getText().toString().isEmpty()){
+                    Toast.makeText(getApplicationContext(), "Por favor ingrese un volumen", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    if(textDeductiva.getText().toString().equals("") || textDeductiva.getText().toString().equals("0")){
-                        spinnerMotivo.setSelection(0);
-                        textViewMotivo.setVisibility(View.GONE);
-                        spinnerMotivo.setVisibility(View.GONE);
-                    }
                     checkNfcEnabled();
                     WriteModeOn();
                 }
@@ -615,7 +565,7 @@ public class TiroUnicoActivity extends AppCompatActivity
                 cv.put("idMotivo", 0);
             } else {
                 cv.put("deductiva", textDeductiva.getText().toString());
-                cv.put("idMotivo", idMotivo);
+                cv.put("idMotivo", 0);
             }
             if(textseg.getText().toString().equals("")) {
                 cv.put("folio_seguimiento", 0);
@@ -631,8 +581,11 @@ public class TiroUnicoActivity extends AppCompatActivity
             RandomString r = new RandomString(10);
             cv.put("FolioRandom", r.nextString().toUpperCase());
             cv.put("primerToque", usuario.getId());
-            c = c.find(idCamion);
-            cv.put("cubicacion", String.valueOf(c.capacidad));
+            Integer salida = 0;
+            if(!textDeductiva.getText().toString().equals("")){
+                salida = Integer.valueOf(textDeductiva.getText().toString());
+            }
+            cv.put("cubicacion", String.valueOf(salida));
             cv.put("tipoEsquema", usuario.getTipoEsquema());
             cv.put("numImpresion", 0);
             cv.put("idperfil", usuario.tipo_permiso);

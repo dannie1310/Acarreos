@@ -338,11 +338,11 @@ public class MainActivity extends AppCompatActivity
                         if (usuario.tipo_permiso == 3) {
                            // tipoPerfil = tipoPerfil.replace(" ","");
                             if(tipoPerfil == null){
-                                tipoPerfil="0";
+                                tipoPerfil="";
                             }else{
                                 tipoPerfil= tipoPerfil.replace(" ", "");
                             }
-                            if(tipoPerfil == "" || !tipoPerfil.equals("1")) {
+                            if(tipoPerfil == "") {
                                 Intent r = new Intent(getApplicationContext(), TiroUnicoActivity.class);
                                 r.putExtra("UID", UID);
                                 r.putExtra("camion", String.valueOf(CamionID));

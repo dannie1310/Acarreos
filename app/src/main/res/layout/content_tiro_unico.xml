@@ -129,7 +129,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="DEDUCTIVA:"
+                android:text="VOLUMEN:"
                 android:textAppearance="@android:style/TextAppearance.Material.Menu" />
 
             <EditText
@@ -139,17 +139,6 @@
                 android:inputType="number"
                 android:textAppearance="@android:style/TextAppearance.Material.Menu" />
 
-            <TextView
-                android:id="@+id/textViewMotivo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="SELECCIONE EL MOTIVO:"
-                android:textAppearance="@android:style/TextAppearance.Material.Menu" />
-
-            <Spinner
-                android:id="@+id/spinnerMotivo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
 
             <TextView
                 android:layout_width="match_parent"
