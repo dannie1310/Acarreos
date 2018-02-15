@@ -76,7 +76,6 @@ public class SetOrigenActivity extends AppCompatActivity
     private TextView deductiva;
     private TextInputLayout mina;
     private TextInputLayout seg;
-    private TextInputLayout vol;
     private TextInputLayout ded;
     private Snackbar snackbar;
     private TextView textmotivo;
@@ -143,7 +142,6 @@ public class SetOrigenActivity extends AppCompatActivity
         origenesSpinner = (Spinner) findViewById(R.id.spinnerOrigenes);
 
         mina = (TextInputLayout) findViewById(R.id.textomina);
-        vol = (TextInputLayout) findViewById(R.id.vol);
         seg = (TextInputLayout) findViewById(R.id.seg);
         ded = (TextInputLayout) findViewById(R.id.textodeductiva);
         vale_mina = (TextView)findViewById(R.id.vale_mina);
