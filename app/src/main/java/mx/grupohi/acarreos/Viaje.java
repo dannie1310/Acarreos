@@ -202,19 +202,16 @@ public class Viaje {
                         json.put("uidTAG", c.getString(17));
                         json.put("IMEI", c.getString(18));
                         json.put("CodeImagen",c.getString(19));
-                        json.put("Deductiva", c.getString(20));
                         json.put("CodeRandom", c.getString(21));
-                        json.put("IdMotivoDeductiva",c.getString(22));
                         json.put("CreoPrimerToque", c.getString(c.getColumnIndex("primerToque")));
                         json.put("CubicacionCamion", c.getString(c.getColumnIndex("cubicacion")));
                         json.put("IdPerfil", c.getInt(c.getColumnIndex("idperfil")));
                         json.put("folioMina", c.getString(c.getColumnIndex("folio_mina")));
                         json.put("folioSeguimiento", c.getString(c.getColumnIndex("folio_seguimiento")));
                         json.put("numImpresion", c.getString(c.getColumnIndex("numImpresion")));
-                        json.put("deductiva_origen", c.getString(c.getColumnIndex("deductiva_origen")));
-                        json.put("deductiva_entrada", c.getString(c.getColumnIndex("deductiva_entrada")));
-                        json.put("idmotivo_origen", c.getString(c.getColumnIndex("idmotivo_origen")));
-                        json.put("idmotivo_entrada", c.getString(c.getColumnIndex("idmotivo_entrada")));
+                        json.put("volumen_origen", c.getString(c.getColumnIndex("deductiva_origen")));
+                        json.put("volumen_entrada", c.getString(c.getColumnIndex("deductiva_entrada")));
+                        json.put("volumen", c.getString(c.getColumnIndex("deductiva")));
                         json.put("tipoViaje", c.getString(c.getColumnIndex("tipoViaje")));
 
                     JSON.put(i + "", json);
