@@ -419,9 +419,9 @@ public class TiroUnicoActivity extends AppCompatActivity
                             tipoPerfil = nfcTag.readSector(myTag, 3, 14);
                             tipoPerfil = tipoPerfil.replace(" ","");
                             if(tipoPerfil == "" || tipoPerfil == null){  // test valor nulo
-                                tipoPerfil = "0";
+                                tipoPerfil = "";
                             }
-                            if(Integer.valueOf(tipoPerfil) != 1) {
+                            if(tipoPerfil == "") {
                                 if (tagInfo != null) {
                                     limpiarorigen = nfcTag.cleanSector(myTag, 1);
                                     nfcTag.cleanSector(myTag, 3);
@@ -453,11 +453,11 @@ public class TiroUnicoActivity extends AppCompatActivity
                                 }
                                 tipoPerfil = nfcUltra.readPage(myTag, 18);
                                 if(tipoPerfil == " " || tipoPerfil == null){
-                                    tipoPerfil ="0";
+                                    tipoPerfil ="";
                                 }else{
                                     tipoPerfil = tipoPerfil.substring(0,1);
                                 }
-                                if(Integer.valueOf(tipoPerfil) != 1) {
+                                if(tipoPerfil == "") {
                                     Boolean limpiar = nfcUltra.cleanTag(myTag);
                                     if (!limpiar) {
                                         error_eliminar = 1;
@@ -483,7 +483,7 @@ public class TiroUnicoActivity extends AppCompatActivity
                 } else if(error_eliminar == 1){
                     if(tipo == 1) {
                         tipoPerfil = nfcTag.readSector(myTag, 3, 14);
-                        if(Integer.valueOf(tipoPerfil) != 1) {
+                        if(tipoPerfil == "") {
                             limpiarorigen = nfcTag.cleanSector(myTag, 1);
                             nfcTag.cleanSector(myTag, 3);
 
@@ -493,10 +493,10 @@ public class TiroUnicoActivity extends AppCompatActivity
                         }
                     } else if( tipo == 2){
                         tipoPerfil = nfcUltra.readPage(myTag, 18).substring(0,1);
-                        if(tipoPerfil == " "){
-                            tipoPerfil ="0";
+                        if(tipoPerfil == " " || tipoPerfil == null){
+                            tipoPerfil ="";
                         }
-                        if(Integer.valueOf(tipoPerfil) != 1) {
+                        if(tipoPerfil == "") {
                             Boolean limpiar = nfcUltra.cleanTag(myTag);
                             if (limpiar) {
                                 error_eliminar = 2;

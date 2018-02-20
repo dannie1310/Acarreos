@@ -74,7 +74,7 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
             printTextTwoColumns("Proyecto: ", dato.getString("1") + " \n");
             printTextTwoColumns("Camión: ", dato.getString("2") + " \n");
             printTextTwoColumns("Cubicación Camión: ", dato.getString("3") + " m3\n");
-            printTextTwoColumns("Volumen Real: ", dato.getString("10") + " m3\n");
+            printTextTwoColumns("Volumen Real(Recibido): ", dato.getString("10") + " m3\n");
             /*if(!dato.getString("31").equals("0") && !dato.getString("31").equals("NULL")) {
                 printTextTwoColumns("              -----  Detalles deductiva  ----", "\n");
                 sumaDeductiva = sumaDeductiva + dato.getInt("31");

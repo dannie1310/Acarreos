@@ -519,7 +519,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
 
             if(viaje.tipoViaje == 1){
                 textTipoViaje.setVisibility(View.VISIBLE);
-                textViewTipoViaje.setText("Origen(Suministro).");
+                textViewTipoViaje.setText("Origen(Mina).");
             }else{
                 textTipoViaje.setVisibility(View.GONE);
             }

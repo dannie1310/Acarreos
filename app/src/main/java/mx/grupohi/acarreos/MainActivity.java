@@ -288,7 +288,7 @@ public class MainActivity extends AppCompatActivity
                         if(tipoPerfil != null){
                             tipoPerfil = tipoPerfil.substring(0,1);
                         }else{
-                            tipoPerfil = "0";
+                            tipoPerfil = "";
                         }
                         if(aux != null){
                             tagS = tagS+aux;
@@ -348,7 +348,7 @@ public class MainActivity extends AppCompatActivity
                                 r.putExtra("camion", String.valueOf(CamionID));
                                 startActivity(r);
                             }else{
-                                Toast.makeText(MainActivity.this, "El TAG cuenta con datos de Origen Mina, Favor de pasar a un filtro de salida", Toast.LENGTH_LONG).show();
+                                Toast.makeText(MainActivity.this, "El TAG cuenta con datos de Origen Mina, Favor de pasar a un filtro de salida", Toast.LENGTH_SHORT).show();
                             }
                         } else if (usuario.tipo_permiso == 2 || usuario.tipo_permiso == 5) {
                             if (origen != null && material != null) {
