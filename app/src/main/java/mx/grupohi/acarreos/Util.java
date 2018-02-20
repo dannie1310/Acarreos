@@ -230,7 +230,7 @@ class Util {
 
     public static void copyDataBaseSyns(Context mActivity) throws IOException {
         InputStream myInput = new FileInputStream(new File("/data/user/0/" + mActivity.getPackageName() + "/databases/sca"));
-        File files = new File("/sdcard/files/v11/");
+        File files = new File("/sdcard/files/v12/");
         files.mkdirs();
         String outFileName = "/sdcard/files/v12/acarreos"+getFechaSegundosBD()+".sqlite";
         boolean isDirectoryCreated = files.exists();
