@@ -138,6 +138,11 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
                 if(dato.getString("30")!= "NULL"){
                     printTextTwoColumns("Tipo Viaje: ", dato.getString("30") + "\n");
                 }
+
+                Boolean dat = Util.getFechaImprocedente(dato.getString("6"), dato.getString("8"));
+                if(dat == true){
+                    bixolonPrinterApi.printText("V I A J E   I M P R O C E D E N T E\n", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_C, 0, false);
+                }
                 num = Viaje.numImpresion(dato.getInt("0"), context);
                 if(num == 0){
                     bixolonPrinterApi.printText("C H O F E R", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_A, 2, false);

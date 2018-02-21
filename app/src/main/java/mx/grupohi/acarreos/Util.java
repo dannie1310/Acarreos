@@ -337,6 +337,44 @@ class Util {
             return null;
         }
     }
+    static Boolean getFechaImprocedente(String fecha_Llegada, String fecha_Salida) {
 
+        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        try {
+            Date dateLlegada = format.parse(fecha_Llegada);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(dateLlegada);
+            Date dateSalida = format.parse(fecha_Salida);
+            Calendar calendarS = Calendar.getInstance();
+            calendarS.setTime(dateSalida);
+            long mill1 = calendar.getTimeInMillis();
+            long mill2 = calendarS.getTimeInMillis();
+
+            long diff= mill2 - mill1;
+
+            // Calculate difference in seconds
+            /*
+            long diffSeconds = diff / 1000;
+
+            // Calculate difference in minutes
+            long diffMinutes = diff / (60 * 1000);
+            */
+
+            // Calculate difference in hours
+            long diffHours = diff / (60 * 60 * 1000);
+
+            // Calculate difference in days
+            // long diffDays = diff / (24 * 60 * 60 * 1000);
+
+            if(diffHours >= 20){
+                return true;
+            }else{
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
 }
