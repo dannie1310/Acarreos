@@ -280,6 +280,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
                                            @Override
                                            public void onClick(View v) {
                                                num = Viaje.numImpresion(viaje.idViaje, getApplicationContext());
+                                               num=num-1;
                                               if(num == null) {
                                                   num = InicioViaje.numImpresion(in.id, getApplicationContext());
                                               }

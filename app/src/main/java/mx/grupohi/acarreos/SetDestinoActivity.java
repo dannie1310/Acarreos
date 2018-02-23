@@ -608,16 +608,20 @@ public class SetDestinoActivity extends AppCompatActivity
                 cv.put("HoraLlegada", horaLlegada);
                 String fechaOrigen = Util.getFecha(fechaString);
                 String horaOrigen = Util.getTime(fechaString);
+                String fechaSal;
                 if (fechaString.replace(" ", "").isEmpty()) {
                     String fecha = Util.getFechaDisminucion(fechaLlegada + " " + horaLlegada);
+                    fechaSal = fecha;
                     cv.put("FechaSalida", Util.getFecha(fecha));
                     cv.put("HoraSalida", Util.getTime(fecha));
                 } else {
                     if (horaOrigen == null || fechaOrigen == null) {
                         String fecha = Util.getFechaDisminucion(fechaLlegada + " " + horaLlegada);
+                        fechaSal = fecha;
                         cv.put("FechaSalida", Util.getFecha(fecha));
                         cv.put("HoraSalida", Util.getTime(fecha));
                     } else {
+                        fechaSal = fechaOrigen +" "+horaOrigen;
                         cv.put("FechaSalida", fechaOrigen);
                         cv.put("HoraSalida", horaOrigen);
                     }
@@ -627,7 +631,13 @@ public class SetDestinoActivity extends AppCompatActivity
                 cv.put("IdMaterial", idMaterial);
                 cv.put("Observaciones", observacionesTextView.getText().toString());
                 cv.put("Creo", usuario.getId());
-                cv.put("Estatus", "1");
+                Boolean dat = Util.getFechaImprocedente(fechaSal, fechaLlegada+" "+horaLlegada);
+                if(dat == true){
+                    cv.put("Estatus", "2");
+                }else{
+                    cv.put("Estatus", "1");
+                }
+
                 cv.put("Ruta", idRuta);
 
                 cv.put("Code", code);

@@ -39,6 +39,7 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
     Bitmap bitmap;
     Usuario uss;
     Integer sumaDeductiva=0;
+    Boolean dat;
 
     ImprimirTicket(Context context, ProgressDialog progressDialog, BixolonPrinter bixolonPrinterApi, JSONObject datos, Bitmap b) {
         this.context = context;
@@ -75,6 +76,12 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
             printTextTwoColumns("Camión: ", dato.getString("2") + " \n");
             printTextTwoColumns("Cubicación Camión: ", dato.getString("3") + " m3\n");
             printTextTwoColumns("Volumen Real(Recibido): ", dato.getString("10") + " m3\n");
+            if (dato.getString("20").equals("NULL")) {
+                dat = Util.getFechaImprocedente(dato.getString("6"), dato.getString("8"));
+                if(dat == true){
+                    bixolonPrinterApi.printText("V I A J E   I M P R O C E D E N T E\n", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_C, 0, false);
+                }
+            }
             /*if(!dato.getString("31").equals("0") && !dato.getString("31").equals("NULL")) {
                 printTextTwoColumns("              -----  Detalles deductiva  ----", "\n");
                 sumaDeductiva = sumaDeductiva + dato.getInt("31");
@@ -118,6 +125,10 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
 
             if (dato.getString("20").equals("NULL")) {
                 idViaje = dato.getInt("0");
+                dat = Util.getFechaImprocedente(dato.getString("6"), dato.getString("8"));
+                if(dat == true){
+                    bixolonPrinterApi.printText("V I A J E   I M P R O C E D E N T E\n", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_C, 0, false);
+                }
                 printTextTwoColumns("Destino: ", dato.getString("7") + "\n");
                 printTextTwoColumns("Fecha Llegada: ", dato.getString("8") + "\n");
                 printTextTwoColumns("Ruta: ", dato.getString("9") + "\n");
@@ -125,7 +136,9 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
                 //printTextTwoColumns("Deductiva: ", dato.getString("10") + "\n");
                 //printTextTwoColumns("Motivo Deductiva: ", dato.getString("11") + "\n");
                 printTextTwoColumns("Observaciones: ", dato.getString("12") + "\n");
-
+                if(dat == true){
+                    bixolonPrinterApi.printText("V I A J E   I M P R O C E D E N T E\n", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_C, 0, false);
+                }
                 if (dato.getInt("13") == 3) {
                     printTextTwoColumns("Checador: " + dato.getString("14"), dato.getString("15") + "\n");
                     printTextTwoColumns("Versión: ", String.valueOf(dato.getString("16")) + "\n");
@@ -141,9 +154,11 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
 
                 Boolean dat = Util.getFechaImprocedente(dato.getString("6"), dato.getString("8"));
                 if(dat == true){
-                    bixolonPrinterApi.printText("V I A J E   I M P R O C E D E N T E\n", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_C, 0, false);
+                    bixolonPrinterApi.printText("V I A J E   I M P R O C E D E N T E\n", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_A, 1, false);
+                    bixolonPrinterApi.printText("PASAR A MESA DE ACLARACIÓN\n\n", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_A, 0, false);
                 }
                 num = Viaje.numImpresion(dato.getInt("0"), context);
+                num = num -1;
                 if(num == 0){
                     bixolonPrinterApi.printText("C H O F E R", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_A, 2, false);
                 }
