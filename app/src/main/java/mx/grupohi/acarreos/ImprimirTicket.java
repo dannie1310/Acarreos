@@ -158,7 +158,6 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
                     bixolonPrinterApi.printText("PASAR A MESA DE ACLARACIÓN\n\n", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_A, 0, false);
                 }
                 num = Viaje.numImpresion(dato.getInt("0"), context);
-                num = num -1;
                 if(num == 0){
                     bixolonPrinterApi.printText("C H O F E R", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_A, 2, false);
                 }
