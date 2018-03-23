@@ -270,7 +270,7 @@ public class TiroUnicoActivity extends AppCompatActivity
                 }else if (idruta == 0 && Ruta.getCount(getApplicationContext(),idOrigen, usuario.idtiro) != 0) {
                     Toast.makeText(getApplicationContext(), "Por favor seleccione un Tiro de la lista", Toast.LENGTH_LONG).show();
                     rutasSpinner.requestFocus();
-                }else if(camion.capacidad != 0 && camion.capacidad!= null && !textDeductiva.getText().toString().equals("") && Integer.valueOf(textDeductiva.getText().toString()) != 0 && Integer.valueOf(textDeductiva.getText().toString()) >= camion.capacidad) {
+                }else if(camion.capacidad != 0 && camion.capacidad!= null && !textDeductiva.getText().toString().equals("") && Integer.valueOf(textDeductiva.getText().toString()) != 0 && Integer.valueOf(textDeductiva.getText().toString()) > camion.capacidad) {
                     Toast.makeText(getApplicationContext(), R.string.error_deductiva, Toast.LENGTH_LONG).show();
                 }
                 else if(textmina.getText().toString().isEmpty()){

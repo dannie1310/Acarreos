@@ -263,7 +263,7 @@ public class SetDestinoActivity extends AppCompatActivity
                 else if(deductiva.getText().toString().equals("")){
                     Toast.makeText(getApplicationContext(), "Por favor ingrese el volumen", Toast.LENGTH_SHORT).show();
                 }
-                else if(c.capacidad != 0 && c.capacidad!= null && !deductiva.getText().toString().equals("") && Integer.valueOf(deductiva.getText().toString()) != 0 && Integer.valueOf(deductiva.getText().toString()) >= c.capacidad) {
+                else if(c.capacidad != 0 && c.capacidad!= null && !deductiva.getText().toString().equals("") && Integer.valueOf(deductiva.getText().toString()) != 0 && Integer.valueOf(deductiva.getText().toString()) > c.capacidad) {
                      Toast.makeText(getApplicationContext(), R.string.error_deductiva, Toast.LENGTH_LONG).show();
                 }
                 else if(textmina.getText().toString().isEmpty()){
