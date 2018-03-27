@@ -17,7 +17,7 @@ import java.io.IOException;
  * Creado por JFEsquivel on 05/10/2016.
  */
 
-class Usuario {
+public class Usuario {
 
     private Integer idUsuario;
     Integer idProyecto;
@@ -42,7 +42,7 @@ class Usuario {
     Tiro tiro;
     Origen origen;
 
-    Usuario(Context context) {
+    public Usuario(Context context) {
         this.context = context;
         db_sca = new DBScaSqlite(context, "sca", null, 1);
         origen = new Origen(context);

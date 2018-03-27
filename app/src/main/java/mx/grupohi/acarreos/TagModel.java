@@ -11,7 +11,7 @@ import android.provider.Contacts;
  * Creado por JFEsquivel on 07/10/2016.
  */
 
-class TagModel {
+public class TagModel {
 
     public String UID;
     public Integer idCamion;
@@ -24,7 +24,7 @@ class TagModel {
     private static SQLiteDatabase db;
     private DBScaSqlite db_sca;
 
-    TagModel(Context context) {
+    public TagModel(Context context) {
         this.context = context;
         db_sca = new DBScaSqlite(context, "sca", null, 1);
     }
@@ -43,7 +43,7 @@ class TagModel {
         return result;
     }
 
-    TagModel find(String UID, Integer idCamion, Integer idProyecto) {
+    public TagModel find(String UID, Integer idCamion, Integer idProyecto) {
         db = db_sca.getWritableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM tags WHERE uid = '" +  UID + "' AND idcamion = '" + idCamion + "' AND idproyecto = '" + idProyecto + "'", null);
         try {
@@ -63,7 +63,7 @@ class TagModel {
         }
     }
 
-    static Boolean findTAG(Context context, String UID) {
+    public static Boolean findTAG(Context context, String UID) {
         DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
         SQLiteDatabase db = db_sca.getWritableDatabase();
 

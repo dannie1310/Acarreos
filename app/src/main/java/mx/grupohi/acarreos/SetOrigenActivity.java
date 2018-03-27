@@ -99,7 +99,6 @@ public class SetOrigenActivity extends AppCompatActivity
     private PendingIntent pendingIntent;
     private IntentFilter writeTagFilters[];
     private Boolean writeMode;
-    private Integer tipo;
     Certificados certificados;
 
     @Override
@@ -148,40 +147,39 @@ public class SetOrigenActivity extends AppCompatActivity
         seguimiento = (TextView) findViewById(R.id.seguimiento);
         deductiva = (TextView) findViewById(R.id.deductiva);
 
-        tipo = 1;
-            final ArrayList<String> descripcionesOrigenes = origen.getArrayListDescripciones();
-            final ArrayList <String> idsOrigenes = origen.getArrayListId();
+        final ArrayList<String> descripcionesOrigenes = origen.getArrayListDescripciones();
+        final ArrayList <String> idsOrigenes = origen.getArrayListId();
 
-            final String[] spinnerOrigenesArray = new String[idsOrigenes.size()];
-            final HashMap<String, String> spinnerOrigenesMap = new HashMap<>();
+        final String[] spinnerOrigenesArray = new String[idsOrigenes.size()];
+        final HashMap<String, String> spinnerOrigenesMap = new HashMap<>();
 
-            for (int i = 0; i < idsOrigenes.size(); i++) {
-                spinnerOrigenesMap.put(descripcionesOrigenes.get(i), idsOrigenes.get(i));
-                spinnerOrigenesArray[i] = descripcionesOrigenes.get(i);
-               // idOrigen = usuario.idorigen; // origen o tiro asignado
+        for (int i = 0; i < idsOrigenes.size(); i++) {
+            spinnerOrigenesMap.put(descripcionesOrigenes.get(i), idsOrigenes.get(i));
+            spinnerOrigenesArray[i] = descripcionesOrigenes.get(i);
+           // idOrigen = usuario.idorigen; // origen o tiro asignado
+        }
+
+        final ArrayAdapter<String> arrayAdapterOrigenes = new ArrayAdapter<>(this,R.layout.support_simple_spinner_dropdown_item, spinnerOrigenesArray);
+        arrayAdapterOrigenes.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        origenesSpinner.setAdapter(arrayAdapterOrigenes);
+
+        origenesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String descripcion = origenesSpinner.getSelectedItem().toString();
+                if(descripcion == "0") {
+                    descripcion = "NO SE ENCUENTRAN ORIGENES";
+                    idOrigen = 0;
+                }else{
+                    idOrigen = Integer.valueOf(spinnerOrigenesMap.get(descripcion));
+                }
             }
 
-            final ArrayAdapter<String> arrayAdapterOrigenes = new ArrayAdapter<>(this,R.layout.support_simple_spinner_dropdown_item, spinnerOrigenesArray);
-            arrayAdapterOrigenes.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-            origenesSpinner.setAdapter(arrayAdapterOrigenes);
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
-            origenesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    String descripcion = origenesSpinner.getSelectedItem().toString();
-                    if(descripcion == "0") {
-                        descripcion = "NO SE ENCUENTRAN ORIGENES";
-                        idOrigen = 0;
-                    }else{
-                        idOrigen = Integer.valueOf(spinnerOrigenesMap.get(descripcion));
-                    }
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-
-                }
-            });
+            }
+        });
 
 
         final ArrayList<String> descripcionesMateriales = material.getArrayListDescripciones();
@@ -224,7 +222,6 @@ public class SetOrigenActivity extends AppCompatActivity
 
             }
         });
-
 
         escribirOrigenButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -356,6 +353,7 @@ public class SetOrigenActivity extends AppCompatActivity
                             }
 
                             String aux =nfcTag.readSector(myTag, 3, 14).replace(" ","");
+
                             if(aux != "") {
                                 tipoperfil = Integer.valueOf(nfcTag.readSector(myTag, 3, 14).replace(" ", ""));
                             }
@@ -629,14 +627,9 @@ public class SetOrigenActivity extends AppCompatActivity
     }
 
     private void WriteModeOn() {
-        writeMode = true;
         nfcAdapter.enableForegroundDispatch(this, pendingIntent, writeTagFilters, null);
-
-
         mainLayout.setVisibility(View.GONE);
-
         lecturaTag.setVisibility(View.VISIBLE);
-
     }
 
     private void WriteModeOff() {

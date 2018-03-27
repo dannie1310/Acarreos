@@ -43,7 +43,7 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
  * Creado por JFEsquivel on 07/10/2016.
  */
 
-class Util {
+public class Util {
 
     static boolean isNetworkStatusAvialable (Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -96,7 +96,7 @@ class Util {
         return (String) android.text.format.DateFormat.format("yyyy-MM-dd HH:mm:ss", new java.util.Date());
     }
 
-    static Integer getIdCamion(String string, int value) {
+    public static Integer getIdCamion(String string, int value) {
 
         try {
             Integer result = Integer.valueOf(string.substring(0,value));
@@ -110,7 +110,7 @@ class Util {
         }
     }
 
-    static Integer getIdProyecto(String string, int value) {
+    public static Integer getIdProyecto(String string, int value) {
         try {
             Integer result = Integer.valueOf(string.substring(value,string.length()));
             if(result != null) {
@@ -123,7 +123,7 @@ class Util {
         }
     }
 
-    static Integer getIdMaterial(String string) {
+    public static Integer getIdMaterial(String string) {
         try {
             Integer result = Integer.valueOf(string.substring(0,4));
             if(result != null) {
@@ -136,7 +136,7 @@ class Util {
         }
     }
 
-   static Integer getIdOrigen(String string) {
+   public static Integer getIdOrigen(String string) {
        try {
            Integer result = Integer.valueOf(string.substring(4,8));
            if(result != null) {
