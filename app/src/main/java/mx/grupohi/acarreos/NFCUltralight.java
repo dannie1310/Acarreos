@@ -138,8 +138,8 @@ public class NFCUltralight {
         }
     }
 
-    public String readPage(Tag nfc, int page){
-        MifareUltralight mf=MifareUltralight.get(nfc);
+    public String readPage(Tag nfc_1, int page){
+        MifareUltralight mf=MifareUltralight.get(NFCTag);
         byte[] toRead = null;
         byte[] auxRead =  new byte[4];
         String aux="";

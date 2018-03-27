@@ -14,16 +14,15 @@ import mx.grupohi.acarreos.Usuario;
 
 public class SalidaMina {
     Context context;
-    ContentValues datos;
     TagNFC tag_nfc;
-    public SalidaMina(Context context, ContentValues datos){
+    public SalidaMina(Context context, TagNFC tag_nfc){
         this.context = context;
-        this.datos = datos;
+        this.tag_nfc = tag_nfc;
         //validarDatosTag();
 
     }
 
-    private String validarDatosTag(){
+    public String validarDatosTag(){
         if (!TagModel.findTAG (context, tag_nfc.getUID())) {
             return String.valueOf(R.string.error_tag_inexistente);
         }
@@ -40,14 +39,21 @@ public class SalidaMina {
         if (tag_nfc.getIdproyecto() == usuario.getProyecto()) {
             return String.valueOf(R.string.error_proyecto);
         }
-        tag_nfc.setIdmaterial((Integer) datos.get("id_material"));
+        /*tag_nfc.setIdmaterial((Integer) datos.get("id_material"));
         tag_nfc.setIdorigen((Integer) datos.get("id_origen"));
         tag_nfc.setFecha((String) datos.get("fecha"));
         tag_nfc.setUsuario((String) datos.get("id_usuario"));
-        tag_nfc.setTipo_viaje((String) datos.get("tipo_viaje"));
+        tag_nfc.setTipo_viaje((String) datos.get("tipo_viaje"));*/
 
         return "continuar";
     }
+
+    public void guardarDatosDB(ContentValues datos){
+
+
+    }
+
+
 
 
 

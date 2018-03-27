@@ -181,10 +181,10 @@ public class NFCTag {
         return aux;
     }
 
-    String readSector (Tag tag, int sector, int bloque) { //Leer solo un sector y bloque especifico
+    String readSector (Tag tag_1, int sector, int bloque) { //Leer solo un sector y bloque especifico
         byte[] toRead=null;
         String aux="";
-        MifareClassic mf = MifareClassic.get(tag);
+        MifareClassic mf = MifareClassic.get(NFCTag);
         try {
             mf.connect();
             boolean auth = false;

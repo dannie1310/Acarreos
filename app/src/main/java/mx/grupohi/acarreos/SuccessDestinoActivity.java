@@ -283,7 +283,8 @@ public class SuccessDestinoActivity extends AppCompatActivity
                                               if(num == null) {
                                                   num = InicioViaje.numImpresion(in.id, getApplicationContext());
                                               }
-                                               if (num!=null && num > 4) {
+                                               if (num!=null && num > 4)
+                                               {
                                                    Toast.makeText(getApplicationContext(), R.string.error_ticket, Toast.LENGTH_SHORT).show();
                                                } else {
                                                    btnImprimir.setEnabled(false);
