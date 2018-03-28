@@ -12,6 +12,7 @@ import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.MifareClassic;
 import android.nfc.tech.MifareUltralight;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.DialogPreference;
@@ -84,8 +85,8 @@ public class SetOrigenActivity extends AppCompatActivity
     private TextView textmotivo;
     private Integer idMotivo = 0;
     private Integer id_motivo = 0;
+    private String mensaje = "";
     private String txtDeductiva = "";
-    private Boolean mensaje = false;
     private  HashMap<String, String> spinnerMotivosMap;
     private Spinner motivos;
 
@@ -229,7 +230,7 @@ public class SetOrigenActivity extends AppCompatActivity
         escribirOrigenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(idMaterial == 0) {
+                /*if(idMaterial == 0) {
                     Toast.makeText(getApplicationContext(), "Por favor seleccione un Material de la lista", Toast.LENGTH_SHORT).show();
                     materialesSpinner.requestFocus();
                 } else if(idOrigen == 0) {
@@ -244,6 +245,8 @@ public class SetOrigenActivity extends AppCompatActivity
                 }
                 else if(vale_mina.getText().toString().isEmpty()){
                     Toast.makeText(getApplicationContext(), "Por favor escribir el folio de mina", Toast.LENGTH_SHORT).show();
+                }*/if(!validarCampos()){
+                    /// imrime valiable mensaje en toast o alert
                 }
                 else {
                     checkNfcEnabled();
@@ -301,72 +304,131 @@ public class SetOrigenActivity extends AppCompatActivity
             });
     }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
+    private Boolean validarCampos(){
+        /// validar material
+        if(idMaterial == 0) {
+            //Toast.makeText(getApplicationContext(), "Por favor seleccione un Material de la lista", Toast.LENGTH_SHORT).show();
+            mensaje = "Por favor seleccione un Material de la lista";
+            materialesSpinner.requestFocus();
+            return false;
+        }
+        /// valir origen
+        /// validar folio mina
+        /// validar folio seguimiento
+        /// validar volumen
+
+        /// asignacion de valores
+
+        return true;
+    }
+    class SalidaMinaTarea extends AsyncTask<Void, Void, Boolean> {
         TagNFC tag_nfc = new TagNFC();
+        Context context;
+        Intent intent;
+        String mensaje_error = "";
+        public SalidaMinaTarea(Context context, Intent intent) {
+            this.context = context;
+            this.intent = intent;
+        }
 
-        //// se debe iniciar un asyncTask para realizar esta accion
-        if(writeMode){
-            if(NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
-                Tag myTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-                String[] techs = myTag.getTechList();
-                for (String t : techs) {
-                    if (MifareClassic.class.getName().equals(t)) {
-                        nfcTag = new NFCTag(myTag, this);
-                        tag_nfc.setUID(nfcTag.byteArrayToHexString(myTag.getId()));
-                        tag_nfc.setTipo(1);
-                        String camion_proyecto = nfcTag.readSector(null, 0, 1).replace(" ", "");
-                        if (camion_proyecto.length() == 8) {
-                            tag_nfc.setIdcamion(Util.getIdCamion(camion_proyecto, 4));
-                            tag_nfc.setIdproyecto(Util.getIdProyecto(camion_proyecto, 4));
-                        } else {
-                            tag_nfc.setIdcamion(Util.getIdCamion(camion_proyecto, 5));
-                            tag_nfc.setIdproyecto( Util.getIdProyecto(camion_proyecto, 5));
-                        }
-                        String material_origen = nfcTag.readSector(null,1, 4);
-                        tag_nfc.setIdmaterial( Util.getIdMaterial(material_origen));
-                        tag_nfc.setIdorigen(Util.getIdOrigen(material_origen));
-                        tag_nfc.setFecha(nfcTag.readSector(null,1,5));
-                        tag_nfc.setUsuario(nfcTag.readSector(null,1,6));
-                        tag_nfc.setTipo_viaje(nfcTag.readSector(null,2,9));
-                        tag_nfc.setVolumen(nfcTag.readSector(null,3,12));
-                        tag_nfc.setTipo_perfil(nfcTag.readSector(null,3,14));
-                        tag_nfc.setVolumen_entrada(nfcTag.readSector(null,4,16));
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
 
-                    } else if (MifareUltralight.class.getName().equals(t)) {
-                        nfcUltra = new NFCUltralight(myTag, this);
-                        tag_nfc.setUID(nfcUltra.byteArrayToHexString(myTag.getId()));
-                        tag_nfc.setTipo(2);
-                        String camion_proyecto = nfcUltra.readPage(null, 4)+nfcUltra.readPage(null, 5)+nfcUltra.readPage(null, 6);
-                        if (camion_proyecto.length() == 8) {
-                            tag_nfc.setIdcamion(Util.getIdCamion(camion_proyecto, 4));
-                            tag_nfc.setIdproyecto(Util.getIdProyecto(camion_proyecto, 4));
-                        } else {
-                            tag_nfc.setIdcamion(Util.getIdCamion(camion_proyecto, 8));
-                            tag_nfc.setIdproyecto(Util.getIdProyecto(camion_proyecto, 8));
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+
+            //// se lee el tag y se inicializa la clase con los datos
+            if(writeMode){
+                if(NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
+                    Tag myTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+                    String[] techs = myTag.getTechList();
+                    for (String t : techs) {
+                        if (MifareClassic.class.getName().equals(t)) {
+                            nfcTag = new NFCTag(myTag, context);
+                            tag_nfc.setUID(nfcTag.byteArrayToHexString(myTag.getId()));
+                            tag_nfc.setTipo(1);
+                            String camion_proyecto = nfcTag.readSector(null, 0, 1).replace(" ", "");
+                            if (camion_proyecto.length() == 8) {
+                                tag_nfc.setIdcamion(Util.getIdCamion(camion_proyecto, 4));
+                                tag_nfc.setIdproyecto(Util.getIdProyecto(camion_proyecto, 4));
+                            } else {
+                                tag_nfc.setIdcamion(Util.getIdCamion(camion_proyecto, 5));
+                                tag_nfc.setIdproyecto( Util.getIdProyecto(camion_proyecto, 5));
+                            }
+                            String material_origen = nfcTag.readSector(null,1, 4);
+                            tag_nfc.setIdmaterial( Util.getIdMaterial(material_origen));
+                            tag_nfc.setIdorigen(Util.getIdOrigen(material_origen));
+                            tag_nfc.setFecha(nfcTag.readSector(null,1,5));
+                            tag_nfc.setUsuario(nfcTag.readSector(null,1,6));
+                            tag_nfc.setTipo_viaje(nfcTag.readSector(null,2,9));
+                            tag_nfc.setVolumen(nfcTag.readSector(null,3,12));
+                            tag_nfc.setTipo_perfil(nfcTag.readSector(null,3,14));
+                            tag_nfc.setVolumen_entrada(nfcTag.readSector(null,4,16));
+
+                        } else if (MifareUltralight.class.getName().equals(t)) {
+                            nfcUltra = new NFCUltralight(myTag, context);
+                            tag_nfc.setUID(nfcUltra.byteArrayToHexString(myTag.getId()));
+                            tag_nfc.setTipo(2);
+                            String camion_proyecto = nfcUltra.readPage(null, 4)+nfcUltra.readPage(null, 5)+nfcUltra.readPage(null, 6);
+                            if (camion_proyecto.length() == 8) {
+                                tag_nfc.setIdcamion(Util.getIdCamion(camion_proyecto, 4));
+                                tag_nfc.setIdproyecto(Util.getIdProyecto(camion_proyecto, 4));
+                            } else {
+                                tag_nfc.setIdcamion(Util.getIdCamion(camion_proyecto, 8));
+                                tag_nfc.setIdproyecto(Util.getIdProyecto(camion_proyecto, 8));
+                            }
+                            tag_nfc.setIdmaterial(Integer.parseInt(nfcUltra.readPage(null,7)));
+                            tag_nfc.setIdorigen( Integer.parseInt(nfcUltra.readPage(null,8)));
+                            tag_nfc.setFecha( nfcUltra.readPage(null,9)+nfcUltra.readPage(null,10)+nfcUltra.readPage(null,11)+ nfcUltra.readPage(null,12));
+                            tag_nfc.setUsuario(nfcUltra.readPage(null,13));
+                            tag_nfc.setTipo_viaje(nfcUltra.readPage(null,15));
+                            tag_nfc.setVolumen(nfcUltra.readPage(null,16));
+                            tag_nfc.setTipo_perfil(nfcUltra.readPage(null,18));
+                            tag_nfc.setVolumen_entrada(nfcUltra.readPage(null,19));
                         }
-                        tag_nfc.setIdmaterial(Integer.parseInt(nfcUltra.readPage(null,7)));
-                        tag_nfc.setIdorigen( Integer.parseInt(nfcUltra.readPage(null,8)));
-                        tag_nfc.setFecha( nfcUltra.readPage(null,9)+nfcUltra.readPage(null,10)+nfcUltra.readPage(null,11)+ nfcUltra.readPage(null,12));
-                        tag_nfc.setUsuario(nfcUltra.readPage(null,13);
-                        tag_nfc.setTipo_viaje(nfcUltra.readPage(null,15));
-                        tag_nfc.setVolumen(nfcUltra.readPage(null,16));
-                        tag_nfc.setTipo_perfil(nfcUltra.readPage(null,18));
-                        tag_nfc.setVolumen_entrada(nfcUltra.readPage(null,19));
                     }
                 }
             }
+
+            //// inicia seccion de validaciones y escritura de dtos en DB
+
+            SalidaMina salida_mina = new SalidaMina(context, tag_nfc);
+
+            if(salida_mina.validarDatosTag() == "continuar"){
+
+                /// aqui ya se valido que no haya viajes pendientes en el tag, lo que procede es:
+                ///  1) crear el content values con los datos extra que debe de llevar el tag
+                ///     con el content valaes generado se complementa con lo que esta en la clase POJO para
+                ///        generar el paquete de insercion a BBD
+                ///  2) insertar los datos al tag
+            }else{
+                mensaje_error = salida_mina.validarDatosTag();
+                return false;
+            }
+            return false;
         }
 
-        //// inicia seccion de validaciones y escritura de dtos en DB
+        @Override
+        protected void onPostExecute(Boolean registro) {
+            super.onPostExecute(registro);
 
-        SalidaMina salida_mina = new SalidaMina(this, tag_nfc);
-
-        if(salida_mina.validarDatosTag() == "continuar"){
-
-        }else{
-            // toas con el mensaje de error
+            /// si registro == true entonces cierras progress dialog, muestras mensaje de que se hizo el registro, mandas a pantalla de impresion y ejecutaas sonido de alerta
         }
+    }
+
+    @Override
+    protected void onNewIntent(final Intent intent) {
+
+        new SalidaMinaTarea(this,  intent).execute();
+
+
+
+
+
+
+
 
 
 

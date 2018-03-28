@@ -48,7 +48,18 @@ public class SalidaMina {
         return "continuar";
     }
 
+    /**
+     * Metodo para guardarlos datos en la base de datos,
+     * el Content Values que va a llegar se debe complementar con
+     * los datos basicos del tag
+     * @param datos
+     */
     public void guardarDatosDB(ContentValues datos){
+        /// datos.put(llave, tag_nfc.getIdorigen())   ---> este es un ejemplo
+
+        //// despues de completar los datos, ya se hace la insercion en base de datos, para esto
+        //// se debe ocupar el mismo metodo que se utiliza
+
 
 
     }

@@ -3,8 +3,6 @@ package mx.grupohi.acarreos;
 import android.content.Context;
 import android.nfc.Tag;
 import android.nfc.tech.MifareClassic;
-import android.renderscript.Element;
-import android.util.Log;
 import android.widget.Toast;
 
 
@@ -12,9 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
 
 
 /**
