@@ -89,6 +89,7 @@ public class SetOrigenActivity extends AppCompatActivity
     private String txtDeductiva = "";
     private  HashMap<String, String> spinnerMotivosMap;
     private Spinner motivos;
+    private ContentValues datosVista;
 
     //GPS
     private GPSTracker gps;
@@ -150,6 +151,8 @@ public class SetOrigenActivity extends AppCompatActivity
         vale_mina = (TextView)findViewById(R.id.vale_mina);
         seguimiento = (TextView) findViewById(R.id.seguimiento);
         deductiva = (TextView) findViewById(R.id.deductiva);
+        //inicializa contentvalue para registrar datos a DB
+        datosVista = new ContentValues();
 
         final ArrayList<String> descripcionesOrigenes = origen.getArrayListDescripciones();
         final ArrayList <String> idsOrigenes = origen.getArrayListId();
@@ -230,23 +233,9 @@ public class SetOrigenActivity extends AppCompatActivity
         escribirOrigenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*if(idMaterial == 0) {
-                    Toast.makeText(getApplicationContext(), "Por favor seleccione un Material de la lista", Toast.LENGTH_SHORT).show();
-                    materialesSpinner.requestFocus();
-                } else if(idOrigen == 0) {
-                        Toast.makeText(getApplicationContext(), "Por favor seleccione un Origen de la lista", Toast.LENGTH_SHORT).show();
-                        origenesSpinner.requestFocus();
-                }
-                else if (deductiva.getText().toString().isEmpty()){
-                    Toast.makeText(getApplicationContext(), "Por favor escribir el volumen", Toast.LENGTH_SHORT).show();
-                }
-                else if(seguimiento.getText().toString().isEmpty()){
-                        Toast.makeText(getApplicationContext(), "Por favor escribir el folio de seguimiento de material", Toast.LENGTH_SHORT).show();
-                }
-                else if(vale_mina.getText().toString().isEmpty()){
-                    Toast.makeText(getApplicationContext(), "Por favor escribir el folio de mina", Toast.LENGTH_SHORT).show();
-                }*/if(!validarCampos()){
-                    /// imrime valiable mensaje en toast o alert
+                if(!validarCampos()){
+                    /// imprime valiable mensaje en toast o alert
+                    Toast.makeText(getApplicationContext(), mensaje, Toast.LENGTH_SHORT).show();
                 }
                 else {
                     checkNfcEnabled();
@@ -307,20 +296,43 @@ public class SetOrigenActivity extends AppCompatActivity
     private Boolean validarCampos(){
         /// validar material
         if(idMaterial == 0) {
-            //Toast.makeText(getApplicationContext(), "Por favor seleccione un Material de la lista", Toast.LENGTH_SHORT).show();
             mensaje = "Por favor seleccione un Material de la lista";
             materialesSpinner.requestFocus();
             return false;
         }
-        /// valir origen
+        /// validar origen
+        if(idOrigen == 0){
+            mensaje = "Por favor seleccione un Origen de la lista";
+            origenesSpinner.requestFocus();
+            return false;
+        }
         /// validar folio mina
+        if(vale_mina.getText().toString().isEmpty()){
+            mensaje = "Por favor escribir el folio de mina";
+            vale_mina.requestFocus();
+            return false;
+        }
         /// validar folio seguimiento
+        if(seguimiento.getText().toString().isEmpty()){
+            mensaje = "Por favor escribir el folio de seguimiento de material";
+            seguimiento.requestFocus();
+            return false;
+        }
         /// validar volumen
-
+        if(deductiva.getText().toString().isEmpty()){
+            mensaje = "Por favor escribir el volumen";
+            deductiva.requestFocus();
+            return false;
+        }
         /// asignacion de valores
-
+        datosVista.put("idmaterial", idMaterial);
+        datosVista.put("idorigen", idOrigen);
+        datosVista.put("mina", vale_mina.getText().toString());
+        datosVista.put("seguimiento", seguimiento.getText().toString());
+        datosVista.put("volumen", deductiva.getText().toString());
         return true;
     }
+
     class SalidaMinaTarea extends AsyncTask<Void, Void, Boolean> {
         TagNFC tag_nfc = new TagNFC();
         Context context;
