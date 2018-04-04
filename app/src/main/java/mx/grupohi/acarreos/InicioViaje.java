@@ -47,7 +47,7 @@ public class InicioViaje {
     private static DBScaSqlite db_sca;
     private Context context;
 
-    InicioViaje(Context context){
+    public InicioViaje(Context context){
         this.context = context;
         this.camion =new Camion(context);
         this.origen = new Origen(context);
@@ -55,7 +55,7 @@ public class InicioViaje {
         db_sca = new DBScaSqlite(this.context, "sca", null, 1);
     }
 
-    Boolean create(ContentValues data) {
+    public Boolean create(ContentValues data) {
         db = db_sca.getWritableDatabase();
         Boolean result = null;
         result = db.insert("inicio_viajes", null, data) > -1;

@@ -327,9 +327,11 @@ public class SetOrigenActivity extends AppCompatActivity
         /// asignacion de valores
         datosVista.put("idmaterial", idMaterial);
         datosVista.put("idorigen", idOrigen);
-        datosVista.put("mina", vale_mina.getText().toString());
-        datosVista.put("seguimiento", seguimiento.getText().toString());
-        datosVista.put("volumen", deductiva.getText().toString());
+        datosVista.put("folio_mina", vale_mina.getText().toString());
+        datosVista.put("folio_seguimiento", seguimiento.getText().toString());
+        datosVista.put("usuario", String.valueOf(usuario.getId()));
+        datosVista.put("imei", IMEI);
+        datosVista.put("deductiva", deductiva.getText().toString());
         return true;
     }
 
@@ -415,6 +417,25 @@ public class SetOrigenActivity extends AppCompatActivity
                 ///     con el content valaes generado se complementa con lo que esta en la clase POJO para
                 ///        generar el paquete de insercion a BBD
                 ///  2) insertar los datos al tag
+
+                datosVista.put("idcamion", tag_nfc.getIdcamion());
+                datosVista.put("fecha_origen", Util.getFormatDate(Util.getFechaHora()));
+                datosVista.put("uidTAG", tag_nfc.getUID());
+                datosVista.put("estatus", 1);
+                datosVista.put("tipoEsquema", usuario.getTipoEsquema());
+                datosVista.put("idperfil", usuario.tipo_permiso);
+                datosVista.put("tipo_suministro", tipo_s); // revisar validacion estandar para el lector del tag y validar que tipo de viaje es: Perfil Origen o perfil entrada
+                if (tipo_s == 1) {
+                    datosVista.put("Code", Util.folio(Util.dateFolios()) + String.valueOf(tag_nfc.getIdcamion());
+                }
+                if(deductiva_check){ // colocar las validaciones del check para el volumen de entrada para un viaje de mina.
+                    datosVista.put("deductiva_entrada", 1);
+                }else {
+                    datosVista.put("deductiva_entrada", 0);
+                }
+                datosVista.put("idMotivo", tag_nfc.getIdmotivo());
+                datosVista.put("numImpresion", 0);
+                salida_mina.guardarDatosDB(datosVista);
             }else{
                 mensaje_error = salida_mina.validarDatosTag();
                 return false;

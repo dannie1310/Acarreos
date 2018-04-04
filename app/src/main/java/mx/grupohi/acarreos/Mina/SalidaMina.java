@@ -3,10 +3,12 @@ package mx.grupohi.acarreos.Mina;
 import android.content.ContentValues;
 import android.content.Context;
 
+import mx.grupohi.acarreos.InicioViaje;
 import mx.grupohi.acarreos.R;
 import mx.grupohi.acarreos.TagModel;
 import mx.grupohi.acarreos.TiposTag.TagNFC;
 import mx.grupohi.acarreos.Usuario;
+import mx.grupohi.acarreos.InicioViaje;
 
 /**
  * Created by DBENITEZ on 26/03/2018.
@@ -54,14 +56,14 @@ public class SalidaMina {
      * los datos basicos del tag
      * @param datos
      */
-    public void guardarDatosDB(ContentValues datos){
+    public Boolean guardarDatosDB(ContentValues datos){
         /// datos.put(llave, tag_nfc.getIdorigen())   ---> este es un ejemplo
 
         //// despues de completar los datos, ya se hace la insercion en base de datos, para esto
         //// se debe ocupar el mismo metodo que se utiliza
-
-
-
+        InicioViaje in = new InicioViaje(context);
+        Boolean guardar = in.create(datos);
+        return guardar;
     }
 
 

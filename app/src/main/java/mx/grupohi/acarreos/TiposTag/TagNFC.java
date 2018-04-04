@@ -115,4 +115,19 @@ public class TagNFC {
     public void setVolumen_entrada(String volumen_entrada) {
         this.volumen_entrada = volumen_entrada;
     }
+    public String getIdmotivo() {
+        return idmotivo;
+    }
+
+    public void setIdmotivo(String idmotivo) {
+        this.idmotivo = idmotivo;
+    }
+
+    public String getMotivo_entrada() {
+        return motivo_entrada;
+    }
+
+    public void setMotivo_entrada(String motivo_entrada) {
+        this.motivo_entrada = motivo_entrada;
+    }
 }
