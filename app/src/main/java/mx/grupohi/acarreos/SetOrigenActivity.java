@@ -424,7 +424,7 @@ public class SetOrigenActivity extends AppCompatActivity
                 datosVista.put("estatus", 1);
                 datosVista.put("tipoEsquema", usuario.getTipoEsquema());
                 datosVista.put("idperfil", usuario.tipo_permiso);
-                datosVista.put("tipo_suministro", tipo_s); // revisar validacion estandar para el lector del tag y validar que tipo de viaje es: Perfil Origen o perfil entrada
+               /* datosVista.put("tipo_suministro", tipo_s); // revisar validacion estandar para el lector del tag y validar que tipo de viaje es: Perfil Origen o perfil entrada
                 if (tipo_s == 1) {
                     datosVista.put("Code", Util.folio(Util.dateFolios()) + String.valueOf(tag_nfc.getIdcamion());
                 }
@@ -432,7 +432,7 @@ public class SetOrigenActivity extends AppCompatActivity
                     datosVista.put("deductiva_entrada", 1);
                 }else {
                     datosVista.put("deductiva_entrada", 0);
-                }
+                }*/
                 datosVista.put("idMotivo", tag_nfc.getIdmotivo());
                 datosVista.put("numImpresion", 0);
                 salida_mina.guardarDatosDB(datosVista);
@@ -476,7 +476,7 @@ public class SetOrigenActivity extends AppCompatActivity
 
 
 
-        String UID="";
+      /*  String UID="";
         Usuario u = new Usuario(getApplicationContext());
         u = u.getUsuario();
         int tipo=0;
@@ -755,7 +755,7 @@ public class SetOrigenActivity extends AppCompatActivity
                 }
 
             }
-        }
+        }*/
     }
 
     @Override
