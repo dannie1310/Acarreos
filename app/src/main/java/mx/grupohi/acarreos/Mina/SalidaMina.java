@@ -29,7 +29,7 @@ public class SalidaMina {
             return String.valueOf(R.string.error_tag_inexistente);
         }
         // idmaterial, idorigen, fecha, usuaurio existe,
-        if(tag_nfc.getIdmaterial() == null || tag_nfc.getIdorigen() == null || tag_nfc.getFecha() == "" || tag_nfc.getUsuario() == null || tag_nfc.getVolumen() == null){
+        if(tag_nfc.getIdmaterial() != null && tag_nfc.getIdorigen() != null && tag_nfc.getFecha() != "" && tag_nfc.getUsuario() != null && tag_nfc.getVolumen() != null){
             return "El TAG cuenta con un viaje activo, Favor de pasar a un filtro de salida para finalizar el viaje.";
         }
         TagModel datosTagCamion = new TagModel(context);

@@ -297,7 +297,7 @@ public class NFCUltralight {
     }
 
     public String readDeductiva(Tag nfc, int page){
-        MifareUltralight mf=MifareUltralight.get(nfc);
+        MifareUltralight mf=MifareUltralight.get(NFCTag);
         byte[] toRead = null;
         byte[] auxRead =  new byte[4];
         String aux="";

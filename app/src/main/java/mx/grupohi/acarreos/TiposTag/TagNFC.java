@@ -9,8 +9,8 @@ public class TagNFC {
     String UID;
     Integer idcamion;
     Integer idproyecto;
-    Integer idmaterial;
-    Integer idorigen;
+    String idmaterial;
+    String idorigen;
     String fecha;
     String usuario;
     String tipo_viaje;
@@ -52,19 +52,19 @@ public class TagNFC {
         this.idproyecto = idproyecto;
     }
 
-    public Integer getIdmaterial() {
+    public String getIdmaterial() {
         return idmaterial;
     }
 
-    public void setIdmaterial(Integer idmaterial) {
+    public void setIdmaterial(String idmaterial) {
         this.idmaterial = idmaterial;
     }
 
-    public Integer getIdorigen() {
+    public String getIdorigen() {
         return idorigen;
     }
 
-    public void setIdorigen(Integer idorigen) {
+    public void setIdorigen(String idorigen) {
         this.idorigen = idorigen;
     }
 

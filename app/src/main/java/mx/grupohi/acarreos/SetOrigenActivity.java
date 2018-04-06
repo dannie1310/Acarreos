@@ -1,5 +1,6 @@
 package mx.grupohi.acarreos;
 
+import android.Manifest;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
@@ -7,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
@@ -19,6 +21,7 @@ import android.preference.DialogPreference;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
@@ -57,7 +60,7 @@ public class SetOrigenActivity extends AppCompatActivity
     private Usuario usuario;
     private Material material;
     private Origen origen;
-    private  Camion c;
+    private Camion c;
 
     //Variables
     private Integer idMaterial;
@@ -87,7 +90,7 @@ public class SetOrigenActivity extends AppCompatActivity
     private Integer id_motivo = 0;
     private String mensaje = "";
     private String txtDeductiva = "";
-    private  HashMap<String, String> spinnerMotivosMap;
+    private HashMap<String, String> spinnerMotivosMap;
     private Spinner motivos;
     private ContentValues datosVista;
 
@@ -120,7 +123,17 @@ public class SetOrigenActivity extends AppCompatActivity
 
         gps = new GPSTracker(SetOrigenActivity.this);
 
-        TelephonyManager phneMgr = (TelephonyManager)getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+        TelephonyManager phneMgr = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         IMEI = phneMgr.getDeviceId();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -372,8 +385,8 @@ public class SetOrigenActivity extends AppCompatActivity
                                 tag_nfc.setIdproyecto( Util.getIdProyecto(camion_proyecto, 5));
                             }
                             String material_origen = nfcTag.readSector(null,1, 4);
-                            tag_nfc.setIdmaterial( Util.getIdMaterial(material_origen));
-                            tag_nfc.setIdorigen(Util.getIdOrigen(material_origen));
+                            tag_nfc.setIdmaterial(String.valueOf(Util.getIdMaterial(material_origen)));
+                            tag_nfc.setIdorigen(String.valueOf(Util.getIdOrigen(material_origen)));
                             tag_nfc.setFecha(nfcTag.readSector(null,1,5));
                             tag_nfc.setUsuario(nfcTag.readSector(null,1,6));
                             tag_nfc.setTipo_viaje(nfcTag.readSector(null,2,9));
@@ -385,7 +398,7 @@ public class SetOrigenActivity extends AppCompatActivity
                             nfcUltra = new NFCUltralight(myTag, context);
                             tag_nfc.setUID(nfcUltra.byteArrayToHexString(myTag.getId()));
                             tag_nfc.setTipo(2);
-                            String camion_proyecto = nfcUltra.readPage(null, 4)+nfcUltra.readPage(null, 5)+nfcUltra.readPage(null, 6);
+                            String camion_proyecto = nfcUltra.readDeductiva(null, 4)+nfcUltra.readDeductiva(null, 5)+nfcUltra.readDeductiva(null, 6);
                             if (camion_proyecto.length() == 8) {
                                 tag_nfc.setIdcamion(Util.getIdCamion(camion_proyecto, 4));
                                 tag_nfc.setIdproyecto(Util.getIdProyecto(camion_proyecto, 4));
@@ -393,9 +406,9 @@ public class SetOrigenActivity extends AppCompatActivity
                                 tag_nfc.setIdcamion(Util.getIdCamion(camion_proyecto, 8));
                                 tag_nfc.setIdproyecto(Util.getIdProyecto(camion_proyecto, 8));
                             }
-                            tag_nfc.setIdmaterial(Integer.parseInt(nfcUltra.readPage(null,7)));
-                            tag_nfc.setIdorigen( Integer.parseInt(nfcUltra.readPage(null,8)));
-                            tag_nfc.setFecha( nfcUltra.readPage(null,9)+nfcUltra.readPage(null,10)+nfcUltra.readPage(null,11)+ nfcUltra.readPage(null,12));
+                            tag_nfc.setIdmaterial(nfcUltra.readPage(null,7));
+                            tag_nfc.setIdorigen(nfcUltra.readPage(null,8));
+                            tag_nfc.setFecha(nfcUltra.readDeductiva(null,9)+nfcUltra.readDeductiva(null,10)+nfcUltra.readDeductiva(null,11)+ nfcUltra.readDeductiva(null,12));
                             tag_nfc.setUsuario(nfcUltra.readPage(null,13));
                             tag_nfc.setTipo_viaje(nfcUltra.readPage(null,15));
                             tag_nfc.setVolumen(nfcUltra.readPage(null,16));
@@ -409,8 +422,8 @@ public class SetOrigenActivity extends AppCompatActivity
             //// inicia seccion de validaciones y escritura de dtos en DB
 
             SalidaMina salida_mina = new SalidaMina(context, tag_nfc);
-
-            if(salida_mina.validarDatosTag() == "continuar"){
+            mensaje = salida_mina.validarDatosTag();
+            if(mensaje == "continuar"){
 
                 /// aqui ya se valido que no haya viajes pendientes en el tag, lo que procede es:
                 ///  1) crear el content values con los datos extra que debe de llevar el tag
@@ -437,7 +450,7 @@ public class SetOrigenActivity extends AppCompatActivity
                 datosVista.put("numImpresion", 0);
                 salida_mina.guardarDatosDB(datosVista);
             }else{
-                mensaje_error = salida_mina.validarDatosTag();
+              //  Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show();
                 return false;
             }
             return false;
@@ -762,7 +775,7 @@ public class SetOrigenActivity extends AppCompatActivity
     public void onResume() {
         super.onResume();
         checkNfcEnabled();
-        WriteModeOff();
+       // WriteModeOff();
     }
 
     @Override
@@ -803,6 +816,7 @@ public class SetOrigenActivity extends AppCompatActivity
     }
 
     private void WriteModeOn() {
+        writeMode = true;
         nfcAdapter.enableForegroundDispatch(this, pendingIntent, writeTagFilters, null);
         mainLayout.setVisibility(View.GONE);
         lecturaTag.setVisibility(View.VISIBLE);
