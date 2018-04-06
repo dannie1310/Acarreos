@@ -342,8 +342,8 @@ public class SetOrigenActivity extends AppCompatActivity
         datosVista.put("idorigen", idOrigen);
         datosVista.put("folio_mina", vale_mina.getText().toString());
         datosVista.put("folio_seguimiento", seguimiento.getText().toString());
-        datosVista.put("usuario", String.valueOf(usuario.getId()));
-        datosVista.put("imei", IMEI);
+        datosVista.put("idusuario", String.valueOf(usuario.getId()));
+        datosVista.put("IMEI", IMEI);
         datosVista.put("deductiva", deductiva.getText().toString());
         return true;
     }
@@ -448,7 +448,18 @@ public class SetOrigenActivity extends AppCompatActivity
                 }*/
                 datosVista.put("idMotivo", tag_nfc.getIdmotivo());
                 datosVista.put("numImpresion", 0);
-                salida_mina.guardarDatosDB(datosVista);
+                if(!salida_mina.guardarDatosDB(datosVista)){
+                    mensaje = "Error al guardar en Base de Datos";
+                    return false;
+                }else{// continuar, escribir tag....
+                    try{
+                        //guardar datos en el tag
+
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        return false;
+                    }
+                }
             }else{
               //  Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show();
                 return false;
@@ -459,8 +470,12 @@ public class SetOrigenActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(Boolean registro) {
             super.onPostExecute(registro);
-
-            /// si registro == true entonces cierras progress dialog, muestras mensaje de que se hizo el registro, mandas a pantalla de impresion y ejecutaas sonido de alerta
+            WriteModeOff();
+            if (registro){
+                /// si registro == true entonces cierras progress dialog, muestras mensaje de que se hizo el registro, mandas a pantalla de impresion y ejecutaas sonido de alerta
+            }else{
+                Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

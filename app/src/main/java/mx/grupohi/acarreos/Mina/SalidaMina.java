@@ -38,7 +38,7 @@ public class SalidaMina {
             return "El camión " + datosTagCamion.economico + " se encuentra inactivo. Por favor contacta al encargado.";
         }
         Usuario usuario = new Usuario(context);
-        if (tag_nfc.getIdproyecto() == usuario.getProyecto()) {
+        if (tag_nfc.getIdproyecto() != usuario.getProyecto()) {
             return String.valueOf(R.string.error_proyecto);
         }
         /*tag_nfc.setIdmaterial((Integer) datos.get("id_material"));
@@ -58,12 +58,16 @@ public class SalidaMina {
      */
     public Boolean guardarDatosDB(ContentValues datos){
         /// datos.put(llave, tag_nfc.getIdorigen())   ---> este es un ejemplo
-
         //// despues de completar los datos, ya se hace la insercion en base de datos, para esto
         //// se debe ocupar el mismo metodo que se utiliza
-        InicioViaje in = new InicioViaje(context);
-        Boolean guardar = in.create(datos);
-        return guardar;
+        try {
+            InicioViaje in = new InicioViaje(context);
+            System.out.println(datos);
+            return in.create(datos);
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
     }
 
 
