@@ -31,91 +31,83 @@ public class NFCTag {
         this.NFCTag = NFCTag;
     }
 
-    void write(String text, Tag tag){
+    void write(String text, Tag tag) throws IOException {
         MifareClassic mfc = MifareClassic.get(tag);
-        try {
-            mfc.connect();
-            int x = 0;
-            int y = 0;
-            int iw;
-            int z = 1;
-            int block;
-            int auxBlock = 2;
-            boolean auth = false;
-            byte[] value = text.getBytes();
-            System.out.println(value.length);
-            if (value.length <= 752) {
-                while (x != value.length) {
-                    if (y < 16) {
-                        auth = mfc.authenticateSectorWithKeyA(y, pw);
-                        if (auth) {
-                            byte[] toWrite = new byte[MifareClassic.BLOCK_SIZE];
-                            for (block = 0; block < auxBlock; block++) {
-                                for (iw = 0; iw < MifareClassic.BLOCK_SIZE; iw++) {
-                                    if (x < value.length) {
-                                        toWrite[iw] = value[x];
-                                        x++;
 
-                                    } else {
-                                        toWrite[iw] = 0;
-                                    }
+        mfc.connect();
+        int x = 0;
+        int y = 0;
+        int iw;
+        int z = 1;
+        int block;
+        int auxBlock = 2;
+        boolean auth = false;
+        byte[] value = text.getBytes();
+        System.out.println(value.length);
+        if (value.length <= 752) {
+            while (x != value.length) {
+                if (y < 16) {
+                    auth = mfc.authenticateSectorWithKeyA(y, pw);
+                    if (auth) {
+                        byte[] toWrite = new byte[MifareClassic.BLOCK_SIZE];
+                        for (block = 0; block < auxBlock; block++) {
+                            for (iw = 0; iw < MifareClassic.BLOCK_SIZE; iw++) {
+                                if (x < value.length) {
+                                    toWrite[iw] = value[x];
+                                    x++;
+
+                                } else {
+                                    toWrite[iw] = 0;
                                 }
-                                mfc.writeBlock(z + block, toWrite);
-                                toWrite = new byte[MifareClassic.BLOCK_SIZE];
                             }
-                            if (z == 1) {
-                                z = z + block + 1;
-                                auxBlock = auxBlock + 1;
-                            } else {
-                                z = z + block + 1;
-                            }
+                            mfc.writeBlock(z + block, toWrite);
+                            toWrite = new byte[MifareClassic.BLOCK_SIZE];
                         }
-                        y = y + 1;
+                        if (z == 1) {
+                            z = z + block + 1;
+                            auxBlock = auxBlock + 1;
+                        } else {
+                            z = z + block + 1;
+                        }
                     }
+                    y = y + 1;
                 }
-                Toast.makeText(context, context.getString(R.string.tag_configurado), Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(context, context.getString(R.string.error_tag_capacidad_almacenamiento), Toast.LENGTH_LONG).show();
             }
-            mfc.close();
-        } catch (Exception fe) {
-            Toast.makeText(context, context.getString(R.string.error_tag_comunicacion), Toast.LENGTH_LONG).show();
-            fe.printStackTrace();
+            Toast.makeText(context, context.getString(R.string.tag_configurado), Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(context, context.getString(R.string.error_tag_capacidad_almacenamiento), Toast.LENGTH_LONG).show();
         }
+        mfc.close();
     }
 
-    boolean writeID(Tag tag, int sector, String mensaje){
+    boolean writeID(Tag tag, int sector, String mensaje) throws  IOException {
         MifareClassic mfc = MifareClassic.get(tag);
         int bloque = mfc.sectorToBlock(sector);
-        int x=0;
-        int auxBloque=0;
-        try {
-            mfc.connect();
-            boolean auth = false;
-            byte[] value =  mensaje.getBytes();
-            auth = mfc.authenticateSectorWithKeyA(sector, pw);
-            if (auth) {
-                while (x != value.length) {
-                    byte[] toWrite = new byte[MifareClassic.BLOCK_SIZE];
-                    for (int iw = 0; iw < MifareClassic.BLOCK_SIZE; iw++) {
-                        if (x < value.length) {
-                            toWrite[iw] = value[x];
-                            x++;
-                        } else {
-                            toWrite[iw] = 0;
-                        }
+        int x = 0;
+        int auxBloque = 0;
+
+        mfc.connect();
+        boolean auth = false;
+        byte[] value = mensaje.getBytes();
+        auth = mfc.authenticateSectorWithKeyA(sector, pw);
+        if (auth) {
+            while (x != value.length) {
+                byte[] toWrite = new byte[MifareClassic.BLOCK_SIZE];
+                for (int iw = 0; iw < MifareClassic.BLOCK_SIZE; iw++) {
+                    if (x < value.length) {
+                        toWrite[iw] = value[x];
+                        x++;
+                    } else {
+                        toWrite[iw] = 0;
                     }
-                    mfc.writeBlock(bloque + auxBloque, toWrite);
-                    auxBloque += 1;
-                    toWrite = new byte[MifareClassic.BLOCK_SIZE];
                 }
+                mfc.writeBlock(bloque + auxBloque, toWrite);
+                auxBloque += 1;
+                toWrite = new byte[MifareClassic.BLOCK_SIZE];
             }
-            mfc.close();
-            return true;
-        } catch (Exception fe) {
-            fe.printStackTrace();
-            return false;
         }
+        mfc.close();
+        return true;
     }
 
     String concatenar(String idCamion, String idProyecto){
@@ -132,7 +124,7 @@ public class NFCTag {
         return resultado;
     }
 
-    String read(Tag tag) {// Leer toda la informacion de la tag
+    String read(Tag tag) throws IOException {// Leer toda la informacion de la tag
         int y = 0;
         int z = 1;
         byte[] toRead = null;
@@ -140,183 +132,153 @@ public class NFCTag {
         int auxBlock = 2;
         String aux = "";
         MifareClassic mf = MifareClassic.get(tag);
-        try {
-            mf.connect();
-            boolean auth = false;
-            for (y = 0; y < 16; y++) {
-                auth = mf.authenticateSectorWithKeyA(y, pw);
-                if (auth) {
-                    for (block = 0; block < auxBlock; block++) {
-                        toRead = mf.readBlock(block + z);
-                        if (toRead != null) {
-                            byte[] limpio = new byte[toRead.length];
-                            for (int i = 0; i < toRead.length; i++) {
-                                if (toRead[i] != 0) {
-                                    limpio[i] += toRead[i];
-                                } else {
-                                    limpio[i] += ' ';
-                                }
+        mf.connect();
+        boolean auth = false;
+        for (y = 0; y < 16; y++) {
+            auth = mf.authenticateSectorWithKeyA(y, pw);
+            if (auth) {
+                for (block = 0; block < auxBlock; block++) {
+                    toRead = mf.readBlock(block + z);
+                    if (toRead != null) {
+                        byte[] limpio = new byte[toRead.length];
+                        for (int i = 0; i < toRead.length; i++) {
+                            if (toRead[i] != 0) {
+                                limpio[i] += toRead[i];
+                            } else {
+                                limpio[i] += ' ';
                             }
-                            String s = new String(limpio);
-                            aux += s;
                         }
-                    }
-                    if (z == 1) {
-                        z += block + 1;
-                        auxBlock = auxBlock + 1;
-                    } else {
-                        z += block + 1;
+                        String s = new String(limpio);
+                        aux += s;
                     }
                 }
+                if (z == 1) {
+                    z += block + 1;
+                    auxBlock = auxBlock + 1;
+                } else {
+                    z += block + 1;
+                }
             }
-            mf.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return context.getString(R.string.error_conexion_tag);
         }
+        mf.close();
         return aux;
     }
 
-    String readSector (Tag tag_1, int sector, int bloque) { //Leer solo un sector y bloque especifico
-        byte[] toRead=null;
-        String aux="";
+    public String readSector (Tag tag_1, int sector, int bloque) throws IOException { //Leer solo un sector y bloque especifico
+        byte[] toRead = null;
+        String aux = "";
         MifareClassic mf = MifareClassic.get(NFCTag);
-        try {
-            mf.connect();
-            boolean auth = false;
-            auth = mf.authenticateSectorWithKeyA(sector, pw);
-            if (auth) {
-                toRead = mf.readBlock(bloque);
-                byte[] limpio=new byte[toRead.length];
-                if (toRead != null) {
-                    for (int i = 0; i < toRead.length; i++) {
-                        if (toRead[i] != 0) {
-                            limpio[i] += toRead[i];
-                        } else {
-                            limpio[i] += ' ';
-                        }
-                    }
-                    String s= new String(limpio);
-                    aux += s;
-                }
-            }
-            mf.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            //return context.getString(R.string.error_conexion_tag);
-            return null;
-        }
-        return  aux;
-    }
-
-    void clean(Tag tag){
-        MifareClassic mfc = MifareClassic.get(tag);
-        try {
-            mfc.connect();
-            int x = 0;
-            int y = 0;
-            int iw;
-            int z = 1;
-            int block;
-            int auxBlock = 2;
-            boolean auth = false;
-            for (y=0; y < 16; y++) {
-                auth = mfc.authenticateSectorWithKeyA(y, pw);
-                if (auth) {
-                    byte[] toWrite = new byte[MifareClassic.BLOCK_SIZE];
-
-                    for (block = 0; block < auxBlock; block++) {
-
-                        for (iw = 0; iw < MifareClassic.BLOCK_SIZE; iw++) {
-                            toWrite[iw] = 0;
-                        }
-                        mfc.writeBlock(z + block, toWrite);
-                        toWrite = new byte[MifareClassic.BLOCK_SIZE];
-                    }
-                    if (z == 1) {
-                        z = z + block + 1;
-                        auxBlock = auxBlock + 1;
+        mf.connect();
+        boolean auth = false;
+        auth = mf.authenticateSectorWithKeyA(sector, pw);
+        if (auth) {
+            toRead = mf.readBlock(bloque);
+            byte[] limpio = new byte[toRead.length];
+            if (toRead != null) {
+                for (int i = 0; i < toRead.length; i++) {
+                    if (toRead[i] != 0) {
+                        limpio[i] += toRead[i];
                     } else {
-                        z = z + block + 1;
+                        limpio[i] += ' ';
                     }
                 }
+                String s = new String(limpio);
+                aux += s;
             }
-            Toast.makeText(context, context.getString(R.string.tag_configurado), Toast.LENGTH_LONG).show();
-            mfc.close();
-        } catch (Exception fe) {
-            Toast.makeText(context, context.getString(R.string.error_tag_comunicacion), Toast.LENGTH_LONG).show();
-            fe.printStackTrace();
         }
+        mf.close();
+        return aux;
     }
 
-    Boolean cleanSector(Tag tag, int sector){
+    void clean(Tag tag) throws  IOException {
         MifareClassic mfc = MifareClassic.get(tag);
-        int bloque = mfc.sectorToBlock(sector);
-        try {
-            mfc.connect();
-            int iw;
-            int z = 1;
-            int block;
-            boolean auth = false;
-
-            auth = mfc.authenticateSectorWithKeyA(sector, pw);
+        mfc.connect();
+        int x = 0;
+        int y = 0;
+        int iw;
+        int z = 1;
+        int block;
+        int auxBlock = 2;
+        boolean auth = false;
+        for (y = 0; y < 16; y++) {
+            auth = mfc.authenticateSectorWithKeyA(y, pw);
             if (auth) {
                 byte[] toWrite = new byte[MifareClassic.BLOCK_SIZE];
 
-                for (block = 0; block < 3; block++) {
+                for (block = 0; block < auxBlock; block++) {
 
                     for (iw = 0; iw < MifareClassic.BLOCK_SIZE; iw++) {
                         toWrite[iw] = 0;
                     }
-                    mfc.writeBlock(bloque + block, toWrite);
+                    mfc.writeBlock(z + block, toWrite);
                     toWrite = new byte[MifareClassic.BLOCK_SIZE];
                 }
+                if (z == 1) {
+                    z = z + block + 1;
+                    auxBlock = auxBlock + 1;
+                } else {
+                    z = z + block + 1;
+                }
             }
-           // Toast.makeText(context, context.getString(R.string.tag_configurado), Toast.LENGTH_LONG).show();
-            mfc.close();
-            return true;
-
-        } catch (Exception fe) {
-            //Toast.makeText(context, context.getString(R.string.error_tag_comunicacion), Toast.LENGTH_LONG).show();
-            fe.printStackTrace();
-            return false;
         }
+        Toast.makeText(context, context.getString(R.string.tag_configurado), Toast.LENGTH_LONG).show();
+        mfc.close();
     }
 
-    String idTag(Tag tag){
-        byte[] toRead=null;
-        byte[] send= new byte[4];
-        String aux="";
-        MifareClassic mf = MifareClassic.get(tag);
-        try {
-            mf.connect();
-            boolean auth = false;
-            auth = mf.authenticateSectorWithKeyA(0, pw);
-            if (auth==true) {
-                toRead = mf.readBlock(0);
-                for(int i=0; i<4; i++) {
-                    send[i]=toRead[i];
+    Boolean cleanSector(Tag tag, int sector) throws IOException {
+        MifareClassic mfc = MifareClassic.get(tag);
+        int bloque = mfc.sectorToBlock(sector);
+        mfc.connect();
+        int iw;
+        int z = 1;
+        int block;
+        boolean auth = false;
+        auth = mfc.authenticateSectorWithKeyA(sector, pw);
+        if (auth) {
+            byte[] toWrite = new byte[MifareClassic.BLOCK_SIZE];
+
+            for (block = 0; block < 3; block++) {
+
+                for (iw = 0; iw < MifareClassic.BLOCK_SIZE; iw++) {
+                    toWrite[iw] = 0;
                 }
-                aux=byteArrayToHexString(send);
+                mfc.writeBlock(bloque + block, toWrite);
+                toWrite = new byte[MifareClassic.BLOCK_SIZE];
             }
-            else {
-                aux="";
-                auth = mf.authenticateSectorWithKeyA(0, MifareClassic.KEY_DEFAULT);
-                if (auth) {
-                    toRead = mf.readBlock(0);
-                    for (int i = 0; i < 4; i++) {
-                        send[i] = toRead[i];
-                    }
-                    aux = byteArrayToHexString(send);
-                }
-            }
-            mf.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return context.getString(R.string.error_conexion_tag);
         }
-        System.out.println("idTag "+aux);
-        return  aux;
+        // Toast.makeText(context, context.getString(R.string.tag_configurado), Toast.LENGTH_LONG).show();
+        mfc.close();
+        return true;
+    }
+
+    String idTag(Tag tag) throws IOException {
+        byte[] toRead = null;
+        byte[] send = new byte[4];
+        String aux = "";
+        MifareClassic mf = MifareClassic.get(tag);
+        mf.connect();
+        boolean auth = false;
+        auth = mf.authenticateSectorWithKeyA(0, pw);
+        if (auth == true) {
+            toRead = mf.readBlock(0);
+            for (int i = 0; i < 4; i++) {
+                send[i] = toRead[i];
+            }
+            aux = byteArrayToHexString(send);
+        } else {
+            aux = "";
+            auth = mf.authenticateSectorWithKeyA(0, MifareClassic.KEY_DEFAULT);
+            if (auth) {
+                toRead = mf.readBlock(0);
+                for (int i = 0; i < 4; i++) {
+                    send[i] = toRead[i];
+                }
+                aux = byteArrayToHexString(send);
+            }
+        }
+        mf.close();
+        System.out.println("idTag " + aux);
+        return aux;
     }
 
     public static String byteArrayToHexString(byte[] byteArray){
@@ -331,54 +293,59 @@ public class NFCTag {
         }
         return data;
     }
-    boolean changeKey(Tag tag) {
+    boolean changeKey(Tag tag) throws IOException {
         MifareClassic mf = MifareClassic.get(tag);
-        int y=0;
-        try {
-            mf.connect();
-            boolean auth = false;
-            boolean auth_cambio = false;
-            for (y=0; y < 16; y++) {
-                auth = mf.authenticateSectorWithKeyA(y, MifareClassic.KEY_DEFAULT);
-                int bloque= mf.sectorToBlock(y);
-                if (auth==true) {
-                    if(y==0){
+        int y = 0;
+        mf.connect();
+        boolean auth = false;
+        boolean auth_cambio = false;
+        for (y = 0; y < 16; y++) {
+            auth = mf.authenticateSectorWithKeyA(y, MifareClassic.KEY_DEFAULT);
+            int bloque = mf.sectorToBlock(y);
+            if (auth == true) {
+                if (y == 0) {
+                    mf.writeBlock(bloque + 3, kyUID);
+                } else {
+                    mf.writeBlock(bloque + 3, ky);
+                }
+            } else {
+                auth_cambio = mf.authenticateSectorWithKeyA(y, pw);
+                if (auth_cambio == true) {
+                    if (y == 0) {
                         mf.writeBlock(bloque + 3, kyUID);
                     }
-                    else{
-                        mf.writeBlock(bloque + 3, ky);
-                    }
                 }
-                else{
-                    auth_cambio= mf.authenticateSectorWithKeyA(y,pw);
-                    if(auth_cambio==true){
-                        if(y==0){
-                            mf.writeBlock(bloque + 3, kyUID);
-                        }
-                    }
-                }
-
             }
-            mf.close();
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+
         }
+        mf.close();
+        return true;
     }
 
-    boolean writeSector(Tag tag, int sector, int bloque, String mensaje){
+    boolean writeSector(Tag tag, int sector, int bloque, String mensaje) throws IOException {
         MifareClassic mfc = MifareClassic.get(tag);
-        int bq=mfc.sectorToBlock(sector);
-        bq=bq+3;
-        if(bloque== bq){
+        int bq = mfc.sectorToBlock(sector);
+        bq = bq + 3;
+        if (bloque == bq) {
             return false;
         }
-        int x=0;
-        try {
-            mfc.connect();
-            boolean auth = false;
-            byte[] value =  mensaje.getBytes();
+        int x = 0;
+        mfc.connect();
+        boolean auth = false;
+        byte[] value = mensaje.getBytes();
+        if (auth) {
+            byte[] toWrite = new byte[MifareClassic.BLOCK_SIZE];
+            for (int iw = 0; iw < MifareClassic.BLOCK_SIZE; iw++) {
+                if (x < value.length) {
+                    toWrite[iw] = value[x];
+                    x++;
+                } else {
+                    toWrite[iw] = 0;
+                }
+            }
+            mfc.writeBlock(bloque, toWrite);
+        } else {
+            auth = mfc.authenticateSectorWithKeyA(sector, pw);
             if (auth) {
                 byte[] toWrite = new byte[MifareClassic.BLOCK_SIZE];
                 for (int iw = 0; iw < MifareClassic.BLOCK_SIZE; iw++) {
@@ -391,76 +358,46 @@ public class NFCTag {
                 }
                 mfc.writeBlock(bloque, toWrite);
             }
-            else {
-                auth = mfc.authenticateSectorWithKeyA(sector, pw);
-                if (auth) {
-                    byte[] toWrite = new byte[MifareClassic.BLOCK_SIZE];
-                    for (int iw = 0; iw < MifareClassic.BLOCK_SIZE; iw++) {
-                        if (x < value.length) {
-                            toWrite[iw] = value[x];
-                            x++;
-                        } else {
-                            toWrite[iw] = 0;
-                        }
-                    }
-                    mfc.writeBlock(bloque, toWrite);
-                }
-            }
-            mfc.close();
-            return true;
-        } catch (Exception fe) {
-            fe.printStackTrace();
-            return false;
         }
+        mfc.close();
+        return true;
     }
 
-    void formatear(Tag tag, int sector) {
+    void formatear(Tag tag, int sector) throws IOException {
         MifareClassic mf = MifareClassic.get(tag);
-        int bloque= mf.sectorToBlock(sector);
-        try {
-            mf.connect();
-            boolean auth = false;
-            auth = mf.authenticateSectorWithKeyA(sector,pw);
-            if (auth) {
-                mf.writeBlock(bloque + 3,def);
-            }
-            mf.close();
-        } catch (Exception e) {
-            e.printStackTrace();
+        int bloque = mf.sectorToBlock(sector);
+        mf.connect();
+        boolean auth = false;
+        auth = mf.authenticateSectorWithKeyA(sector, pw);
+        if (auth) {
+            mf.writeBlock(bloque + 3, def);
         }
+        mf.close();
     }
 
 
-    byte[] readSector (MifareClassic mf, Boolean auth, Tag tag, int sector, int bloque) { //Leer solo un sector y bloque especifico
-        byte[] toRead=null;
-        String aux="";
-        try{
-            if (mf.authenticateSectorWithKeyA(sector, pw)) {
-                toRead = mf.readBlock(bloque);
-            }
-            // mf.close();
-        } catch (Exception e) {
-            e.printStackTrace();
+    byte[] readSector (MifareClassic mf, Boolean auth, Tag tag, int sector, int bloque) throws IOException { //Leer solo un sector y bloque especifico
+        byte[] toRead = null;
+        String aux = "";
+        if (mf.authenticateSectorWithKeyA(sector, pw)) {
+            toRead = mf.readBlock(bloque);
         }
-        return  toRead;
+        // mf.close();
+        return toRead;
     }
 
-    JSONObject destino (Tag mytag){
+    JSONObject destino (Tag mytag) throws IOException {
         Boolean auth = false;
         MifareClassic mf = MifareClassic.get(mytag);
         byte[] viaje = new byte[0];
         byte[] taginfo = new byte[0];
         JSONObject JSON = new JSONObject();
-        try {
-            mf.connect();
-            viaje = readSector(mf, auth, mytag, 2, 8);
-            taginfo = readSector(mf, auth, mytag, 0, 1);
-               // JSON.put("viaje", readSector(mf, auth, mytag, 2, 8));
-               // JSON.put("tagInfo", readSector(mf, auth, mytag, 0, 1));
-            mf.close();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        mf.connect();
+        viaje = readSector(mf, auth, mytag, 2, 8);
+        taginfo = readSector(mf, auth, mytag, 0, 1);
+        // JSON.put("viaje", readSector(mf, auth, mytag, 2, 8));
+        // JSON.put("tagInfo", readSector(mf, auth, mytag, 0, 1));
+        mf.close();
         try {
             JSON.put("viaje", cambio(viaje));
             JSON.put("tagInfo", cambio(taginfo));
