@@ -23,7 +23,7 @@ public class InicioViaje {
     Origen origen;
     Material material;
 
-    Integer id;
+    public Integer id;
     Integer idcamion;
     Integer idmaterial;
     Integer idorigen;

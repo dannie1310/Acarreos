@@ -94,6 +94,7 @@ public class SetOrigenActivity extends AppCompatActivity
     private HashMap<String, String> spinnerMotivosMap;
     private Spinner motivos;
     private ContentValues datosVista;
+    private Integer IdInicio;
 
     //GPS
     private GPSTracker gps;
@@ -523,7 +524,8 @@ public class SetOrigenActivity extends AppCompatActivity
                 if(!salida_mina.guardarDatosDB(datosVista)){
                     mensaje = "Error al guardar en Base de Datos";
                     return false;
-                }else{// continuar, escribir tag....
+                }else{
+                    IdInicio = salida_mina.idInicio;
                     try{
                         //guardar datos en el tag
                         myTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
@@ -537,21 +539,29 @@ public class SetOrigenActivity extends AppCompatActivity
                                 nfcTag.writeSector(null, 3, 12, datosVista.getAsString("deductiva"));
                                 nfcTag.writeSector(null, 3, 13, tag_nfc.getIdmotivo());
                                 nfcTag.writeSector(null, 3, 14, "1");//tipoperfil.... revisar...
+                                return true;
                             }else{
                                 mensaje = "¡Error! Utilice el mismo tag.";
+                                return false;
                             }
                         }
                         if(tag_nfc.getTipo() == 2) {
                            if(tag_nfc.getUID().equals(nfcUltra.byteArrayToHexString(myTag.getId()))){
-                               nfcUltra.writePagina(null, 7, data);
+                               try {
+                                   nfcUltra.writePagina(null, 7, data);
+                               }catch (IOException e){
+                                   e.printStackTrace();
+                               }
                                nfcUltra.writePagina(null, 9, Util.getFechaTag(datosVista.getAsString("fecha_origen")));
                                nfcUltra.writePagina(null, 13, datosVista.getAsString("idusuario"));
                           //     nfcUltra.writePagina(myTag, 15, String.valueOf(tipo_s));
                                nfcUltra.writePagina(null, 16,  datosVista.getAsString("deductiva"));
                                nfcUltra.writePagina(null, 17, tag_nfc.getIdmotivo());
                                nfcUltra.writePagina(null, 18, "1");//tipo perfil ... revisar
+                               return true;
                            }else{
                                mensaje = "¡Error! Utilice el mismo tag.";
+                               return false;
                            }
                         }
                     }catch (Exception e){
@@ -571,7 +581,9 @@ public class SetOrigenActivity extends AppCompatActivity
             super.onPostExecute(registro);
             WriteModeOff();
             if (registro){
-                /// si registro == true entonces cierras progress dialog, muestras mensaje de que se hizo el registro, mandas a pantalla de impresion y ejecutaas sonido de alerta
+                Intent success = new Intent(getApplicationContext(), SuccessDestinoActivity.class);
+                success.putExtra("idInicio", IdInicio);
+                startActivity(success);
             }else{
                 Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show();
             }

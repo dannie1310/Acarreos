@@ -17,6 +17,7 @@ import mx.grupohi.acarreos.InicioViaje;
 public class SalidaMina {
     Context context;
     TagNFC tag_nfc;
+    public Integer idInicio;
     public SalidaMina(Context context, TagNFC tag_nfc){
         this.context = context;
         this.tag_nfc = tag_nfc;
@@ -62,8 +63,9 @@ public class SalidaMina {
         //// se debe ocupar el mismo metodo que se utiliza
         try {
             InicioViaje in = new InicioViaje(context);
-            System.out.println(datos);
-            return in.create(datos);
+            Boolean result = in.create(datos);
+            idInicio = in.id;
+            return result;
         }catch (Exception e){
             e.printStackTrace();
             return false;
