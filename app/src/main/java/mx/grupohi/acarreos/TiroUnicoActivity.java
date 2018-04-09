@@ -1,5 +1,6 @@
 package mx.grupohi.acarreos;
 
+import android.Manifest;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
@@ -7,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
@@ -16,6 +18,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
 import android.view.View;
@@ -39,6 +42,7 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -67,10 +71,10 @@ public class TiroUnicoActivity extends AppCompatActivity
     private TextView tagAlertTextView;
     private TextView text_origen;
     private EditText textDeductiva;
-    private  Spinner rutasSpinner;
-    private  EditText observaciones;
-    private  HashMap<String, String> spinnerMotivosMap;
-    private  HashMap<String, String>  spinnerRutasMap;
+    private Spinner rutasSpinner;
+    private EditText observaciones;
+    private HashMap<String, String> spinnerMotivosMap;
+    private HashMap<String, String> spinnerRutasMap;
     private TextView mensajeTextView;
 
     private ProgressDialog progressDialogSync;
@@ -125,6 +129,16 @@ public class TiroUnicoActivity extends AppCompatActivity
         camion = camion.find(idcamion);
         destinoSuccess = new Intent(this, SuccessDestinoActivity.class);
         TelephonyManager phneMgr = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         IMEI = phneMgr.getDeviceId();
         mina = (TextInputLayout) findViewById(R.id.textomina);
         seg = (TextInputLayout) findViewById(R.id.seg);
@@ -415,16 +429,32 @@ public class TiroUnicoActivity extends AppCompatActivity
                         latitude = gps.getLatitude();
                         longitude = gps.getLongitude();
                         if (tipo == 1) {
-                            tagInfo = nfcTag.readSector(myTag, 0, 1);
-                            tipoPerfil = nfcTag.readSector(myTag, 3, 14);
+                            try {
+                                tagInfo = nfcTag.readSector(myTag, 0, 1);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                tipoPerfil = nfcTag.readSector(myTag, 3, 14);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                             tipoPerfil = tipoPerfil.replace(" ","");
                             if(tipoPerfil == "" || tipoPerfil == null){  // test valor nulo
                                 tipoPerfil = "";
                             }
                             if(tipoPerfil == "") {
                                 if (tagInfo != null) {
-                                    limpiarorigen = nfcTag.cleanSector(myTag, 1);
-                                    nfcTag.cleanSector(myTag, 3);
+                                    try {
+                                        limpiarorigen = nfcTag.cleanSector(myTag, 1);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    try {
+                                        nfcTag.cleanSector(myTag, 3);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
                                     if (!limpiarorigen) {
                                         error_eliminar = 1;
                                     } else {
@@ -482,22 +512,43 @@ public class TiroUnicoActivity extends AppCompatActivity
                     }
                 } else if(error_eliminar == 1){
                     if(tipo == 1) {
-                        tipoPerfil = nfcTag.readSector(myTag, 3, 14);
+                        try {
+                            tipoPerfil = nfcTag.readSector(myTag, 3, 14);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                         if(tipoPerfil == "") {
-                            limpiarorigen = nfcTag.cleanSector(myTag, 1);
-                            nfcTag.cleanSector(myTag, 3);
+                            try {
+                                limpiarorigen = nfcTag.cleanSector(myTag, 1);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                nfcTag.cleanSector(myTag, 3);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
 
                             if (limpiarorigen) {
                                 error_eliminar = 2;
                             }
                         }
                     } else if( tipo == 2){
-                        tipoPerfil = nfcUltra.readPage(myTag, 18).substring(0,1);
+                        try {
+                            tipoPerfil = nfcUltra.readPage(myTag, 18).substring(0,1);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                         if(tipoPerfil == " " || tipoPerfil == null){
                             tipoPerfil ="";
                         }
                         if(tipoPerfil == "") {
-                            Boolean limpiar = nfcUltra.cleanTag(myTag);
+                            Boolean limpiar = null;
+                            try {
+                                limpiar = nfcUltra.cleanTag(myTag);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                             if (limpiar) {
                                 error_eliminar = 2;
                             }

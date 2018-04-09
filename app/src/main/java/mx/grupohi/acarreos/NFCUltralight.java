@@ -53,7 +53,7 @@ public class NFCUltralight {
     public boolean writePagina(Tag mytag, int page, String mensaje) throws IOException {
         byte[] value = mensaje.getBytes();
         byte[] aux = new byte[4];
-        MifareUltralight mf = MifareUltralight.get(mytag);
+        MifareUltralight mf = MifareUltralight.get(NFCTag);
         int z = 0;
         int auxPages = 0;
 

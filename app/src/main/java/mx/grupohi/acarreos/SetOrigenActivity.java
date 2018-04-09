@@ -47,6 +47,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringTokenizer;
@@ -365,18 +366,23 @@ public class SetOrigenActivity extends AppCompatActivity
 
         @Override
         protected Boolean doInBackground(Void... voids) {
-
+            Tag myTag;
             //// se lee el tag y se inicializa la clase con los datos
             if(writeMode){
                 if(NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
-                    Tag myTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+                    myTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
                     String[] techs = myTag.getTechList();
                     for (String t : techs) {
                         if (MifareClassic.class.getName().equals(t)) {
                             nfcTag = new NFCTag(myTag, context);
                             tag_nfc.setUID(nfcTag.byteArrayToHexString(myTag.getId()));
                             tag_nfc.setTipo(1);
-                            String camion_proyecto = nfcTag.readSector(null, 0, 1).replace(" ", "");
+                            String camion_proyecto = null;
+                            try {
+                                camion_proyecto = nfcTag.readSector(null, 0, 1).replace(" ", "");
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                             if (camion_proyecto.length() == 8) {
                                 tag_nfc.setIdcamion(Util.getIdCamion(camion_proyecto, 4));
                                 tag_nfc.setIdproyecto(Util.getIdProyecto(camion_proyecto, 4));
@@ -384,21 +390,55 @@ public class SetOrigenActivity extends AppCompatActivity
                                 tag_nfc.setIdcamion(Util.getIdCamion(camion_proyecto, 5));
                                 tag_nfc.setIdproyecto( Util.getIdProyecto(camion_proyecto, 5));
                             }
-                            String material_origen = nfcTag.readSector(null,1, 4);
+                            String material_origen = null;
+                            try {
+                                material_origen = nfcTag.readSector(null,1, 4);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                             tag_nfc.setIdmaterial(String.valueOf(Util.getIdMaterial(material_origen)));
                             tag_nfc.setIdorigen(String.valueOf(Util.getIdOrigen(material_origen)));
-                            tag_nfc.setFecha(nfcTag.readSector(null,1,5));
-                            tag_nfc.setUsuario(nfcTag.readSector(null,1,6));
-                            tag_nfc.setTipo_viaje(nfcTag.readSector(null,2,9));
-                            tag_nfc.setVolumen(nfcTag.readSector(null,3,12));
-                            tag_nfc.setTipo_perfil(nfcTag.readSector(null,3,14));
-                            tag_nfc.setVolumen_entrada(nfcTag.readSector(null,4,16));
+                            try {
+                                tag_nfc.setFecha(nfcTag.readSector(null,1,5));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                tag_nfc.setUsuario(nfcTag.readSector(null,1,6));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                tag_nfc.setTipo_viaje(nfcTag.readSector(null,2,9));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                tag_nfc.setVolumen(nfcTag.readSector(null,3,12));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                tag_nfc.setTipo_perfil(nfcTag.readSector(null,3,14));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                tag_nfc.setVolumen_entrada(nfcTag.readSector(null,4,16));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
 
                         } else if (MifareUltralight.class.getName().equals(t)) {
                             nfcUltra = new NFCUltralight(myTag, context);
                             tag_nfc.setUID(nfcUltra.byteArrayToHexString(myTag.getId()));
                             tag_nfc.setTipo(2);
-                            String camion_proyecto = nfcUltra.readDeductiva(null, 4)+nfcUltra.readDeductiva(null, 5)+nfcUltra.readDeductiva(null, 6);
+                            String camion_proyecto = null;
+                            try {
+                                camion_proyecto = nfcUltra.readDeductiva(null, 4)+nfcUltra.readDeductiva(null, 5)+nfcUltra.readDeductiva(null, 6);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                             if (camion_proyecto.length() == 8) {
                                 tag_nfc.setIdcamion(Util.getIdCamion(camion_proyecto, 4));
                                 tag_nfc.setIdproyecto(Util.getIdProyecto(camion_proyecto, 4));
@@ -406,14 +446,46 @@ public class SetOrigenActivity extends AppCompatActivity
                                 tag_nfc.setIdcamion(Util.getIdCamion(camion_proyecto, 8));
                                 tag_nfc.setIdproyecto(Util.getIdProyecto(camion_proyecto, 8));
                             }
-                            tag_nfc.setIdmaterial(nfcUltra.readPage(null,7));
-                            tag_nfc.setIdorigen(nfcUltra.readPage(null,8));
-                            tag_nfc.setFecha(nfcUltra.readDeductiva(null,9)+nfcUltra.readDeductiva(null,10)+nfcUltra.readDeductiva(null,11)+ nfcUltra.readDeductiva(null,12));
-                            tag_nfc.setUsuario(nfcUltra.readPage(null,13));
-                            tag_nfc.setTipo_viaje(nfcUltra.readPage(null,15));
-                            tag_nfc.setVolumen(nfcUltra.readPage(null,16));
-                            tag_nfc.setTipo_perfil(nfcUltra.readPage(null,18));
-                            tag_nfc.setVolumen_entrada(nfcUltra.readPage(null,19));
+                            try {
+                                tag_nfc.setIdmaterial(nfcUltra.readPage(null,7));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                tag_nfc.setIdorigen(nfcUltra.readPage(null,8));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                tag_nfc.setFecha(nfcUltra.readDeductiva(null,9)+nfcUltra.readDeductiva(null,10)+nfcUltra.readDeductiva(null,11)+ nfcUltra.readDeductiva(null,12));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                tag_nfc.setUsuario(nfcUltra.readPage(null,13));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                tag_nfc.setTipo_viaje(nfcUltra.readPage(null,15));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                tag_nfc.setVolumen(nfcUltra.readPage(null,16));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                tag_nfc.setTipo_perfil(nfcUltra.readPage(null,18));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                tag_nfc.setVolumen_entrada(nfcUltra.readPage(null,19));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 }
@@ -454,7 +526,34 @@ public class SetOrigenActivity extends AppCompatActivity
                 }else{// continuar, escribir tag....
                     try{
                         //guardar datos en el tag
-
+                        myTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+                        String data = Util.concatenar(datosVista.getAsString("idmaterial"), datosVista.getAsString("idorigen"));
+                        if(tag_nfc.getTipo() == 1) {
+                            if(tag_nfc.getUID() == nfcTag.byteArrayToHexString(myTag.getId())){
+                                nfcTag.writeSector(null, 1, 4, data);
+                                nfcTag.writeSector(null, 1, 5, Util.getFechaTag(datosVista.getAsString("fecha_origen")));
+                                nfcTag.writeSector(null, 1, 6, datosVista.getAsString("idusuario"));
+                                //nfcTag.writeSector(null, 2, 9, String.valueOf(tipo_s)); //tipo viaje
+                                nfcTag.writeSector(null, 3, 12, datosVista.getAsString("deductiva"));
+                                nfcTag.writeSector(null, 3, 13, tag_nfc.getIdmotivo());
+                                nfcTag.writeSector(null, 3, 14, "1");//tipoperfil.... revisar...
+                            }else{
+                                mensaje = "¡Error! Utilice el mismo tag.";
+                            }
+                        }
+                        if(tag_nfc.getTipo() == 2) {
+                           if(tag_nfc.getUID().equals(nfcUltra.byteArrayToHexString(myTag.getId()))){
+                               nfcUltra.writePagina(null, 7, data);
+                               nfcUltra.writePagina(null, 9, Util.getFechaTag(datosVista.getAsString("fecha_origen")));
+                               nfcUltra.writePagina(null, 13, datosVista.getAsString("idusuario"));
+                          //     nfcUltra.writePagina(myTag, 15, String.valueOf(tipo_s));
+                               nfcUltra.writePagina(null, 16,  datosVista.getAsString("deductiva"));
+                               nfcUltra.writePagina(null, 17, tag_nfc.getIdmotivo());
+                               nfcUltra.writePagina(null, 18, "1");//tipo perfil ... revisar
+                           }else{
+                               mensaje = "¡Error! Utilice el mismo tag.";
+                           }
+                        }
                     }catch (Exception e){
                         e.printStackTrace();
                         return false;

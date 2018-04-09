@@ -322,8 +322,8 @@ public class NFCTag {
         return true;
     }
 
-    boolean writeSector(Tag tag, int sector, int bloque, String mensaje) throws IOException {
-        MifareClassic mfc = MifareClassic.get(tag);
+    boolean writeSector(Tag tag_1, int sector, int bloque, String mensaje) throws IOException {
+        MifareClassic mfc = MifareClassic.get(NFCTag);
         int bq = mfc.sectorToBlock(sector);
         bq = bq + 3;
         if (bloque == bq) {

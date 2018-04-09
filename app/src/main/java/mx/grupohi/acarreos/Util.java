@@ -164,8 +164,17 @@ public class Util {
     static String getFechaHora() {
         return (String) android.text.format.DateFormat.format("HHmmssyyyyMMdd", new java.util.Date());
     }
-
-
+    static String getFechaTag(String string) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            Date date = format.parse(string);
+            SimpleDateFormat fechaFormat = new SimpleDateFormat("HHmmssyyyyMMdd");
+            return fechaFormat.format(date);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
     static String getFechaSegundos() {
         return (String) android.text.format.DateFormat.format("yyMMddHHmmss", new java.util.Date());
     }

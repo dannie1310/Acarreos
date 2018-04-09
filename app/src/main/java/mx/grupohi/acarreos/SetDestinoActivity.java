@@ -1,5 +1,6 @@
 package mx.grupohi.acarreos;
 
+import android.Manifest;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
@@ -7,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
@@ -16,6 +18,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.view.menu.ActionMenuItemView;
 import android.telephony.TelephonyManager;
@@ -44,6 +47,7 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -84,9 +88,9 @@ public class SetDestinoActivity extends AppCompatActivity
     private Snackbar snackbar;
     private ProgressDialog progressDialogSync;
     private TextInputLayout mina,
-                            seg;
+            seg;
     private TextView textmina,
-                    textseg;
+            textseg;
 
     private Integer idTiro;
     private Integer idRuta;
@@ -119,11 +123,10 @@ public class SetDestinoActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         camionId = getIntent().getStringExtra("camion");
-        tipo_suministro = getIntent().getIntExtra("tipo_suministro",0);
+        tipo_suministro = getIntent().getIntExtra("tipo_suministro", 0);
 
         c = new Camion(getApplicationContext());
         c = c.find(Integer.valueOf(camionId));
-
 
 
         usuario = new Usuario(this);
@@ -132,7 +135,17 @@ public class SetDestinoActivity extends AppCompatActivity
         tiro = new Tiro(this);
 
         gps = new GPSTracker(SetDestinoActivity.this);
-        TelephonyManager phneMgr = (TelephonyManager)getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+        TelephonyManager phneMgr = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         IMEI = phneMgr.getDeviceId();
 
         tirosSpinner = (Spinner) findViewById(R.id.spinnerTiros);
@@ -489,15 +502,51 @@ public class SetDestinoActivity extends AppCompatActivity
                         longitude = gps.getLongitude();
                         if (tipo == 1) {
 
-                            tagInfo = nfcTag.readSector(myTag, 0, 1);
-                            tagOrigen = nfcTag.readSector(myTag, 1, 4);
-                            fechaString = nfcTag.readSector(myTag, 1, 5);
-                            idUsuario = nfcTag.readSector(myTag, 1, 6);
-                            deductiva_origen = nfcTag.readSector(myTag, 3, 12);
-                            idmotivo_origen = nfcTag.readSector(myTag, 3, 13);
-                            tipoviaje = nfcTag.readSector(myTag, 2, 9);
-                            deductiva_entrada = nfcTag.readSector(myTag, 4, 16); //validar
-                            idmotivo_entrada = nfcTag.readSector(myTag, 4, 17);
+                            try {
+                                tagInfo = nfcTag.readSector(myTag, 0, 1);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                tagOrigen = nfcTag.readSector(myTag, 1, 4);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                fechaString = nfcTag.readSector(myTag, 1, 5);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                idUsuario = nfcTag.readSector(myTag, 1, 6);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                deductiva_origen = nfcTag.readSector(myTag, 3, 12);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                idmotivo_origen = nfcTag.readSector(myTag, 3, 13);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                tipoviaje = nfcTag.readSector(myTag, 2, 9);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                deductiva_entrada = nfcTag.readSector(myTag, 4, 16); //validar
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                idmotivo_entrada = nfcTag.readSector(myTag, 4, 17);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                             tagInfo = tagInfo.replace(" ", "");
                             idCamion = null;
                             idProyecto = null;
@@ -728,10 +777,26 @@ public class SetDestinoActivity extends AppCompatActivity
 
                 if (Viaje.findCode(code) != null) {
                     if (tipo == 1) {
-                        limpiarorigen = nfcTag.cleanSector(myTag, 1);
-                        nfcTag.cleanSector(myTag, 2);
-                        nfcTag.cleanSector(myTag, 3);
-                        nfcTag.cleanSector(myTag, 4);
+                        try {
+                            limpiarorigen = nfcTag.cleanSector(myTag, 1);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            nfcTag.cleanSector(myTag, 2);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            nfcTag.cleanSector(myTag, 3);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            nfcTag.cleanSector(myTag, 4);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
 
                         if (!limpiarorigen) {
                             error_eliminar = 1;
@@ -740,7 +805,12 @@ public class SetDestinoActivity extends AppCompatActivity
                         }
                     }
                     if (tipo == 2) {
-                        Boolean limpiar = nfcUltra.cleanTag(myTag);
+                        Boolean limpiar = null;
+                        try {
+                            limpiar = nfcUltra.cleanTag(myTag);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                         if (!limpiar) {
                             error_eliminar = 1;
                         } else {
