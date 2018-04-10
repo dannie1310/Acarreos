@@ -26,19 +26,22 @@ public class SalidaMina {
     }
 
     public String validarDatosTag(){
+        Usuario usuario = new Usuario(context);
         if (!TagModel.findTAG (context, tag_nfc.getUID())) {
             return String.valueOf(R.string.error_tag_inexistente);
         }
-        // idmaterial, idorigen, fecha, usuaurio existe,
         if(tag_nfc.getIdmaterial() != null && tag_nfc.getIdorigen() != null && tag_nfc.getFecha() != "" && tag_nfc.getUsuario() != null && tag_nfc.getVolumen() != null){
-            return "El TAG cuenta con un viaje activo, Favor de pasar a un filtro de salida para finalizar el viaje.";
+            if(usuario.getTipo_permiso() == 4){
+                return "volumen_entrada";
+            }else {
+                return "El TAG cuenta con un viaje activo, Favor de pasar a un filtro de salida para finalizar el viaje.";
+            }
         }
         TagModel datosTagCamion = new TagModel(context);
         datosTagCamion = datosTagCamion.find(tag_nfc.getUID(), tag_nfc.getIdcamion(), tag_nfc.getIdproyecto());
         if(datosTagCamion.estatus != 1){
             return "El camión " + datosTagCamion.economico + " se encuentra inactivo. Por favor contacta al encargado.";
         }
-        Usuario usuario = new Usuario(context);
         if (tag_nfc.getIdproyecto() != usuario.getProyecto()) {
             return String.valueOf(R.string.error_proyecto);
         }
@@ -71,9 +74,4 @@ public class SalidaMina {
             return false;
         }
     }
-
-
-
-
-
 }

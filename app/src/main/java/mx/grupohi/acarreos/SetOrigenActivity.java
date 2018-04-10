@@ -497,13 +497,11 @@ public class SetOrigenActivity extends AppCompatActivity
             SalidaMina salida_mina = new SalidaMina(context, tag_nfc);
             mensaje = salida_mina.validarDatosTag();
             if(mensaje == "continuar"){
-
                 /// aqui ya se valido que no haya viajes pendientes en el tag, lo que procede es:
                 ///  1) crear el content values con los datos extra que debe de llevar el tag
                 ///     con el content valaes generado se complementa con lo que esta en la clase POJO para
                 ///        generar el paquete de insercion a BBD
                 ///  2) insertar los datos al tag
-
                 datosVista.put("idcamion", tag_nfc.getIdcamion());
                 datosVista.put("fecha_origen", Util.getFormatDate(Util.getFechaHora()));
                 datosVista.put("uidTAG", tag_nfc.getUID());
@@ -569,9 +567,14 @@ public class SetOrigenActivity extends AppCompatActivity
                         return false;
                     }
                 }
-            }else{
-              //  Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show();
-                return false;
+            }
+            if(mensaje == "volumen_entrada"){// mensaje para agregar volumen extra de entrada
+                mensajeDeductiva();
+                if(!txtDeductiva.equals("")) {
+                   /* nfcUltra.writePagina(myTag, 19, txtDeductiva);
+                    nfcUltra.writePagina(myTag, 20, id_motivo.toString());
+                    banderaPermisos = 0;*/
+                }
             }
             return false;
         }
@@ -901,7 +904,7 @@ public class SetOrigenActivity extends AppCompatActivity
     public void onResume() {
         super.onResume();
         checkNfcEnabled();
-       // WriteModeOff();
+        WriteModeOff();
     }
 
     @Override
