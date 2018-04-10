@@ -187,7 +187,8 @@ public class NFCTag {
             }
         }
         mf.close();
-        return aux;
+        String respuesta = aux.replace(" ", "");
+        return respuesta;
     }
 
     void clean(Tag tag) throws  IOException {

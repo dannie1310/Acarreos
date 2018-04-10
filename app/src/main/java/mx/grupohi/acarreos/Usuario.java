@@ -29,7 +29,7 @@ public class Usuario {
     String empresa;
     Integer logo;
     String imagen;
-    Integer tipo_permiso;
+    public Integer tipo_permiso;
     Integer idorigen;
     String origen_name;
     String tiro_name;
@@ -98,7 +98,7 @@ public class Usuario {
         }
     }
 
-    Usuario getUsuario() {
+    public Usuario getUsuario() {
         db = db_sca.getWritableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM user LIMIT 1", null);
         try {

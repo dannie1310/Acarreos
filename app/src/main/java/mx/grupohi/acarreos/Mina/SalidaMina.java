@@ -27,11 +27,12 @@ public class SalidaMina {
 
     public String validarDatosTag(){
         Usuario usuario = new Usuario(context);
+        usuario = usuario.getUsuario();
         if (!TagModel.findTAG (context, tag_nfc.getUID())) {
-            return String.valueOf(R.string.error_tag_inexistente);
+            return "El TAG que intentas configurar no está autorizado para éste proyecto.";
         }
         if(tag_nfc.getIdmaterial() != null && tag_nfc.getIdorigen() != null && tag_nfc.getFecha() != "" && tag_nfc.getUsuario() != null && tag_nfc.getVolumen() != null){
-            if(usuario.getTipo_permiso() == 4){
+            if(usuario.tipo_permiso == 4){
                 return "volumen_entrada";
             }else {
                 return "El TAG cuenta con un viaje activo, Favor de pasar a un filtro de salida para finalizar el viaje.";
@@ -43,7 +44,7 @@ public class SalidaMina {
             return "El camión " + datosTagCamion.economico + " se encuentra inactivo. Por favor contacta al encargado.";
         }
         if (tag_nfc.getIdproyecto() != usuario.getProyecto()) {
-            return String.valueOf(R.string.error_proyecto);
+            return "El TAG no pertenece al proyecto del usuario.";
         }
         /*tag_nfc.setIdmaterial((Integer) datos.get("id_material"));
         tag_nfc.setIdorigen((Integer) datos.get("id_origen"));
@@ -73,5 +74,17 @@ public class SalidaMina {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public  Boolean tipoviaje(){
+        Usuario usuario = new Usuario(context);
+        usuario = usuario.getUsuario();
+        if(usuario.tipo_permiso == 1) { // Perfil Checador de Origen
+            return true;
+        }
+        if(usuario.tipo_permiso == 4){ // Perfil Checador de Entrada
+            return false;
+        }
+        return false;
     }
 }
