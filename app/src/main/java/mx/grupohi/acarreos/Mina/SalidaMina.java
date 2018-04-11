@@ -32,7 +32,7 @@ public class SalidaMina {
             return "El TAG que intentas configurar no está autorizado para éste proyecto.";
         }
         if(tag_nfc.getIdmaterial() != null && tag_nfc.getIdorigen() != null && tag_nfc.getFecha() != "" && tag_nfc.getUsuario() != null && tag_nfc.getVolumen() != null){
-            if(usuario.tipo_permiso == 4){
+            if(usuario.tipo_permiso == 4 && tag_nfc.getTipo_viaje().equals("1")){ // Perfil de Checador Entrada y Viaje de Origen.
                 return "volumen_entrada";
             }else {
                 return "El TAG cuenta con un viaje activo, Favor de pasar a un filtro de salida para finalizar el viaje.";
@@ -46,12 +46,6 @@ public class SalidaMina {
         if (tag_nfc.getIdproyecto() != usuario.getProyecto()) {
             return "El TAG no pertenece al proyecto del usuario.";
         }
-        /*tag_nfc.setIdmaterial((Integer) datos.get("id_material"));
-        tag_nfc.setIdorigen((Integer) datos.get("id_origen"));
-        tag_nfc.setFecha((String) datos.get("fecha"));
-        tag_nfc.setUsuario((String) datos.get("id_usuario"));
-        tag_nfc.setTipo_viaje((String) datos.get("tipo_viaje"));*/
-
         return "continuar";
     }
 
@@ -76,6 +70,9 @@ public class SalidaMina {
         }
     }
 
+    /**
+     * Metodo para identificar el tipo de perfil
+     */
     public  Boolean tipoviaje(){
         Usuario usuario = new Usuario(context);
         usuario = usuario.getUsuario();

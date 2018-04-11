@@ -1,6 +1,7 @@
 package mx.grupohi.acarreos;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
@@ -681,8 +682,8 @@ public class SetOrigenActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(Boolean registro) {
             super.onPostExecute(registro);
-            WriteModeOff();
             if (registro){
+                WriteModeOff();
                 Intent success = new Intent(getApplicationContext(), SuccessDestinoActivity.class);
                 success.putExtra("idInicio", IdInicio);
                 startActivity(success);
@@ -690,6 +691,7 @@ public class SetOrigenActivity extends AppCompatActivity
                 if(mensaje == "volumen_entrada") {
                     mensajeDeductiva(intent, tag_nfc);
                 }else {
+                    WriteModeOff();
                     Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -1031,6 +1033,7 @@ public class SetOrigenActivity extends AppCompatActivity
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            nfcAdapter.disableForegroundDispatch(SetOrigenActivity.this);
         }
 
         @Override
@@ -1162,7 +1165,7 @@ public class SetOrigenActivity extends AppCompatActivity
                     Toast.makeText(getApplicationContext(), "Por favor escribir el volumen", Toast.LENGTH_SHORT).show();
                 }else{
                     txtDeductiva = deduc.getText().toString();
-                    WriteModeOn();
+                    //WriteModeOn();
                     new MensajeTarea(getApplicationContext(),  intent,tag_nfc).execute();
                 }
             }
