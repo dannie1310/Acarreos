@@ -466,14 +466,14 @@ public class SetOrigenActivity extends AppCompatActivity
                                 tag_nfc.setIdproyecto(Util.getIdProyecto(camion_proyecto, 8));
                             }
                             try {
-                                tag_nfc.setIdmaterial(nfcUltra.readPage(null,7));
+                                tag_nfc.setIdmaterial(nfcUltra.readDeductiva(null,7));
                             } catch (IOException e) {
                                 e.printStackTrace();
                                 mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
                                 return false;
                             }
                             try {
-                                tag_nfc.setIdorigen(nfcUltra.readPage(null,8));
+                                tag_nfc.setIdorigen(nfcUltra.readDeductiva(null,8));
                             } catch (IOException e) {
                                 e.printStackTrace();
                                 mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
@@ -487,33 +487,33 @@ public class SetOrigenActivity extends AppCompatActivity
                                 return false;
                             }
                             try {
-                                tag_nfc.setUsuario(nfcUltra.readPage(null,13));
+                                tag_nfc.setUsuario(nfcUltra.readDeductiva(null,13));
                             } catch (IOException e) {
                                 e.printStackTrace();
                                 mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
                                 return false;
                             }
                             try {
-                                tag_nfc.setTipo_viaje(nfcUltra.readPage(null,15));
+                                tag_nfc.setTipo_viaje(nfcUltra.readDeductiva(null,15));
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
                             try {
-                                tag_nfc.setVolumen(nfcUltra.readPage(null,16));
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                                mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
-                                return false;
-                            }
-                            try {
-                                tag_nfc.setTipo_perfil(nfcUltra.readPage(null,18));
+                                tag_nfc.setVolumen(nfcUltra.readDeductiva(null,16));
                             } catch (IOException e) {
                                 e.printStackTrace();
                                 mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
                                 return false;
                             }
                             try {
-                                tag_nfc.setVolumen_entrada(nfcUltra.readPage(null,19));
+                                tag_nfc.setTipo_perfil(nfcUltra.readDeductiva(null,18));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
+                                return false;
+                            }
+                            try {
+                                tag_nfc.setVolumen_entrada(nfcUltra.readDeductiva(null,19));
                             } catch (IOException e) {
                                 e.printStackTrace();
                                 mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
@@ -661,7 +661,7 @@ public class SetOrigenActivity extends AppCompatActivity
                                 return false;
                             }
                             try {
-                                nfcUltra.writePagina(null, 18, "tipo_suministro");
+                                nfcUltra.writePagina(null, 18, datosVista.getAsString("tipo_suministro"));
                             } catch (IOException e) {
                                 e.printStackTrace();
                                 mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
@@ -1043,6 +1043,7 @@ public class SetOrigenActivity extends AppCompatActivity
                     String[] techs = myTag.getTechList();
                     for (String t : techs) {
                         if (MifareClassic.class.getName().equals(t)) {
+                            nfcTag = new NFCTag(myTag, context);
                             if (tag_nfc.getUID().equals(nfcTag.byteArrayToHexString(myTag.getId()))) {
                                 mensaje_error = "continuar";
                             } else {
@@ -1051,6 +1052,7 @@ public class SetOrigenActivity extends AppCompatActivity
                             }
                         }
                         if (MifareUltralight.class.getName().equals(t)) {
+                            nfcUltra = new NFCUltralight(myTag, context);
                             if (tag_nfc.getUID().equals(nfcUltra.byteArrayToHexString(myTag.getId()))) {
                                 mensaje_error = "continuar";
                             } else {
@@ -1063,7 +1065,7 @@ public class SetOrigenActivity extends AppCompatActivity
             }
             if (mensaje_error == "continuar") {
                 datosVista.put("idcamion", tag_nfc.getIdcamion());
-                datosVista.put("fecha_origen", tag_nfc.getFecha());
+                datosVista.put("fecha_origen", Util.getFormatDate(tag_nfc.getFecha()));
                 datosVista.put("uidTAG", tag_nfc.getUID());
                 datosVista.put("estatus", 1);
                 datosVista.put("tipoEsquema", tag_nfc.getTipo_viaje());
@@ -1072,9 +1074,10 @@ public class SetOrigenActivity extends AppCompatActivity
                 datosVista.put("deductiva", txtDeductiva);
                 datosVista.put("idMotivo", tag_nfc.getIdmotivo());
                 datosVista.put("numImpresion", 0);
+                datosVista.put("tipo_suministro", tag_nfc.getTipo_viaje());
                 SalidaMina salida_mina = new SalidaMina(context, tag_nfc);
                 if (!salida_mina.guardarDatosDB(datosVista)) {
-                    mensaje = "Error al guardar en Base de Datos";
+                    mensaje_error = "Error al guardar en Base de Datos";
                     return false;
                 } else {
                     IdInicio = salida_mina.idInicio;
@@ -1085,14 +1088,14 @@ public class SetOrigenActivity extends AppCompatActivity
                                 nfcTag.writeSector(myTag, 4, 16, txtDeductiva);
                             } catch (IOException e) {
                                 e.printStackTrace();
-                                mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
+                                mensaje_error = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
                                 return false;
                             }
                             try {
                                 nfcTag.writeSector(myTag, 4, 17, tag_nfc.getIdmotivo());
                             } catch (IOException e) {
                                 e.printStackTrace();
-                                mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
+                                mensaje_error = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
                                 return false;
                             }
                         } else {
@@ -1103,17 +1106,17 @@ public class SetOrigenActivity extends AppCompatActivity
                     if (tag_nfc.getTipo() == 2) {
                         if (tag_nfc.getUID().equals(nfcUltra.byteArrayToHexString(myTag.getId()))) {
                             try {
-                                nfcUltra.writePagina(myTag, 19, txtDeductiva);
+                                nfcUltra.writePagina(null, 19, txtDeductiva.toString());
                             } catch (IOException e) {
                                 e.printStackTrace();
-                                mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
+                                mensaje_error = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
                                 return false;
                             }
                             try {
-                                nfcUltra.writePagina(myTag, 20, tag_nfc.getIdmotivo());
+                                nfcUltra.writePagina(null, 20, tag_nfc.getIdmotivo());
                             } catch (IOException e) {
                                 e.printStackTrace();
-                                mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
+                                mensaje_error = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
                                 return false;
                             }
                         } else {
@@ -1136,7 +1139,8 @@ public class SetOrigenActivity extends AppCompatActivity
                 success.putExtra("idInicio", IdInicio);
                 startActivity(success);
             }else {
-                Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, mensaje_error, Toast.LENGTH_SHORT).show();
+                mensajeDeductiva(intent,tag_nfc);
             }
         }
     }
@@ -1158,8 +1162,8 @@ public class SetOrigenActivity extends AppCompatActivity
                     Toast.makeText(getApplicationContext(), "Por favor escribir el volumen", Toast.LENGTH_SHORT).show();
                 }else{
                     txtDeductiva = deduc.getText().toString();
-                    new MensajeTarea(getApplicationContext(),  intent,tag_nfc).execute();
                     WriteModeOn();
+                    new MensajeTarea(getApplicationContext(),  intent,tag_nfc).execute();
                 }
             }
         });
