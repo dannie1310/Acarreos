@@ -689,7 +689,8 @@ public class SetOrigenActivity extends AppCompatActivity
                 startActivity(success);
             }else{
                 if(mensaje == "volumen_entrada") {
-                    mensajeDeductiva(intent, tag_nfc);
+                   // mensajeDeductiva(intent, tag_nfc); // usar el mensaje deductiva despues....
+                    Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show();
                 }else {
                     WriteModeOff();
                     Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show();

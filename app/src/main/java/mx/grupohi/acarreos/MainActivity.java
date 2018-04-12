@@ -2,6 +2,7 @@ package mx.grupohi.acarreos;
 
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -12,6 +13,7 @@ import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.MifareClassic;
 import android.nfc.tech.MifareUltralight;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -39,11 +41,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.StringTokenizer;
 
+import mx.grupohi.acarreos.Destino.DestinoTiro;
+import mx.grupohi.acarreos.TiposTag.TagNFC;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
-    private NFCTag nfc;
+    private NFCTag nfcTag;
     private NFCUltralight nfcUltra;
     private NfcAdapter nfc_adapter;
     private PendingIntent pendingIntent;
@@ -81,6 +86,7 @@ public class MainActivity extends AppCompatActivity
     private TextView tFecha;
     private TextView tHora;
     String validacion;
+    private String mensaje = "";
 
     Intent descarga;
     Camion camion;
@@ -225,9 +231,238 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    class TirosTarea extends AsyncTask<Void, Void, Boolean> {
+        TagNFC tag_nfc = new TagNFC();
+        Context context;
+        Intent intent;
+        Camion camion = new Camion(context);
+        Origen origen = new Origen(context);
+        Material material = new Material(context);
+
+        public TirosTarea(Context context, Intent intent) {
+            this.context = context;
+            this.intent = intent;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            Tag myTag;
+            //// se lee el tag y se inicializa la clase con los datos
+            if (writeMode) {
+                if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
+                    myTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+                    String[] techs = myTag.getTechList();
+                    for (String t : techs) {
+                        if (MifareClassic.class.getName().equals(t)) {
+                            nfcTag = new NFCTag(myTag, context);
+                            tag_nfc.setUID(nfcTag.byteArrayToHexString(myTag.getId()));
+                            tag_nfc.setTipo(1);
+                            String camion_proyecto = null;
+                            try {
+                                camion_proyecto = nfcTag.readSector(null, 0, 1);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
+                                return false;
+                            }
+                            if (camion_proyecto.length() == 8) {
+                                tag_nfc.setIdcamion(Util.getIdCamion(camion_proyecto, 4));
+                                tag_nfc.setIdproyecto(Util.getIdProyecto(camion_proyecto, 4));
+                            } else {
+                                tag_nfc.setIdcamion(Util.getIdCamion(camion_proyecto, 5));
+                                tag_nfc.setIdproyecto(Util.getIdProyecto(camion_proyecto, 5));
+                            }
+                            String material_origen = null;
+                            try {
+                                material_origen = nfcTag.readSector(null, 1, 4);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
+                                return false;
+                            }
+                            tag_nfc.setIdmaterial(String.valueOf(Util.getIdMaterial(material_origen)));
+                            tag_nfc.setIdorigen(String.valueOf(Util.getIdOrigen(material_origen)));
+                            try {
+                                tag_nfc.setFecha(nfcTag.readSector(null, 1, 5));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
+                                return false;
+                            }
+                            try {
+                                tag_nfc.setUsuario(nfcTag.readSector(null, 1, 6));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
+                                return false;
+                            }
+                            try {
+                                tag_nfc.setTipo_viaje(nfcTag.readSector(null, 2, 9));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
+                                return false;
+                            }
+                            try {
+                                tag_nfc.setVolumen(nfcTag.readSector(null, 3, 12));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
+                                return false;
+                            }
+                            try {
+                                tag_nfc.setTipo_perfil(nfcTag.readSector(null, 3, 14));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
+                                return false;
+                            }
+                            try {
+                                tag_nfc.setVolumen_entrada(nfcTag.readSector(null, 4, 16));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
+                                return false;
+                            }
+
+                        } else if (MifareUltralight.class.getName().equals(t)) {
+                            nfcUltra = new NFCUltralight(myTag, context);
+                            tag_nfc.setUID(nfcUltra.byteArrayToHexString(myTag.getId()));
+                            tag_nfc.setTipo(2);
+                            String camion_proyecto = null;
+                            try {
+                                camion_proyecto = nfcUltra.readDeductiva(null, 4) + nfcUltra.readDeductiva(null, 5) + nfcUltra.readDeductiva(null, 6);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
+                                return false;
+                            }
+                            if (camion_proyecto.length() == 8) {
+                                tag_nfc.setIdcamion(Util.getIdCamion(camion_proyecto, 4));
+                                tag_nfc.setIdproyecto(Util.getIdProyecto(camion_proyecto, 4));
+                            } else {
+                                tag_nfc.setIdcamion(Util.getIdCamion(camion_proyecto, 8));
+                                tag_nfc.setIdproyecto(Util.getIdProyecto(camion_proyecto, 8));
+                            }
+                            try {
+                                tag_nfc.setIdmaterial(nfcUltra.readDeductiva(null, 7));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
+                                return false;
+                            }
+                            try {
+                                tag_nfc.setIdorigen(nfcUltra.readDeductiva(null, 8));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
+                                return false;
+                            }
+                            try {
+                                tag_nfc.setFecha(nfcUltra.readDeductiva(null, 9) + nfcUltra.readDeductiva(null, 10) + nfcUltra.readDeductiva(null, 11) + nfcUltra.readDeductiva(null, 12));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
+                                return false;
+                            }
+                            try {
+                                tag_nfc.setUsuario(nfcUltra.readDeductiva(null, 13));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
+                                return false;
+                            }
+                            try {
+                                tag_nfc.setTipo_viaje(nfcUltra.readDeductiva(null, 15));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                tag_nfc.setVolumen(nfcUltra.readDeductiva(null, 16));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
+                                return false;
+                            }
+                            try {
+                                tag_nfc.setTipo_perfil(nfcUltra.readDeductiva(null, 18));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
+                                return false;
+                            }
+                            try {
+                                tag_nfc.setVolumen_entrada(nfcUltra.readDeductiva(null, 19));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+            //// inicia seccion de validaciones
+            DestinoTiro destinoTiro = new DestinoTiro(context, tag_nfc);
+            mensaje = destinoTiro.validarDatosTag();
+
+            if(mensaje == "destino") {
+                camion = camion.find(tag_nfc.getIdcamion());
+                origen = origen.find(Integer.valueOf(tag_nfc.getIdorigen()));
+                material = material.find(Integer.valueOf(tag_nfc.getIdmaterial()));
+                return true;
+            }
+            if(mensaje == "libreAbordo") {
+                return true;
+            }
+
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean registro) {
+            super.onPostExecute(registro);
+            if (registro) {
+                WriteModeOff();
+                if(mensaje == "destino"){
+                    setCamionInfo(camion, tag_nfc.getTipo_viaje());
+                    setOrigenInfo(origen, material, tag_nfc.getFecha());
+                    actionButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            setDestinoActivity.putExtra("UID", tag_nfc.getUID());
+                            setDestinoActivity.putExtra("idOrigen", tag_nfc.getIdorigen());
+                            setDestinoActivity.putExtra("camion", tag_nfc.getIdcamion());
+                            setDestinoActivity.putExtra("tipo_suministro", tag_nfc.getTipo_viaje());
+                            startActivity(setDestinoActivity);
+                        }
+                    });
+                }
+                if(mensaje == "libreAbordo") {
+                    Intent r = new Intent(getApplicationContext(), TiroUnicoActivity.class);
+                    r.putExtra("UID", tag_nfc.getUID());
+                    r.putExtra("camion", tag_nfc.getIdcamion()); // enviar el POJO TagNFC
+                    startActivity(r);
+                }
+            } else {
+                WriteModeOff();
+                Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
     @Override
     protected void onNewIntent(Intent intent) {
-        int tipo=0;
+
+        new TirosTarea(this,  intent).execute();
+
+      /*  int tipo=0;
         Integer tagCamion =0;
         Integer tagProyecto =0;
         Integer tagOrigen =0;
@@ -410,6 +645,7 @@ public class MainActivity extends AppCompatActivity
         } else if (nfc_adapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
             Toast.makeText(getApplicationContext(), "El TAG que intentas utilizar no es compatible", Toast.LENGTH_LONG).show();
         }
+        */
     }
 
     private void WriteModeOn() {
@@ -441,8 +677,14 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void setCamionInfo(Camion camion) {
+    private void setCamionInfo(Camion camion, String tipoViaje) {
 
+        if(tipoViaje == "1"){
+            estad.setVisibility(View.VISIBLE);
+        }else{
+            estad.setVisibility(View.GONE);
+        }
+        setTitle("INFORMACIÓN DEL TAG");
         tCamion.setText(camion.economico + " [" + camion.placas + "]");
         tCapacidad.setText("CAPACIDAD: " + camion.capacidad + " m3");
         tCapacidad2.setText(String.valueOf(camion.capacidad));
