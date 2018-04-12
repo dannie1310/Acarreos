@@ -226,8 +226,9 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            clearCamionInfo();
-            clearOrigenInfo();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
         }
     }
 
@@ -235,9 +236,9 @@ public class MainActivity extends AppCompatActivity
         TagNFC tag_nfc = new TagNFC();
         Context context;
         Intent intent;
-        Camion camion = new Camion(context);
-        Origen origen = new Origen(context);
-        Material material = new Material(context);
+        Camion camion;
+        Origen origen;
+        Material material;
 
         public TirosTarea(Context context, Intent intent) {
             this.context = context;
@@ -412,6 +413,9 @@ public class MainActivity extends AppCompatActivity
             mensaje = destinoTiro.validarDatosTag();
 
             if(mensaje == "destino") {
+                camion = new Camion(context);
+                origen = new Origen(context);
+                material = new Material(context);
                 camion = camion.find(tag_nfc.getIdcamion());
                 origen = origen.find(Integer.valueOf(tag_nfc.getIdorigen()));
                 material = material.find(Integer.valueOf(tag_nfc.getIdmaterial()));
@@ -437,7 +441,7 @@ public class MainActivity extends AppCompatActivity
                         public void onClick(View v) {
                             setDestinoActivity.putExtra("UID", tag_nfc.getUID());
                             setDestinoActivity.putExtra("idOrigen", tag_nfc.getIdorigen());
-                            setDestinoActivity.putExtra("camion", tag_nfc.getIdcamion());
+                            setDestinoActivity.putExtra("camion", String.valueOf(tag_nfc.getIdcamion()));
                             setDestinoActivity.putExtra("tipo_suministro", tag_nfc.getTipo_viaje());
                             startActivity(setDestinoActivity);
                         }
