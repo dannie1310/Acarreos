@@ -681,7 +681,7 @@ public class MainActivity extends AppCompatActivity
 
     private void setCamionInfo(Camion camion, String tipoViaje) {
 
-        if(tipoViaje == "1"){
+        if(tipoViaje.equals("1")){
             estad.setVisibility(View.VISIBLE);
         }else{
             estad.setVisibility(View.GONE);

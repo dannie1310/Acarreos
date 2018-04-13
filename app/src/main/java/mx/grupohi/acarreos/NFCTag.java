@@ -226,8 +226,8 @@ public class NFCTag {
         mfc.close();
     }
 
-    Boolean cleanSector(Tag tag, int sector) throws IOException {
-        MifareClassic mfc = MifareClassic.get(tag);
+    Boolean cleanSector(Tag tag_1, int sector) throws IOException {
+        MifareClassic mfc = MifareClassic.get(NFCTag);
         int bloque = mfc.sectorToBlock(sector);
         mfc.connect();
         int iw;

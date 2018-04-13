@@ -351,7 +351,7 @@ public class SetDestinoActivity extends AppCompatActivity
         datosVista.put("Creo", String.valueOf(usuario.getId()));
         datosVista.put("IMEI", IMEI);
         datosVista.put("IdProyecto", tagNFC.getIdproyecto());
-        datosVista.put("IdCamion", idCamion);
+        datosVista.put("IdCamion", tagNFC.getIdcamion());
         datosVista.put("deductiva_origen", tagNFC.getVolumen());
         datosVista.put("idmotivo_origen", tagNFC.getIdmotivo());
         if (tagNFC.getVolumen_entrada().trim().equals("") || tagNFC.getVolumen_entrada() == null) { //deductiva checador de entrada
@@ -554,7 +554,7 @@ public class SetDestinoActivity extends AppCompatActivity
                     }
                 }
             }
-            //// inicia seccion de validaciones y escritura de dtos en DB
+            //// inicia seccion de validaciones y escritura de datos en DB
             if(mensaje == "continuar"){
                 String aux =Util.dateFolios();
                 String code = Util.folio(aux) + String.valueOf(tagNFC.getIdcamion());
@@ -595,17 +595,52 @@ public class SetDestinoActivity extends AppCompatActivity
                 datosVista.put("cubicacion", String.valueOf(volumen));
 
                 DestinoTiro destinoTiro = new DestinoTiro(context,tagNFC);
-                if(destinoTiro.guardarDatosDB(datosVista)){
+                if(destinoTiro.guardarDatosDB(datosVista)) {
                     idViaje = destinoTiro.idViaje;
                     // eliminar datos del TAG...
-
+                    if (tagNFC.getTipo() == 1) {
+                        try {
+                            nfcTag.cleanSector(null, 1);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
+                            return false;
+                        }
+                        try {
+                            nfcTag.cleanSector(null, 2);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
+                            return false;
+                        }
+                        try {
+                            nfcTag.cleanSector(null, 3);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
+                            return false;
+                        }
+                        try {
+                            nfcTag.cleanSector(null, 4);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
+                            return false;
+                        }
+                        return true;
+                    }
+                    if (tagNFC.getTipo() == 2) {
+                        try {
+                            nfcUltra.cleanTag(null);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
+                            return false;
+                        }
+                        return true;
+                    }
                 }
-
             }
-
-
-
-
             return false;
         }
 
@@ -617,9 +652,9 @@ public class SetDestinoActivity extends AppCompatActivity
                 destinoSuccess.putExtra("idViaje", idViaje);
                 destinoSuccess.putExtra("LIST", 0);
                 destinoSuccess.putExtra("code", datosVista.getAsString("Code"));
-
+                startActivity(destinoSuccess);
             } else {
-                WriteModeOff();
+              //  WriteModeOff();
                 Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show();
             }
         }

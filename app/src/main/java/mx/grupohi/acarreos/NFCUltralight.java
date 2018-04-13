@@ -179,7 +179,7 @@ public class NFCUltralight {
     }
 
     public boolean cleanTag(Tag nfc) throws IOException {
-        MifareUltralight mf = MifareUltralight.get(nfc);
+        MifareUltralight mf = MifareUltralight.get(NFCTag);
 
         byte[] value = new byte[4];
         mf.connect();
@@ -191,7 +191,6 @@ public class NFCUltralight {
         }
 
         mf.close();
-        //Toast.makeText(context, context.getString(R.string.tag_configurado), Toast.LENGTH_LONG).show();
         return true;
     }
 
