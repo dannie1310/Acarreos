@@ -1,15 +1,18 @@
 package mx.grupohi.acarreos.Destino;
 
+import android.content.ContentValues;
 import android.content.Context;
 
+import mx.grupohi.acarreos.InicioViaje;
 import mx.grupohi.acarreos.TagModel;
 import mx.grupohi.acarreos.TiposTag.TagNFC;
 import mx.grupohi.acarreos.Usuario;
+import mx.grupohi.acarreos.Viaje;
 
 public class DestinoTiro {
     Context context;
     TagNFC tag_nfc;
-    public Integer idInicio;
+    public Integer idViaje;
     public DestinoTiro(Context context, TagNFC tag_nfc) {
         this.context = context;
         this.tag_nfc = tag_nfc;
@@ -55,4 +58,23 @@ public class DestinoTiro {
         }
         return null;
     }
+
+    /**
+     * Metodo para guardarlos datos en la base de datos,
+     * el Content Values que va a llegar se debe complementar con
+     * los datos basicos del tag
+     * @param datos
+     */
+    public Boolean guardarDatosDB(ContentValues datos){
+        try {
+            Viaje viaje = new Viaje(context);
+            Boolean resultado = viaje.create(datos);
+            idViaje = viaje.idViaje;
+            return resultado;
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }

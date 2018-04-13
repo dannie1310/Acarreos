@@ -14,6 +14,7 @@ import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.MifareClassic;
 import android.nfc.tech.MifareUltralight;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -51,6 +52,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import mx.grupohi.acarreos.Destino.DestinoTiro;
+import mx.grupohi.acarreos.TiposTag.TagNFC;
+
 public class SetDestinoActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -59,6 +63,7 @@ public class SetDestinoActivity extends AppCompatActivity
     Tiro tiro;
     Ruta ruta;
     Camion c;
+    TagNFC tagNFC;
 
     //GPS
     private GPSTracker gps;
@@ -97,6 +102,8 @@ public class SetDestinoActivity extends AppCompatActivity
     private Integer idMotivo;
     Integer idCamion;
     Integer idProyecto;
+    String mensaje = "";
+    ContentValues datosVista;
 
 
     private Integer tipo_suministro;
@@ -122,17 +129,14 @@ public class SetDestinoActivity extends AppCompatActivity
         destinoSuccess = new Intent(this, SuccessDestinoActivity.class);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        camionId = getIntent().getStringExtra("camion");
-        tipo_suministro = getIntent().getIntExtra("tipo_suministro", 0);
-
+        tagNFC = (TagNFC) getIntent().getSerializableExtra("datos");
         c = new Camion(getApplicationContext());
-        c = c.find(Integer.valueOf(camionId));
-
-
+        c = c.find(tagNFC.getIdcamion());
         usuario = new Usuario(this);
         usuario = usuario.getUsuario();
         ruta = new Ruta(this);
         tiro = new Tiro(this);
+        datosVista = new ContentValues();
 
         gps = new GPSTracker(SetDestinoActivity.this);
         TelephonyManager phneMgr = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
@@ -186,8 +190,8 @@ public class SetDestinoActivity extends AppCompatActivity
                 String descripcion = String.valueOf(parent.getItemAtPosition(position));
                 idTiro = Integer.valueOf(spinnerTirosMap.get(descripcion));
 
-                final ArrayList<String> descripcionesRutas = ruta.getArrayListDescripciones(getIntent().getIntExtra("idOrigen", 1), idTiro);
-                final ArrayList <String> idsRutas = ruta.getArrayListId(getIntent().getIntExtra("idOrigen", 1), idTiro);
+                final ArrayList<String> descripcionesRutas = ruta.getArrayListDescripciones(Integer.valueOf(tagNFC.getIdorigen()), idTiro);
+                final ArrayList <String> idsRutas = ruta.getArrayListId(Integer.valueOf(tagNFC.getIdorigen()), idTiro);
 
                 final String[] spinnerRutasArray = new String[idsRutas.size()];
                 spinnerRutasMap = new HashMap<>();
@@ -265,26 +269,9 @@ public class SetDestinoActivity extends AppCompatActivity
         escribirDestinoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (idTiro == 0) {
-                    Toast.makeText(getApplicationContext(), "Por favor seleccione el Tiro de la lista", Toast.LENGTH_SHORT).show();
-                    tirosSpinner.requestFocus();
-                }
-                else if(idRuta == 0 &&  Ruta.getCount(getApplicationContext(),getIntent().getIntExtra("idOrigen", 1),idTiro) != 0) {
-                    Toast.makeText(getApplicationContext(), "Por favor seleccione la Ruta de la lista", Toast.LENGTH_SHORT).show();
-                    rutasSpinner.requestFocus();
-                }
-                else if(deductiva.getText().toString().equals("")){
-                    Toast.makeText(getApplicationContext(), "Por favor ingrese el volumen", Toast.LENGTH_SHORT).show();
-                }
-                else if(c.capacidad != 0 && c.capacidad!= null && !deductiva.getText().toString().equals("") && Integer.valueOf(deductiva.getText().toString()) != 0 && Integer.valueOf(deductiva.getText().toString()) > c.capacidad) {
-                     Toast.makeText(getApplicationContext(), R.string.error_deductiva, Toast.LENGTH_LONG).show();
-                }
-                else if(textmina.getText().toString().isEmpty()){
-                    Toast.makeText(getApplicationContext(), "Por favor ingrese el folio de mina", Toast.LENGTH_SHORT).show();
-                }
-                else if(textseg.getText().toString().isEmpty()){
-                    Toast.makeText(getApplicationContext(), "Por favor ingrese el folio de seguimiento", Toast.LENGTH_SHORT).show();
-                }
+               if(!validarCampos()){
+                   Toast.makeText(getApplicationContext(), mensaje, Toast.LENGTH_SHORT).show();
+               }
                 else {
                     checkNfcEnabled();
                     WriteModeOn();
@@ -311,6 +298,78 @@ public class SetDestinoActivity extends AppCompatActivity
                 WriteModeOff();
             }
         });
+    }
+
+    private Boolean validarCampos(){
+        // validar el Spinner idTiro
+        if (idTiro == 0) {
+           mensaje="Por favor seleccione el Tiro de la lista";
+            tirosSpinner.requestFocus();
+            return false;
+        }
+        // Validar una ruta seleccionada del Spinner
+        if(idRuta == 0 &&  Ruta.getCount(getApplicationContext(),Integer.valueOf(tagNFC.getIdorigen()),idTiro) != 0) {
+            mensaje = "Por favor seleccione la Ruta de la lista";
+            rutasSpinner.requestFocus();
+            return false;
+        }
+        // escribir volumen
+        if(deductiva.getText().toString().equals("")){
+            mensaje = "Por favor ingrese el volumen";
+            deductiva.requestFocus();
+            return false;
+        }
+        //deductiva no sobrepase el valir de la cubicacion del camion o sea igual a cero
+        if(c.capacidad != 0 && c.capacidad!= null && !deductiva.getText().toString().equals("") && Integer.valueOf(deductiva.getText().toString()) != 0 && Integer.valueOf(deductiva.getText().toString()) > c.capacidad) {
+           mensaje = "El volumen es mayor a la capacidad del camión.";
+           deductiva.requestFocus();
+           return false;
+        }
+        // Ingresar folio de mina obligatorio
+        if(textmina.getText().toString().isEmpty()){
+            mensaje = "Por favor ingrese el folio de mina";
+            textmina.requestFocus();
+            return false;
+        }
+        // Ingresar folio seguimiento obligatorio
+        if(textseg.getText().toString().isEmpty()){
+            mensaje = "Por favor ingrese el folio de seguimiento";
+            textseg.requestFocus();
+            return false;
+        }
+
+        /// asignacion de valores
+        datosVista.put("IdMaterial", tagNFC.getIdmaterial());
+        datosVista.put("IdOrigen", tagNFC.getIdorigen());
+        datosVista.put("IdTiro", idTiro);
+        datosVista.put("Ruta", idRuta);
+        datosVista.put("deductiva", deductiva.getText().toString());
+        datosVista.put("idmotivo", tagNFC.getIdmotivo());
+        datosVista.put("folio_mina", textmina.getText().toString());
+        datosVista.put("folio_seguimiento", textseg.getText().toString());
+        datosVista.put("Observaciones", observacionesTextView.getText().toString());
+        datosVista.put("Creo", String.valueOf(usuario.getId()));
+        datosVista.put("IMEI", IMEI);
+        datosVista.put("IdProyecto", tagNFC.getIdproyecto());
+        datosVista.put("IdCamion", idCamion);
+        datosVista.put("deductiva_origen", tagNFC.getVolumen());
+        datosVista.put("idmotivo_origen", tagNFC.getIdmotivo());
+        if (tagNFC.getVolumen_entrada().trim().equals("") || tagNFC.getVolumen_entrada() == null) { //deductiva checador de entrada
+            datosVista.put("deductiva_entrada", 0);
+            datosVista.put("idmotivo_entrada", 0);
+        } else {
+            datosVista.put("deductiva_entrada", tagNFC.getVolumen_entrada());
+            datosVista.put("idmotivo_entrada", tagNFC.getIdmotivo());
+        }
+        RandomString r = new RandomString(10);
+        datosVista.put("FolioRandom", r.nextString().toUpperCase());
+        datosVista.put("primerToque", tagNFC.getUsuario());
+        datosVista.put("tipoEsquema", usuario.getTipoEsquema());
+        datosVista.put("numImpresion", 0);
+        datosVista.put("idperfil", usuario.tipo_permiso);
+        datosVista.put("tipoViaje", tagNFC.getTipo_viaje());
+
+        return true;
     }
 
     private void WriteModeOn() {
@@ -456,9 +515,124 @@ public class SetDestinoActivity extends AppCompatActivity
         }
     }
 
+    class DestinoTarea extends AsyncTask<Void, Void, Boolean> {
+        Context context;
+        Intent intent;
+        Integer idViaje;
+
+        public DestinoTarea(Context context, Intent intent) {
+            this.context = context;
+            this.intent = intent;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            Tag myTag;
+            //// se lee el tag y se inicializa la clase con los datos
+            if (writeMode) {
+                if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
+                    myTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+                    String[] techs = myTag.getTechList();
+                    for (String t : techs) {
+                        if (MifareClassic.class.getName().equals(t)) {
+                            nfcTag = new NFCTag(myTag, context);
+                            if(nfcTag.byteArrayToHexString(myTag.getId()).equals(tagNFC.getUID())){
+                                mensaje = "continuar";
+                            }
+
+                        } else if (MifareUltralight.class.getName().equals(t)) {
+                            nfcUltra = new NFCUltralight(myTag, context);
+                            if(nfcUltra.byteArrayToHexString(myTag.getId()).equals(tagNFC.getUID())){
+                                mensaje = "continuar";
+                            }
+                        }
+                    }
+                }
+            }
+            //// inicia seccion de validaciones y escritura de dtos en DB
+            if(mensaje == "continuar"){
+                String aux =Util.dateFolios();
+                String code = Util.folio(aux) + String.valueOf(tagNFC.getIdcamion());
+                String fechaLlegada = Util.getFecha();
+                String horaLlegada = Util.getTime();
+                String fechaOrigen = Util.getFecha(tagNFC.getFecha());
+                String horaOrigen = Util.getTime(tagNFC.getFecha());
+                String fecha;
+
+                datosVista.put("Code", code);
+                datosVista.put("CodeImagen", Util.getCodeFecha(tagNFC.getIdcamion(), aux));
+                datosVista.put("uidTAG", tagNFC.getUID());
+                datosVista.put("FechaCarga", Util.getFecha());
+                datosVista.put("HoraCarga", Util.getTime());
+                datosVista.put("FechaLlegada", fechaLlegada);
+                datosVista.put("HoraLlegada", horaLlegada);
+                if (tagNFC.getFecha().replace(" ", "").isEmpty()) {
+                    fecha = Util.getFechaDisminucion(fechaLlegada + " " + horaLlegada);
+                    datosVista.put("FechaSalida", Util.getFecha(fecha));
+                    datosVista.put("HoraSalida", Util.getTime(fecha));
+                } else {
+                    if (horaOrigen == null || fechaOrigen == null) {
+                        fecha = Util.getFechaDisminucion(fechaLlegada + " " + horaLlegada);
+                        datosVista.put("FechaSalida", Util.getFecha(fecha));
+                        datosVista.put("HoraSalida", Util.getTime(fecha));
+                    } else {
+                        fecha = fechaOrigen +" "+horaOrigen;
+                        datosVista.put("FechaSalida", fechaOrigen);
+                        datosVista.put("HoraSalida", horaOrigen);
+                    }
+                }
+                if(Util.getFechaImprocedente(fecha, fechaLlegada+" "+horaLlegada)){
+                    datosVista.put("Estatus", "2");
+                }else{
+                    datosVista.put("Estatus", "1");
+                }
+                Integer volumen = volumenMenor(Integer.valueOf(datosVista.getAsString("deductiva_origen")), Integer.valueOf(datosVista.getAsString("deductiva_entrada")), Integer.valueOf(deductiva.getText().toString()));
+                datosVista.put("cubicacion", String.valueOf(volumen));
+
+                DestinoTiro destinoTiro = new DestinoTiro(context,tagNFC);
+                if(destinoTiro.guardarDatosDB(datosVista)){
+                    idViaje = destinoTiro.idViaje;
+                    // eliminar datos del TAG...
+
+                }
+
+            }
+
+
+
+
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean registro) {
+            super.onPostExecute(registro);
+            if (registro) {
+                WriteModeOff();
+                destinoSuccess.putExtra("idViaje", idViaje);
+                destinoSuccess.putExtra("LIST", 0);
+                destinoSuccess.putExtra("code", datosVista.getAsString("Code"));
+
+            } else {
+                WriteModeOff();
+                Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
     @Override
     protected void onNewIntent(Intent intent) {
-        int contador=0;
+
+
+        new DestinoTarea(this,  intent).execute();
+
+        /*int contador=0;
         JSONObject json = new JSONObject();
         String tagInfo ="";
         String viajes = "";
@@ -834,7 +1008,7 @@ public class SetDestinoActivity extends AppCompatActivity
                         }
                     }
                 }*/
-                } else {
+            /*    } else {
                     snackbar = Snackbar.make(findViewById(R.id.content_set_destino), getString(R.string.error_guardado), Snackbar.LENGTH_SHORT);
                     View snackBarView = snackbar.getView();
                     snackBarView.setBackgroundColor(Color.RED);
@@ -853,6 +1027,8 @@ public class SetDestinoActivity extends AppCompatActivity
             snackBarView.setBackgroundColor(Color.RED);
             snackbar.show();
         }
+
+        */
     }
 
     public static String getCode(String idcamion) {

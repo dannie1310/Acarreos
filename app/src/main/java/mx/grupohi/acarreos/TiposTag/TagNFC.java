@@ -1,10 +1,16 @@
 package mx.grupohi.acarreos.TiposTag;
 
+import android.content.Context;
+import android.content.Intent;
+
+import java.io.Serializable;
+
 /**
  * Created by DBENITEZ on 26/03/2018.
  */
-
-public class TagNFC {
+@SuppressWarnings("serial")
+public class TagNFC implements Serializable{
+    Context context;
     Integer tipo;
     String UID;
     Integer idcamion;

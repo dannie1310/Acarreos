@@ -233,7 +233,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     class TirosTarea extends AsyncTask<Void, Void, Boolean> {
-        TagNFC tag_nfc = new TagNFC();
+        TagNFC tag_nfc;
         Context context;
         Intent intent;
         Camion camion;
@@ -253,6 +253,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected Boolean doInBackground(Void... voids) {
             Tag myTag;
+            tag_nfc = new TagNFC();
             //// se lee el tag y se inicializa la clase con los datos
             if (writeMode) {
                 if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
@@ -439,10 +440,7 @@ public class MainActivity extends AppCompatActivity
                     actionButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            setDestinoActivity.putExtra("UID", tag_nfc.getUID());
-                            setDestinoActivity.putExtra("idOrigen", tag_nfc.getIdorigen());
-                            setDestinoActivity.putExtra("camion", String.valueOf(tag_nfc.getIdcamion()));
-                            setDestinoActivity.putExtra("tipo_suministro", tag_nfc.getTipo_viaje());
+                            setDestinoActivity.putExtra("datos", tag_nfc);
                             startActivity(setDestinoActivity);
                         }
                     });

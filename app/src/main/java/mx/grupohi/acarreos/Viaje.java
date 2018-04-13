@@ -23,7 +23,7 @@ import org.json.JSONObject;
 
 public class Viaje {
 
-    Integer idViaje;
+    public Integer idViaje;
     Integer idMaterial;
     Integer idTiro;
     Integer idOrigen;
@@ -62,7 +62,7 @@ public class Viaje {
 
     private Context context;
 
-    Viaje(Context context) {
+    public Viaje(Context context) {
         this.context = context;
         this.camion =new Camion(context);
         this.origen = new Origen(context);
@@ -72,7 +72,7 @@ public class Viaje {
         db_sca = new DBScaSqlite(this.context, "sca", null, 1);
     }
 
-    Boolean create(ContentValues data) {
+    public Boolean create(ContentValues data) {
         db = db_sca.getWritableDatabase();
         Boolean result = null;
         result = db.insert("viajesnetos", null, data) > -1;
