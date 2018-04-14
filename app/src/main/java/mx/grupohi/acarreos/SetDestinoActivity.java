@@ -303,7 +303,7 @@ public class SetDestinoActivity extends AppCompatActivity
     private Boolean validarCampos(){
         // validar el Spinner idTiro
         if (idTiro == 0) {
-           mensaje="Por favor seleccione el Tiro de la lista";
+            mensaje = "Por favor seleccione el Tiro de la lista";
             tirosSpinner.requestFocus();
             return false;
         }
