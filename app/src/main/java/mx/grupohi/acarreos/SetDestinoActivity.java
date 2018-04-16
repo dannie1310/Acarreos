@@ -595,7 +595,10 @@ public class SetDestinoActivity extends AppCompatActivity
                 datosVista.put("cubicacion", String.valueOf(volumen));
 
                 DestinoTiro destinoTiro = new DestinoTiro(context,tagNFC);
-                if(destinoTiro.guardarDatosDB(datosVista)) {
+                if(!destinoTiro.guardarDatosDB(datosVista)){
+                    mensaje = "Error al guardar en Base de Datos";
+                    return false;
+                }else {
                     idViaje = destinoTiro.idViaje;
                     // eliminar datos del TAG...
                     if (tagNFC.getTipo() == 1) {
