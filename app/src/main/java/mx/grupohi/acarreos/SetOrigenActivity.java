@@ -356,6 +356,9 @@ public class SetOrigenActivity extends AppCompatActivity
         Context context;
         Intent intent;
         String mensaje_error = "";
+        Double latitud = gps.getLatitude();
+        Double longitud = gps.getLongitude();
+
         public SalidaMinaTarea(Context context, Intent intent) {
             this.context = context;
             this.intent = intent;
@@ -557,6 +560,7 @@ public class SetOrigenActivity extends AppCompatActivity
                     return false;
                 }else {
                     IdInicio = salida_mina.idInicio;
+                    salida_mina.coordenadas(datosVista.getAsString("IMEI"),datosVista.getAsString("Code"), latitud, longitud);
                     //guardar datos en el tag
                     myTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
                     String data = Util.concatenar(datosVista.getAsString("idmaterial"), datosVista.getAsString("idorigen"));

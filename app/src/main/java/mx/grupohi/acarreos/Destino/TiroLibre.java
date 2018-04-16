@@ -3,10 +3,11 @@ package mx.grupohi.acarreos.Destino;
 import android.content.ContentValues;
 import android.content.Context;
 
+import mx.grupohi.acarreos.Coordenada;
 import mx.grupohi.acarreos.TagModel;
 import mx.grupohi.acarreos.TiposTag.TagNFC;
-import mx.grupohi.acarreos.TiroUnicoActivity;
 import mx.grupohi.acarreos.Usuario;
+import mx.grupohi.acarreos.Util;
 import mx.grupohi.acarreos.Viaje;
 
 public class TiroLibre {
@@ -53,4 +54,19 @@ public class TiroLibre {
             return false;
         }
     }
+
+    public void coordenadas(String IMEI, String code, Double latitud, Double longitud){
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put("IMEI", IMEI);
+        contentValues.put("idevento", 2);
+        contentValues.put("latitud", latitud);
+        contentValues.put("longitud", longitud);
+        contentValues.put("fecha_hora", Util.timeStamp());
+        contentValues.put("code", code);
+
+        Coordenada coordenada = new Coordenada(context);
+        coordenada.create(contentValues, context);
+    }
+
 }

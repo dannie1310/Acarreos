@@ -457,6 +457,8 @@ public class TiroUnicoActivity extends AppCompatActivity
         Context context;
         Intent intent;
         Integer idViaje;
+        Double latitud = gps.getLatitude();
+        Double longitud = gps.getLongitude();
 
         public TiroTarea(Context context, Intent intent) {
             this.context = context;
@@ -548,6 +550,7 @@ public class TiroUnicoActivity extends AppCompatActivity
                     return false;
                 }else {
                     idViaje = tiroLibre.idViaje;
+                    tiroLibre.coordenadas(datosVista.getAsString("IMEI"),datosVista.getAsString("Code"), latitud, longitud);
                     // eliminar datos del TAG...
                     if (tagNFC.getTipo() == 1) {
                         try {

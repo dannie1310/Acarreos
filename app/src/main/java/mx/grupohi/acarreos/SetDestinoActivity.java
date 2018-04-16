@@ -519,6 +519,8 @@ public class SetDestinoActivity extends AppCompatActivity
         Context context;
         Intent intent;
         Integer idViaje;
+        Double latitud = gps.getLatitude();
+        Double longitud = gps.getLongitude();
 
         public DestinoTarea(Context context, Intent intent) {
             this.context = context;
@@ -600,6 +602,7 @@ public class SetDestinoActivity extends AppCompatActivity
                     return false;
                 }else {
                     idViaje = destinoTiro.idViaje;
+                    destinoTiro.coordenadas(datosVista.getAsString("IMEI"),datosVista.getAsString("Code"), latitud, longitud);
                     // eliminar datos del TAG...
                     if (tagNFC.getTipo() == 1) {
                         try {

@@ -11,13 +11,13 @@ import org.json.JSONObject;
  * Creado por JFEsquivel on 11/10/2016.
  */
 
-class Coordenada {
+public class Coordenada {
 
     Context context;
     SQLiteDatabase db;
     DBScaSqlite db_sca;
 
-    Coordenada (Context context) {
+    public Coordenada (Context context) {
         this.context = context;
         db_sca = new DBScaSqlite(context, "sca", null, 1);
     }

@@ -95,7 +95,6 @@ public class MainActivity extends AppCompatActivity
 
     Usuario usuario;
     Viaje viaje;
-    Coordenada coordenada;
     Configuraciones c;
     Certificados certificados;
 
@@ -112,7 +111,6 @@ public class MainActivity extends AppCompatActivity
         camion = new Camion(getApplicationContext());
         usuario = usuario.getUsuario();
         viaje = new Viaje(this);
-        coordenada = new Coordenada(this);
         writeMode = true;
         infoLayout = (LinearLayout) findViewById(R.id.LayoutInfo);
         origenLayout = (LinearLayout) findViewById(R.id.LayoutOrigen);

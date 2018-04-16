@@ -92,7 +92,7 @@ public class Util {
         return result.toString();
     }
 
-    static String timeStamp() {
+    public static String timeStamp() {
         return (String) android.text.format.DateFormat.format("yyyy-MM-dd HH:mm:ss", new java.util.Date());
     }
 

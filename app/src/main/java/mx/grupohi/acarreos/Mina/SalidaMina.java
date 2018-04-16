@@ -3,12 +3,13 @@ package mx.grupohi.acarreos.Mina;
 import android.content.ContentValues;
 import android.content.Context;
 
+import mx.grupohi.acarreos.Coordenada;
 import mx.grupohi.acarreos.InicioViaje;
-import mx.grupohi.acarreos.R;
 import mx.grupohi.acarreos.TagModel;
 import mx.grupohi.acarreos.TiposTag.TagNFC;
 import mx.grupohi.acarreos.Usuario;
 import mx.grupohi.acarreos.InicioViaje;
+import mx.grupohi.acarreos.Util;
 
 /**
  * Created by DBENITEZ on 26/03/2018.
@@ -21,8 +22,6 @@ public class SalidaMina {
     public SalidaMina(Context context, TagNFC tag_nfc){
         this.context = context;
         this.tag_nfc = tag_nfc;
-        //validarDatosTag();
-
     }
 
     public String validarDatosTag(){
@@ -84,4 +83,19 @@ public class SalidaMina {
         }
         return false;
     }
+
+    public void coordenadas(String IMEI, String code, Double latitud, Double longitud){
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put("IMEI", IMEI);
+        contentValues.put("idevento", 2);
+        contentValues.put("latitud", latitud);
+        contentValues.put("longitud", longitud);
+        contentValues.put("fecha_hora", Util.timeStamp());
+        contentValues.put("code", code);
+
+        Coordenada coordenada = new Coordenada(context);
+        coordenada.create(contentValues, context);
+    }
+
 }
