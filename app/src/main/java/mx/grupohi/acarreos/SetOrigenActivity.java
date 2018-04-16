@@ -712,7 +712,6 @@ public class SetOrigenActivity extends AppCompatActivity
                    // mensajeDeductiva(intent, tag_nfc); // usar el mensaje deductiva despues....
                     Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show();
                 }else {
-                    WriteModeOff();
                     Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show();
                 }
             }

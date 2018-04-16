@@ -683,7 +683,6 @@ public class SetDestinoActivity extends AppCompatActivity
                 destinoSuccess.putExtra("code", datosVista.getAsString("Code"));
                 startActivity(destinoSuccess);
             } else {
-              //  WriteModeOff();
                 Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show();
             }
         }

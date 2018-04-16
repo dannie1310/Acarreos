@@ -448,7 +448,6 @@ public class MainActivity extends AppCompatActivity
                     startActivity(r);
                 }
             } else {
-                WriteModeOff();
                 Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show();
             }
         }
