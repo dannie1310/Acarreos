@@ -94,7 +94,7 @@
                     android:layout_height="wrap_content"
                     android:hint="FOLIO DE VALE DE MINA"
                     android:inputType="textCapCharacters"
-                    android:digits="0123456789-QAZWSXEDCRFVTGBYHNUJMIKOLP"
+                    android:digits="0123456789QAZWSXEDCRFVTGBYHNUJMIKOLP"
                     android:maxLength="8"
                     android:singleLine="true"
                     android:maxLines="1" />
@@ -113,7 +113,7 @@
                     android:layout_height="wrap_content"
                     android:hint="FOLIO DE SEGUIMIENTO DE MATERIAL"
                     android:inputType="textCapCharacters"
-                    android:digits="0123456789-QAZWSXEDCRFVTGBYHNUJMIKOLP"
+                    android:digits="0123456789QAZWSXEDCRFVTGBYHNUJMIKOLP"
                     android:maxLength="8"
                     android:maxLines="1" />
 

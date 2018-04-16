@@ -363,8 +363,18 @@ public class TiroUnicoActivity extends AppCompatActivity
             textmina.requestFocus();
             return false;
         }
+        if(foliosSinCeros(textmina.getText().toString())){
+            mensaje = "Por favor ingrese un folio de mina valido (No es permitido usar únicamente ceros).";
+            textmina.requestFocus();
+            return false;
+        }
         if(textseg.getText().toString().isEmpty()){
             mensaje = "Por favor ingrese el folio de seguimiento";
+            textseg.requestFocus();
+            return false;
+        }
+        if(foliosSinCeros(textseg.getText().toString())){
+            mensaje = "Por favor ingrese un folio de seguimiento valido (No es permitido usar únicamente ceros).";
             textseg.requestFocus();
             return false;
         }
@@ -373,7 +383,12 @@ public class TiroUnicoActivity extends AppCompatActivity
             textDeductiva.requestFocus();
             return false;
         }
-        if(camion.capacidad != 0 && camion.capacidad!= null && !textDeductiva.getText().toString().equals("") && Integer.valueOf(textDeductiva.getText().toString()) != 0 && Integer.valueOf(textDeductiva.getText().toString()) > camion.capacidad) {
+        if(foliosSinCeros(textDeductiva.getText().toString())){
+            mensaje = "El volumen no puede ser cero.";
+            textDeductiva.requestFocus();
+            return false;
+        }
+        if(camion.capacidad != 0 && camion.capacidad!= null && Integer.valueOf(textDeductiva.getText().toString()) > camion.capacidad) {
             mensaje = "El volumen es mayor a la capacidad del camión.";
             textDeductiva.requestFocus();
             return false;
@@ -499,6 +514,9 @@ public class TiroUnicoActivity extends AppCompatActivity
                                     tag_nfc.setIdcamion(Util.getIdCamion(camion_proyecto, 5));
                                     tag_nfc.setIdproyecto(Util.getIdProyecto(camion_proyecto, 5));
                                 }
+                            }else {
+                                mensaje = "¡Error! Utilice el mismo tag.";
+                                return false;
                             }
 
                         } else if (MifareUltralight.class.getName().equals(t)) {
@@ -521,6 +539,9 @@ public class TiroUnicoActivity extends AppCompatActivity
                                     tag_nfc.setIdcamion(Util.getIdCamion(camion_proyecto, 8));
                                     tag_nfc.setIdproyecto(Util.getIdProyecto(camion_proyecto, 8));
                                 }
+                            }else {
+                                mensaje = "¡Error! Utilice el mismo tag.";
+                                return false;
                             }
                         }
                     }
@@ -982,4 +1003,12 @@ public class TiroUnicoActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    private Boolean foliosSinCeros(String folio){
+        if(folio.replace("0","").trim().equals("")){
+            return true;
+        }
+        return false;
+    }
+
 }

@@ -329,9 +329,19 @@ public class SetOrigenActivity extends AppCompatActivity
             vale_mina.requestFocus();
             return false;
         }
+        if(foliosSinCeros(vale_mina.getText().toString())){
+            mensaje = "Por favor ingrese un folio de mina valido (No es permitido usar únicamente ceros).";
+            vale_mina.requestFocus();
+            return false;
+        }
         /// validar folio seguimiento
         if(seguimiento.getText().toString().isEmpty()){
             mensaje = "Por favor escribir el folio de seguimiento de material";
+            seguimiento.requestFocus();
+            return false;
+        }
+        if(foliosSinCeros(seguimiento.getText().toString())){
+            mensaje = "Por favor ingrese un folio de seguimiento valido (No es permitido usar únicamente ceros).";
             seguimiento.requestFocus();
             return false;
         }
@@ -341,6 +351,12 @@ public class SetOrigenActivity extends AppCompatActivity
             deductiva.requestFocus();
             return false;
         }
+        if(foliosSinCeros(deductiva.getText().toString())){
+            mensaje = "El volumen no puede ser cero.";
+            deductiva.requestFocus();
+            return false;
+        }
+
         /// asignacion de valores
         datosVista.put("idmaterial", idMaterial);
         datosVista.put("idorigen", idOrigen);
@@ -1337,4 +1353,10 @@ public class SetOrigenActivity extends AppCompatActivity
         }
     }
 
+    private Boolean foliosSinCeros(String folio){
+        if(folio.replace("0","").trim().equals("")){
+            return true;
+        }
+        return false;
+    }
 }

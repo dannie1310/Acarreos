@@ -307,10 +307,35 @@ public class SetDestinoActivity extends AppCompatActivity
             tirosSpinner.requestFocus();
             return false;
         }
+
         // Validar una ruta seleccionada del Spinner
         if(idRuta == 0 &&  Ruta.getCount(getApplicationContext(),Integer.valueOf(tagNFC.getIdorigen()),idTiro) != 0) {
             mensaje = "Por favor seleccione la Ruta de la lista";
             rutasSpinner.requestFocus();
+            return false;
+        }
+
+        // Ingresar folio de mina obligatorio
+        if(textmina.getText().toString().isEmpty()){
+            mensaje = "Por favor ingrese el folio de mina";
+            textmina.requestFocus();
+            return false;
+        }
+        if(foliosSinCeros(textmina.getText().toString())){
+            mensaje = "Por favor ingrese un folio de mina valido (No es permitido usar únicamente ceros).";
+            textmina.requestFocus();
+            return false;
+        }
+
+        // Ingresar folio seguimiento obligatorio
+        if(textseg.getText().toString().isEmpty()){
+            mensaje = "Por favor ingrese el folio de seguimiento";
+            textseg.requestFocus();
+            return false;
+        }
+        if(foliosSinCeros(textseg.getText().toString())){
+            mensaje = "Por favor ingrese un folio de seguimiento valido (No es permitido usar únicamente ceros).";
+            textseg.requestFocus();
             return false;
         }
         // escribir volumen
@@ -319,22 +344,14 @@ public class SetDestinoActivity extends AppCompatActivity
             deductiva.requestFocus();
             return false;
         }
-        //deductiva no sobrepase el valir de la cubicacion del camion o sea igual a cero
-        if(c.capacidad != 0 && c.capacidad!= null && !deductiva.getText().toString().equals("") && Integer.valueOf(deductiva.getText().toString()) != 0 && Integer.valueOf(deductiva.getText().toString()) > c.capacidad) {
-           mensaje = "El volumen es mayor a la capacidad del camión.";
-           deductiva.requestFocus();
-           return false;
-        }
-        // Ingresar folio de mina obligatorio
-        if(textmina.getText().toString().isEmpty()){
-            mensaje = "Por favor ingrese el folio de mina";
-            textmina.requestFocus();
+        if(foliosSinCeros(deductiva.getText().toString())){
+            mensaje = "El volumen no puede ser cero.";
+            deductiva.requestFocus();
             return false;
         }
-        // Ingresar folio seguimiento obligatorio
-        if(textseg.getText().toString().isEmpty()){
-            mensaje = "Por favor ingrese el folio de seguimiento";
-            textseg.requestFocus();
+        if(c.capacidad != 0 && c.capacidad!= null && Integer.valueOf(deductiva.getText().toString()) > c.capacidad) {
+            mensaje = "El volumen es mayor a la capacidad del camión.";
+            deductiva.requestFocus();
             return false;
         }
 
@@ -545,12 +562,18 @@ public class SetDestinoActivity extends AppCompatActivity
                             nfcTag = new NFCTag(myTag, context);
                             if(nfcTag.byteArrayToHexString(myTag.getId()).equals(tagNFC.getUID())){
                                 mensaje = "continuar";
+                            }else {
+                                mensaje = "¡Error! Utilice el mismo tag.";
+                                return false;
                             }
 
                         } else if (MifareUltralight.class.getName().equals(t)) {
                             nfcUltra = new NFCUltralight(myTag, context);
                             if(nfcUltra.byteArrayToHexString(myTag.getId()).equals(tagNFC.getUID())){
                                 mensaje = "continuar";
+                            }else {
+                                mensaje = "¡Error! Utilice el mismo tag.";
+                                return false;
                             }
                         }
                     }
@@ -1117,5 +1140,10 @@ public class SetDestinoActivity extends AppCompatActivity
         return resp;
     }
 
-
+    private Boolean foliosSinCeros(String folio){
+        if(folio.replace("0","").trim().equals("")){
+            return true;
+        }
+        return false;
+    }
 }
