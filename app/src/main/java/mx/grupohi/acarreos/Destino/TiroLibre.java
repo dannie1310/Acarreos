@@ -31,6 +31,9 @@ public class TiroLibre {
         }
         TagModel datosTagCamion = new TagModel(context);
         datosTagCamion = datosTagCamion.find(tag_nfc.getUID(), tag_nfc.getIdcamion(), tag_nfc.getIdproyecto());
+        if(datosTagCamion.estatus == null){
+            return "Error en la validación del TAG, Favor de leerlo nuevamente.";
+        }
         if(datosTagCamion.estatus != 1){
             return "El camión " + datosTagCamion.economico + " se encuentra inactivo. Por favor contacta al encargado.";
         }

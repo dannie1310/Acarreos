@@ -576,26 +576,8 @@ public class TiroUnicoActivity extends AppCompatActivity
                     if (tagNFC.getTipo() == 1) {
                         try {
                             nfcTag.cleanSector(null, 1);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
-                            return false;
-                        }
-                        try {
                             nfcTag.cleanSector(null, 2);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
-                            return false;
-                        }
-                        try {
                             nfcTag.cleanSector(null, 3);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
-                            return false;
-                        }
-                        try {
                             nfcTag.cleanSector(null, 4);
                         } catch (IOException e) {
                             e.printStackTrace();
