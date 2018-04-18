@@ -14,7 +14,7 @@ import android.util.Log;
  * Creado por JFEsquivel on 07/10/2016.
  */
 
-class Camion {
+public class Camion {
 
     public Integer idCamion;
     public String placas;
@@ -34,7 +34,7 @@ class Camion {
     private SQLiteDatabase db;
     private DBScaSqlite db_sca;
 
-    Camion(Context context) {
+    public Camion(Context context) {
         this.context = context;
         db_sca = new DBScaSqlite(context, "sca", null, 1);
     }

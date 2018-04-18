@@ -258,7 +258,7 @@ public class NFCUltralight {
         }
         String x = byteArrayToHexString(auxRead);
         if (x.equalsIgnoreCase("00000000")) {
-            aux = null;
+            aux = "";
         } else {
             String s = new String(auxRead);
             aux += s;

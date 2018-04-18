@@ -3,6 +3,7 @@ package mx.grupohi.acarreos.Mina;
 import android.content.ContentValues;
 import android.content.Context;
 
+import mx.grupohi.acarreos.Camion;
 import mx.grupohi.acarreos.Coordenada;
 import mx.grupohi.acarreos.InicioViaje;
 import mx.grupohi.acarreos.TagModel;
@@ -24,13 +25,16 @@ public class SalidaMina {
         this.tag_nfc = tag_nfc;
     }
 
-    public String validarDatosTag(){
+    public String validarDatosTag(Integer volumen){
         Usuario usuario = new Usuario(context);
         usuario = usuario.getUsuario();
+        Camion camion = new Camion(context);
+        camion = camion.find(tag_nfc.getIdcamion());
         if (!TagModel.findTAG (context, tag_nfc.getUID())) {
             return "El TAG que intentas configurar no está autorizado para éste proyecto.";
         }
-        if(tag_nfc.getIdmaterial() != null && tag_nfc.getIdorigen() != null && tag_nfc.getFecha() != "" && tag_nfc.getUsuario() != null && tag_nfc.getVolumen() != null){
+
+        if(!tag_nfc.getIdmaterial().equals("") && !tag_nfc.getIdorigen().equals("") && tag_nfc.getFecha() != "" && !tag_nfc.getUsuario().equals("") && !tag_nfc.getVolumen().equals("")){
             if(usuario.tipo_permiso == 4 && tag_nfc.getTipo_viaje().equals("1")){ // Perfil de Checador Entrada y Viaje de Origen.
                 return "volumen_entrada";
             }else {
@@ -39,11 +43,14 @@ public class SalidaMina {
         }
         TagModel datosTagCamion = new TagModel(context);
         datosTagCamion = datosTagCamion.find(tag_nfc.getUID(), tag_nfc.getIdcamion(), tag_nfc.getIdproyecto());
-        if(datosTagCamion.estatus != 1){
+        if(datosTagCamion.estatus != 1) {
             return "El camión " + datosTagCamion.economico + " se encuentra inactivo. Por favor contacta al encargado.";
         }
         if (tag_nfc.getIdproyecto() != usuario.getProyecto()) {
             return "El TAG no pertenece al proyecto del usuario.";
+        }
+        if(camion.capacidad != 0 && camion.capacidad!= null && volumen > camion.capacidad) {
+            return "El volumen es mayor a la capacidad del camión.";
         }
         return "continuar";
     }

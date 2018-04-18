@@ -458,7 +458,7 @@ public class SetOrigenActivity extends AppCompatActivity
             //// inicia seccion de validaciones y escritura de dtos en DB
 
             SalidaMina salida_mina = new SalidaMina(context, tag_nfc);
-            mensaje = salida_mina.validarDatosTag();
+            mensaje = salida_mina.validarDatosTag(Integer.valueOf(deductiva.getText().toString()));
             if(mensaje == "continuar"){
                 /// aqui ya se valido que no haya viajes pendientes en el tag, lo que procede es:
                 ///  1) crear el content values con los datos extra que debe de llevar el tag
@@ -541,8 +541,9 @@ public class SetOrigenActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(Boolean registro) {
             super.onPostExecute(registro);
+            WriteModeOff();
             if (registro){
-                WriteModeOff();
+
                 Intent success = new Intent(getApplicationContext(), SuccessDestinoActivity.class);
                 success.putExtra("idInicio", IdInicio);
                 startActivity(success);

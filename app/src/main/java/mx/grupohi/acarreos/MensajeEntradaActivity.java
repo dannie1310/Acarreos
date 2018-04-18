@@ -46,7 +46,7 @@ import java.util.HashMap;
 import mx.grupohi.acarreos.Mina.SalidaMina;
 import mx.grupohi.acarreos.TiposTag.TagNFC;
 
-public class MensajeEntradaActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MensajeEntradaActivity extends AppCompatActivity {
     //Objetos
     private Usuario usuario;
     private TagNFC tagNFC;
@@ -62,6 +62,7 @@ public class MensajeEntradaActivity extends AppCompatActivity implements Navigat
 
     EditText deduc;
     String mensaje;
+    String txtDeductiva;
 
     //GPS
     private GPSTracker gps;
@@ -81,8 +82,11 @@ public class MensajeEntradaActivity extends AppCompatActivity implements Navigat
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_mensaje_entrada_volumen);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         certificados = new Certificados(getApplicationContext());
-        setContentView(R.layout.activity_set_origen);
         usuario = new Usuario(this);
         usuario = usuario.getUsuario();
         tagNFC = (TagNFC) getIntent().getSerializableExtra("datos");
@@ -103,29 +107,12 @@ public class MensajeEntradaActivity extends AppCompatActivity implements Navigat
         }
         IMEI = phneMgr.getDeviceId();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        final Boolean[] ok = {false};
-        final android.app.AlertDialog.Builder alerta = new android.app.AlertDialog.Builder(getApplicationContext());
-        View vista = getLayoutInflater().inflate(R.layout.popup, null);
-        deduc = (EditText) vista.findViewById(R.id.etPopAgregar);
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
         nfcImage = (ImageView) findViewById(R.id.imageViewNFC);
         fabCancel = (FloatingActionButton) findViewById(R.id.fabCancel);
         mainLayout = (LinearLayout) findViewById(R.id.MainLayout);
         lecturaTag = (LinearLayout) findViewById(R.id.leerTag);
         lecturaTag.setVisibility(View.GONE);
-
+        mensajeDeductiva();
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if (nfcAdapter == null) {
             Toast.makeText(this, getString(R.string.error_no_nfc), Toast.LENGTH_LONG).show();
@@ -139,15 +126,31 @@ public class MensajeEntradaActivity extends AppCompatActivity implements Navigat
         IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
         writeTagFilters = new IntentFilter[]{tagDetected};
 
+        fabCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                WriteModeOff();
+            }
+        });
+
+    }
+    public void mensajeDeductiva(){
+        final Boolean[] ok = {false};
+        final android.app.AlertDialog.Builder alerta = new android.app.AlertDialog.Builder(MensajeEntradaActivity.this);
+        View vista = getLayoutInflater().inflate(R.layout.popup,  null);
+        final EditText deduc = (EditText) vista.findViewById(R.id.etPopAgregar);
         alerta.setTitle("¿Desea Agregar un Nuevo Volumen?");
+
         alerta.setView(vista);
+
         alerta.setPositiveButton("Agregar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (!validarCampos()) {
-                    Toast.makeText(getApplicationContext(), "Por favor escribir el volumen", Toast.LENGTH_SHORT).show();
-                } else {
-                    checkNfcEnabled();
+                txtDeductiva = deduc.getText().toString();
+                if(!validarCampos()) {
+                    Toast.makeText(getApplicationContext(), mensaje, Toast.LENGTH_SHORT).show();
+                    mensajeDeductiva();
+                }else{
                     WriteModeOn();
                 }
             }
@@ -162,71 +165,22 @@ public class MensajeEntradaActivity extends AppCompatActivity implements Navigat
             }
         });
         alerta.show();
-
-        fabCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                WriteModeOff();
-            }
-        });
-
-        if (drawer != null)
-            drawer.post(new Runnable() {
-                @Override
-                public void run() {
-                    for (int i = 0; i < drawer.getChildCount(); i++) {
-                        View child = drawer.getChildAt(i);
-                        TextView tvp = (TextView) child.findViewById(R.id.textViewProyecto);
-                        TextView tvu = (TextView) child.findViewById(R.id.textViewUser);
-                        TextView tpe = (TextView) child.findViewById(R.id.textViewPerfil);
-                        TextView tvv = (TextView) child.findViewById(R.id.textViewVersion);
-                        TextView tim = (TextView) child.findViewById(R.id.textViewImpresora);
-
-                        Integer impresora = CelularImpresora.getId(getApplicationContext());
-                        if (tim != null) {
-                            if (impresora == 0) {
-                                tim.setTextColor(Color.RED);
-                                tim.setText("Sin Impresora Asignada");
-                            } else {
-                                tim.setText("Impresora " + impresora);
-                            }
-                        }
-                        if (tvp != null) {
-                            tvp.setText(usuario.descripcionBaseDatos);
-                        }
-                        if (tvu != null) {
-                            tvu.setText(usuario.nombre);
-                        }
-                        if (tpe != null) {
-                            if (usuario.origen_name == "0") {
-                                tpe.setText("PERFIL: " + usuario.getNombreEsquema() + " - " + usuario.tiro_name);
-                            } else if (usuario.tiro_name == "0") {
-                                tpe.setText("PERFIL: " + usuario.getNombreEsquema() + " - " + usuario.origen_name);
-                            }
-                        }
-                        if (tvv != null) {
-                            tvv.setText(getString(R.string.app_name) + "     " + "Versión " + String.valueOf(BuildConfig.VERSION_NAME));
-                        }
-                    }
-                }
-            });
     }
+
 
     private Boolean validarCampos(){
         /// validar volumen entrada
-        if(deduc.getText().toString().isEmpty()){
+        if(txtDeductiva.isEmpty()){
             mensaje = "Por favor escribir el volumen";
-            deduc.requestFocus();
+            mensajeDeductiva();
             return false;
         }
-        if(foliosSinCeros(deduc.getText().toString())){
+        if(foliosSinCeros(txtDeductiva)){
             mensaje = "El volumen no puede ser cero.";
-            deduc.requestFocus();
             return false;
         }
-        if(c.capacidad != 0 && c.capacidad!= null && Integer.valueOf(deduc.getText().toString()) > c.capacidad) {
+        if(c.capacidad != 0 && c.capacidad!= null && Integer.valueOf(txtDeductiva) > c.capacidad) {
             mensaje = "El volumen es mayor a la capacidad del camión.";
-            deduc.requestFocus();
             return false;
         }
 
@@ -311,7 +265,7 @@ public class MensajeEntradaActivity extends AppCompatActivity implements Navigat
                 datosVista.put("tipoEsquema", tagNFC.getTipo_viaje());
                 datosVista.put("idperfil", usuario.tipo_permiso);
                 datosVista.put("deductiva_entrada", 1);
-                datosVista.put("deductiva", deduc.toString());
+                datosVista.put("deductiva", txtDeductiva);
                 datosVista.put("idMotivo", tagNFC.getIdmotivo());
                 datosVista.put("numImpresion", 0);
                 datosVista.put("tipo_suministro", tagNFC.getTipo_viaje());
@@ -325,7 +279,7 @@ public class MensajeEntradaActivity extends AppCompatActivity implements Navigat
                     if (tagNFC.getTipo() == 1) {
                         if (tagNFC.getUID().equals(nfcTag.byteArrayToHexString(myTag.getId()))) {
                             try {
-                                nfcTag.writeSector(myTag, 4, 16, deduc.toString());
+                                nfcTag.writeSector(myTag, 4, 16, txtDeductiva);
                             } catch (IOException e) {
                                 e.printStackTrace();
                                 mensaje_error = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
@@ -346,7 +300,7 @@ public class MensajeEntradaActivity extends AppCompatActivity implements Navigat
                     if (tagNFC.getTipo() == 2) {
                         if (tagNFC.getUID().equals(nfcUltra.byteArrayToHexString(myTag.getId()))) {
                             try {
-                                nfcUltra.writePagina(null, 19, deduc.toString());
+                                nfcUltra.writePagina(null, 19, txtDeductiva);
                             } catch (IOException e) {
                                 e.printStackTrace();
                                 mensaje_error = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
@@ -380,6 +334,7 @@ public class MensajeEntradaActivity extends AppCompatActivity implements Navigat
                 startActivity(success);
             }else {
                 Toast.makeText(context, mensaje_error, Toast.LENGTH_SHORT).show();
+                mensajeDeductiva();
             }
         }
     }
@@ -387,113 +342,19 @@ public class MensajeEntradaActivity extends AppCompatActivity implements Navigat
     private void WriteModeOn() {
         writeMode = true;
         nfcAdapter.enableForegroundDispatch(this, pendingIntent, writeTagFilters, null);
-        mainLayout.setVisibility(View.GONE);
         lecturaTag.setVisibility(View.VISIBLE);
     }
 
     private void WriteModeOff() {
         writeMode = false;
         nfcAdapter.disableForegroundDispatch(this);
-        mainLayout.setVisibility(View.VISIBLE);
         lecturaTag.setVisibility(View.GONE);
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_HOME);
-            startActivity(intent);
-        }
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_home) {
-            Intent mainActivity;
-            Integer tipo = usuario.getTipo_permiso();
-            if(tipo == 0){
-                Intent intent = getIntent();
-                finish();
-                startActivity(intent);
-            }else if(tipo == 1){
-                mainActivity = new Intent(getApplicationContext(), MainActivity.class);
-                mainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(mainActivity);
-            }
-        } else if (id == R.id.nav_sync) {
-            new AlertDialog.Builder(getApplicationContext())
-                    .setTitle("¡ADVERTENCIA!")
-                    .setMessage("Se borrarán los registros de viajes almacenados en este dispositivo. \n ¿Deséas continuar con la sincronización?")
-                    .setNegativeButton("NO", null)
-                    .setPositiveButton("SI", new DialogInterface.OnClickListener() {
-                        @Override public void onClick(DialogInterface dialog, int which) {
-                            if (Util.isNetworkStatusAvialable(getApplicationContext())) {
-                                if(!Viaje.isSync(getApplicationContext()) || !InicioViaje.isSync(getApplicationContext())){
-                                    progressDialogSync = ProgressDialog.show(MensajeEntradaActivity.this, "Sincronizando datos", "Por favor espere...", true);
-                                    new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
-                                    tiempoEsperaSincronizacion();
-                                } else {
-                                    Toast.makeText(getApplicationContext(), "No es necesaria la sincronización en este momento", Toast.LENGTH_LONG).show();
-                                }
-                            } else {
-                                Toast.makeText(getApplicationContext(), R.string.error_internet, Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    })
-                    .create()
-                    .show();
-        } else if (id == R.id.nav_list) {
-            Intent listActivity = new Intent(this, ListaViajesActivity.class);
-            startActivity(listActivity);
-
-        } else if (id == R.id.nav_desc) {
-
-            Intent descarga = new Intent(this, DescargaActivity.class);
-            startActivity(descarga);
-
-        }  else if (id == R.id.nav_logout) {
-            if(!Viaje.isSync(getApplicationContext()) || !InicioViaje.isSync(getApplicationContext())){
-                new AlertDialog.Builder(MensajeEntradaActivity.this)
-                        .setTitle("¡ADVERTENCIA!")
-                        .setMessage("Hay viajes aún sin sincronizar, se borrarán los registros de viajes almacenados en este dispositivo,  \n ¿Deséas sincronizar?")
-                        .setNegativeButton("NO", null)
-                        .setPositiveButton("SI", new DialogInterface.OnClickListener() {
-                            @Override public void onClick(DialogInterface dialog, int which) {
-                                if (Util.isNetworkStatusAvialable(getApplicationContext())) {
-                                    progressDialogSync = ProgressDialog.show(MensajeEntradaActivity.this, "Sincronizando datos", "Por favor espere...", true);
-                                    new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
-                                    Intent login_activity = new Intent(getApplicationContext(), LoginActivity.class);
-                                    usuario.destroy();
-                                    startActivity(login_activity);
-                                } else {
-                                    Toast.makeText(getApplicationContext(), R.string.error_internet, Toast.LENGTH_LONG).show();
-                                }
-                            }
-                        })
-                        .create()
-                        .show();
-            }
-            else {
-                Intent login_activity = new Intent(getApplicationContext(), LoginActivity.class);
-                usuario.destroy();
-                startActivity(login_activity);
-            }
-        }else if(id == R.id.nav_cambio){
-            Intent cambio = new Intent(this, CambioClaveActivity.class);
-            startActivity(cambio);
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+        Intent success = new Intent(getApplicationContext(), SetOrigenActivity.class);
+        startActivity(success);
     }
 
     public  void tiempoEsperaSincronizacion(){

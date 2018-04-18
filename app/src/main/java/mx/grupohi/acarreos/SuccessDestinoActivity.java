@@ -407,7 +407,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
             json.put("32", "NULL");
             json.put("33", "NULL");
             json.put("34", "NULL");
-            if(inicios.tipo_suministro == 1) {
+            if(inicios.tipo_suministro == 1 && inicios.deductiva_entrada == 0) {
                // datos_inicio = "000|000000|000|000000000000|000|000000000000|000|00000|000000000000|000000000000000|00000|00|000000000000000000|0|00000000|00000000|00|0";
                 datos_inicio = usuario.idProyecto + "|"
                         + inicios.idcamion + "|"

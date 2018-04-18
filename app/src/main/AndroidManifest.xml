@@ -95,7 +95,12 @@
             android:name=".TiroUnicoActivity"
             android:label="@string/title_activity_tiro_unico"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MensajeEntradaActivity"
+            android:label="Mensaje Volumen Entrada"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>
