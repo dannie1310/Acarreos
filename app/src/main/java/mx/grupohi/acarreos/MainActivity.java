@@ -359,11 +359,21 @@ public class MainActivity extends AppCompatActivity
                     startActivity(r);
                 }
             } else {
-                Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show();
+                alert(mensaje);
             }
         }
     }
 
+    public void alert(String message) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+
+        dialog.setMessage(message)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialoginterface, int i) {
+
+                    }
+                }).show();
+    }
 
     @Override
     protected void onNewIntent(Intent intent) {

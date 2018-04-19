@@ -267,4 +267,9 @@ public class InicioViaje {
             db.close();
         }
     }
+
+    public Boolean borrar (Integer inicio){
+        db = db_sca.getWritableDatabase();
+        return db.delete("inicio_viajes", "ID = "+inicio, null) > 0;
+    }
 }

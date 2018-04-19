@@ -252,7 +252,7 @@ public class SetOrigenActivity extends AppCompatActivity
             public void onClick(View v) {
                 if(!validarCampos()){
                     /// imprime valiable mensaje en toast o alert
-                    Toast.makeText(getApplicationContext(), mensaje, Toast.LENGTH_SHORT).show();
+                    alert(mensaje);
                 }
                 else {
                     checkNfcEnabled();
@@ -388,6 +388,7 @@ public class SetOrigenActivity extends AppCompatActivity
         @Override
         protected Boolean doInBackground(Void... voids) {
             Tag myTag;
+            IdInicio = 0;
             //// se lee el tag y se inicializa la clase con los datos
             if(writeMode){
                 if(NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
@@ -543,7 +544,6 @@ public class SetOrigenActivity extends AppCompatActivity
             super.onPostExecute(registro);
             WriteModeOff();
             if (registro){
-
                 Intent success = new Intent(getApplicationContext(), SuccessDestinoActivity.class);
                 success.putExtra("idInicio", IdInicio);
                 startActivity(success);
@@ -553,10 +553,28 @@ public class SetOrigenActivity extends AppCompatActivity
                     r.putExtra("datos", tag_nfc);// enviar el POJO TagNFC
                     startActivity(r);
                 }else {
-                    Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show();
+                    if(!IdInicio.equals(0)){
+                        SalidaMina salidaMina = new SalidaMina(context, tag_nfc);
+                        while(!salidaMina.rollbackDB(IdInicio)){
+                            mensaje_error = "intentar nuevamente";
+                        }
+                        mensaje_error = "Manten el TAG más tiempo! " + mensaje_error;
+                    }
+                    alert(mensaje_error);
                 }
             }
         }
+    }
+
+    public void alert(String message) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(SetOrigenActivity.this);
+
+        dialog.setMessage(message)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialoginterface, int i) {
+
+                    }
+                }).show();
     }
 
     @Override

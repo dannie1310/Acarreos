@@ -129,6 +129,7 @@ public class MensajeEntradaActivity extends AppCompatActivity {
         fabCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mensajeDeductiva();
                 WriteModeOff();
             }
         });
@@ -148,8 +149,7 @@ public class MensajeEntradaActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 txtDeductiva = deduc.getText().toString();
                 if(!validarCampos()) {
-                    Toast.makeText(getApplicationContext(), mensaje, Toast.LENGTH_SHORT).show();
-                    mensajeDeductiva();
+                    alert(mensaje);
                 }else{
                     WriteModeOn();
                 }
@@ -159,9 +159,9 @@ public class MensajeEntradaActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Toast.makeText(getApplicationContext(), "Favor de Pasar a la Salida para Finalizar el Viaje.", Toast.LENGTH_LONG).show();
+                dialog.cancel();
                 Intent success = new Intent(getApplicationContext(), SetOrigenActivity.class);
                 startActivity(success);
-                dialog.cancel();
             }
         });
         alerta.show();
@@ -216,7 +216,7 @@ public class MensajeEntradaActivity extends AppCompatActivity {
         Context context;
         Intent intent;
         String mensaje_error = "";
-        Integer IdInicio;
+        Integer IdInicio = 0;
         public MensajeTarea(Context context, Intent intent) {
             this.context = context;
             this.intent = intent;
@@ -280,12 +280,6 @@ public class MensajeEntradaActivity extends AppCompatActivity {
                         if (tagNFC.getUID().equals(nfcTag.byteArrayToHexString(myTag.getId()))) {
                             try {
                                 nfcTag.writeSector(myTag, 4, 16, txtDeductiva);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                                mensaje_error = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
-                                return false;
-                            }
-                            try {
                                 nfcTag.writeSector(myTag, 4, 17, tagNFC.getIdmotivo());
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -301,12 +295,6 @@ public class MensajeEntradaActivity extends AppCompatActivity {
                         if (tagNFC.getUID().equals(nfcUltra.byteArrayToHexString(myTag.getId()))) {
                             try {
                                 nfcUltra.writePagina(null, 19, txtDeductiva);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                                mensaje_error = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
-                                return false;
-                            }
-                            try {
                                 nfcUltra.writePagina(null, 20, tagNFC.getIdmotivo());
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -333,10 +321,27 @@ public class MensajeEntradaActivity extends AppCompatActivity {
                 success.putExtra("idInicio", IdInicio);
                 startActivity(success);
             }else {
-                Toast.makeText(context, mensaje_error, Toast.LENGTH_SHORT).show();
-                mensajeDeductiva();
+                if(!IdInicio.equals(0)){
+                    SalidaMina salidaMina = new SalidaMina(context, tagNFC);
+                    while(!salidaMina.rollbackDB(IdInicio)){
+                       mensaje_error = "intentar nuevamente";
+                    }
+                    mensaje_error = "Manten el TAG más tiempo! " + mensaje_error;
+                }
+                alert(mensaje_error);
             }
         }
+    }
+
+    public void alert(String message) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(MensajeEntradaActivity.this);
+
+        dialog.setMessage(message)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialoginterface, int i) {
+                        mensajeDeductiva();
+                    }
+                }).show();
     }
 
     private void WriteModeOn() {

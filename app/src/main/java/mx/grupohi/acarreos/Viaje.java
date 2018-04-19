@@ -392,4 +392,9 @@ public class Viaje {
             db.close();
         }
     }
+
+    public Boolean borrar (Integer inicio){
+        db = db_sca.getWritableDatabase();
+        return db.delete("viajesnetos", "ID = "+inicio, null) > 0;
+    }
 }

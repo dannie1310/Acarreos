@@ -34,7 +34,7 @@ public class SalidaMina {
             return "El TAG que intentas configurar no está autorizado para éste proyecto.";
         }
 
-        if(!tag_nfc.getIdmaterial().equals("") && !tag_nfc.getIdorigen().equals("") && tag_nfc.getFecha() != "" && !tag_nfc.getUsuario().equals("") && !tag_nfc.getVolumen().equals("")){
+        if(!tag_nfc.getIdmaterial().equals("") && !tag_nfc.getIdorigen().equals("") && tag_nfc.getFecha() != "" && !tag_nfc.getUsuario().equals("") && !tag_nfc.getVolumen().equals("") && !tag_nfc.getTipo_perfil().equals("")){
             if(usuario.tipo_permiso == 4 && tag_nfc.getTipo_viaje().equals("1")){ // Perfil de Checador Entrada y Viaje de Origen.
                 return "volumen_entrada";
             }else {
@@ -103,6 +103,16 @@ public class SalidaMina {
 
         Coordenada coordenada = new Coordenada(context);
         coordenada.create(contentValues, context);
+    }
+
+    public  Boolean rollbackDB(Integer inicio){
+        try {
+            InicioViaje in = new InicioViaje(context);
+            return in.borrar(inicio);
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
     }
 
 }

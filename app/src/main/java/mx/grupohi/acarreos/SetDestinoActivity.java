@@ -270,7 +270,7 @@ public class SetDestinoActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                if(!validarCampos()){
-                   Toast.makeText(getApplicationContext(), mensaje, Toast.LENGTH_SHORT).show();
+                   alert(mensaje);
                }
                 else {
                     checkNfcEnabled();
@@ -539,6 +539,7 @@ public class SetDestinoActivity extends AppCompatActivity
         Double latitud = gps.getLatitude();
         Double longitud = gps.getLongitude();
 
+
         public DestinoTarea(Context context, Intent intent) {
             this.context = context;
             this.intent = intent;
@@ -580,8 +581,8 @@ public class SetDestinoActivity extends AppCompatActivity
                 }
             }
             //// inicia seccion de validaciones y escritura de datos en DB
-            if(mensaje == "continuar"){
-                String aux =Util.dateFolios();
+            if(mensaje == "continuar") {
+                String aux = Util.dateFolios();
                 String code = Util.folio(aux) + String.valueOf(tagNFC.getIdcamion());
                 String fechaLlegada = Util.getFecha();
                 String horaLlegada = Util.getTime();
@@ -606,27 +607,22 @@ public class SetDestinoActivity extends AppCompatActivity
                         datosVista.put("FechaSalida", Util.getFecha(fecha));
                         datosVista.put("HoraSalida", Util.getTime(fecha));
                     } else {
-                        fecha = fechaOrigen +" "+horaOrigen;
+                        fecha = fechaOrigen + " " + horaOrigen;
                         datosVista.put("FechaSalida", fechaOrigen);
                         datosVista.put("HoraSalida", horaOrigen);
                     }
                 }
-                if(Util.getFechaImprocedente(fecha, fechaLlegada+" "+horaLlegada)){
+                if (Util.getFechaImprocedente(fecha, fechaLlegada + " " + horaLlegada)) {
                     datosVista.put("Estatus", "2");
-                }else{
+                } else {
                     datosVista.put("Estatus", "1");
                 }
                 Integer volumen = volumenMenor(Integer.valueOf(datosVista.getAsString("deductiva_origen")), Integer.valueOf(datosVista.getAsString("deductiva_entrada")), Integer.valueOf(deductiva.getText().toString()));
                 datosVista.put("cubicacion", String.valueOf(volumen));
 
-                DestinoTiro destinoTiro = new DestinoTiro(context,tagNFC);
-                if(!destinoTiro.guardarDatosDB(datosVista)){
-                    mensaje = "Error al guardar en Base de Datos";
-                    return false;
-                }else {
-                    idViaje = destinoTiro.idViaje;
-                    destinoTiro.coordenadas(datosVista.getAsString("IMEI"),datosVista.getAsString("Code"), latitud, longitud);
-                    // eliminar datos del TAG...
+                // eliminar datos del TAG...
+                Boolean bandera = false;
+                while (!bandera) {
                     if (tagNFC.getTipo() == 1) {
                         try {
                             nfcTag.cleanSector(null, 1);
@@ -638,7 +634,7 @@ public class SetDestinoActivity extends AppCompatActivity
                             mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
                             return false;
                         }
-                        return true;
+                        bandera = true;
                     }
                     if (tagNFC.getTipo() == 2) {
                         try {
@@ -648,9 +644,16 @@ public class SetDestinoActivity extends AppCompatActivity
                             mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
                             return false;
                         }
-                        return true;
+                        bandera = true;
                     }
                 }
+                DestinoTiro destinoTiro = new DestinoTiro(context, tagNFC);
+                while (!destinoTiro.guardarDatosDB(datosVista)) {
+                    mensaje = "Error al guardar en Base de Datos";
+                }
+                idViaje = destinoTiro.idViaje;
+                destinoTiro.coordenadas(datosVista.getAsString("IMEI"), datosVista.getAsString("Code"), latitud, longitud);
+                return true;
             }
             return false;
         }
@@ -658,18 +661,28 @@ public class SetDestinoActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(Boolean registro) {
             super.onPostExecute(registro);
+            WriteModeOff();
             if (registro) {
-                WriteModeOff();
                 destinoSuccess.putExtra("idViaje", idViaje);
                 destinoSuccess.putExtra("LIST", 0);
                 destinoSuccess.putExtra("code", datosVista.getAsString("Code"));
                 startActivity(destinoSuccess);
             } else {
-                Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show();
+                alert(mensaje);
             }
         }
     }
 
+    public void alert(String message) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(SetDestinoActivity.this);
+
+        dialog.setMessage(message)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialoginterface, int i) {
+
+                    }
+                }).show();
+    }
 
     @Override
     protected void onNewIntent(Intent intent) {

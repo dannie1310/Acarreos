@@ -91,5 +91,4 @@ public class DestinoTiro {
         Coordenada coordenada = new Coordenada(context);
         coordenada.create(contentValues, context);
     }
-
 }
