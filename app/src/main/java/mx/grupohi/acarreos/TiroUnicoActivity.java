@@ -282,9 +282,8 @@ public class TiroUnicoActivity extends AppCompatActivity
         escribirButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (!validarCampos()){
-                    Toast.makeText(getApplicationContext(), mensaje, Toast.LENGTH_SHORT).show();
+                    alert(mensaje);
                 }
                 else {
                     checkNfcEnabled();
@@ -550,7 +549,7 @@ public class TiroUnicoActivity extends AppCompatActivity
             //// inicia seccion de validaciones y escritura de datos en DB
             TiroLibre tiroLibre = new TiroLibre(context, tag_nfc);
             mensaje = tiroLibre.validarDatosTag();
-            if(mensaje == "continuar"){ //escribir datos en DB
+            if(mensaje == "continuar") { //escribir datos en DB
                 String aux = Util.dateFolios();
                 String fechaLlegada = Util.getFecha();
                 String horaLlegada = Util.getTime();
@@ -560,43 +559,41 @@ public class TiroUnicoActivity extends AppCompatActivity
                 datosVista.put("Code", Util.folio(aux) + String.valueOf(tag_nfc.getIdcamion()));
                 datosVista.put("CodeImagen", Util.getCodeFecha(tagNFC.getIdcamion(), aux));
                 datosVista.put("FechaCarga", Util.getFecha());
-                datosVista.put("HoraCarga",  Util.getTime());
+                datosVista.put("HoraCarga", Util.getTime());
                 datosVista.put("FechaLlegada", fechaLlegada);
                 datosVista.put("HoraLlegada", horaLlegada);
                 datosVista.put("FechaSalida", fechaLlegada);
                 datosVista.put("HoraSalida", horaLlegada);
-
-                if(!tiroLibre.guardarDatosDB(datosVista)){
-                    mensaje = "Error al guardar en Base de Datos";
-                    return false;
-                }else {
-                    idViaje = tiroLibre.idViaje;
-                    tiroLibre.coordenadas(datosVista.getAsString("IMEI"),datosVista.getAsString("Code"), latitud, longitud);
-                    // eliminar datos del TAG...
-                    if (tagNFC.getTipo() == 1) {
-                        try {
-                            nfcTag.cleanSector(null, 1);
-                            nfcTag.cleanSector(null, 2);
-                            nfcTag.cleanSector(null, 3);
-                            nfcTag.cleanSector(null, 4);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
-                            return false;
-                        }
-                        return true;
-                    }
-                    if (tagNFC.getTipo() == 2) {
-                        try {
-                            nfcUltra.cleanTag(null);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
-                            return false;
-                        }
-                        return true;
+                // eliminar datos del TAG...
+                if (tagNFC.getTipo() == 1) {
+                    try {
+                        nfcTag.cleanSector(null, 1);
+                        nfcTag.cleanSector(null, 2);
+                        nfcTag.cleanSector(null, 3);
+                        nfcTag.cleanSector(null, 4);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
+                        return false;
                     }
                 }
+                if (tagNFC.getTipo() == 2) {
+                    try {
+                        nfcUltra.cleanTag(null);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
+                        return false;
+                    }
+                }
+                // enviar datos a la BD
+                if (!tiroLibre.guardarDatosDB(datosVista)) {
+                    mensaje = "Error al guardar en Base de Datos";
+                    return false;
+                }
+                idViaje = tiroLibre.idViaje;
+                tiroLibre.coordenadas(datosVista.getAsString("IMEI"), datosVista.getAsString("Code"), latitud, longitud);
+                return true;
             }
             return false;
         }
@@ -611,11 +608,21 @@ public class TiroUnicoActivity extends AppCompatActivity
                 destinoSuccess.putExtra("code", datosVista.getAsString("Code"));
                 startActivity(destinoSuccess);
             } else {
-                Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show();
+                alert(mensaje);
             }
         }
     }
 
+    public void alert(String message) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(TiroUnicoActivity.this);
+
+        dialog.setMessage(message)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialoginterface, int i) {
+
+                    }
+                }).show();
+    }
 
     @Override
     protected void onNewIntent(Intent intent) {

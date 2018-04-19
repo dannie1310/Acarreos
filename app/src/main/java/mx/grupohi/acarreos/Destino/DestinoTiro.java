@@ -22,30 +22,28 @@ public class DestinoTiro {
     public String validarDatosTag() {
         Usuario usuario = new Usuario(context);
         usuario = usuario.getUsuario();
-        if (!TagModel.findTAG (context, tag_nfc.getUID())) {
+        if (!TagModel.findTAG(context, tag_nfc.getUID())) {
             return "El TAG que intentas configurar no está autorizado para éste proyecto.";
         }
         TagModel datosTagCamion = new TagModel(context);
         datosTagCamion = datosTagCamion.find(tag_nfc.getUID(), tag_nfc.getIdcamion(), tag_nfc.getIdproyecto());
-        if(datosTagCamion.estatus != 1){
+        if (datosTagCamion.estatus != 1) {
             return "El camión " + datosTagCamion.economico + " se encuentra inactivo. Por favor contacta al encargado.";
         }
         if (tag_nfc.getIdproyecto() != usuario.getProyecto()) {
             return "El TAG no pertenece al proyecto del usuario.";
         }
-        if (tipoPerfil()){ // Perfil Tiro o Salida
-            if((tag_nfc.getIdmaterial().equals("null") && tag_nfc.getIdorigen().equals("null")) || (tag_nfc.getIdmaterial() == "" && tag_nfc.getIdorigen() == "") && tag_nfc.getFecha() == "" && tag_nfc.getUsuario() == "" && tag_nfc.getVolumen() == ""){
+        if (tipoPerfil()) { // Perfil Tiro o Salida
+            if ((tag_nfc.getIdmaterial().equals("null") && tag_nfc.getIdorigen().equals("null")) || (!tag_nfc.getIdmaterial().equals("") && !tag_nfc.getIdorigen().equals("")) && tag_nfc.getFecha() == "" && tag_nfc.getUsuario() == "" && tag_nfc.getVolumen() == "") {
                 return "El TAG que intentas utilizar no cuenta con un origen definido.";
             }
             return "destino";
-        }
-        if(!tipoPerfil()){ // Perfil de Tiro Libre a Bordo
-            if((!tag_nfc.getIdmaterial().equals("null") && !tag_nfc.getIdorigen().equals("null")) || (tag_nfc.getIdmaterial() != "" && tag_nfc.getIdorigen() != "")  && tag_nfc.getFecha() != "" && tag_nfc.getUsuario() != "" && tag_nfc.getVolumen() != ""){
+        } else {// Perfil de Tiro Libre a Bordo
+            if ((!tag_nfc.getIdmaterial().equals("") && !tag_nfc.getIdorigen().equals(""))&& !tag_nfc.getFecha().equals("") && !tag_nfc.getUsuario().equals("") && !tag_nfc.getVolumen().equals("")) {
                 return "El TAG cuenta con un viaje activo, Favor de pasar a un filtro de salida para finalizar el viaje.";
             }
             return "libreAbordo";
         }
-        return "Error al validar datos del TAG.";
     }
 
     public Boolean tipoPerfil(){

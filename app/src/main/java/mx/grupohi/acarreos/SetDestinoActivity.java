@@ -621,30 +621,25 @@ public class SetDestinoActivity extends AppCompatActivity
                 datosVista.put("cubicacion", String.valueOf(volumen));
 
                 // eliminar datos del TAG...
-                Boolean bandera = false;
-                while (!bandera) {
-                    if (tagNFC.getTipo() == 1) {
-                        try {
-                            nfcTag.cleanSector(null, 1);
-                            nfcTag.cleanSector(null, 2);
-                            nfcTag.cleanSector(null, 3);
-                            nfcTag.cleanSector(null, 4);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
-                            return false;
-                        }
-                        bandera = true;
+                if (tagNFC.getTipo() == 1) {
+                    try {
+                        nfcTag.cleanSector(null, 1);
+                        nfcTag.cleanSector(null, 2);
+                        nfcTag.cleanSector(null, 3);
+                        nfcTag.cleanSector(null, 4);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
+                        return false;
                     }
-                    if (tagNFC.getTipo() == 2) {
-                        try {
-                            nfcUltra.cleanTag(null);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
-                            return false;
-                        }
-                        bandera = true;
+                }
+                if (tagNFC.getTipo() == 2) {
+                    try {
+                        nfcUltra.cleanTag(null);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
+                        return false;
                     }
                 }
                 DestinoTiro destinoTiro = new DestinoTiro(context, tagNFC);
