@@ -34,6 +34,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -117,6 +119,9 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+
+        Crashlytics.setUserIdentifier(String.valueOf(usuario.getId()));
+        Crashlytics.setUserName(usuario.getNombre());
 
         userText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override

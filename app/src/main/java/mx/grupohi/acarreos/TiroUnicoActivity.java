@@ -41,6 +41,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -503,6 +505,7 @@ public class TiroUnicoActivity extends AppCompatActivity
                                     camion_proyecto = nfcTag.readSector(null, 0, 1);
                                 } catch (IOException e) {
                                     e.printStackTrace();
+                                    Crashlytics.logException(e);
                                     mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
                                     return false;
                                 }
@@ -528,6 +531,7 @@ public class TiroUnicoActivity extends AppCompatActivity
                                     camion_proyecto = nfcUltra.readDeductiva(null, 4) + nfcUltra.readDeductiva(null, 5) + nfcUltra.readDeductiva(null, 6);
                                 } catch (IOException e) {
                                     e.printStackTrace();
+                                    Crashlytics.logException(e);
                                     mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
                                     return false;
                                 }
@@ -573,6 +577,7 @@ public class TiroUnicoActivity extends AppCompatActivity
                         nfcTag.cleanSector(null, 4);
                     } catch (IOException e) {
                         e.printStackTrace();
+                        Crashlytics.logException(e);
                         mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
                         return false;
                     }
@@ -582,6 +587,7 @@ public class TiroUnicoActivity extends AppCompatActivity
                         nfcUltra.cleanTag(null);
                     } catch (IOException e) {
                         e.printStackTrace();
+                        Crashlytics.logException(e);
                         mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
                         return false;
                     }

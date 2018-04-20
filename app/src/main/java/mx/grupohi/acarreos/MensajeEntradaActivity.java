@@ -39,6 +39,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -283,6 +285,7 @@ public class MensajeEntradaActivity extends AppCompatActivity {
                                 nfcTag.writeSector(myTag, 4, 17, tagNFC.getIdmotivo());
                             } catch (IOException e) {
                                 e.printStackTrace();
+                                Crashlytics.logException(e);
                                 mensaje_error = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
                                 return false;
                             }
@@ -298,6 +301,7 @@ public class MensajeEntradaActivity extends AppCompatActivity {
                                 nfcUltra.writePagina(null, 20, tagNFC.getIdmotivo());
                             } catch (IOException e) {
                                 e.printStackTrace();
+                                Crashlytics.logException(e);
                                 mensaje_error = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
                                 return false;
                             }

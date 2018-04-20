@@ -35,6 +35,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -274,6 +276,7 @@ public class MainActivity extends AppCompatActivity
                                 tag_nfc.setVolumen_entrada(nfcTag.readSector(null, 4, 16));
                             } catch (IOException e) {
                                 e.printStackTrace();
+                                Crashlytics.logException(e);
                                 mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
                                 return false;
                             }
@@ -303,6 +306,7 @@ public class MainActivity extends AppCompatActivity
                                 tag_nfc.setVolumen_entrada(nfcUltra.readDeductiva(null, 19));
                             } catch (IOException e) {
                                 e.printStackTrace();
+                                Crashlytics.logException(e);
                                 mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
                                 return false;
                             }

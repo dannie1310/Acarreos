@@ -3,6 +3,8 @@ package mx.grupohi.acarreos.Destino;
 import android.content.ContentValues;
 import android.content.Context;
 
+import com.crashlytics.android.Crashlytics;
+
 import mx.grupohi.acarreos.Coordenada;
 import mx.grupohi.acarreos.TagModel;
 import mx.grupohi.acarreos.TiposTag.TagNFC;
@@ -72,6 +74,7 @@ public class DestinoTiro {
             return resultado;
         }catch (Exception e){
             e.printStackTrace();
+            Crashlytics.logException(e);
             return false;
         }
     }

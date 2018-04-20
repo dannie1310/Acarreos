@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "311126550127-i8b1r7172lbk7k5h1r8llq6dpsu33j0h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "mx.grupohi.acarreos",
+            "certificate_hash": "de840ef7cfa3978809e6ca682bcdb342520a1786"
+          }
+        },
+        {
           "client_id": "311126550127-ue27ia80u36kahhk5182h6h41r3dghsi.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "311126550127-ue27ia80u36kahhk5182h6h41r3dghsi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

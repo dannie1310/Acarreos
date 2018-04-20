@@ -48,9 +48,7 @@ import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.crashlytics.android.Crashlytics;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -126,7 +124,6 @@ public class SetOrigenActivity extends AppCompatActivity
         usuario = usuario.getUsuario();
         material = new Material(this);
         origen = new Origen(this);
-
         gps = new GPSTracker(SetOrigenActivity.this);
 
         TelephonyManager phneMgr = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
@@ -189,7 +186,7 @@ public class SetOrigenActivity extends AppCompatActivity
         final ArrayAdapter<String> arrayAdapterOrigenes = new ArrayAdapter<>(this,R.layout.support_simple_spinner_dropdown_item, spinnerOrigenesArray);
         arrayAdapterOrigenes.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         origenesSpinner.setAdapter(arrayAdapterOrigenes);
-
+        Crashlytics.setUserEmail("IMEI:"+IMEI);
         origenesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
