@@ -3,6 +3,8 @@ package mx.grupohi.acarreos.Mina;
 import android.content.ContentValues;
 import android.content.Context;
 
+import com.crashlytics.android.Crashlytics;
+
 import mx.grupohi.acarreos.Camion;
 import mx.grupohi.acarreos.Coordenada;
 import mx.grupohi.acarreos.InicioViaje;
@@ -72,6 +74,7 @@ public class SalidaMina {
             return result;
         }catch (Exception e){
             e.printStackTrace();
+            Crashlytics.logException(e);
             return false;
         }
     }
@@ -111,6 +114,7 @@ public class SalidaMina {
             return in.borrar(inicio);
         }catch (Exception e){
             e.printStackTrace();
+            Crashlytics.logException(e);
             return false;
         }
     }

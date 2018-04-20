@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "311126550127",
+    "firebase_url": "https://modulo-de-acarreos.firebaseio.com",
+    "project_id": "modulo-de-acarreos",
+    "storage_bucket": "modulo-de-acarreos.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:311126550127:android:191686ac3cdfb867",
+        "android_client_info": {
+          "package_name": "mx.grupohi.acarreos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "311126550127-ue27ia80u36kahhk5182h6h41r3dghsi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBXaidvUBJ5xtaaERH0NWezC0gySFrSbs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

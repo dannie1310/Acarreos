@@ -35,6 +35,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -47,6 +48,8 @@ import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.crashlytics.android.Crashlytics;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -371,7 +374,6 @@ public class SetOrigenActivity extends AppCompatActivity
         TagNFC tag_nfc = new TagNFC();
         Context context;
         Intent intent;
-        String mensaje_error = "";
         Double latitud = gps.getLatitude();
         Double longitud = gps.getLongitude();
 
@@ -412,6 +414,7 @@ public class SetOrigenActivity extends AppCompatActivity
                                 tag_nfc.setVolumen_entrada(nfcTag.readSector(null,4,16));
                             } catch (IOException e) {
                                 e.printStackTrace();
+                                Crashlytics.logException(e);
                                 mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
                                 return false;
                             }
@@ -441,6 +444,7 @@ public class SetOrigenActivity extends AppCompatActivity
                                 tag_nfc.setVolumen_entrada(nfcUltra.readDeductiva(null,19));
                             } catch (IOException e) {
                                 e.printStackTrace();
+                                Crashlytics.logException(e);
                                 mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
                                 return false;
                             }
@@ -504,6 +508,7 @@ public class SetOrigenActivity extends AppCompatActivity
                                 nfcTag.writeSector(null, 3, 14, datosVista.getAsString("tipo_suministro"));
                             } catch (IOException e) {
                                 e.printStackTrace();
+                                Crashlytics.logException(e);
                                 mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
                                 return false;
                             }
@@ -525,6 +530,7 @@ public class SetOrigenActivity extends AppCompatActivity
                                 nfcUltra.writePagina(null, 18, datosVista.getAsString("tipo_suministro"));
                             } catch (IOException e) {
                                 e.printStackTrace();
+                                Crashlytics.logException(e);
                                 mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
                                 return false;
                             }
@@ -556,11 +562,11 @@ public class SetOrigenActivity extends AppCompatActivity
                     if(!IdInicio.equals(0)){
                         SalidaMina salidaMina = new SalidaMina(context, tag_nfc);
                         while(!salidaMina.rollbackDB(IdInicio)){
-                            mensaje_error = "intentar nuevamente";
+                            mensaje = "intentar nuevamente";
                         }
-                        mensaje_error = "Manten el TAG más tiempo! " + mensaje_error;
+                        mensaje = "Manten el TAG más tiempo! " + mensaje;
                     }
-                    alert(mensaje_error);
+                    alert(mensaje);
                 }
             }
         }
