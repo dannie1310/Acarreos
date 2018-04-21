@@ -124,7 +124,7 @@ public class MensajeEntradaActivity extends AppCompatActivity {
                 WriteModeOff();
             }
         });
-
+        Crashlytics.setUserEmail("IMEI:"+IMEI);
     }
     public void mensajeDeductiva(){
         final Boolean[] ok = {false};

@@ -182,7 +182,7 @@ public class TiroUnicoActivity extends AppCompatActivity
 
         final String[] spinnerOrigenesArray = new String[idsOrigenes.size()];
         final HashMap<String, String> spinnerOrigenesMap = new HashMap<>();
-
+        Crashlytics.setUserEmail("IMEI:"+IMEI);
         for (int i = 0; i < idsOrigenes.size(); i++) {
             spinnerOrigenesMap.put(descripcionesOrigenes.get(i), idsOrigenes.get(i));
             spinnerOrigenesArray[i] = descripcionesOrigenes.get(i);

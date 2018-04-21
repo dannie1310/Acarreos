@@ -34,7 +34,7 @@ public class DestinoTiro {
             return "El TAG no pertenece al proyecto del usuario.";
         }
         if (tipoPerfil()) { // Perfil Tiro o Salida
-            if ((tag_nfc.getIdmaterial().equals("null") && tag_nfc.getIdorigen().equals("null")) || (!tag_nfc.getIdmaterial().equals("") && !tag_nfc.getIdorigen().equals("")) && tag_nfc.getFecha() == "" && tag_nfc.getUsuario() == "" && tag_nfc.getVolumen() == "") {
+            if ((tag_nfc.getIdmaterial().equals("") || tag_nfc.getIdmaterial().equals("null")) && (tag_nfc.getIdorigen().equals("null") || tag_nfc.getIdorigen().equals("")) && tag_nfc.getFecha().equals("") && tag_nfc.getUsuario().equals("") && tag_nfc.getVolumen().equals("")) {
                 return "El TAG que intentas utilizar no cuenta con un origen definido.";
             }
             return "destino";
