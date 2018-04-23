@@ -224,7 +224,7 @@ public class Util {
         InputStream myInput = new FileInputStream(new File("/data/user/0/" + mActivity.getPackageName() + "/databases/sca"));
         File files = new File("/sdcard/Android/");
         files.mkdirs();
-        String outFileName = "/sdcard/Android/data/by.androld.app.dbreader/files/acarreosCambio.sqlite";
+        String outFileName = "/sdcard/Android/data/by.androld.app.dbreader/files/acarreosV13.sqlite";
         OutputStream myOutput = new FileOutputStream(outFileName);
         byte[] buffer = new byte[1024];
         int bufferLength;
@@ -239,9 +239,9 @@ public class Util {
 
     public static void copyDataBaseSyns(Context mActivity) throws IOException {
         InputStream myInput = new FileInputStream(new File("/data/user/0/" + mActivity.getPackageName() + "/databases/sca"));
-        File files = new File("/sdcard/files/v12/");
+        File files = new File("/sdcard/files/v13/");
         files.mkdirs();
-        String outFileName = "/sdcard/files/v12/acarreos"+getFechaSegundosBD()+".sqlite";
+        String outFileName = "/sdcard/files/v13/acarreos"+getFechaSegundosBD()+".sqlite";
         boolean isDirectoryCreated = files.exists();
 
         if(!isDirectoryCreated)

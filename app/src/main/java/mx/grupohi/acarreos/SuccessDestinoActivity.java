@@ -340,7 +340,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
                     + viaje.primerToque + "|"
                     + viaje.cubicacion + "|"
                     + IMEI +"|"
-                    + "0|"
+                    + viaje.tipoViaje+"|"
                     + viaje.folio_mina + "|"
                     + viaje.folio_seguimiento +"|0|"
                     + usuario.tipo_permiso;
