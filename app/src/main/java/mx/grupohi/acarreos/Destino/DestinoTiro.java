@@ -34,16 +34,27 @@ public class DestinoTiro {
             return "El TAG no pertenece al proyecto del usuario.";
         }
         if (tipoPerfil()) { // Perfil Tiro o Salida
-            if ((tag_nfc.getIdmaterial().equals("") || tag_nfc.getIdmaterial().equals("null")) && (tag_nfc.getIdorigen().equals("null") || tag_nfc.getIdorigen().equals("")) && tag_nfc.getFecha().equals("") && tag_nfc.getUsuario().equals("") && tag_nfc.getVolumen().equals("")) {
+            if (validar(tag_nfc.getIdmaterial()) && validar(tag_nfc.getIdorigen()) && tag_nfc.getFecha().equals("") && tag_nfc.getUsuario().equals("") && tag_nfc.getVolumen().equals("")) {
                 return "El TAG que intentas utilizar no cuenta con un origen definido.";
             }
-            return "destino";
+            if (!validar(tag_nfc.getIdmaterial()) && !validar(tag_nfc.getIdorigen())  && !tag_nfc.getFecha().equals("") && !tag_nfc.getUsuario().equals("") && !tag_nfc.getVolumen().equals("")) {
+                return "destino";
+            }
+            return "El TAG no cuenta con un origen definido.";
         } else {// Perfil de Tiro Libre a Bordo
             if ((!tag_nfc.getIdmaterial().equals("") && !tag_nfc.getIdorigen().equals(""))&& !tag_nfc.getFecha().equals("") && !tag_nfc.getUsuario().equals("") && !tag_nfc.getVolumen().equals("")) {
                 return "El TAG cuenta con un viaje activo, Favor de pasar a un filtro de salida para finalizar el viaje.";
             }
             return "libreAbordo";
         }
+    }
+
+    public Boolean validar(String datos){
+       if(datos.equals("") || datos.equals("null")){
+           return true;
+       }else{
+           return false;
+       }
     }
 
     public Boolean tipoPerfil(){
