@@ -326,7 +326,7 @@ public class MensajeEntradaActivity extends AppCompatActivity {
 
     public void alert(String message) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(MensajeEntradaActivity.this);
-
+        dialog.setCancelable(false);
         dialog.setMessage(message)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialoginterface, int i) {

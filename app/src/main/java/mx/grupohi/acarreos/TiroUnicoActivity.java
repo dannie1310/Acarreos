@@ -617,7 +617,7 @@ public class TiroUnicoActivity extends AppCompatActivity
 
     public void alert(String message) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(TiroUnicoActivity.this);
-
+        dialog.setCancelable(false);
         dialog.setMessage(message)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialoginterface, int i) {
