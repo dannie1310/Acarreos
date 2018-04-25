@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.widget.Toast;
 
 import com.bixolon.printer.BixolonPrinter;
+import com.crashlytics.android.Crashlytics;
 
 import org.json.JSONObject;
 
@@ -64,6 +65,7 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
                 bixolonPrinterApi.printBitmap(bitmap, BixolonPrinter.ALIGNMENT_CENTER, 220, 50, true);
                 bixolonPrinterApi.lineFeed(1, true);
             }catch (Exception e){
+                Crashlytics.logException(e);
                 Toast.makeText(context, "Error Impresión de logo", Toast.LENGTH_LONG).show();
             }
 
@@ -140,15 +142,15 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
                     bixolonPrinterApi.printText("V I A J E   I M P R O C E D E N T E\n", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_C, 0, false);
                 }
                 if (dato.getInt("13") == 3) {
-                    printTextTwoColumns("Checador: " + dato.getString("14"), dato.getString("15") + "\n");
+                    printTextTwoColumns("Checador: " + dato.getString("14"), "   "+dato.getString("15") + "\n");
                     printTextTwoColumns("Versión: ", String.valueOf(dato.getString("16")) + "\n");
                     bixolonPrinterApi.printText("TIRO LIBRE ABORDO\n", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_C, 0, false);
                 } else {
                     printTextTwoColumns("Checador Inicio: ", dato.getString("17") + "\n");
-                    printTextTwoColumns("Checador Cierre: " + dato.getString("14"), dato.getString("15") + "\n");
+                    printTextTwoColumns("Checador Cierre: " + dato.getString("14"), "   "+dato.getString("15") + "\n");
                     printTextTwoColumns("Versión: ", String.valueOf(dato.getString("16")) + "\n");
                 }
-                if(dato.getString("30")!= "NULL"){
+                if(!dato.getString("30").equals("")){
                     printTextTwoColumns("Tipo Viaje: ", dato.getString("30") + "\n");
                 }
 
@@ -177,7 +179,7 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
                 num = InicioViaje.numImpresion(dato.getInt("20"), context);
 
                 if(uss.tipo_permiso == 1) {
-                    printTextTwoColumns("Checador: " + dato.getString("14"), dato.getString("15") + "\n");
+                    printTextTwoColumns("Checador: " + dato.getString("14"), "   "+dato.getString("15") + "\n");
                     printTextTwoColumns("Versión: ", String.valueOf(dato.getString("16")) + "\n");
                     if(dato.getString("30")!= "NULL"){
                         printTextTwoColumns("Tipo Viaje: ", dato.getString("30") + "\n");
@@ -195,7 +197,7 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
                     }
 
                 }else {
-                    printTextTwoColumns("Checador: " + dato.getString("14"), dato.getString("15") + "\n");
+                    printTextTwoColumns("Checador: " + dato.getString("14"), "   "+dato.getString("15") + "\n");
                     printTextTwoColumns("Versión: ", String.valueOf(dato.getString("16")) + "\n");
                     if(dato.getString("30")!= "NULL"){
                         printTextTwoColumns("Tipo Viaje: ", dato.getString("30") + "\n");

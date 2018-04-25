@@ -9,7 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.MifareClassic;
@@ -19,9 +18,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -31,7 +27,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
 import com.crashlytics.android.Crashlytics;
+
 import java.io.IOException;
 
 import mx.grupohi.acarreos.Mina.SalidaMina;
@@ -134,7 +132,7 @@ public class MensajeEntradaActivity extends AppCompatActivity {
         alerta.setTitle("¿Desea Agregar un Nuevo Volumen?");
 
         alerta.setView(vista);
-
+        alerta.setCancelable(false);
         alerta.setPositiveButton("Agregar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
