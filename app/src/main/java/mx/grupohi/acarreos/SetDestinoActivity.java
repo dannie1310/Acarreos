@@ -17,14 +17,10 @@ import android.nfc.tech.MifareUltralight;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.view.menu.ActionMenuItemView;
 import android.telephony.TelephonyManager;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -32,9 +28,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -45,8 +39,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
-import org.json.JSONException;
-import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,8 +47,6 @@ import mx.grupohi.acarreos.TiposTag.TagNFC;
 
 public class SetDestinoActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
-
     Usuario usuario;
     Tiro tiro;
     Ruta ruta;
@@ -66,9 +56,6 @@ public class SetDestinoActivity extends AppCompatActivity
     //GPS
     private GPSTracker gps;
     private String IMEI;
-    private Double latitude;
-    private Double longitude;
-
     //NFC
     private NFCTag nfcTag;
     private NFCUltralight nfcUltra;
@@ -88,7 +75,6 @@ public class SetDestinoActivity extends AppCompatActivity
     private TextView mensajeTextView;
     private EditText observacionesTextView;
     private EditText deductiva;
-    private Snackbar snackbar;
     private ProgressDialog progressDialogSync;
     private TextInputLayout mina,
             seg;
@@ -97,19 +83,12 @@ public class SetDestinoActivity extends AppCompatActivity
 
     private Integer idTiro;
     private Integer idRuta;
-    private Integer idMotivo;
-    Integer idCamion;
-    Integer idProyecto;
     String mensaje = "";
     ContentValues datosVista;
+    Integer id;
 
-
-    private Integer tipo_suministro;
     private HashMap<String, String> spinnerTirosMap;
     private HashMap<String, String> spinnerRutasMap;
-    int error_eliminar = 0;// error de borrado de Tag (si es 0 no se ha realizado ninguna lectura, si es 1 no elimino correctamente)
-
-    String camionId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,6 +107,7 @@ public class SetDestinoActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         tagNFC = (TagNFC) getIntent().getSerializableExtra("datos");
+        id = getIntent().getIntExtra("IdViaje", 0);
         c = new Camion(getApplicationContext());
         c = c.find(tagNFC.getIdcamion());
         usuario = new Usuario(this);
@@ -413,12 +393,6 @@ public class SetDestinoActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -611,12 +585,21 @@ public class SetDestinoActivity extends AppCompatActivity
                     }
                 }
                 if (Util.getFechaImprocedente(fecha, fechaLlegada + " " + horaLlegada)) {
-                    datosVista.put("Estatus", "2");
+                    datosVista.put("Estatus", "4");
                 } else {
-                    datosVista.put("Estatus", "1");
+                    datosVista.put("Estatus", "3");
                 }
                 Integer volumen = volumenMenor(Integer.valueOf(datosVista.getAsString("deductiva_origen")), Integer.valueOf(datosVista.getAsString("deductiva_entrada")), Integer.valueOf(deductiva.getText().toString()));
                 datosVista.put("cubicacion", String.valueOf(volumen));
+                DestinoTiro destinoTiro = new DestinoTiro(context, tagNFC);
+                idViaje = destinoTiro.viajeIncompleto(tagNFC.getIdcamion());
+                if(idViaje == null) {
+                    while (!destinoTiro.guardarDatosDB(datosVista)) {
+                        mensaje = "Error al guardar en Base de Datos";
+                    }
+                    idViaje = destinoTiro.idViaje;
+                    destinoTiro.coordenadas(datosVista.getAsString("IMEI"), datosVista.getAsString("Code"), latitud, longitud);
+                }
 
                 // eliminar datos del TAG...
                 if (tagNFC.getTipo() == 1) {
@@ -642,12 +625,6 @@ public class SetDestinoActivity extends AppCompatActivity
                         return false;
                     }
                 }
-                DestinoTiro destinoTiro = new DestinoTiro(context, tagNFC);
-                while (!destinoTiro.guardarDatosDB(datosVista)) {
-                    mensaje = "Error al guardar en Base de Datos";
-                }
-                idViaje = destinoTiro.idViaje;
-                destinoTiro.coordenadas(datosVista.getAsString("IMEI"), datosVista.getAsString("Code"), latitud, longitud);
                 return true;
             }
             return false;
@@ -658,10 +635,14 @@ public class SetDestinoActivity extends AppCompatActivity
             super.onPostExecute(registro);
             WriteModeOff();
             if (registro) {
-                destinoSuccess.putExtra("idViaje", idViaje);
-                destinoSuccess.putExtra("LIST", 0);
-                destinoSuccess.putExtra("code", datosVista.getAsString("Code"));
-                startActivity(destinoSuccess);
+                boolean resp = DestinoTiro.cambioEstatus(context, idViaje);
+                if(resp == true) {
+                    destinoSuccess.putExtra("idViaje", idViaje);
+                    destinoSuccess.putExtra("LIST", 0);
+                    startActivity(destinoSuccess);
+                }else{
+                    alert("Error al cambiar el estatus");
+                }
             } else {
                 alert(mensaje);
             }

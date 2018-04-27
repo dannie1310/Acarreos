@@ -9,7 +9,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 13
-        versionName "13.0.0"
+        versionName "13.0.0.DEV"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -32,7 +32,9 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:3.6.1'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.google.firebase:firebase-core:11.8.0'
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.1'
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
+        transitive = true
+    }
     testImplementation'junit:junit:4.12'
 }
 apply plugin: 'com.google.gms.google-services'

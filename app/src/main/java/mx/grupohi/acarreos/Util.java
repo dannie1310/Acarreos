@@ -183,7 +183,7 @@ public class Util {
         return (String) android.text.format.DateFormat.format("yyMMddHHmmsss", new java.util.Date());
     }
 
-    static String getFecha() {
+    public static String getFecha() {
         return (String) android.text.format.DateFormat.format("yyyy/MM/dd", new java.util.Date());
     }
 
@@ -386,4 +386,24 @@ public class Util {
         }
     }
 
+    public static String getHora() {
+        return (String) android.text.format.DateFormat.format("HH:mm:ss", new java.util.Date());
+    }
+
+    public static String getHoraInicial(String fecha) {
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+        try {
+            Date date = format.parse(fecha);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.add(Calendar.MINUTE, -240);
+            Date fechaS = calendar.getTime();
+            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+            String c = timeFormat.format(fechaS);
+            return c;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

@@ -34,13 +34,19 @@ public class DestinoTiro {
             return "El TAG no pertenece al proyecto del usuario.";
         }
         if (tipoPerfil()) { // Perfil Tiro o Salida
-            if (validar(tag_nfc.getIdmaterial()) && validar(tag_nfc.getIdorigen()) && tag_nfc.getFecha().equals("") && tag_nfc.getUsuario().equals("") && tag_nfc.getVolumen().equals("")) {
-                return "El TAG que intentas utilizar no cuenta con un origen definido.";
+            idViaje =  viajeIncompleto(tag_nfc.getIdcamion());
+            if(idViaje!=null) {
+                return "viaje inconcluso";
+            }else {
+                if (!validar(tag_nfc.getIdmaterial()) && !validar(tag_nfc.getIdorigen()) && !tag_nfc.getFecha().equals("") && !tag_nfc.getUsuario().equals("") && !tag_nfc.getVolumen().equals("")) {
+                    return "destino";
+                }
+                //buscar en BD para validar si es un viaje no  finalizado....
+                if (validar(tag_nfc.getIdmaterial()) && validar(tag_nfc.getIdorigen()) && tag_nfc.getFecha().equals("") && tag_nfc.getUsuario().equals("") && tag_nfc.getVolumen().equals("")) {
+                    return "El TAG que intentas utilizar no cuenta con un origen definido.";
+                }
+                return "El TAG no cuenta con un origen definido.";
             }
-            if (!validar(tag_nfc.getIdmaterial()) && !validar(tag_nfc.getIdorigen())  && !tag_nfc.getFecha().equals("") && !tag_nfc.getUsuario().equals("") && !tag_nfc.getVolumen().equals("")) {
-                return "destino";
-            }
-            return "El TAG no cuenta con un origen definido.";
         } else {// Perfil de Tiro Libre a Bordo
             if ((!tag_nfc.getIdmaterial().equals("") && !tag_nfc.getIdorigen().equals(""))&& !tag_nfc.getFecha().equals("") && !tag_nfc.getUsuario().equals("") && !tag_nfc.getVolumen().equals("")) {
                 return "El TAG cuenta con un viaje activo, Favor de pasar a un filtro de salida para finalizar el viaje.";
@@ -86,6 +92,25 @@ public class DestinoTiro {
             Crashlytics.logException(e);
             return false;
         }
+    }
+
+    public static Boolean cambioEstatus(Context context, Integer idViaje){
+        Viaje viaje = new Viaje(context);
+        viaje = viaje.find(idViaje);
+        if(viaje.Estatus == 3){
+            return viaje.updateEstado(idViaje, 1);
+        }
+        if(viaje.Estatus == 4) {
+            return viaje.updateEstado(idViaje, 2);
+        }
+        return false;
+    }
+
+    public Integer viajeIncompleto(Integer idcamion){
+        String hora = Util.getHora();
+        Integer idviaje = null;
+        idviaje = Viaje.findViajeInconcluso(idcamion, Util.getFecha(), Util.getHoraInicial(hora), hora);
+        return idviaje;
     }
 
     public void coordenadas(String IMEI, String code, Double latitud, Double longitud){

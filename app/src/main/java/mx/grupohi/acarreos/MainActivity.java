@@ -237,6 +237,7 @@ public class MainActivity extends AppCompatActivity
         Camion camion;
         Origen origen;
         Material material;
+        Integer id;
 
         public TirosTarea(Context context, Intent intent) {
             this.context = context;
@@ -335,6 +336,33 @@ public class MainActivity extends AppCompatActivity
             if(mensaje == "libreAbordo") {
                 return true;
             }
+            if(mensaje == "viaje inconcluso"){
+                id = destinoTiro.idViaje;
+                if (tag_nfc.getTipo() == 1) {
+                    try {
+                        nfcTag.cleanSector(null, 1);
+                        nfcTag.cleanSector(null, 2);
+                        nfcTag.cleanSector(null, 3);
+                        nfcTag.cleanSector(null, 4);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Crashlytics.logException(e);
+                        mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
+                        return false;
+                    }
+                }
+                if (tag_nfc.getTipo() == 2) {
+                    try {
+                        nfcUltra.cleanTag(null);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Crashlytics.logException(e);
+                        mensaje = "¡Error! No se puede establecer la comunicación con el TAG, por favor mantenga el TAG cerca del dispositivo";
+                        return false;
+                    }
+                }
+                return true;
+            }
 
             return false;
         }
@@ -359,6 +387,17 @@ public class MainActivity extends AppCompatActivity
                     Intent r = new Intent(getApplicationContext(), TiroUnicoActivity.class);
                     r.putExtra("datos", tag_nfc);// enviar el POJO TagNFC
                     startActivity(r);
+                }
+                if(mensaje == "viaje inconcluso"){
+                    boolean resp = DestinoTiro.cambioEstatus(context, id);
+                    if(resp) {
+                        Intent destinoSuccess = new Intent(getApplicationContext(), SuccessDestinoActivity.class);
+                        destinoSuccess.putExtra("idViaje", id);
+                        destinoSuccess.putExtra("LIST", 0);
+                        startActivity(destinoSuccess);
+                    }else{
+                        alert("Error al cambiar el estatus del viaje");
+                    }
                 }
             } else {
                 alert(mensaje);

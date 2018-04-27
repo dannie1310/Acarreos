@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.widget.SimpleCursorAdapter;
-
+import com.crashlytics.android.Crashlytics;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -56,6 +56,7 @@ public class Viaje {
     String folio_mina;
     String folio_seguimiento;
     Integer tipoViaje;
+    public Integer Estatus;
 
     private static SQLiteDatabase db;
     private static DBScaSqlite db_sca;
@@ -133,6 +134,7 @@ public class Viaje {
                 this.idmotivo_origen = c.getInt(c.getColumnIndex("idmotivo_origen"));
                 this.idmotivo_entrada = c.getInt(c.getColumnIndex("idmotivo_entrada"));
                 this.tipoViaje = c.getInt(c.getColumnIndex("tipoViaje"));
+                this.Estatus = c.getInt(c.getColumnIndex("Estatus"));
 
                 return this;
             } else {
@@ -397,4 +399,39 @@ public class Viaje {
         db = db_sca.getWritableDatabase();
         return db.delete("viajesnetos", "ID = "+inicio, null) > 0;
     }
+
+    public boolean updateEstado(Integer idViaje,Integer estado) {
+        boolean resp=false;
+        ContentValues data = new ContentValues();
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+        try{
+            data.put("Estatus", estado);
+            db.update("viajesnetos", data, "ID = "+idViaje, null);
+            resp = true;
+        }catch (Exception e){
+            e.printStackTrace();
+            Crashlytics.logException(e);
+            resp = false;
+        }
+        db.close();
+        return resp;
+    }
+
+    public static Integer findViajeInconcluso(Integer idCamion, String fecha, String horaInicio, String horaFinal){
+        db = db_sca.getWritableDatabase();
+        Cursor c= db.rawQuery("SELECT ID FROM viajesnetos WHERE IdCamion = "+idCamion +" and Estatus in (3,4) and FechaCarga = '"+fecha+"' and HoraCarga between '"+horaInicio+"' and '"+horaFinal+"'", null);
+        try {
+            if(c!=null && c.moveToFirst()){
+                return c.getInt(0);
+            }
+            else {
+                return null;
+            }
+        } finally {
+            c.close();
+            db.close();
+        }
+    }
+
 }
