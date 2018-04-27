@@ -70,6 +70,7 @@ public class SetDestinoActivity extends AppCompatActivity
     private Spinner rutasSpinner;
     private Button escribirDestinoButton;
     private LinearLayout mainLayout;
+    private LinearLayout lecturaTag;
     private ImageView nfcImage;
     private FloatingActionButton fabCancel;
     private TextView mensajeTextView;
@@ -143,10 +144,8 @@ public class SetDestinoActivity extends AppCompatActivity
         seg = (TextInputLayout) findViewById(R.id.seg);
         textmina = (TextView) findViewById(R.id.vale_mina);
         textseg = (TextView) findViewById(R.id.seguimiento);
-        mensajeTextView.setVisibility(View.INVISIBLE);
-        nfcImage.setVisibility(View.INVISIBLE);
-        fabCancel.setVisibility(View.INVISIBLE);
-
+        lecturaTag = (LinearLayout) findViewById(R.id.leerTag);
+        lecturaTag.setVisibility(View.GONE);
         final ArrayList<String> descripcionesTiros = tiro.getArrayListDescripcionesTiro();
         final ArrayList <String> idsTiros = tiro.getArrayListIdTiro();
 
@@ -371,24 +370,18 @@ public class SetDestinoActivity extends AppCompatActivity
         writeMode = true;
         nfcAdapter.enableForegroundDispatch(this, pendingIntent, writeTagFilters, null);
 
-        escribirDestinoButton.setVisibility(View.INVISIBLE);
-        mainLayout.setVisibility(View.INVISIBLE);
+        mainLayout.setVisibility(View.GONE);
 
-        fabCancel.setVisibility(View.VISIBLE);
-        nfcImage.setVisibility(View.VISIBLE);
-        mensajeTextView.setVisibility(View.VISIBLE);
+        lecturaTag.setVisibility(View.VISIBLE);
     }
 
     private void WriteModeOff() {
         writeMode = false;
         nfcAdapter.disableForegroundDispatch(this);
 
-        escribirDestinoButton.setVisibility(View.VISIBLE);
         mainLayout.setVisibility(View.VISIBLE);
 
-        fabCancel.setVisibility(View.GONE);
-        nfcImage.setVisibility(View.GONE);
-        mensajeTextView.setVisibility(View.GONE);
+        lecturaTag.setVisibility(View.GONE);
     }
 
     @Override
