@@ -420,7 +420,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
                         + inicios.getCode(inicio).replace(inicios.idcamion.toString(), "") + "|"
                         + inicios.uidTAG + "|"
                         + inicios.idusuario + "|"
-                        + inicios.camion.capacidad + "|"
+                        + inicios.deductiva + "|"
                         + IMEI + "|"
                         + inicios.tipo_suministro + '|'
                         + inicios.folio_mina + '|'
@@ -490,18 +490,30 @@ public class SuccessDestinoActivity extends AppCompatActivity
         idViaje = getIntent().getIntExtra("idViaje", 0);
         if(idViaje != 0) {
             viaje = viaje.find(idViaje);
-
-            textViewCamion.setText(viaje.camion.economico);
-            textViewCubicacion.setText(viaje.camion.capacidad + " m3");
-            textViewMaterial.setText(viaje.material.descripcion);
-
+            if(viaje.camion == null){
+                textViewCamion.setText("NO SE ENCONTRO");
+                textViewCubicacion.setText("NO SE ENCONTRO");
+                alert("Favor de descargar catálogos datos no encontrados.");
+            }else {
+                textViewCamion.setText(viaje.camion.economico);
+                textViewCubicacion.setText(viaje.camion.capacidad + " m3");
+            }
+            if(viaje.material != null) {
+                textViewMaterial.setText(viaje.material.descripcion);
+            }else{
+                textViewMaterial.setText("NO SE ENCONTRO");
+            }
             textViewFechaHoraSalida.setText(viaje.fechaSalida + " " + viaje.horaSalida);
-            textViewDestino.setText(viaje.tiro.descripcion);
+            if(viaje.tiro != null) {
+                textViewDestino.setText(viaje.tiro.descripcion);
+            }else{
+                textViewDestino.setText("NO SE ENCONTRO");
+            }
             textViewFechaHoraLlegada.setText(viaje.fechaLlegada + " " + viaje.horaLlegada);
-            if(viaje.idOrigen != 0) {
+            if(viaje.origen != null) {
                 textViewOrigen.setText(viaje.origen.descripcion);
             }else{
-                textViewOrigen.setText("NO SE ENCONTRO ORIGEN PARA ESTE TIRO.");
+                textViewOrigen.setText("NO SE ENCONTRO");
             }
             if (viaje.idRuta != 0) {
                 textViewRuta.setText(viaje.ruta.toString());
@@ -530,10 +542,24 @@ public class SuccessDestinoActivity extends AppCompatActivity
             in = new InicioViaje(getApplicationContext());
             in = in.find(inicio);
             textViewDeductiva.setText(in.deductiva);
-            textViewCamion.setText(in.camion.economico);
-            textViewCubicacion.setText(in.camion.capacidad + " m3");
-            textViewMaterial.setText(in.material.descripcion);
-            textViewOrigen.setText(in.origen.descripcion);
+            if(in.camion == null){
+                textViewCamion.setText("NO SE ENCONTRO");
+                textViewCubicacion.setText("NO SE ENCONTRO");
+                alert("Favor de descargar catálogos datos no encontrados.");
+            }else {
+                textViewCamion.setText(in.camion.economico);
+                textViewCubicacion.setText(in.camion.capacidad + " m3");
+            }
+            if(in.material != null) {
+                textViewMaterial.setText(in.material.descripcion);
+            }else{
+                textViewMaterial.setText("NO SE ENCONTRO");
+            }
+            if(in.origen != null) {
+                textViewOrigen.setText(in.origen.descripcion);
+            }else{
+                textViewOrigen.setText("NO SE ENCONTRO");
+            }
             textViewFechaHoraSalida.setText(in.fecha_origen);
             if(in.folio_seg != null || in.folio_mina != null) {
                 folioMina.setVisibility(View.VISIBLE);
@@ -551,7 +577,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
             textFechaDestino.setVisibility(View.GONE);
             textRuta.setVisibility(View.GONE);
             textObservacion.setVisibility(View.GONE);
-              view2.setVisibility(View.GONE);
+            view2.setVisibility(View.GONE);
             btnImprimir.setText("IMPRIMIR");
             if(in.deductiva_entrada == 1 && in.tipo_suministro==1){
                 textTipoViaje.setVisibility(View.VISIBLE);
@@ -565,7 +591,16 @@ public class SuccessDestinoActivity extends AppCompatActivity
 
 
     }
+    public void alert(String message) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(SuccessDestinoActivity.this);
+        dialog.setCancelable(false);
+        dialog.setMessage(message)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialoginterface, int i) {
 
+                    }
+                }).show();
+    }
     @Override
     public void onBackPressed() {
         Integer list = getIntent().getIntExtra("list", 0);

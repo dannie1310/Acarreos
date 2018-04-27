@@ -33,24 +33,30 @@ public class SalidaMina {
         if (!TagModel.findTAG (context, tag_nfc.getUID())) {
             return "El TAG que intentas configurar no está autorizado para éste proyecto.";
         }
+        if (tag_nfc.getIdproyecto() != usuario.getProyecto()) {
+            return "El TAG no pertenece al proyecto del usuario.";
+        }
 
+        TagModel datosTagCamion = new TagModel(context);
+        datosTagCamion = datosTagCamion.find(tag_nfc.getUID(), tag_nfc.getIdcamion(), tag_nfc.getIdproyecto());
+        if(datosTagCamion == null){
+            return "No está activo el camión con id: " + tag_nfc.getIdcamion() + " con tag: "+ tag_nfc.getUID()+ ". Favor de reportarlo al encargado.";
+        }
+        if(datosTagCamion.estatus != 1) {
+            return "El camión " + datosTagCamion.economico + " se encuentra inactivo. Por favor contacta al encargado.";
+        }
+        if(camion == null){
+            return "No se encuentra el camión camión con id: " + tag_nfc.getIdcamion() + ", Favor de descargar catálogos.";
+        }
+        if(camion.capacidad != 0 && camion.capacidad!= null && volumen > camion.capacidad) {
+            return "El volumen es mayor a la capacidad del camión.";
+        }
         if(!tag_nfc.getIdmaterial().equals("") && !tag_nfc.getIdorigen().equals("") && tag_nfc.getFecha() != "" && !tag_nfc.getUsuario().equals("") && !tag_nfc.getVolumen().equals("") && !tag_nfc.getTipo_perfil().equals("")){
             if(usuario.tipo_permiso == 4 && tag_nfc.getTipo_viaje().equals("1")){ // Perfil de Checador Entrada y Viaje de Origen.
                 return "volumen_entrada";
             }else {
                 return "El TAG cuenta con un viaje activo, Favor de pasar a un filtro de salida para finalizar el viaje.";
             }
-        }
-        TagModel datosTagCamion = new TagModel(context);
-        datosTagCamion = datosTagCamion.find(tag_nfc.getUID(), tag_nfc.getIdcamion(), tag_nfc.getIdproyecto());
-        if(datosTagCamion.estatus != 1) {
-            return "El camión " + datosTagCamion.economico + " se encuentra inactivo. Por favor contacta al encargado.";
-        }
-        if (tag_nfc.getIdproyecto() != usuario.getProyecto()) {
-            return "El TAG no pertenece al proyecto del usuario.";
-        }
-        if(camion.capacidad != 0 && camion.capacidad!= null && volumen > camion.capacidad) {
-            return "El volumen es mayor a la capacidad del camión.";
         }
         return "continuar";
     }

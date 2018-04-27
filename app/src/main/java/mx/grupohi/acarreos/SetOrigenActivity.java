@@ -59,7 +59,6 @@ public class SetOrigenActivity extends AppCompatActivity
     //Variables
     private Integer idMaterial;
     private Integer idOrigen;
-    String[] spinnerMotivosA = null;
 
     //Referencias UI
     Spinner materialesSpinner;
@@ -78,22 +77,13 @@ public class SetOrigenActivity extends AppCompatActivity
     private TextInputLayout mina;
     private TextInputLayout seg;
     private TextInputLayout ded;
-    private Snackbar snackbar;
-    private TextView textmotivo;
-    private Integer idMotivo = 0;
-    private Integer id_motivo = 0;
     private String mensaje = "";
-    private String txtDeductiva = "";
-    private HashMap<String, String> spinnerMotivosMap;
-    private Spinner motivos;
     private ContentValues datosVista;
     private Integer IdInicio;
 
     //GPS
     private GPSTracker gps;
     private String IMEI;
-    private Double latitude;
-    private Double longitude;
 
     //NFC
     private NFCTag nfcTag;

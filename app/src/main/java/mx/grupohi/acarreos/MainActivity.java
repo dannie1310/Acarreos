@@ -495,9 +495,16 @@ public class MainActivity extends AppCompatActivity
     private void setOrigenInfo(Origen origen, Material material, String fechaHora) {
 
         origenLayout.setVisibility(View.VISIBLE);
-        tOrigen.setText(origen.descripcion);
-        tMaterial.setText(material.descripcion);
-
+        if(origen != null) {
+            tOrigen.setText(origen.descripcion);
+        }else{
+            tOrigen.setText("No encontrado");
+        }
+        if(material != null) {
+            tMaterial.setText(material.descripcion);
+        }else{
+            tMaterial.setText("No encontrado");
+        }
         tFecha.setText(Util.getFecha(fechaHora));
         tHora.setText(Util.getTime(fechaHora));
 

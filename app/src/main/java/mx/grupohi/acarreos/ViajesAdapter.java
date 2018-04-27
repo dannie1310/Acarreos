@@ -45,16 +45,25 @@ class ViajesAdapter extends ArrayAdapter<Viaje> {
         Viaje viaje = getItem(position);
 
         assert viaje != null;
-
-        camion.setText(viaje.camion.economico);
-        material.setText(viaje.material.descripcion);
-       // origen.setText(viaje.origen.descripcion);
-        destino.setText(viaje.tiro.descripcion);
-
-        if(viaje.idOrigen != 0) {
+        if(viaje.camion != null) {
+            camion.setText(viaje.camion.economico);
+        }else{
+            camion.setText("Num camión: "+viaje.idCamion);
+        }
+        if(viaje.material != null) {
+            material.setText(viaje.material.descripcion);
+        }else{
+            material.setText("NO ENCONTRADO");
+        }
+        if(viaje.tiro != null) {
+            destino.setText(viaje.tiro.descripcion);
+        }else{
+            destino.setText("NO ENCONTRADO");
+        }
+        if(viaje.origen != null) {
             origen.setText(viaje.origen.descripcion);
         }else{
-            origen.setText("NO SE ENCONTRO ORIGEN PARA ESTE TIRO.");
+            origen.setText("NO ENCONTRADO");
         }
 
 

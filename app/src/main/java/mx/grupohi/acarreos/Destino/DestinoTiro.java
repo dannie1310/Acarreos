@@ -3,6 +3,7 @@ package mx.grupohi.acarreos.Destino;
 import android.content.ContentValues;
 import android.content.Context;
 import com.crashlytics.android.Crashlytics;
+import mx.grupohi.acarreos.Camion;
 import mx.grupohi.acarreos.Coordenada;
 import mx.grupohi.acarreos.TagModel;
 import mx.grupohi.acarreos.TiposTag.TagNFC;
@@ -22,16 +23,26 @@ public class DestinoTiro {
     public String validarDatosTag() {
         Usuario usuario = new Usuario(context);
         usuario = usuario.getUsuario();
+        Camion camion = new Camion(context);
+        camion = camion.find(tag_nfc.getIdcamion());
+
         if (!TagModel.findTAG(context, tag_nfc.getUID())) {
             return "El TAG que intentas configurar no está autorizado para éste proyecto.";
         }
+        if (tag_nfc.getIdproyecto() != usuario.getProyecto()) {
+            return "El TAG no pertenece al proyecto del usuario.";
+        }
+
         TagModel datosTagCamion = new TagModel(context);
         datosTagCamion = datosTagCamion.find(tag_nfc.getUID(), tag_nfc.getIdcamion(), tag_nfc.getIdproyecto());
+        if(datosTagCamion == null){
+            return "No está activo el camión con id: " + tag_nfc.getIdcamion() + " con tag: "+ tag_nfc.getUID()+ ". Favor de reportarlo al encargado.";
+        }
         if (datosTagCamion.estatus != 1) {
             return "El camión " + datosTagCamion.economico + " se encuentra inactivo. Por favor contacta al encargado.";
         }
-        if (tag_nfc.getIdproyecto() != usuario.getProyecto()) {
-            return "El TAG no pertenece al proyecto del usuario.";
+        if(camion == null){
+            return "No se encuentra el camión camión con id: " + tag_nfc.getIdcamion() + ", Favor de contactar al encargado y descargar catálogos.";
         }
         if (tipoPerfil()) { // Perfil Tiro o Salida
             idViaje =  viajeIncompleto(tag_nfc.getIdcamion());

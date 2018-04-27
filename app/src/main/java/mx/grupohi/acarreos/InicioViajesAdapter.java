@@ -43,9 +43,21 @@ public class InicioViajesAdapter extends ArrayAdapter<InicioViaje> {
         InicioViaje viaje = getItem(position);
 
         assert viaje != null;
-        camion.setText(viaje.camion.economico);
-        material.setText(viaje.material.descripcion);
-        origen.setText(viaje.origen.descripcion);
+        if(viaje.camion != null) {
+            camion.setText(viaje.camion.economico);
+        }else{
+            camion.setText("Num camión: "+viaje.idcamion);
+        }
+        if(viaje.material != null) {
+            material.setText(viaje.material.descripcion);
+        }else{
+            material.setText("NO ENCONTRADO");
+        }
+        if(viaje.origen != null) {
+            origen.setText(viaje.origen.descripcion);
+        }else{
+            origen.setText("NO ENCONTRADO");
+        }
       //  destino.setText(viaje.tiro.descripcion);
 
         return convertView;
