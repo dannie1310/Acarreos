@@ -10,6 +10,8 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -142,15 +144,21 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
+                        Crashlytics.log("Se ha producido el siguiente error en el Sincr-imagenes: ");
+                        Crashlytics.logException(e);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Crashlytics.log("Se ha producido el siguiente error en el Sincr-imagenes ");
+                    Crashlytics.logException(e);
                 }
             }
 
         } catch (Exception e) {
             Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
+            Crashlytics.log("Se ha producido el siguiente error en el Sincr-datos ");
+            Crashlytics.logException(e);
             return false;
         }
         return true;
@@ -174,6 +182,8 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
             } catch (Exception e) {
                 Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
+                Crashlytics.log("Se ha producido el siguiente error en el Sincr"+e.toString());
+                Crashlytics.logException(e);
             }
         }
     }

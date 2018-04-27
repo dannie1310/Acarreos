@@ -600,7 +600,6 @@ public class SetDestinoActivity extends AppCompatActivity
                     idViaje = destinoTiro.idViaje;
                     destinoTiro.coordenadas(datosVista.getAsString("IMEI"), datosVista.getAsString("Code"), latitud, longitud);
                 }
-
                 // eliminar datos del TAG...
                 if (tagNFC.getTipo() == 1) {
                     try {

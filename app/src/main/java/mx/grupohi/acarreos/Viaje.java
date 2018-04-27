@@ -248,7 +248,7 @@ public class Viaje {
     public static List<Viaje> getViajes(Context context){
         DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
         SQLiteDatabase db = db_sca.getWritableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM viajesnetos ORDER BY ID DESC",null);
+        Cursor c = db.rawQuery("SELECT * FROM viajesnetos WHERE Estatus = 1 ORDER BY ID DESC",null);
         ArrayList  viajes = new ArrayList<Viaje>();
         try {
             if (c != null){
@@ -428,7 +428,11 @@ public class Viaje {
             else {
                 return null;
             }
-        } finally {
+        }catch (Exception e){
+            e.printStackTrace();
+            Crashlytics.logException(e);
+            return null;
+        }  finally{
             c.close();
             db.close();
         }

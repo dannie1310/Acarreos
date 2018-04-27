@@ -274,7 +274,6 @@ public class LoginActivity extends AppCompatActivity {
             data.put("IMEI", IMEI);
 
             try {
-
                 URL url = new URL("http://sca.grupohi.mx/android20160923.php");
                 final JSONObject JSON = HttpConnection.POST(url, data);
                 db_sca.deleteCatalogos();
@@ -287,6 +286,8 @@ public class LoginActivity extends AppCompatActivity {
                                 loginFormLayout.setError((String) JSON.get("error"));
                             } catch (JSONException e) {
                                 e.printStackTrace();
+                                Crashlytics.log("Se ha producido el siguiente error en el Login-error: " + e.getMessage());
+                                Crashlytics.logException(e);
                             }
                         }
                     });
@@ -367,6 +368,8 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Crashlytics.log("Se ha producido el siguiente error en el Login-camion: " + e.getMessage());
+                            Crashlytics.logException(e);
                         }
 
                         //Tiros
@@ -394,6 +397,8 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Crashlytics.log("Se ha producido el siguiente error en el Login-tiro: " + e.getMessage());
+                            Crashlytics.logException(e);
                         }
 
                         //Origenes
@@ -423,6 +428,8 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Crashlytics.log("Se ha producido el siguiente error en el Login-origen: " + e.getMessage());
+                            Crashlytics.logException(e);
                         }
 
                         //Tags
@@ -453,6 +460,8 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Crashlytics.log("Se ha producido el siguiente error en el Login-tags: " + e.getMessage());
+                            Crashlytics.logException(e);
                         }
 
                         //Rutas
@@ -483,6 +492,8 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Crashlytics.log("Se ha producido el siguiente error en el Login-rutas: " + e.getMessage());
+                            Crashlytics.logException(e);
                         }
 
                         //Materiales
@@ -510,6 +521,8 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Crashlytics.log("Se ha producido el siguiente error en el Login-material: " + e.getMessage());
+                            Crashlytics.logException(e);
                         }
 
                         //Tipos Imagenes
@@ -537,6 +550,8 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Crashlytics.log("Se ha producido el siguiente error en el Login-tiposimagen: " + e.getMessage());
+                            Crashlytics.logException(e);
                         }
 
                         //Motivo Deduccion
@@ -564,6 +579,8 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Crashlytics.log("Se ha producido el siguiente error en el Login-motivos: " + e.getMessage());
+                            Crashlytics.logException(e);
                         }
 
                         //Configuraciones
@@ -582,6 +599,8 @@ public class LoginActivity extends AppCompatActivity {
 
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Crashlytics.log("Se ha producido el siguiente error en el Login-configuraciones: " + e.getMessage());
+                            Crashlytics.logException(e);
                         }
 
                         //Checadores
@@ -610,6 +629,8 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Crashlytics.log("Se ha producido el siguiente error en el Login-checadores: " + e.getMessage());
+                            Crashlytics.logException(e);
                         }
 
                         //Celulares
@@ -638,6 +659,8 @@ public class LoginActivity extends AppCompatActivity {
                          }
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Crashlytics.log("Se ha producido el siguiente error en el Login-celulares: " + e.getMessage());
+                            Crashlytics.logException(e);
                         }
 
                         data.clear();
@@ -657,6 +680,9 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
             } catch (Exception e) {
+                e.printStackTrace();
+                Crashlytics.log("Se ha producido el siguiente error en el Login: " + e.getMessage());
+                Crashlytics.logException(e);
                 return false;
             }
         }

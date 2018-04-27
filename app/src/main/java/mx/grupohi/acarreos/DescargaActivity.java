@@ -34,6 +34,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -286,6 +288,8 @@ public class DescargaActivity extends AppCompatActivity
                             Util.copyDataBaseSyns(context);
                         } catch (IOException e) {
                             e.printStackTrace();
+                            Crashlytics.log("Se ha producido el siguiente error en el Descarga");
+                            Crashlytics.logException(e);
                         }
                         db_sca.descargaCatalogos();
                         try {
@@ -297,6 +301,8 @@ public class DescargaActivity extends AppCompatActivity
                             Usuario.updateLogo(logo, perfil, origen, tiro, getApplicationContext());
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Crashlytics.log("Se ha producido el siguiente error en el Descarga-Usuario: ");
+                            Crashlytics.logException(e);
                         }
                         //Camiones
                         Camion camion = new Camion(context);
@@ -336,6 +342,8 @@ public class DescargaActivity extends AppCompatActivity
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Crashlytics.log("Se ha producido el siguiente error en el Descarga-camion: ");
+                            Crashlytics.logException(e);
                         }
 
                         //Tiros
@@ -364,6 +372,8 @@ public class DescargaActivity extends AppCompatActivity
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Crashlytics.log("Se ha producido el siguiente error en el Descarga-tiro: ");
+                            Crashlytics.logException(e);
                         }
 
                         //Origenes
@@ -394,6 +404,8 @@ public class DescargaActivity extends AppCompatActivity
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Crashlytics.log("Se ha producido el siguiente error en el Descarga-origen: " );
+                            Crashlytics.logException(e);
                         }
 
                         //Rutas
@@ -424,6 +436,8 @@ public class DescargaActivity extends AppCompatActivity
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Crashlytics.log("Se ha producido el siguiente error en el Descarga-ruta: ");
+                            Crashlytics.logException(e);
                         }
 
                         //Materiales
@@ -452,6 +466,8 @@ public class DescargaActivity extends AppCompatActivity
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Crashlytics.log("Se ha producido el siguiente error en el Descarga-material: ");
+                            Crashlytics.logException(e);
                         }
 
                         //Checadores
@@ -480,6 +496,8 @@ public class DescargaActivity extends AppCompatActivity
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Crashlytics.log("Se ha producido el siguiente error en el Descarga: ");
+                            Crashlytics.logException(e);
                         }
 
 
@@ -508,6 +526,8 @@ public class DescargaActivity extends AppCompatActivity
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Crashlytics.log("Se ha producido el siguiente error en el Descarga-motivo: ");
+                            Crashlytics.logException(e);
                         }
 
                         //Configuraciones
@@ -526,6 +546,8 @@ public class DescargaActivity extends AppCompatActivity
                             // }
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Crashlytics.log("Se ha producido el siguiente error en el Descarga-config: ");
+                            Crashlytics.logException(e);
                         }
 
                         //Tags
@@ -557,6 +579,8 @@ public class DescargaActivity extends AppCompatActivity
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Crashlytics.log("Se ha producido el siguiente error en el Descarga-tag: ");
+                            Crashlytics.logException(e);
                         }
                         //Celulares
 
@@ -584,6 +608,8 @@ public class DescargaActivity extends AppCompatActivity
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Crashlytics.log("Se ha producido el siguiente error en el Descarga-celulares: ");
+                            Crashlytics.logException(e);
                         }
 
                         return true;
@@ -591,6 +617,8 @@ public class DescargaActivity extends AppCompatActivity
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                Crashlytics.log("Se ha producido el siguiente error en el Descarga");
+                Crashlytics.logException(e);
                 return false;
             }
         }
