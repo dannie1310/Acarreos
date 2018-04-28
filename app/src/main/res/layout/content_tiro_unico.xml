@@ -153,7 +153,9 @@
                 android:id="@+id/textObservaciones"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLength="50"
+                android:inputType="textCapCharacters"
+                android:digits="0123456789 QAZWSXEDCRFVTGBYHNUJMIKOLP"
+                android:maxLength="30"
                 android:textAppearance="@android:style/TextAppearance.Material.Menu" />
 
             <Button

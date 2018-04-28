@@ -118,7 +118,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="OBSERVACIONES:"
-                android:inputType="text"
+                android:inputType="textCapCharacters"
+                android:digits="0123456789QAZWSXEDCRFVTGBYHNUJMIKOLP "
                 android:maxLength="30"
                 android:singleLine="true"
                 android:maxLines="1" />

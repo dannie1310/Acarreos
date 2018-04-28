@@ -39,6 +39,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bixolon.printer.BixolonPrinter;
+import com.crashlytics.android.Crashlytics;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -306,6 +307,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
                                                                 new ImprimirTicket(getApplicationContext(), progressDialog, bixolonPrinterApi, TicketDatos(), bitmap).execute((Void) null);
                                                                } catch (JSONException e) {
                                                                    e.printStackTrace();
+                                                                   Crashlytics.logException(e);
                                                                }
                                                            }
                                                        }

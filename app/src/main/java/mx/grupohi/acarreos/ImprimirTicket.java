@@ -209,6 +209,8 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
             return true;
         }
         catch (Exception e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
             Toast.makeText(context, R.string.error_impresion, Toast.LENGTH_LONG).show();
             return false;
         }
@@ -227,8 +229,9 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
                     boolean c= Viaje.updateImpresion(idViaje, num, context);
                 }
             } catch (Exception e) {
-                Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
+                Crashlytics.logException(e);
+                Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
             }
         }
     }
