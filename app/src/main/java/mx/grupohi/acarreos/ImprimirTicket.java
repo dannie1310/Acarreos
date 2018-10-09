@@ -21,7 +21,7 @@ import java.io.IOException;
 
 public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
 
-
+    private GPSTracker gps;
     public static BixolonPrinter bixolonPrinterApi;
     public static int milisegundos = 7200;
     private static final long PRINTING_TIME = 2100;
@@ -48,12 +48,16 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
         this.bixolonPrinterApi = bixolonPrinterApi;
         this.dato = datos;
         this.bitmap = b;
+        gps = new GPSTracker(context);
     }
 
     @Override
     protected Boolean doInBackground(Void... params) {
         Usuario uss = new Usuario(context);
         uss= uss.getUsuario();
+        Double latitud = gps.getLatitude();
+        Double longitud = gps.getLongitude();
+
         try {
 
             bixolonPrinterApi.setSingleByteFont(BixolonPrinter.CODE_PAGE_858_EURO);
@@ -62,7 +66,7 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
             bixolonPrinterApi.lineFeed(1, true);
             Thread.sleep(400);
             try {
-                bixolonPrinterApi.printBitmap(bitmap, BixolonPrinter.ALIGNMENT_CENTER, 220, 50, true);
+                //bixolonPrinterApi.printBitmap(bitmap, BixolonPrinter.ALIGNMENT_CENTER, 220, 50, true);
                 bixolonPrinterApi.lineFeed(1, true);
             }catch (Exception e){
                 Crashlytics.logException(e);
@@ -134,6 +138,8 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
                 printTextTwoColumns("Destino: ", dato.getString("7") + "\n");
                 printTextTwoColumns("Fecha Llegada: ", dato.getString("8") + "\n");
                 printTextTwoColumns("Ruta: ", dato.getString("9") + "\n");
+                printTextTwoColumns("Latitud: ", latitud.toString()+"\n");
+                printTextTwoColumns("Longitud: ", longitud.toString()+"\n");
                 // if(textViewObservaciones.getText().length()!=0) {
                 //printTextTwoColumns("Deductiva: ", dato.getString("10") + "\n");
                 //printTextTwoColumns("Motivo Deductiva: ", dato.getString("11") + "\n");
