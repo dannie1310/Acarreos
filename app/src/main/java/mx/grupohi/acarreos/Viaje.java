@@ -56,6 +56,10 @@ public class Viaje {
     String folio_mina;
     String folio_seguimiento;
     Integer tipoViaje;
+    String latitud_origen;
+    String longitud_origen;
+    String latitud_tiro;
+    String longitud_tiro;
     public Integer Estatus;
 
     private static SQLiteDatabase db;
@@ -135,7 +139,10 @@ public class Viaje {
                 this.idmotivo_entrada = c.getInt(c.getColumnIndex("idmotivo_entrada"));
                 this.tipoViaje = c.getInt(c.getColumnIndex("tipoViaje"));
                 this.Estatus = c.getInt(c.getColumnIndex("Estatus"));
-
+                this.latitud_origen = c.getString(c.getColumnIndex("latitud_origen"));
+                this.longitud_origen = c.getString(c.getColumnIndex("longitud_origen"));
+                this.latitud_tiro = c.getString(c.getColumnIndex("latitud_tiro"));
+                this.longitud_tiro = c.getString(c.getColumnIndex("longitud_tiro"));
                 return this;
             } else {
                 return null;
@@ -215,6 +222,10 @@ public class Viaje {
                         json.put("volumen_entrada", c.getString(c.getColumnIndex("deductiva_entrada")));
                         json.put("volumen", c.getString(c.getColumnIndex("deductiva")));
                         json.put("tipoViaje", c.getString(c.getColumnIndex("tipoViaje")));
+                        json.put("latitud_origen", c.getString(c.getColumnIndex("latitud_origen")));
+                        json.put("longitud_origen", c.getString(c.getColumnIndex("longitud_origen")));
+                        json.put("latitud_tiro", c.getString(c.getColumnIndex("latitud_tiro")));
+                        json.put("longitud_tiro", c.getString(c.getColumnIndex("longitud_tiro")));
 
                     JSON.put(i + "", json);
                         i++;

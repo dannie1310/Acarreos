@@ -399,6 +399,10 @@ public class SuccessDestinoActivity extends AppCompatActivity
         json.put("23", textMina.getText());
         json.put("24", textSeg.getText());
 
+        json.put("35", viaje.latitud_origen);
+        json.put("36", viaje.longitud_origen);
+        json.put("37", viaje.latitud_tiro);
+        json.put("38", viaje.longitud_tiro);
         if(inicio != 0) {
             InicioViaje inicios = new InicioViaje(getApplicationContext());
             inicios = inicios.find(inicio);
@@ -409,6 +413,10 @@ public class SuccessDestinoActivity extends AppCompatActivity
             json.put("32", "NULL");
             json.put("33", "NULL");
             json.put("34", "NULL");
+            json.put("35", inicios.latitud_origen);
+            json.put("36", inicios.longitud_origen);
+            json.put("37", "NULL");
+            json.put("38", "NULL");
             if(inicios.tipo_suministro == 1 && inicios.deductiva_entrada == 0) {
                // datos_inicio = "000|000000|000|000000000000|000|000000000000|000|00000|000000000000|000000000000000|00000|00|000000000000000000|0|00000000|00000000|00|0";
                 datos_inicio = usuario.idProyecto + "|"

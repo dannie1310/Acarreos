@@ -390,6 +390,7 @@ public class SetOrigenActivity extends AppCompatActivity
                                 tag_nfc.setVolumen(nfcTag.readSector(null,3,12));
                                 tag_nfc.setTipo_perfil(nfcTag.readSector(null,3,14));
                                 tag_nfc.setVolumen_entrada(nfcTag.readSector(null,4,16));
+
                             } catch (IOException e) {
                                 e.printStackTrace();
                                 Crashlytics.logException(e);
@@ -405,6 +406,8 @@ public class SetOrigenActivity extends AppCompatActivity
                             }
                             tag_nfc.setIdmaterial(String.valueOf(Util.getIdMaterial(material_origen)));
                             tag_nfc.setIdorigen(String.valueOf(Util.getIdOrigen(material_origen)));
+                            tag_nfc.setLatitud_origen(latitud.toString());
+                            tag_nfc.setLongitud_origen(longitud.toString());
                         } else if (MifareUltralight.class.getName().equals(t)) {
                             nfcUltra = new NFCUltralight(myTag, context);
                             tag_nfc.setUID(nfcUltra.byteArrayToHexString(myTag.getId()));
@@ -420,6 +423,8 @@ public class SetOrigenActivity extends AppCompatActivity
                                 tag_nfc.setVolumen(nfcUltra.readDeductiva(null,16));
                                 tag_nfc.setTipo_perfil(nfcUltra.readDeductiva(null,18));
                                 tag_nfc.setVolumen_entrada(nfcUltra.readDeductiva(null,19));
+                                tag_nfc.setLatitud_origen(latitud.toString());
+                                tag_nfc.setLongitud_origen(longitud.toString());
                             } catch (IOException e) {
                                 e.printStackTrace();
                                 Crashlytics.logException(e);
@@ -465,6 +470,8 @@ public class SetOrigenActivity extends AppCompatActivity
                 }else{
                     datosVista.put("tipo_suministro", 0);
                 }
+                datosVista.put("latitud_origen", tag_nfc.getLatitud_origen());
+                datosVista.put("longitud_origen", tag_nfc.getLongitud_origen());
                 if(!salida_mina.guardarDatosDB(datosVista)){
                     mensaje = "Error al guardar en Base de Datos";
                     return false;
@@ -484,6 +491,8 @@ public class SetOrigenActivity extends AppCompatActivity
                                 nfcTag.writeSector(null, 3, 12, datosVista.getAsString("deductiva"));
                                 nfcTag.writeSector(null, 3, 13, tag_nfc.getIdmotivo());
                                 nfcTag.writeSector(null, 3, 14, datosVista.getAsString("tipo_suministro"));
+                                nfcTag.writeSector(null, 5, 20, tag_nfc.getLatitud_origen());
+                                nfcTag.writeSector(null, 5, 21, tag_nfc.getLongitud_origen());
                             } catch (IOException e) {
                                 e.printStackTrace();
                                 Crashlytics.logException(e);
@@ -506,6 +515,8 @@ public class SetOrigenActivity extends AppCompatActivity
                                 nfcUltra.writePagina(null, 16, datosVista.getAsString("deductiva"));
                                 nfcUltra.writePagina(null, 17, tag_nfc.getIdmotivo());
                                 nfcUltra.writePagina(null, 18, datosVista.getAsString("tipo_suministro"));
+                                nfcUltra.writePagina(null, 21, tag_nfc.getLatitud_origen());
+                                nfcUltra.writePagina(null, 24, tag_nfc.getLongitud_origen());
                             } catch (IOException e) {
                                 e.printStackTrace();
                                 Crashlytics.logException(e);
