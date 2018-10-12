@@ -375,6 +375,26 @@ public class SuccessDestinoActivity extends AppCompatActivity
             json.put("32", "0");
             json.put("34","0");
 
+            if(viaje.latitud_origen != null) {
+                json.put("35", viaje.latitud_origen);
+            }else{
+                json.put("35", "NULL");
+            }
+            if(viaje.longitud_origen != null) {
+                json.put("36", viaje.longitud_origen);
+            }else{
+                json.put("36","NULL");
+            }
+            if (viaje.latitud_tiro != null) {
+                json.put("37", viaje.latitud_tiro);
+            }else{
+                json.put("37", "NULL");
+            }
+            if (viaje.longitud_tiro != null) {
+                json.put("38", viaje.longitud_tiro);
+            }else{
+                json.put("38", "NULL");
+            }
         }
 
         json.put("1", usuario.getDescripcion());
@@ -399,10 +419,6 @@ public class SuccessDestinoActivity extends AppCompatActivity
         json.put("23", textMina.getText());
         json.put("24", textSeg.getText());
 
-        json.put("35", viaje.latitud_origen);
-        json.put("36", viaje.longitud_origen);
-        json.put("37", viaje.latitud_tiro);
-        json.put("38", viaje.longitud_tiro);
         if(inicio != 0) {
             InicioViaje inicios = new InicioViaje(getApplicationContext());
             inicios = inicios.find(inicio);

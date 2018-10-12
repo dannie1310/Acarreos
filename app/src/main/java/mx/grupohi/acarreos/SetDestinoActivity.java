@@ -555,6 +555,9 @@ public class SetDestinoActivity extends AppCompatActivity
                 String horaOrigen = Util.getTime(tagNFC.getFecha());
                 String fecha;
 
+                tagNFC.setLatitud_tiro(latitud.toString());
+                tagNFC.setLongitud_tiro(longitud.toString());
+
                 datosVista.put("Code", code);
                 datosVista.put("CodeImagen", Util.getCodeFecha(tagNFC.getIdcamion(), aux));
                 datosVista.put("uidTAG", tagNFC.getUID());
@@ -582,6 +585,28 @@ public class SetDestinoActivity extends AppCompatActivity
                 } else {
                     datosVista.put("Estatus", "3");
                 }
+
+                if(!tagNFC.getLatitud_origen().equals("")) {
+                    datosVista.put("latitud_origen", tagNFC.getLatitud_origen());
+                }else{
+                    datosVista.put("latitud_origen", "NULL");
+                }
+                if(!tagNFC.getLongitud_origen().equals("")) {
+                    datosVista.put("longitud_origen", tagNFC.getLongitud_origen());
+                }else{
+                    datosVista.put("longitud_origen", "NULL");
+                }
+                if(!tagNFC.getLatitud_tiro().equals("")) {
+                    datosVista.put("latitud_tiro", tagNFC.getLatitud_tiro());
+                }else{
+                    datosVista.put("latitud_tiro", "NULL");
+                }
+                if(!tagNFC.getLongitud_tiro().equals("")) {
+                    datosVista.put("longitud_tiro", tagNFC.getLongitud_tiro());
+                }else{
+                    datosVista.put("longitud_tiro", "NULL");
+                }
+
                 Integer volumen = volumenMenor(Integer.valueOf(datosVista.getAsString("deductiva_origen")), Integer.valueOf(datosVista.getAsString("deductiva_entrada")), Integer.valueOf(deductiva.getText().toString()));
                 datosVista.put("cubicacion", String.valueOf(volumen));
                 DestinoTiro destinoTiro = new DestinoTiro(context, tagNFC);
@@ -600,6 +625,7 @@ public class SetDestinoActivity extends AppCompatActivity
                         nfcTag.cleanSector(null, 2);
                         nfcTag.cleanSector(null, 3);
                         nfcTag.cleanSector(null, 4);
+                        nfcTag.cleanSector(null, 5);
                     } catch (IOException e) {
                         e.printStackTrace();
                         Crashlytics.logException(e);

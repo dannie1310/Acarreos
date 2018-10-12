@@ -553,6 +553,8 @@ public class TiroUnicoActivity extends AppCompatActivity
                 String aux = Util.dateFolios();
                 String fechaLlegada = Util.getFecha();
                 String horaLlegada = Util.getTime();
+                tag_nfc.setLatitud_tiro(latitud.toString());
+                tag_nfc.setLongitud_tiro(longitud.toString());
                 datosVista.put("IdProyecto", tag_nfc.getIdproyecto());
                 datosVista.put("IdCamion", tag_nfc.getIdcamion());
                 datosVista.put("uidTAG", tagNFC.getUID());
@@ -564,6 +566,10 @@ public class TiroUnicoActivity extends AppCompatActivity
                 datosVista.put("HoraLlegada", horaLlegada);
                 datosVista.put("FechaSalida", fechaLlegada);
                 datosVista.put("HoraSalida", horaLlegada);
+                datosVista.put("latitud_origen","NULL");
+                datosVista.put("longitud_origen", "NULL");
+                datosVista.put("latitud_tiro", tagNFC.getLatitud_tiro());
+                datosVista.put("longitud_tiro", tagNFC.getLongitud_tiro());
                 // eliminar datos del TAG...
                 if (tagNFC.getTipo() == 1) {
                     try {

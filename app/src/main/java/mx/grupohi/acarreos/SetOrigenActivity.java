@@ -406,8 +406,6 @@ public class SetOrigenActivity extends AppCompatActivity
                             }
                             tag_nfc.setIdmaterial(String.valueOf(Util.getIdMaterial(material_origen)));
                             tag_nfc.setIdorigen(String.valueOf(Util.getIdOrigen(material_origen)));
-                            tag_nfc.setLatitud_origen(latitud.toString());
-                            tag_nfc.setLongitud_origen(longitud.toString());
                         } else if (MifareUltralight.class.getName().equals(t)) {
                             nfcUltra = new NFCUltralight(myTag, context);
                             tag_nfc.setUID(nfcUltra.byteArrayToHexString(myTag.getId()));
@@ -423,8 +421,7 @@ public class SetOrigenActivity extends AppCompatActivity
                                 tag_nfc.setVolumen(nfcUltra.readDeductiva(null,16));
                                 tag_nfc.setTipo_perfil(nfcUltra.readDeductiva(null,18));
                                 tag_nfc.setVolumen_entrada(nfcUltra.readDeductiva(null,19));
-                                tag_nfc.setLatitud_origen(latitud.toString());
-                                tag_nfc.setLongitud_origen(longitud.toString());
+
                             } catch (IOException e) {
                                 e.printStackTrace();
                                 Crashlytics.logException(e);
@@ -439,6 +436,8 @@ public class SetOrigenActivity extends AppCompatActivity
                                 tag_nfc.setIdproyecto(Util.getIdProyecto(camion_proyecto, 8));
                             }
                         }
+                        tag_nfc.setLatitud_origen(latitud.toString());
+                        tag_nfc.setLongitud_origen(longitud.toString());
                     }
                 }
             }
@@ -470,8 +469,18 @@ public class SetOrigenActivity extends AppCompatActivity
                 }else{
                     datosVista.put("tipo_suministro", 0);
                 }
-                datosVista.put("latitud_origen", tag_nfc.getLatitud_origen());
-                datosVista.put("longitud_origen", tag_nfc.getLongitud_origen());
+
+                if(!tag_nfc.getLatitud_origen().equals("")) {
+                    datosVista.put("latitud_origen", tag_nfc.getLatitud_origen());
+                }else{
+                    datosVista.put("latitud_origen", "NULL");
+                }
+                if(!tag_nfc.getLongitud_origen().equals("")) {
+                    datosVista.put("longitud_origen", tag_nfc.getLongitud_origen());
+                }else{
+                    datosVista.put("longitud_origen", "NULL");
+                }
+
                 if(!salida_mina.guardarDatosDB(datosVista)){
                     mensaje = "Error al guardar en Base de Datos";
                     return false;

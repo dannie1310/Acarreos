@@ -128,8 +128,9 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
             }else {
                 printTextTwoColumns("Folio de Seguimiento: ", "------\n");
             }
-            printTextTwoColumns("Latitud de Origen: ", dato.getString("35")+"\n");
-            printTextTwoColumns("Longitud de Origen: ", dato.getString("36")+"\n");
+            if(!dato.getString("35").equals("NULL") && !dato.getString("36").equals("NULL")) {
+                printTextTwoColumns("Coordenadas GD Origen: ", "(" + dato.getString("35") + "," + dato.getString("36") + ")\n");
+            }
             if (dato.getString("20").equals("NULL")) {
                 idViaje = dato.getInt("0");
                 dat = Util.getFechaImprocedente(dato.getString("6"), dato.getString("8"));
@@ -146,8 +147,9 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
                 if(dat == true){
                     bixolonPrinterApi.printText("V I A J E   I M P R O C E D E N T E\n", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_C, 0, false);
                 }
-                printTextTwoColumns("Latitud de Tiro: ", dato.getString("37")+"\n");
-                printTextTwoColumns("Longitud de Tiro: ", dato.getString("38")+"\n");
+                if(!dato.getString("37").equals("NULL") && !dato.getString("38").equals("NULL")) {
+                    printTextTwoColumns("Coordenadas GD Tiro: ", "(" + dato.getString("37") + "," + dato.getString("38") + ")\n");
+                }
                 if (dato.getInt("13") == 3) {
                     printTextTwoColumns("Checador: " + dato.getString("14"), "   "+dato.getString("15") + "\n");
                     printTextTwoColumns("Versión: ", String.valueOf(dato.getString("16")) + "\n");

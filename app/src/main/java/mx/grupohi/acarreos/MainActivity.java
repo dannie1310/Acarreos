@@ -273,6 +273,8 @@ public class MainActivity extends AppCompatActivity
                                 tag_nfc.setVolumen(nfcTag.readSector(null, 3, 12));
                                 tag_nfc.setTipo_perfil(nfcTag.readSector(null, 3, 14));
                                 tag_nfc.setVolumen_entrada(nfcTag.readSector(null, 4, 16));
+                                tag_nfc.setLatitud_origen(nfcTag.readSector(null, 5, 20));
+                                tag_nfc.setLongitud_origen(nfcTag.readSector(null, 5,21));
                             } catch (IOException e) {
                                 e.printStackTrace();
                                 Crashlytics.logException(e);
@@ -303,6 +305,8 @@ public class MainActivity extends AppCompatActivity
                                 tag_nfc.setVolumen(nfcUltra.readDeductiva(null, 16));
                                 tag_nfc.setTipo_perfil(nfcUltra.readDeductiva(null, 18));
                                 tag_nfc.setVolumen_entrada(nfcUltra.readDeductiva(null, 19));
+                                tag_nfc.setLatitud_origen(nfcUltra.readDeductiva(null,21)+nfcUltra.readDeductiva(null, 22)+nfcUltra.readDeductiva(null, 23));
+                                tag_nfc.setLongitud_origen(nfcUltra.readDeductiva(null,24)+nfcUltra.readDeductiva(null, 25)+nfcUltra.readDeductiva(null, 26));
                             } catch (IOException e) {
                                 e.printStackTrace();
                                 Crashlytics.logException(e);
