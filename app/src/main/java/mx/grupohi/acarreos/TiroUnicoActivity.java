@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.LocationManager;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.MifareClassic;
@@ -86,10 +87,10 @@ public class TiroUnicoActivity extends AppCompatActivity
 
     //GPS
     private GPSTracker gps;
+    Double latitud;
+    Double longitud;
+    AlertDialog alerta = null;
     private String IMEI;
-    private Double latitude;
-    private Double longitude;
-
 
     private TextInputLayout mina,
             seg;
@@ -127,6 +128,7 @@ public class TiroUnicoActivity extends AppCompatActivity
         origen = new Origen(this);
         camion = new Camion(getApplicationContext());
         gps = new GPSTracker(getApplicationContext());
+        final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
         ruta = new Ruta(getApplicationContext());
 
         tagNFC = (TagNFC) getIntent().getSerializableExtra("datos");
@@ -152,6 +154,7 @@ public class TiroUnicoActivity extends AppCompatActivity
         textseg = (TextView) findViewById(R.id.seguimiento);
         tiro = (LinearLayout) findViewById(R.id.leerTag);
         tiro.setVisibility(View.GONE);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -276,16 +279,29 @@ public class TiroUnicoActivity extends AppCompatActivity
             }
         });
 
+        if (!manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+            AlertNoGps();
+        }
 
         escribirButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!validarCampos()){
-                    alert(mensaje);
-                }
-                else {
-                    checkNfcEnabled();
-                    WriteModeOn();
+                if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    AlertNoGps();
+                } else {
+                    latitud = gps.getLatitude();
+                    longitud = gps.getLongitude();
+
+                    if (latitud.toString() != "0.0" || longitud.toString() != "0.0") {
+                        if (!validarCampos()) {
+                            alert(mensaje);
+                        } else {
+                            checkNfcEnabled();
+                            WriteModeOn();
+                        }
+                    } else {
+                        alert("ESPERE, NO SE DETECTA SU UBICACIÓN");
+                    }
                 }
             }
         });
@@ -419,6 +435,19 @@ public class TiroUnicoActivity extends AppCompatActivity
         return true;
     }
 
+    private void AlertNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Debe activar el GPS")
+                .setCancelable(false)
+                .setPositiveButton("ACTIVAR", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                });
+        alerta = builder.create();
+        alerta.show();
+    }
+
 
     private void WriteModeOn() {
         writeMode = true;
@@ -469,8 +498,6 @@ public class TiroUnicoActivity extends AppCompatActivity
         Context context;
         Intent intent;
         Integer idViaje;
-        Double latitud = gps.getLatitude();
-        Double longitud = gps.getLongitude();
 
         public TiroTarea(Context context, Intent intent) {
             this.context = context;
@@ -553,6 +580,8 @@ public class TiroUnicoActivity extends AppCompatActivity
                 String aux = Util.dateFolios();
                 String fechaLlegada = Util.getFecha();
                 String horaLlegada = Util.getTime();
+                tag_nfc.setLatitud_tiro(latitud.toString());
+                tag_nfc.setLongitud_tiro(longitud.toString());
                 datosVista.put("IdProyecto", tag_nfc.getIdproyecto());
                 datosVista.put("IdCamion", tag_nfc.getIdcamion());
                 datosVista.put("uidTAG", tagNFC.getUID());
@@ -564,6 +593,10 @@ public class TiroUnicoActivity extends AppCompatActivity
                 datosVista.put("HoraLlegada", horaLlegada);
                 datosVista.put("FechaSalida", fechaLlegada);
                 datosVista.put("HoraSalida", horaLlegada);
+                datosVista.put("latitud_origen","NULL");
+                datosVista.put("longitud_origen", "NULL");
+                datosVista.put("latitud_tiro", tagNFC.getLatitud_tiro());
+                datosVista.put("longitud_tiro", tagNFC.getLongitud_tiro());
                 // eliminar datos del TAG...
                 if (tagNFC.getTipo() == 1) {
                     try {

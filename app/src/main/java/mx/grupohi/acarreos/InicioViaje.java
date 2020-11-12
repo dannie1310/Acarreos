@@ -43,6 +43,8 @@ public class InicioViaje {
     Integer numImpresion;
     Integer tipo_suministro;
     Integer deductiva_entrada;
+    String latitud_origen;
+    String longitud_origen;
     private static SQLiteDatabase db;
     private static DBScaSqlite db_sca;
     private Context context;
@@ -101,6 +103,8 @@ public class InicioViaje {
                 this.deductiva = c.getString(c.getColumnIndex("deductiva"));
                 this.idMotivo = c.getInt(c.getColumnIndex("idMotivo"));
                 this.deductiva_entrada = c.getInt(c.getColumnIndex("deductiva_entrada"));
+                this.latitud_origen = c.getString(c.getColumnIndex("latitud_origen"));
+                this.longitud_origen = c.getString(c.getColumnIndex("longitud_origen"));
                 return this;
             } else {
                 return null;
@@ -165,6 +169,8 @@ public class InicioViaje {
                     json.put("deductiva", c.getString(c.getColumnIndex("deductiva")));
                     json.put("idMotivo", c.getInt(c.getColumnIndex("idMotivo")));
                     json.put("deductiva_entrada", c.getInt(c.getColumnIndex("deductiva_entrada")));
+                    json.put("latitud_origen", c.getString(c.getColumnIndex("latitud_origen")));
+                    json.put("longitud_origen", c.getString(c.getColumnIndex("longitud_origen")));
                     JSON.put(i + "", json);
                     i++;
 

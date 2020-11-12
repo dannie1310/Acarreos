@@ -375,6 +375,26 @@ public class SuccessDestinoActivity extends AppCompatActivity
             json.put("32", "0");
             json.put("34","0");
 
+            if(viaje.latitud_origen != null) {
+                json.put("35", viaje.latitud_origen);
+            }else{
+                json.put("35", "NULL");
+            }
+            if(viaje.longitud_origen != null) {
+                json.put("36", viaje.longitud_origen);
+            }else{
+                json.put("36","NULL");
+            }
+            if (viaje.latitud_tiro != null) {
+                json.put("37", viaje.latitud_tiro);
+            }else{
+                json.put("37", "NULL");
+            }
+            if (viaje.longitud_tiro != null) {
+                json.put("38", viaje.longitud_tiro);
+            }else{
+                json.put("38", "NULL");
+            }
         }
 
         json.put("1", usuario.getDescripcion());
@@ -409,6 +429,10 @@ public class SuccessDestinoActivity extends AppCompatActivity
             json.put("32", "NULL");
             json.put("33", "NULL");
             json.put("34", "NULL");
+            json.put("35", inicios.latitud_origen);
+            json.put("36", inicios.longitud_origen);
+            json.put("37", "NULL");
+            json.put("38", "NULL");
             if(inicios.tipo_suministro == 1 && inicios.deductiva_entrada == 0) {
                // datos_inicio = "000|000000|000|000000000000|000|000000000000|000|00000|000000000000|000000000000000|00000|00|000000000000000000|0|00000000|00000000|00|0";
                 datos_inicio = usuario.idProyecto + "|"

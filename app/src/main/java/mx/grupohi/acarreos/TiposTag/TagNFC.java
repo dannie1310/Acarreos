@@ -25,6 +25,10 @@ public class TagNFC implements Serializable{
     String tipo_perfil;
     String volumen_entrada;
     String motivo_entrada = "0";
+    String latitud_origen;
+    String longitud_origen;
+    String latitud_tiro;
+    String longitud_tiro;
 
     public Integer getTipo() {
         return tipo;
@@ -136,4 +140,36 @@ public class TagNFC implements Serializable{
     public void setMotivo_entrada(String motivo_entrada) {
         this.motivo_entrada = motivo_entrada;
     }
+    public String getLatitud_origen() {
+        return latitud_origen;
+    }
+
+    public String getLongitud_origen() {
+        return longitud_origen;
+    }
+
+    public String getLatitud_tiro() {
+        return latitud_tiro;
+    }
+
+    public String getLongitud_tiro() {
+        return longitud_tiro;
+    }
+
+    public void setLatitud_origen(String latitud_origen) {
+        this.latitud_origen = latitud_origen;
+    }
+
+    public void setLongitud_origen(String longitud_origen) {
+        this.longitud_origen = longitud_origen;
+    }
+
+    public void setLatitud_tiro(String latitud_tiro) {
+        this.latitud_tiro = latitud_tiro;
+    }
+
+    public void setLongitud_tiro(String longitud_tiro) {
+        this.longitud_tiro = longitud_tiro;
+    }
+
 }

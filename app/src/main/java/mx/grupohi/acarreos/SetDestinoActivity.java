@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.LocationManager;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.MifareClassic;
@@ -55,6 +56,9 @@ public class SetDestinoActivity extends AppCompatActivity
 
     //GPS
     private GPSTracker gps;
+    Double latitud;
+    Double longitud;
+    AlertDialog alerta = null;
     private String IMEI;
     //NFC
     private NFCTag nfcTag;
@@ -118,6 +122,8 @@ public class SetDestinoActivity extends AppCompatActivity
         datosVista = new ContentValues();
 
         gps = new GPSTracker(SetDestinoActivity.this);
+        final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
+
         TelephonyManager phneMgr = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -243,15 +249,29 @@ public class SetDestinoActivity extends AppCompatActivity
 
             }
         });
+        if (!manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+            AlertNoGps();
+        }
+
         escribirDestinoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               if(!validarCampos()){
-                   alert(mensaje);
-               }
-                else {
-                    checkNfcEnabled();
-                    WriteModeOn();
+                if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    AlertNoGps();
+                } else {
+                    latitud = gps.getLatitude();
+                    longitud = gps.getLongitude();
+
+                    if (latitud.toString() != "0.0" || longitud.toString() != "0.0") {
+                        if (!validarCampos()) {
+                            alert(mensaje);
+                        } else {
+                            checkNfcEnabled();
+                            WriteModeOn();
+                        }
+                    } else {
+                        alert("ESPERE, NO SE DETECTA SU UBICACIÓN");
+                    }
                 }
             }
         });
@@ -497,13 +517,23 @@ public class SetDestinoActivity extends AppCompatActivity
         }
     }
 
+    private void AlertNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Debe activar el GPS")
+                .setCancelable(false)
+                .setPositiveButton("ACTIVAR", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                });
+        alerta = builder.create();
+        alerta.show();
+    }
+
     class DestinoTarea extends AsyncTask<Void, Void, Boolean> {
         Context context;
         Intent intent;
         Integer idViaje;
-        Double latitud = gps.getLatitude();
-        Double longitud = gps.getLongitude();
-
 
         public DestinoTarea(Context context, Intent intent) {
             this.context = context;
@@ -555,6 +585,9 @@ public class SetDestinoActivity extends AppCompatActivity
                 String horaOrigen = Util.getTime(tagNFC.getFecha());
                 String fecha;
 
+                tagNFC.setLatitud_tiro(latitud.toString());
+                tagNFC.setLongitud_tiro(longitud.toString());
+
                 datosVista.put("Code", code);
                 datosVista.put("CodeImagen", Util.getCodeFecha(tagNFC.getIdcamion(), aux));
                 datosVista.put("uidTAG", tagNFC.getUID());
@@ -582,6 +615,28 @@ public class SetDestinoActivity extends AppCompatActivity
                 } else {
                     datosVista.put("Estatus", "3");
                 }
+
+                if(!tagNFC.getLatitud_origen().equals("")) {
+                    datosVista.put("latitud_origen", tagNFC.getLatitud_origen());
+                }else{
+                    datosVista.put("latitud_origen", "NULL");
+                }
+                if(!tagNFC.getLongitud_origen().equals("")) {
+                    datosVista.put("longitud_origen", tagNFC.getLongitud_origen());
+                }else{
+                    datosVista.put("longitud_origen", "NULL");
+                }
+                if(!tagNFC.getLatitud_tiro().equals("")) {
+                    datosVista.put("latitud_tiro", tagNFC.getLatitud_tiro());
+                }else{
+                    datosVista.put("latitud_tiro", "NULL");
+                }
+                if(!tagNFC.getLongitud_tiro().equals("")) {
+                    datosVista.put("longitud_tiro", tagNFC.getLongitud_tiro());
+                }else{
+                    datosVista.put("longitud_tiro", "NULL");
+                }
+
                 Integer volumen = volumenMenor(Integer.valueOf(datosVista.getAsString("deductiva_origen")), Integer.valueOf(datosVista.getAsString("deductiva_entrada")), Integer.valueOf(deductiva.getText().toString()));
                 datosVista.put("cubicacion", String.valueOf(volumen));
                 DestinoTiro destinoTiro = new DestinoTiro(context, tagNFC);
@@ -600,6 +655,7 @@ public class SetDestinoActivity extends AppCompatActivity
                         nfcTag.cleanSector(null, 2);
                         nfcTag.cleanSector(null, 3);
                         nfcTag.cleanSector(null, 4);
+                        nfcTag.cleanSector(null, 5);
                     } catch (IOException e) {
                         e.printStackTrace();
                         Crashlytics.logException(e);

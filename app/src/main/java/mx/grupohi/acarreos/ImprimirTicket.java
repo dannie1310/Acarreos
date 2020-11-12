@@ -21,7 +21,7 @@ import java.io.IOException;
 
 public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
 
-
+    private GPSTracker gps;
     public static BixolonPrinter bixolonPrinterApi;
     public static int milisegundos = 7200;
     private static final long PRINTING_TIME = 2100;
@@ -48,12 +48,16 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
         this.bixolonPrinterApi = bixolonPrinterApi;
         this.dato = datos;
         this.bitmap = b;
+        gps = new GPSTracker(context);
     }
 
     @Override
     protected Boolean doInBackground(Void... params) {
         Usuario uss = new Usuario(context);
         uss= uss.getUsuario();
+        Double latitud = gps.getLatitude();
+        Double longitud = gps.getLongitude();
+
         try {
 
             bixolonPrinterApi.setSingleByteFont(BixolonPrinter.CODE_PAGE_858_EURO);
@@ -124,7 +128,9 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
             }else {
                 printTextTwoColumns("Folio de Seguimiento: ", "------\n");
             }
-
+            if(!dato.getString("35").equals("NULL") && !dato.getString("36").equals("NULL")) {
+                printTextTwoColumns("Coordenadas GD Origen: ", "(" + dato.getString("35") + "," + dato.getString("36") + ")\n");
+            }
             if (dato.getString("20").equals("NULL")) {
                 idViaje = dato.getInt("0");
                 dat = Util.getFechaImprocedente(dato.getString("6"), dato.getString("8"));
@@ -140,6 +146,9 @@ public class ImprimirTicket  extends AsyncTask<Void, Void, Boolean> {
                 printTextTwoColumns("Observaciones: ", dato.getString("12") + "\n");
                 if(dat == true){
                     bixolonPrinterApi.printText("V I A J E   I M P R O C E D E N T E\n", BixolonPrinter.ALIGNMENT_CENTER, BixolonPrinter.TEXT_ATTRIBUTE_FONT_C, 0, false);
+                }
+                if(!dato.getString("37").equals("NULL") && !dato.getString("38").equals("NULL")) {
+                    printTextTwoColumns("Coordenadas GD Tiro: ", "(" + dato.getString("37") + "," + dato.getString("38") + ")\n");
                 }
                 if (dato.getInt("13") == 3) {
                     printTextTwoColumns("Checador: " + dato.getString("14"), "   "+dato.getString("15") + "\n");

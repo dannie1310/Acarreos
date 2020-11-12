@@ -59,7 +59,11 @@ import java.util.GregorianCalendar;
                     "idmotivo_origen INT," +
                     "deductiva_entrada TEXT," +
                     "idmotivo_entrada INT," +
-                    "tipoViaje INT);",
+                    "tipoViaje INT," +
+                    "latitud_origen TEXT," +
+                    "longitud_origen TEXT," +
+                    "latitud_tiro TEXT," +
+                    "longitud_tiro TEXT);",
             "CREATE TABLE coordenadas (IMEI TEXT, idevento INT, latitud TEXT, longitud TEXT, fecha_hora TEXT, code TEXT)",
             "CREATE TABLE camion_tag (ID INTEGER PRIMARY KEY AUTOINCREMENT, IMEI TEXT, id_camion INT, id_tags TEXT, created_at DATETIME DEFAULT CURRENT_TIMESTAMP);",
             "CREATE TABLE tipos_imagenes (id INTEGER, descripcion TEXT);",
@@ -67,7 +71,7 @@ import java.util.GregorianCalendar;
             "CREATE TABLE motivos (id INTEGER, descripcion TEXT);",
             "CREATE TABLE configuraciones (ID INTEGER PRIMARY KEY AUTOINCREMENT, validacion_placas INTEGER);",
             "CREATE TABLE checadores (idChecador INTEGER PRIMARY KEY, nombre TEXT);",
-            "CREATE TABLE inicio_viajes (ID INTEGER PRIMARY KEY AUTOINCREMENT, idcamion INTEGER, idmaterial INTEGER, idorigen INTEGER, fecha_origen VARCHAR(8), idusuario INTEGER, uidTAG TEXT, IMEI TEXT, tipoEsquema INTEGER, estatus INTEGER, idperfil INTEGER, folio_mina TEXT, folio_seguimiento TEXT, volumen INTEGER, tipo_suministro INTEGER, Code TEXT, numImpresion INTEGER, deductiva TEXT, idMotivo INTEGER, deductiva_entrada INTEGER,  created_at DATETIME DEFAULT CURRENT_TIMESTAMP);",
+            "CREATE TABLE inicio_viajes (ID INTEGER PRIMARY KEY AUTOINCREMENT, idcamion INTEGER, idmaterial INTEGER, idorigen INTEGER, fecha_origen VARCHAR(8), idusuario INTEGER, uidTAG TEXT, IMEI TEXT, tipoEsquema INTEGER, estatus INTEGER, idperfil INTEGER, folio_mina TEXT, folio_seguimiento TEXT, volumen INTEGER, tipo_suministro INTEGER, Code TEXT, numImpresion INTEGER, deductiva TEXT, idMotivo INTEGER, deductiva_entrada INTEGER, latitud_origen TEXT, longitud_origen TEXT, created_at DATETIME DEFAULT CURRENT_TIMESTAMP);",
             "CREATE TABLE entrada_tiros (ID INTEGER PRIMARY KEY AUTOINCREMENT, idcamion INTEGER, idtiro INTEGER, fecha_entrada VARCHAR(8), idusuario INTEGER, uidTAG TEXT, IMEI TEXT,  estatus INTEGER, created_at DATETIME DEFAULT CURRENT_TIMESTAMP );",
             "CREATE TABLE celular_impresora (ID INTEGER PRIMARY KEY AUTOINCREMENT, IMEI TEXT, MAC TEXT);",
     };

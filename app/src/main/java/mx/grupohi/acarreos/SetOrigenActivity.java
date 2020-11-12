@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.LocationManager;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.MifareClassic;
@@ -83,6 +84,9 @@ public class SetOrigenActivity extends AppCompatActivity
 
     //GPS
     private GPSTracker gps;
+    Double latitud;
+    Double longitud;
+    AlertDialog alerta = null;
     private String IMEI;
 
     //NFC
@@ -106,6 +110,8 @@ public class SetOrigenActivity extends AppCompatActivity
         material = new Material(this);
         origen = new Origen(this);
         gps = new GPSTracker(SetOrigenActivity.this);
+
+        final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
 
         TelephonyManager phneMgr = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
@@ -227,68 +233,81 @@ public class SetOrigenActivity extends AppCompatActivity
 
             }
         });
+        if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+            AlertNoGps();
+        }
 
         escribirOrigenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!validarCampos()){
-                    /// imprime valiable mensaje en toast o alert
-                    alert(mensaje);
-                }
-                else {
-                    checkNfcEnabled();
-                    WriteModeOn();
-                }
-            }
-        });
+                if (!manager.isProviderEnabled( LocationManager.GPS_PROVIDER )) {
+                    AlertNoGps();
+                }else {
+                    latitud = gps.getLatitude();
+                    longitud = gps.getLongitude();
 
-        fabCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                WriteModeOff();
-            }
-        });
-
-        if(drawer != null)
-            drawer.post(new Runnable() {
-                @Override
-                public void run() {
-                    for (int i = 0; i < drawer.getChildCount(); i++) {
-                        View child = drawer.getChildAt(i);
-                        TextView tvp = (TextView) child.findViewById(R.id.textViewProyecto);
-                        TextView tvu = (TextView) child.findViewById(R.id.textViewUser);
-                        TextView tpe = (TextView) child.findViewById(R.id.textViewPerfil);
-                        TextView tvv = (TextView) child.findViewById(R.id.textViewVersion);
-                        TextView tim = (TextView) child.findViewById(R.id.textViewImpresora);
-
-                        Integer impresora = CelularImpresora.getId(getApplicationContext());
-                        if (tim != null){
-                            if(impresora == 0){
-                                tim.setTextColor(Color.RED);
-                                tim.setText("Sin Impresora Asignada");
-                            }else{
-                                tim.setText("Impresora "+impresora);
-                            }
+                    if(latitud.toString() != "0.0" || longitud.toString() != "0.0") {
+                        if (!validarCampos()) {
+                            /// imprime valiable mensaje en toast o alert
+                            alert(mensaje);
+                        } else {
+                            checkNfcEnabled();
+                            WriteModeOn();
                         }
-                        if (tvp != null) {
-                            tvp.setText(usuario.descripcionBaseDatos);
-                        }
-                        if (tvu != null) {
-                            tvu.setText(usuario.nombre);
-                        }
-                        if (tpe != null){
-                            if(usuario.origen_name == "0"){
-                                tpe.setText("PERFIL: "+usuario.getNombreEsquema()+" - "+usuario.tiro_name);
-                            }else if(usuario.tiro_name == "0"){
-                                tpe.setText("PERFIL: "+usuario.getNombreEsquema()+" - "+usuario.origen_name);
-                            }
-                        }
-                        if (tvv != null) {
-                            tvv.setText(getString(R.string.app_name)+"     "+"Versión " + String.valueOf(BuildConfig.VERSION_NAME));
-                        }
+                    }else{
+                        alert("ESPERE, NO SE DETECTA SU UBICACION");
                     }
                 }
+            }
+        });
+
+            fabCancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    WriteModeOff();
+                }
             });
+
+            if (drawer != null)
+                drawer.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (int i = 0; i < drawer.getChildCount(); i++) {
+                            View child = drawer.getChildAt(i);
+                            TextView tvp = (TextView) child.findViewById(R.id.textViewProyecto);
+                            TextView tvu = (TextView) child.findViewById(R.id.textViewUser);
+                            TextView tpe = (TextView) child.findViewById(R.id.textViewPerfil);
+                            TextView tvv = (TextView) child.findViewById(R.id.textViewVersion);
+                            TextView tim = (TextView) child.findViewById(R.id.textViewImpresora);
+
+                            Integer impresora = CelularImpresora.getId(getApplicationContext());
+                            if (tim != null) {
+                                if (impresora == 0) {
+                                    tim.setTextColor(Color.RED);
+                                    tim.setText("Sin Impresora Asignada");
+                                } else {
+                                    tim.setText("Impresora " + impresora);
+                                }
+                            }
+                            if (tvp != null) {
+                                tvp.setText(usuario.descripcionBaseDatos);
+                            }
+                            if (tvu != null) {
+                                tvu.setText(usuario.nombre);
+                            }
+                            if (tpe != null) {
+                                if (usuario.origen_name == "0") {
+                                    tpe.setText("PERFIL: " + usuario.getNombreEsquema() + " - " + usuario.tiro_name);
+                                } else if (usuario.tiro_name == "0") {
+                                    tpe.setText("PERFIL: " + usuario.getNombreEsquema() + " - " + usuario.origen_name);
+                                }
+                            }
+                            if (tvv != null) {
+                                tvv.setText(getString(R.string.app_name) + "     " + "Versión " + String.valueOf(BuildConfig.VERSION_NAME));
+                            }
+                        }
+                    }
+                });
     }
 
     private Boolean validarCampos(){
@@ -348,12 +367,23 @@ public class SetOrigenActivity extends AppCompatActivity
         return true;
     }
 
+    private void AlertNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Debe activar el GPS")
+                .setCancelable(false)
+                .setPositiveButton("ACTIVAR", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                });
+        alerta = builder.create();
+        alerta.show();
+    }
+
     class SalidaMinaTarea extends AsyncTask<Void, Void, Boolean> {
         TagNFC tag_nfc = new TagNFC();
         Context context;
         Intent intent;
-        Double latitud = gps.getLatitude();
-        Double longitud = gps.getLongitude();
 
         public SalidaMinaTarea(Context context, Intent intent) {
             this.context = context;
@@ -390,6 +420,7 @@ public class SetOrigenActivity extends AppCompatActivity
                                 tag_nfc.setVolumen(nfcTag.readSector(null,3,12));
                                 tag_nfc.setTipo_perfil(nfcTag.readSector(null,3,14));
                                 tag_nfc.setVolumen_entrada(nfcTag.readSector(null,4,16));
+
                             } catch (IOException e) {
                                 e.printStackTrace();
                                 Crashlytics.logException(e);
@@ -420,6 +451,7 @@ public class SetOrigenActivity extends AppCompatActivity
                                 tag_nfc.setVolumen(nfcUltra.readDeductiva(null,16));
                                 tag_nfc.setTipo_perfil(nfcUltra.readDeductiva(null,18));
                                 tag_nfc.setVolumen_entrada(nfcUltra.readDeductiva(null,19));
+
                             } catch (IOException e) {
                                 e.printStackTrace();
                                 Crashlytics.logException(e);
@@ -434,6 +466,8 @@ public class SetOrigenActivity extends AppCompatActivity
                                 tag_nfc.setIdproyecto(Util.getIdProyecto(camion_proyecto, 8));
                             }
                         }
+                        tag_nfc.setLatitud_origen(latitud.toString());
+                        tag_nfc.setLongitud_origen(longitud.toString());
                     }
                 }
             }
@@ -465,6 +499,18 @@ public class SetOrigenActivity extends AppCompatActivity
                 }else{
                     datosVista.put("tipo_suministro", 0);
                 }
+
+                if(!tag_nfc.getLatitud_origen().equals("")) {
+                    datosVista.put("latitud_origen", tag_nfc.getLatitud_origen());
+                }else{
+                    datosVista.put("latitud_origen", "NULL");
+                }
+                if(!tag_nfc.getLongitud_origen().equals("")) {
+                    datosVista.put("longitud_origen", tag_nfc.getLongitud_origen());
+                }else{
+                    datosVista.put("longitud_origen", "NULL");
+                }
+
                 if(!salida_mina.guardarDatosDB(datosVista)){
                     mensaje = "Error al guardar en Base de Datos";
                     return false;
@@ -484,6 +530,8 @@ public class SetOrigenActivity extends AppCompatActivity
                                 nfcTag.writeSector(null, 3, 12, datosVista.getAsString("deductiva"));
                                 nfcTag.writeSector(null, 3, 13, tag_nfc.getIdmotivo());
                                 nfcTag.writeSector(null, 3, 14, datosVista.getAsString("tipo_suministro"));
+                                nfcTag.writeSector(null, 5, 20, tag_nfc.getLatitud_origen());
+                                nfcTag.writeSector(null, 5, 21, tag_nfc.getLongitud_origen());
                             } catch (IOException e) {
                                 e.printStackTrace();
                                 Crashlytics.logException(e);
@@ -506,6 +554,8 @@ public class SetOrigenActivity extends AppCompatActivity
                                 nfcUltra.writePagina(null, 16, datosVista.getAsString("deductiva"));
                                 nfcUltra.writePagina(null, 17, tag_nfc.getIdmotivo());
                                 nfcUltra.writePagina(null, 18, datosVista.getAsString("tipo_suministro"));
+                                nfcUltra.writePagina(null, 21, tag_nfc.getLatitud_origen());
+                                nfcUltra.writePagina(null, 24, tag_nfc.getLongitud_origen());
                             } catch (IOException e) {
                                 e.printStackTrace();
                                 Crashlytics.logException(e);
