@@ -34,6 +34,7 @@ public class Usuario {
     String origen_name;
     String tiro_name;
     Integer  idtiro;
+    String  token;
 
     private Context context;
 
@@ -62,6 +63,7 @@ public class Usuario {
             this.logo = data.getAsInteger("logo");
             this.imagen = data.getAsString("imagen");
             this.tipo_permiso = data.getAsInteger("tipo_permiso");
+            this.token = data.getAsString("token");
         }
         db.close();
         return result;
@@ -119,6 +121,7 @@ public class Usuario {
                 this.tipo_permiso = c.getInt(c.getColumnIndex("tipo_permiso"));
                 this.idorigen = c.getInt(c.getColumnIndex("idorigen"));
                 this.idtiro = c.getInt(c.getColumnIndex("idtiro"));
+                this.token = c.getString(c.getColumnIndex("token"));
 
                 if(idorigen.toString() == "0"){
                     tiro = tiro.find(c.getInt(c.getColumnIndex("idtiro")));
@@ -218,6 +221,22 @@ public class Usuario {
         try {
             if(c!=null && c.moveToFirst()){
                 return c.getInt(0);
+            }
+            else{
+                return null;
+            }
+        } finally {
+            c.close();
+            db.close();
+        }
+    }
+
+    public String getToken(){
+        db = db_sca.getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT token FROM user LIMIT 1", null);
+        try {
+            if(c!=null && c.moveToFirst()){
+                return c.getString(0);
             }
             else{
                 return null;

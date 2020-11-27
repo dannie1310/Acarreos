@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Acarreos.iml" filepath="$PROJECT_DIR$/Acarreos.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/acarreos.iml" filepath="$PROJECT_DIR$/acarreos.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/acarreos.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/acarreos.app.iml" />
     </modules>
   </component>
 </project>
