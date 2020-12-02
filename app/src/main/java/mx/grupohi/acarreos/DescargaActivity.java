@@ -74,6 +74,8 @@ public class DescargaActivity extends AppCompatActivity
     GPSTracker gps;
     public String IMEI;
 
+    public String URL_API = "http://192.168.100.110:8000/";
+
     private DescargaCatalogos descargaCatalogos = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -274,7 +276,8 @@ public class DescargaActivity extends AppCompatActivity
             data.put("IMEI", IMEI);
 
             try {
-                URL url = new URL("http://sca.grupohi.mx/android20160923.php");
+//                URL url = new URL("http://sca.grupohi.mx/android20160923.php");
+                URL url = new URL(URL_API + "api/acarreos/viaje-neto/catalogo?access_token=" + usuario.token);
                 JSON = HttpConnection.POST(url, data);
 
                 if (JSON.has("error")) {

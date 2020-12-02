@@ -92,8 +92,9 @@ public class LoginActivity extends AppCompatActivity {
     public String CLIENT_ID = "11";
     public String SECRET = "u12k5tax8zOQR53eRZdglLG2gpg5EuYsQqxLcOud";
     public String SECRET_DEV = "VmSpjp0T2WCwZUEWsROs5pd0ZA8K3Yx0qgNM8i8G";
-    public String REDIRECT_URI = "/auth://callback";
-    public String MOVIL = "http://192.168.0.187:8000/api/movil?client_id=11&response_type=code&redirect_uri=/auth&usuario=jlopeza&clave=123456";
+    public String URL_API = "http://192.168.100.110:8000/";
+    public String ROUTE_CODE = URL_API + "api/movil?response_type=code&redirect_uri=/auth&client_id=" + CLIENT_ID + "&";
+//    public String MOVIL = "http://192.168.0.187:8000/api/movil?client_id=11&response_type=code&redirect_uri=/auth&usuario=jlopeza&clave=123456";
     public String token_resp = "";
     private GetCode code = null;
     private JSONObject resp = null;
@@ -280,55 +281,6 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private String getToken(){
-        String body = "";
-        try {
-            URL url = new URL(MOVIL);
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("GET");
-            urlConnection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-
-            String codigoRespuesta = Integer.toString(urlConnection.getResponseCode());
-            if (codigoRespuesta.equals("200")) {//Vemos si es 200 OK y leemos el cuerpo del mensaje.
-                body = readStream(urlConnection.getInputStream());
-                resp = new JSONObject(body);
-                String codec = resp.get("code").toString();
-
-                Retrofit.Builder builder = new Retrofit.Builder()
-                        .baseUrl("http://192.168.100.110:8000/")
-                        .addConverterFactory(GsonConverterFactory.create());
-                Retrofit retrofit = builder.build();
-
-                ErpClient client = retrofit.create(ErpClient.class);
-                Call<Token> getAccessToken = client.getToken(
-                        CLIENT_ID,
-                        SECRET_DEV,
-                        codec,
-                        "authorization_code",
-                        "/auth"
-                );
-                getAccessToken.enqueue(new Callback<Token>() {
-                    @Override
-                    public void onResponse(Call<Token> call, Response<Token> response) {
-                        token_resp = response.body().getAccessToken();
-
-//                            Toast.makeText(LoginActivity.this, "Yes" + response.body().getAccessToken(), Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onFailure(Call<Token> call, Throwable t) {
-//                            Toast.makeText(LoginActivity.this, "Nop", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                urlConnection.disconnect();
-            }
-
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        return token_resp;
-    }
-
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
@@ -354,7 +306,7 @@ public class LoginActivity extends AppCompatActivity {
 
             try {
 //                URL url = new URL("http://sca.grupohi.mx/android20160923.php");
-                URL url = new URL("http://192.168.0.187:8000/api/acarreos/viaje-neto/catalogo?access_token=" + token_resp);
+                URL url = new URL(URL_API + "api/acarreos/viaje-neto/catalogo?access_token=" + token_resp);
                 final JSONObject JSON = HttpConnection.POST(url, data);
                 db_sca.deleteCatalogos();
                 if (JSON.has("error")) {
@@ -816,7 +768,7 @@ public class LoginActivity extends AppCompatActivity {
             String body = " ";
 
             try {
-                URL url = new URL(MOVIL);
+                URL url = new URL(ROUTE_CODE + "usuario=" + user + "&clave=" + pass);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
@@ -828,7 +780,7 @@ public class LoginActivity extends AppCompatActivity {
                     String codec = resp.get("code").toString();
 
                     Retrofit.Builder builder = new Retrofit.Builder()
-                            .baseUrl("http://192.168.0.187:8000/")
+                            .baseUrl(URL_API)
                             .addConverterFactory(GsonConverterFactory.create());
                     Retrofit retrofit = builder.build();
 
@@ -852,6 +804,7 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onFailure(Call<Token> call, Throwable t) {
                             Toast.makeText(LoginActivity.this, "Error al obtener Token", Toast.LENGTH_SHORT).show();
+                            loginProgressDialog.dismiss();
                         }
                     });
                     urlConnection.disconnect();
@@ -869,7 +822,10 @@ public class LoginActivity extends AppCompatActivity {
 
 
         protected void onPostExecute(Boolean result) {
-
+            if(!result){
+                Toast.makeText(LoginActivity.this, "Error al obtener Token", Toast.LENGTH_SHORT).show();
+                loginProgressDialog.dismiss();
+            }
         }
     }
     private static String readStream(InputStream in) throws IOException {

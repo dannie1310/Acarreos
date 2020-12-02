@@ -48,6 +48,7 @@ public class CambioClaveActivity extends AppCompatActivity
     private String us_sesion;
     private String us_escrito;
     CambioClave c;
+    public String URL_API = "http://192.168.100.110:8000/";
 
 
     @Override
@@ -355,7 +356,8 @@ public class CambioClaveActivity extends AppCompatActivity
 
             try {
 
-                URL url = new URL("http://sca.grupohi.mx/android20160923.php");
+//                URL url = new URL("http://sca.grupohi.mx/android20160923.php");
+                URL url = new URL(URL_API + "api/acarreos/viaje-neto/cambioClave?access_token=" + usuario.token);
                 JSONVIAJES = HttpConnection.POST(url, values);
                 Log.i("josn", String.valueOf(JSONVIAJES));
                 Log.i("jsonviajes:  ", String.valueOf(values));

@@ -37,6 +37,7 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
     Integer idviaje;
     Integer imagenesTotales = 0;
     Integer imagenesRegistradas = 0;
+    public String URL_API = "http://192.168.100.110:8000/";
 
     private JSONObject JSONVIAJES;
     private JSONObject JSON;
@@ -97,7 +98,8 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
 
         try {
 
-            URL url = new URL("http://sca.grupohi.mx/android20160923.php");
+//            URL url = new URL("http://sca.grupohi.mx/android20160923.php");
+            URL url = new URL(URL_API  + "api/acarreos/viaje-neto/registrar?access_token=" + usuario.token);
             JSONVIAJES = HttpConnection.POST(url, values);
             Log.i("jsonviajes:  ", String.valueOf(values));
             ContentValues aux = new ContentValues();
@@ -115,7 +117,8 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
                 aux.put("Imagenes", String.valueOf(ImagenesViaje.getJSONImagenes(context)));
 
                 try {
-                    JSON = HttpConnection.POST(url, aux);
+                    URL url_img = new URL(URL_API  + "api/acarreos/viaje-neto/cargaImagenesViajes?access_token=" + usuario.token);
+                    JSON = HttpConnection.POST(url_img, aux);
                     Log.i("json ", String.valueOf(aux));
                     try {
                         if (JSON.has("imagenes_registradas")) {
