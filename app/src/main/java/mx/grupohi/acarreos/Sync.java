@@ -111,8 +111,8 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
                 JSON = null;
                 //System.out.println("Existen imagenes para sincronizar: " + ImagenesViaje.getCount(context));
                 aux.put("metodo", "cargaImagenesViajes");
-                aux.put("usr", usuario.usr);
-                aux.put("pass", usuario.pass);
+                aux.put("usuario", usuario.usr);
+                aux.put("clave", usuario.pass);
                 aux.put("bd", usuario.baseDatos);
                 aux.put("Imagenes", String.valueOf(ImagenesViaje.getJSONImagenes(context)));
 
