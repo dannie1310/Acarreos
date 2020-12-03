@@ -94,5 +94,10 @@
     <string name="title_battery_low">Bateria Baja</string>
     <string name="error_guardado">¡Error! No se guardo el viaje correctamente. Favor de leer el tag nuevamente.</string>
 
+    <!-- Api ERP Strings   -->
+
+    <string name="url_api_erp">http://192.168.100.110:8000/</string>
+    <string name="client_id">11</string>
+    <string name="secret">VmSpjp0T2WCwZUEWsROs5pd0ZA8K3Yx0qgNM8i8G</string>
 
 </resources>

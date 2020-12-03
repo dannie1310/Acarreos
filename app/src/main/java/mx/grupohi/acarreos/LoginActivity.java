@@ -40,7 +40,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.CAMERA;
@@ -48,6 +57,14 @@ import static android.Manifest.permission.PACKAGE_USAGE_STATS;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.READ_PHONE_STATE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
+import mx.grupohi.acarreos.Oauth.ErpClient;
+import mx.grupohi.acarreos.Oauth.Token;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -70,6 +87,17 @@ public class LoginActivity extends AppCompatActivity {
     double latitude;
     double longitude;
     public String IMEI;
+
+    ///Oauth 2.0
+    public String CLIENT_ID = "11";
+    public String SECRET = "u12k5tax8zOQR53eRZdglLG2gpg5EuYsQqxLcOud";
+    public String SECRET_DEV = "VmSpjp0T2WCwZUEWsROs5pd0ZA8K3Yx0qgNM8i8G";
+    public String URL_API = "http://192.168.100.110:8000/";
+    public String ROUTE_CODE = URL_API + "api/movil?response_type=code&redirect_uri=/auth&client_id=" + CLIENT_ID + "&";
+//    public String MOVIL = "http://192.168.0.187:8000/api/movil?client_id=11&response_type=code&redirect_uri=/auth&usuario=jlopeza&clave=123456";
+    public String token_resp = "";
+    private GetCode code = null;
+    private JSONObject resp = null;
 
 
     @Override
@@ -115,7 +143,7 @@ public class LoginActivity extends AppCompatActivity {
                     } else {
                         attemptLogin();
                     }*/
-                    attemptLogin();
+//                    attemptLogin();
                 }
             }
         });
@@ -245,8 +273,11 @@ public class LoginActivity extends AppCompatActivity {
         } else {
 
             loginProgressDialog = ProgressDialog.show(LoginActivity.this, "Autenticando", "Por favor espere...", true);
-            mAuthTask = new UserLoginTask(user, pass);
-            mAuthTask.execute((Void) null);
+//            mAuthTask = new UserLoginTask(user, pass);
+//            mAuthTask.execute((Void) null);
+
+            code = new GetCode(user, pass);
+            code.execute();
         }
     }
 
@@ -269,12 +300,13 @@ public class LoginActivity extends AppCompatActivity {
             // TODO: attempt authentication against a network service.
 
             ContentValues data = new ContentValues();
-            data.put("usr", user);
-            data.put("pass", pass);
+            data.put("usuario", user);
+            data.put("clave", pass);
             data.put("IMEI", IMEI);
 
             try {
-                URL url = new URL("http://sca.grupohi.mx/android20160923.php");
+//                URL url = new URL("http://sca.grupohi.mx/android20160923.php");
+                URL url = new URL(URL_API + "api/acarreos/viaje-neto/catalogo?access_token=" + token_resp);
                 final JSONObject JSON = HttpConnection.POST(url, data);
                 db_sca.deleteCatalogos();
                 if (JSON.has("error")) {
@@ -330,6 +362,7 @@ public class LoginActivity extends AppCompatActivity {
                         data.put("tipo_permiso", JSON.getString("IdPerfil"));//idperfil
                         data.put("idorigen", JSON.getString("IdOrigen"));//idorigen
                         data.put("idtiro", JSON.getString("IdTiro"));//idtiro
+                        data.put("token", token_resp);//token
 
                         if (!usuario.create(data)) {
                             return false;
@@ -448,7 +481,7 @@ public class LoginActivity extends AppCompatActivity {
                                 JSONObject info = tags.getJSONObject(i);
 
                                 data.clear();
-                                data.put("uid", info.getString("uid"));
+                                data.put("uid", info.getString("UID"));
                                 data.put("idcamion", info.getString("idcamion"));
                                 data.put("idproyecto", info.getString("idproyecto"));
                                 data.put("economico", info.getString("Economico"));
@@ -720,6 +753,95 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_HOME);
         startActivity(intent);
+    }
+
+    private class GetCode extends AsyncTask<Void, Void, Boolean> {
+
+        private final String user;
+        private final String pass;
+
+        GetCode(String user, String pass) {
+            this.user = user;
+            this.pass = pass;
+        }
+        protected Boolean doInBackground(Void... urls) {
+            String body = " ";
+
+            try {
+                URL url = new URL(ROUTE_CODE + "usuario=" + user + "&clave=" + pass);
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+
+                String codigoRespuesta = Integer.toString(urlConnection.getResponseCode());
+                if(codigoRespuesta.equals("200")){//Vemos si es 200 OK y leemos el cuerpo del mensaje.
+                    body = readStream(urlConnection.getInputStream());
+                    resp = new JSONObject(body);
+                    String codec = resp.get("code").toString();
+
+                    Retrofit.Builder builder = new Retrofit.Builder()
+                            .baseUrl(URL_API)
+                            .addConverterFactory(GsonConverterFactory.create());
+                    Retrofit retrofit = builder.build();
+
+                    ErpClient client = retrofit.create(ErpClient.class);
+                    Call<Token> getAccessToken =  client.getToken(
+                            CLIENT_ID,
+                            SECRET_DEV,
+                            codec,
+                            "authorization_code",
+                            "/auth"
+                    );
+                    getAccessToken.enqueue(new Callback<Token>() {
+                        @Override
+                        public void onResponse(Call<Token> call, Response<Token> response) {
+                            token_resp = response.body().getAccessToken();
+                            mAuthTask = new UserLoginTask(user, pass);
+                            mAuthTask.execute((Void) null);
+//                            Toast.makeText(LoginActivity.this, "Yes" + response.body().getAccessToken(), Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onFailure(Call<Token> call, Throwable t) {
+                            Toast.makeText(LoginActivity.this, "Error al obtener Token", Toast.LENGTH_SHORT).show();
+                            loginProgressDialog.dismiss();
+                        }
+                    });
+                    urlConnection.disconnect();
+
+                }else{
+                    return false;
+                }
+
+
+            } catch (Exception e) {
+                e.getStackTrace();//Error diferente a los anteriores.
+            }
+            return true;
+        }
+
+
+        protected void onPostExecute(Boolean result) {
+            if(!result){
+                Toast.makeText(LoginActivity.this, "Error al obtener Token", Toast.LENGTH_SHORT).show();
+                loginProgressDialog.dismiss();
+            }
+        }
+    }
+    private static String readStream(InputStream in) throws IOException {
+
+        BufferedReader r = null;
+        r = new BufferedReader(new InputStreamReader(in));
+        StringBuilder total = new StringBuilder();
+        String line;
+        while ((line = r.readLine()) != null) {
+            total.append(line);
+        }
+        if(r != null){
+            r.close();
+        }
+        in.close();
+        return total.toString();
     }
 }
 
