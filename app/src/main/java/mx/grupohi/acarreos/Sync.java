@@ -37,7 +37,7 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
     Integer idviaje;
     Integer imagenesTotales = 0;
     Integer imagenesRegistradas = 0;
-    public String URL_API = "http://192.168.100.110:8000/";
+    public String URL_API = "http://192.168.0.249:8000/";
 
     private JSONObject JSONVIAJES;
     private JSONObject JSON;
@@ -79,9 +79,9 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
         values.clear();
 
         values.put("metodo", "captura");
-        values.put("imei", IMEI);
-        values.put("usr", usuario.usr);
-        values.put("pass", usuario.pass);
+        values.put("IMEI", IMEI);
+        values.put("usuario", usuario.usr);
+        values.put("clave", usuario.pass);
         values.put("bd", usuario.baseDatos);
         values.put("idusuario", usuario.getId());
         values.put("Version", String.valueOf(BuildConfig.VERSION_NAME));
@@ -171,7 +171,7 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
     protected void onPostExecute(Boolean aBoolean) {
         super.onPostExecute(aBoolean);
         progressDialog.dismiss();
-        Integer errores = ImagenesViaje.getCountErrores(context);
+      //  Integer errores = ImagenesViaje.getCountErrores(context);
         if(aBoolean) {
             try {
                 if (JSONVIAJES.has("error")) {

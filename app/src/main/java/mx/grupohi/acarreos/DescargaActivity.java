@@ -74,7 +74,7 @@ public class DescargaActivity extends AppCompatActivity
     GPSTracker gps;
     public String IMEI;
 
-    public String URL_API = "http://192.168.100.110:8000/";
+    public String URL_API = "http://192.168.0.249:8000/";
 
     private DescargaCatalogos descargaCatalogos = null;
     @Override
@@ -570,7 +570,7 @@ public class DescargaActivity extends AppCompatActivity
                                 JSONObject info = tags.getJSONObject(i);
 
                                 data.clear();
-                                data.put("uid", info.getString("uid"));
+                                data.put("uid", info.getString("UID"));
                                 data.put("idcamion", info.getString("idcamion"));
                                 data.put("idproyecto", info.getString("idproyecto"));
                                 data.put("economico", info.getString("Economico"));

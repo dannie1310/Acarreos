@@ -48,7 +48,7 @@ public class CambioClaveActivity extends AppCompatActivity
     private String us_sesion;
     private String us_escrito;
     CambioClave c;
-    public String URL_API = "http://192.168.100.110:8000/";
+    public String URL_API = "http://192.168.0.249:8000/";
 
 
     @Override
