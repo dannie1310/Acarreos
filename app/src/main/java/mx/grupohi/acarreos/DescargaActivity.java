@@ -271,8 +271,8 @@ public class DescargaActivity extends AppCompatActivity
             // TODO: attempt authentication against a network service.
 
             ContentValues data = new ContentValues();
-            data.put("usr", usuario.usr);
-            data.put("pass", usuario.pass);
+            data.put("usuario", usuario.usr);
+            data.put("clave", usuario.pass);
             data.put("IMEI", IMEI);
 
             try {
