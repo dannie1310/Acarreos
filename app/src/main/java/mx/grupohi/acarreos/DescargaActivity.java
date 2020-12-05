@@ -74,7 +74,7 @@ public class DescargaActivity extends AppCompatActivity
     GPSTracker gps;
     public String IMEI;
 
-    public String URL_API = "http://192.168.0.249:8000/";
+    public String URL_API = "http://portal-aplicaciones.grupohi.mx/";
 
     private DescargaCatalogos descargaCatalogos = null;
     @Override

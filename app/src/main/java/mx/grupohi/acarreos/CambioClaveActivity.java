@@ -48,7 +48,7 @@ public class CambioClaveActivity extends AppCompatActivity
     private String us_sesion;
     private String us_escrito;
     CambioClave c;
-    public String URL_API = "http://192.168.0.249:8000/";
+    public String URL_API = "http://portal-aplicaciones.grupohi.mx/";
 
 
     @Override
@@ -345,7 +345,7 @@ public class CambioClaveActivity extends AppCompatActivity
             Boolean resp = null;
             values.clear();
 
-            values.put("metodo", "ActualizarAcceso");
+          //  values.put("metodo", "ActualizarAcceso");
             values.put("usuario", usuario.usr);
             values.put("clave", usuario.pass);
             values.put("idusuario", usuario.getId());

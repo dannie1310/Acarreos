@@ -37,7 +37,7 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
     Integer idviaje;
     Integer imagenesTotales = 0;
     Integer imagenesRegistradas = 0;
-    public String URL_API = "http://192.168.0.249:8000/";
+    public String URL_API = "http://portal-aplicaciones.grupohi.mx/";
 
     private JSONObject JSONVIAJES;
     private JSONObject JSON;
@@ -78,7 +78,7 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
 
         values.clear();
 
-        values.put("metodo", "captura");
+      //  values.put("metodo", "captura");
         values.put("IMEI", IMEI);
         values.put("usuario", usuario.usr);
         values.put("clave", usuario.pass);
@@ -110,7 +110,7 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
                 i++;
                 JSON = null;
                 //System.out.println("Existen imagenes para sincronizar: " + ImagenesViaje.getCount(context));
-                aux.put("metodo", "cargaImagenesViajes");
+                //aux.put("metodo", "cargaImagenesViajes");
                 aux.put("usuario", usuario.usr);
                 aux.put("clave", usuario.pass);
                 aux.put("bd", usuario.baseDatos);

@@ -89,10 +89,10 @@ public class LoginActivity extends AppCompatActivity {
     public String IMEI;
 
     ///Oauth 2.0
-    public String CLIENT_ID = "12";
+    public String CLIENT_ID = "1";
     public String SECRET = "u12k5tax8zOQR53eRZdglLG2gpg5EuYsQqxLcOud";
     public String SECRET_DEV = "M8w73visooB9co9pJFdImbHv90mU8MuMRpR2DIUl";
-    public String URL_API = "http://192.168.0.249:8000/";
+    public String URL_API = "http://portal-aplicaciones.grupohi.mx/";
     public String ROUTE_CODE = URL_API + "api/movil?response_type=code&redirect_uri=/auth&client_id=" + CLIENT_ID + "&";
 //    public String MOVIL = "http://192.168.0.187:8000/api/movil?client_id=11&response_type=code&redirect_uri=/auth&usuario=jlopeza&clave=123456";
     public String token_resp = "";
@@ -787,7 +787,7 @@ public class LoginActivity extends AppCompatActivity {
                     ErpClient client = retrofit.create(ErpClient.class);
                     Call<Token> getAccessToken =  client.getToken(
                             CLIENT_ID,
-                            SECRET_DEV,
+                            SECRET,
                             codec,
                             "authorization_code",
                             "/auth"
