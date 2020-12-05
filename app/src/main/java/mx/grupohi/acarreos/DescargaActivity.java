@@ -74,6 +74,8 @@ public class DescargaActivity extends AppCompatActivity
     GPSTracker gps;
     public String IMEI;
 
+    public String URL_API = "http://portal-aplicaciones.grupohi.mx/";
+
     private DescargaCatalogos descargaCatalogos = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -269,12 +271,13 @@ public class DescargaActivity extends AppCompatActivity
             // TODO: attempt authentication against a network service.
 
             ContentValues data = new ContentValues();
-            data.put("usr", usuario.usr);
-            data.put("pass", usuario.pass);
+            data.put("usuario", usuario.usr);
+            data.put("clave", usuario.pass);
             data.put("IMEI", IMEI);
 
             try {
-                URL url = new URL("http://sca.grupohi.mx/android20160923.php");
+//                URL url = new URL("http://sca.grupohi.mx/android20160923.php");
+                URL url = new URL(URL_API + "api/acarreos/viaje-neto/catalogo?access_token=" + usuario.token);
                 JSON = HttpConnection.POST(url, data);
 
                 if (JSON.has("error")) {
@@ -567,7 +570,7 @@ public class DescargaActivity extends AppCompatActivity
                                 JSONObject info = tags.getJSONObject(i);
 
                                 data.clear();
-                                data.put("uid", info.getString("uid"));
+                                data.put("uid", info.getString("UID"));
                                 data.put("idcamion", info.getString("idcamion"));
                                 data.put("idproyecto", info.getString("idproyecto"));
                                 data.put("economico", info.getString("Economico"));

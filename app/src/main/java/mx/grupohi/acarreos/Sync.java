@@ -37,6 +37,7 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
     Integer idviaje;
     Integer imagenesTotales = 0;
     Integer imagenesRegistradas = 0;
+    public String URL_API = "http://portal-aplicaciones.grupohi.mx/";
 
     private JSONObject JSONVIAJES;
     private JSONObject JSON;
@@ -77,10 +78,10 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
 
         values.clear();
 
-        values.put("metodo", "captura");
-        values.put("imei", IMEI);
-        values.put("usr", usuario.usr);
-        values.put("pass", usuario.pass);
+      //  values.put("metodo", "captura");
+        values.put("IMEI", IMEI);
+        values.put("usuario", usuario.usr);
+        values.put("clave", usuario.pass);
         values.put("bd", usuario.baseDatos);
         values.put("idusuario", usuario.getId());
         values.put("Version", String.valueOf(BuildConfig.VERSION_NAME));
@@ -97,7 +98,8 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
 
         try {
 
-            URL url = new URL("http://sca.grupohi.mx/android20160923.php");
+//            URL url = new URL("http://sca.grupohi.mx/android20160923.php");
+            URL url = new URL(URL_API  + "api/acarreos/viaje-neto/registrar?access_token=" + usuario.token);
             JSONVIAJES = HttpConnection.POST(url, values);
             Log.i("jsonviajes:  ", String.valueOf(values));
             ContentValues aux = new ContentValues();
@@ -108,14 +110,15 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
                 i++;
                 JSON = null;
                 //System.out.println("Existen imagenes para sincronizar: " + ImagenesViaje.getCount(context));
-                aux.put("metodo", "cargaImagenesViajes");
-                aux.put("usr", usuario.usr);
-                aux.put("pass", usuario.pass);
+                //aux.put("metodo", "cargaImagenesViajes");
+                aux.put("usuario", usuario.usr);
+                aux.put("clave", usuario.pass);
                 aux.put("bd", usuario.baseDatos);
                 aux.put("Imagenes", String.valueOf(ImagenesViaje.getJSONImagenes(context)));
 
                 try {
-                    JSON = HttpConnection.POST(url, aux);
+                    URL url_img = new URL(URL_API  + "api/acarreos/viaje-neto/cargaImagenesViajes?access_token=" + usuario.token);
+                    JSON = HttpConnection.POST(url_img, aux);
                     Log.i("json ", String.valueOf(aux));
                     try {
                         if (JSON.has("imagenes_registradas")) {
@@ -168,7 +171,7 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
     protected void onPostExecute(Boolean aBoolean) {
         super.onPostExecute(aBoolean);
         progressDialog.dismiss();
-        Integer errores = ImagenesViaje.getCountErrores(context);
+      //  Integer errores = ImagenesViaje.getCountErrores(context);
         if(aBoolean) {
             try {
                 if (JSONVIAJES.has("error")) {
