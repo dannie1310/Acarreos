@@ -759,10 +759,12 @@ public class LoginActivity extends AppCompatActivity {
 
         private final String user;
         private final String pass;
+        private String mensaje;
 
         GetCode(String user, String pass) {
             this.user = user;
             this.pass = pass;
+            this.mensaje = "Error al obtener Token";
         }
         protected Boolean doInBackground(Void... urls) {
             String body = " ";
@@ -778,6 +780,10 @@ public class LoginActivity extends AppCompatActivity {
                     body = readStream(urlConnection.getInputStream());
                     resp = new JSONObject(body);
                     String codec = resp.get("code").toString();
+                    if(codec.equals("")){
+                        mensaje = resp.get("mensaje").toString();
+                        return false;
+                    }
 
                     Retrofit.Builder builder = new Retrofit.Builder()
                             .baseUrl(URL_API)
@@ -816,6 +822,7 @@ public class LoginActivity extends AppCompatActivity {
 
             } catch (Exception e) {
                 e.getStackTrace();//Error diferente a los anteriores.
+                return false;
             }
             return true;
         }
@@ -823,7 +830,7 @@ public class LoginActivity extends AppCompatActivity {
 
         protected void onPostExecute(Boolean result) {
             if(!result){
-                Toast.makeText(LoginActivity.this, "Error al obtener Token", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, mensaje, Toast.LENGTH_LONG).show();
                 loginProgressDialog.dismiss();
             }
         }
