@@ -48,7 +48,7 @@ public class CambioClaveActivity extends AppCompatActivity
     private String us_sesion;
     private String us_escrito;
     CambioClave c;
-    public String URL_API = "http://192.168.0.249:8000/";
+    public String URL_API = "http://192.168.0.187:8000/";
 
 
     @Override
@@ -318,7 +318,7 @@ public class CambioClaveActivity extends AppCompatActivity
         private Usuario usuario;
 
 
-        private String IMEI;
+        private String IMEI = "N/A";
         private String NuevaClave;
 
         private JSONObject JSONVIAJES;
@@ -339,7 +339,10 @@ public class CambioClaveActivity extends AppCompatActivity
         protected Boolean doInBackground(Void... params) {
 
             TelephonyManager phneMgr = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-            IMEI = phneMgr.getDeviceId();
+            if(phneMgr.getDeviceId() != null){
+                IMEI = phneMgr.getDeviceId();
+            }
+
             in = new Intent(context, CambioClaveActivity.class);
             ContentValues values = new ContentValues();
             Boolean resp = null;

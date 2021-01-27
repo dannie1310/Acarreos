@@ -33,11 +33,11 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
     private GPSTracker gps;
     private double latitude;
     private double longitude;
-    private String IMEI;
+    private String IMEI = "N/A";
     Integer idviaje;
     Integer imagenesTotales = 0;
     Integer imagenesRegistradas = 0;
-    public String URL_API = "http://192.168.0.249:8000/";
+    public String URL_API = "http://192.168.0.187:8000/";
 
     private JSONObject JSONVIAJES;
     private JSONObject JSON;
@@ -63,7 +63,9 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
         latitude = gps.getLatitude();
         longitude = gps.getLongitude();
         TelephonyManager phneMgr = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        IMEI = phneMgr.getDeviceId();
+        if(phneMgr.getDeviceId() != null){
+            IMEI = phneMgr.getDeviceId();
+        }
 
         ContentValues values = new ContentValues();
 

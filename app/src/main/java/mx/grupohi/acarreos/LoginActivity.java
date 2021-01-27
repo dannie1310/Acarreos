@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -86,15 +87,15 @@ public class LoginActivity extends AppCompatActivity {
     GPSTracker gps;
     double latitude;
     double longitude;
-    public String IMEI;
+    public String IMEI = "N/A";
 
     ///Oauth 2.0
-    public String CLIENT_ID = "12";
+    public String CLIENT_ID = "11";
     public String SECRET = "u12k5tax8zOQR53eRZdglLG2gpg5EuYsQqxLcOud";
-    public String SECRET_DEV = "M8w73visooB9co9pJFdImbHv90mU8MuMRpR2DIUl";
-    public String URL_API = "http://192.168.0.249:8000/";
+    public String SECRET_DEV = "VmSpjp0T2WCwZUEWsROs5pd0ZA8K3Yx0qgNM8i8G";
+    public String URL_API = "http://192.168.0.187:8000/";
     public String ROUTE_CODE = URL_API + "api/movil?response_type=code&redirect_uri=/auth&client_id=" + CLIENT_ID + "&";
-//    public String MOVIL = "http://192.168.0.187:8000/api/movil?client_id=11&response_type=code&redirect_uri=/auth&usuario=jlopeza&clave=123456";
+    //    public String MOVIL = "http://192.168.0.187:8000/api/movil?client_id=11&response_type=code&redirect_uri=/auth&usuario=jlopeza&clave=123456";
     public String token_resp = "";
     private GetCode code = null;
     private JSONObject resp = null;
@@ -106,7 +107,7 @@ public class LoginActivity extends AppCompatActivity {
         usuario = new Usuario(this);
         tipo = usuario.getTipo_permiso();
 
-        final PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
+        final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         this.wakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "etiqueta");
         wakeLock.acquire();
 
@@ -131,8 +132,10 @@ public class LoginActivity extends AppCompatActivity {
                     mAuthTask = null;
                     latitude = gps.getLatitude();
                     longitude = gps.getLongitude();
-                    TelephonyManager phneMgr = (TelephonyManager)getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
-                    IMEI = phneMgr.getDeviceId();
+                    TelephonyManager phneMgr = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+                    if(phneMgr.getDeviceId() != null){
+                        IMEI = phneMgr.getDeviceId();
+                    }
                     attemptLogin();
                     /* if(latitude + longitude == 0) {
                         Snackbar snackbar;
@@ -171,16 +174,15 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
         if (usuario.isAuth()) {
-            if (tipo== null){
+            if (tipo == null) {
                 Toast.makeText(LoginActivity.this, R.string.error_usuario, Toast.LENGTH_LONG).show();
                 Intent intent = getIntent();
                 usuario.destroy();
                 startActivity(intent);
-            }
-            else if(tipo == 0){
+            } else if (tipo == 0) {
                 mainActivity = new Intent(this, SetOrigenActivity.class);
                 startActivity(mainActivity);
-            }else if(tipo == 1){
+            } else if (tipo == 1) {
                 mainActivity = new Intent(this, MainActivity.class);
                 startActivity(mainActivity);
             }
