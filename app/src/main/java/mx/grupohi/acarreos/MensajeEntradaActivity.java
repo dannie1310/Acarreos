@@ -55,7 +55,7 @@ public class MensajeEntradaActivity extends AppCompatActivity {
 
     //GPS
     private GPSTracker gps;
-    private String IMEI;
+    private String IMEI = "N/A";
     private Double latitude;
     private Double longitude;
 
@@ -94,7 +94,10 @@ public class MensajeEntradaActivity extends AppCompatActivity {
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        IMEI = phneMgr.getDeviceId();
+        if(phneMgr.getDeviceId() != null){
+            IMEI = phneMgr.getDeviceId();
+        }
+
 
         nfcImage = (ImageView) findViewById(R.id.imageViewNFC);
         fabCancel = (FloatingActionButton) findViewById(R.id.fabCancel);

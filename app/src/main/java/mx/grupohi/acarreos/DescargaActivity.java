@@ -72,7 +72,7 @@ public class DescargaActivity extends AppCompatActivity
 
     // GPSTracker class
     GPSTracker gps;
-    public String IMEI;
+    public String IMEI = "N/A";
 
     public String URL_API = "http://portal-aplicaciones.grupohi.mx/";
 
@@ -97,7 +97,9 @@ public class DescargaActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
         TelephonyManager phneMgr = (TelephonyManager)getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
-        IMEI = phneMgr.getDeviceId();
+        if(phneMgr.getDeviceId() != null){
+            IMEI = phneMgr.getDeviceId();
+        }
         if(drawer != null)
             drawer.post(new Runnable() {
                 @Override

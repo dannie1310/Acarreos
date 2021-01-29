@@ -33,7 +33,7 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
     private GPSTracker gps;
     private double latitude;
     private double longitude;
-    private String IMEI;
+    private String IMEI = "N/A";
     Integer idviaje;
     Integer imagenesTotales = 0;
     Integer imagenesRegistradas = 0;
@@ -63,7 +63,9 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
         latitude = gps.getLatitude();
         longitude = gps.getLongitude();
         TelephonyManager phneMgr = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        IMEI = phneMgr.getDeviceId();
+        if(phneMgr.getDeviceId() != null){
+            IMEI = phneMgr.getDeviceId();
+        }
 
         ContentValues values = new ContentValues();
 
@@ -78,7 +80,6 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
 
         values.clear();
 
-      //  values.put("metodo", "captura");
         values.put("IMEI", IMEI);
         values.put("usuario", usuario.usr);
         values.put("clave", usuario.pass);
@@ -109,8 +110,6 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
             while (ImagenesViaje.getCount(context) != 0) {
                 i++;
                 JSON = null;
-                //System.out.println("Existen imagenes para sincronizar: " + ImagenesViaje.getCount(context));
-                //aux.put("metodo", "cargaImagenesViajes");
                 aux.put("usuario", usuario.usr);
                 aux.put("clave", usuario.pass);
                 aux.put("bd", usuario.baseDatos);

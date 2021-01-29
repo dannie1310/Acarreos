@@ -318,7 +318,7 @@ public class CambioClaveActivity extends AppCompatActivity
         private Usuario usuario;
 
 
-        private String IMEI;
+        private String IMEI = "N/A";
         private String NuevaClave;
 
         private JSONObject JSONVIAJES;
@@ -339,13 +339,15 @@ public class CambioClaveActivity extends AppCompatActivity
         protected Boolean doInBackground(Void... params) {
 
             TelephonyManager phneMgr = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-            IMEI = phneMgr.getDeviceId();
+            if(phneMgr.getDeviceId() != null){
+                IMEI = phneMgr.getDeviceId();
+            }
+
             in = new Intent(context, CambioClaveActivity.class);
             ContentValues values = new ContentValues();
             Boolean resp = null;
             values.clear();
 
-          //  values.put("metodo", "ActualizarAcceso");
             values.put("usuario", usuario.usr);
             values.put("clave", usuario.pass);
             values.put("idusuario", usuario.getId());

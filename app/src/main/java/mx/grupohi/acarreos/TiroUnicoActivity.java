@@ -90,7 +90,7 @@ public class TiroUnicoActivity extends AppCompatActivity
     Double latitud;
     Double longitud;
     AlertDialog alerta = null;
-    private String IMEI;
+    private String IMEI = "N/A";
 
     private TextInputLayout mina,
             seg;
@@ -147,7 +147,10 @@ public class TiroUnicoActivity extends AppCompatActivity
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        IMEI = phneMgr.getDeviceId();
+        if(phneMgr.getDeviceId() != null){
+            IMEI = phneMgr.getDeviceId();
+        }
+
         mina = (TextInputLayout) findViewById(R.id.textomina);
         seg = (TextInputLayout) findViewById(R.id.seg);
         textmina = (TextView) findViewById(R.id.vale_mina);

@@ -126,7 +126,7 @@ public class SuccessDestinoActivity extends AppCompatActivity
 
     //GPS
     private GPSTracker gps;
-    private String IMEI;
+    private String IMEI = "N/A";
     CelularImpresora cl;
     String datos;
     ProgressDialog progressDialog;
@@ -190,7 +190,10 @@ public class SuccessDestinoActivity extends AppCompatActivity
         toggle.syncState();
         gps = new GPSTracker(SuccessDestinoActivity.this);
         TelephonyManager phneMgr = (TelephonyManager)getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
-        IMEI = phneMgr.getDeviceId();
+        if(phneMgr.getDeviceId() != null){
+            IMEI = phneMgr.getDeviceId();
+        }
+
         cl = new CelularImpresora(getApplicationContext());
         cl = cl.find(IMEI);
 

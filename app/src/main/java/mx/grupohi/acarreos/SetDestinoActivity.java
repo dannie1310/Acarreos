@@ -59,7 +59,7 @@ public class SetDestinoActivity extends AppCompatActivity
     Double latitud;
     Double longitud;
     AlertDialog alerta = null;
-    private String IMEI;
+    private String IMEI = "N/A";
     //NFC
     private NFCTag nfcTag;
     private NFCUltralight nfcUltra;
@@ -135,7 +135,9 @@ public class SetDestinoActivity extends AppCompatActivity
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        IMEI = phneMgr.getDeviceId();
+        if(phneMgr.getDeviceId() != null){
+            IMEI = phneMgr.getDeviceId();
+        }
 
         tirosSpinner = (Spinner) findViewById(R.id.spinnerTiros);
         rutasSpinner = (Spinner) findViewById(R.id.spinnerRutas);

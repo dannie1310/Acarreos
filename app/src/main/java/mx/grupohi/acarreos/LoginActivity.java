@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -86,7 +87,7 @@ public class LoginActivity extends AppCompatActivity {
     GPSTracker gps;
     double latitude;
     double longitude;
-    public String IMEI;
+    public String IMEI = "N/A";
 
     ///Oauth 2.0
     public String CLIENT_ID = "1";
@@ -106,7 +107,7 @@ public class LoginActivity extends AppCompatActivity {
         usuario = new Usuario(this);
         tipo = usuario.getTipo_permiso();
 
-        final PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
+        final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         this.wakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "etiqueta");
         wakeLock.acquire();
 
@@ -131,8 +132,10 @@ public class LoginActivity extends AppCompatActivity {
                     mAuthTask = null;
                     latitude = gps.getLatitude();
                     longitude = gps.getLongitude();
-                    TelephonyManager phneMgr = (TelephonyManager)getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
-                    IMEI = phneMgr.getDeviceId();
+                    TelephonyManager phneMgr = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+                    if(phneMgr.getDeviceId() != null){
+                        IMEI = phneMgr.getDeviceId();
+                    }
                     attemptLogin();
                     /* if(latitude + longitude == 0) {
                         Snackbar snackbar;
@@ -759,10 +762,12 @@ public class LoginActivity extends AppCompatActivity {
 
         private final String user;
         private final String pass;
+        private String mensaje;
 
         GetCode(String user, String pass) {
             this.user = user;
             this.pass = pass;
+            this.mensaje = "Error al obtener Token";
         }
         protected Boolean doInBackground(Void... urls) {
             String body = " ";
@@ -778,6 +783,10 @@ public class LoginActivity extends AppCompatActivity {
                     body = readStream(urlConnection.getInputStream());
                     resp = new JSONObject(body);
                     String codec = resp.get("code").toString();
+                    if(codec.equals("")){
+                        mensaje = resp.get("mensaje").toString();
+                        return false;
+                    }
 
                     Retrofit.Builder builder = new Retrofit.Builder()
                             .baseUrl(URL_API)
@@ -816,6 +825,7 @@ public class LoginActivity extends AppCompatActivity {
 
             } catch (Exception e) {
                 e.getStackTrace();//Error diferente a los anteriores.
+                return false;
             }
             return true;
         }
@@ -823,7 +833,7 @@ public class LoginActivity extends AppCompatActivity {
 
         protected void onPostExecute(Boolean result) {
             if(!result){
-                Toast.makeText(LoginActivity.this, "Error al obtener Token", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, mensaje, Toast.LENGTH_LONG).show();
                 loginProgressDialog.dismiss();
             }
         }
