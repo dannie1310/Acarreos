@@ -95,7 +95,6 @@ public class LoginActivity extends AppCompatActivity {
     public String SECRET_DEV = "M8w73visooB9co9pJFdImbHv90mU8MuMRpR2DIUl";
     public String URL_API = "http://portal-aplicaciones.grupohi.mx/";
     public String ROUTE_CODE = URL_API + "api/movil?response_type=code&redirect_uri=/auth&client_id=" + CLIENT_ID + "&";
-//    public String MOVIL = "http://192.168.0.187:8000/api/movil?client_id=11&response_type=code&redirect_uri=/auth&usuario=jlopeza&clave=123456";
     public String token_resp = "";
     private GetCode code = null;
     private JSONObject resp = null;
@@ -308,7 +307,6 @@ public class LoginActivity extends AppCompatActivity {
             data.put("IMEI", IMEI);
 
             try {
-//                URL url = new URL("http://sca.grupohi.mx/android20160923.php");
                 URL url = new URL(URL_API + "api/acarreos/viaje-neto/catalogo?access_token=" + token_resp);
                 final JSONObject JSON = HttpConnection.POST(url, data);
                 db_sca.deleteCatalogos();

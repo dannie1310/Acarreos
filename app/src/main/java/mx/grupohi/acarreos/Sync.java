@@ -98,15 +98,12 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
         }
 
         try {
-
-//            URL url = new URL("http://sca.grupohi.mx/android20160923.php");
             URL url = new URL(URL_API  + "api/acarreos/viaje-neto/registrar?access_token=" + usuario.token);
             JSONVIAJES = HttpConnection.POST(url, values);
             Log.i("jsonviajes:  ", String.valueOf(values));
             ContentValues aux = new ContentValues();
             imagenesTotales = ImagenesViaje.getCount(context);
             int i = 0;
-            //System.out.println("imagenes totales: "+imagenesTotales);
             while (ImagenesViaje.getCount(context) != 0) {
                 i++;
                 JSON = null;
@@ -128,18 +125,14 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
                             }
                         }
 
-                        //System.out.println("imagenesRegiustradas: "+imagenesRegistradas);
-
                         if (JSON.has("imagenes_no_registradas_sv")) {
                             final JSONArray errores = new JSONArray(JSON.getString("imagenes_no_registradas_sv"));
-                            //System.out.println("Errores1: " + errores);
                             for (int r = 0; r < errores.length(); r++) {
                                 ImagenesViaje.cambioEstatus(context, errores.getInt(r));
                             }
                         }
                         if (JSON.has("imagenes_no_registradas")) {
                             final JSONArray errores = new JSONArray(JSON.getString("imagenes_no_registradas"));
-                            // System.out.println("Errores2: " + errores);
                             for (int r = 0; r < errores.length(); r++) {
                                 ImagenesViaje.cambioEstatus(context, errores.getInt(r));
                             }
@@ -170,7 +163,6 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
     protected void onPostExecute(Boolean aBoolean) {
         super.onPostExecute(aBoolean);
         progressDialog.dismiss();
-      //  Integer errores = ImagenesViaje.getCountErrores(context);
         if(aBoolean) {
             try {
                 if (JSONVIAJES.has("error")) {

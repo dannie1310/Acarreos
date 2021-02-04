@@ -357,18 +357,14 @@ public class CambioClaveActivity extends AppCompatActivity
             values.put("NuevaClave", NuevaClave);
 
             try {
-
-//                URL url = new URL("http://sca.grupohi.mx/android20160923.php");
                 URL url = new URL(URL_API + "api/acarreos/viaje-neto/cambioClave?access_token=" + usuario.token);
                 JSONVIAJES = HttpConnection.POST(url, values);
                 Log.i("josn", String.valueOf(JSONVIAJES));
                 Log.i("jsonviajes:  ", String.valueOf(values));
                 if (JSONVIAJES.has("error")) {
-                    //Toast.makeText(context, (String) JSONVIAJES.get("error"), Toast.LENGTH_SHORT).show();
                     resp = false;
                 } else if (JSONVIAJES.has("msj")) {
                     Usuario.updatePass(NuevaClave, context);
-                    //Toast.makeText(context, (String) JSONVIAJES.get("msj"), Toast.LENGTH_LONG).show();
                     resp = true;
                 }
 
